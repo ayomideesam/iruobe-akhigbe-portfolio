@@ -160,22 +160,28 @@ Replace all constructor injection with the `inject()` function. Empty constructo
 
 ---
 
-## Phase 7 — `@Input()` → `input()` Signals
+## Phase 7 — `@Input()` → `input()` Signals ✅ COMPLETE
 
-- [ ] `project-card.component.ts`
-  - `@Input() title!: string` → `title = input.required<string>()`
-  - `@Input() description!: string` → `description = input.required<string>()`
-  - `@Input() demoUrl?: string` → `demoUrl = input<string>()`
-  - `@Input() techStack: TechStack[] = []` → `techStack = input<TechStack[]>([])`
-  - `@Input() metrics: ProjectMetric[] = []` → `metrics = input<ProjectMetric[]>([])`
-  - `@Input() achievements: string[] = []` → `achievements = input<string[]>([])`
-- [ ] `tooltip.component.ts`
-  - `@Input() text = ''` → `text = input('')`
-  - `@Input() show = false` → `show = input(false)`
-- [ ] `spinner.component.ts`
-  - `@Input() isLoading = false` → `isLoading = input(false)`
-  - `@Input() text?: string` → `text = input<string>()`
-  - Remove `ngOnInit` and `ngOnChanges` — `input()` signals re-evaluate automatically
+- [x] `project-card.component.ts` ✅ 2026-06-30
+  - `@Input() title!: string` → `readonly title = input.required<string>()`
+  - `@Input() description!: string` → `readonly description = input.required<string>()`
+  - `@Input() demoUrl?: string` → `readonly demoUrl = input<string>()`
+  - `@Input() techStack: TechStack[] = []` → `readonly techStack = input<TechStack[]>([])`
+  - `@Input() metrics: ProjectMetric[] = []` → `readonly metrics = input<ProjectMetric[]>([])`
+  - `@Input() achievements: string[] = []` → `readonly achievements = input<string[]>([])`
+  - `isHovered` class field → `readonly isHovered = signal(false)` + `.set(true/false)` in template
+  - All template references updated to call signals with `()`
+- [x] `tooltip.component.ts` ✅ 2026-06-30
+  - `@Input() text = ''` → `readonly text = input('')`
+  - `@Input() show = false` → `readonly show = input(false)`
+  - Template: `show` → `show()`, `{{ text }}` → `{{ text() }}`
+- [x] `spinner.component.ts` ✅ 2026-06-30
+  - `@Input() isLoading = false` → `readonly isLoading = input(false)`
+  - `@Input() text?: string` → `readonly text = input('')`
+  - `displayText` class field → `readonly displayText = computed(() => this.text() || 'Loading')`
+  - `ngOnInit` and `ngOnChanges` removed — `computed()` re-evaluates automatically
+  - `implements OnInit` removed from class declaration
+  - Template: `isLoading` → `isLoading()`, `displayText` → `displayText()`
 
 ---
 

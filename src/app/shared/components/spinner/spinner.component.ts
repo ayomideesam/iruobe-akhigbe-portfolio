@@ -1,14 +1,14 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, computed, input } from '@angular/core';
 import { animate, style, transition, trigger } from '@angular/animations';
 
 @Component({
     selector: 'app-spinner',
     template: `
-      <div class="spinner-overlay" [class.active]="isLoading">
+      <div class="spinner-overlay" [class.active]="isLoading()">
          <div class="spinner"></div>
-         @if (isLoading) {
+         @if (isLoading()) {
          <div class="spinner-text" [@fadeInOut]>
-            {{displayText}}
+            {{displayText()}}
             <span class="dots">
                <span class="dot">.</span>
                <span class="dot">.</span>
@@ -71,7 +71,7 @@ import { animate, style, transition, trigger } from '@angular/animations';
       .dot:nth-child(2) { animation-delay: 0.375s; }
       .dot:nth-child(3) { animation-delay: 0.75s; }
       .dot:nth-child(4) { animation-delay: 1.125s; }
-      
+
       @keyframes spin {
          0% { transform: rotate(0deg); }
          100% { transform: rotate(360deg); }
@@ -95,17 +95,8 @@ import { animate, style, transition, trigger } from '@angular/animations';
     ],
     standalone: false
 })
-
-export class SpinnerComponent implements OnInit {
-   @Input() isLoading = false;
-   @Input() text?: string;
-   displayText = 'Loading';
-
-   ngOnInit() {
-      this.displayText = this.text || 'Loading';
-   }
-
-   ngOnChanges() {
-      this.displayText = this.text || 'Loading';
-   }
+export class SpinnerComponent {
+   readonly isLoading = input(false);
+   readonly text = input('');
+   readonly displayText = computed(() => this.text() || 'Loading');
 }

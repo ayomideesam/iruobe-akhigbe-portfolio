@@ -1,5 +1,5 @@
 // components/project-card/project-card.component.ts
-import { Component, Input, HostListener } from '@angular/core';
+import { Component, HostListener, input, signal } from '@angular/core';
 import { trigger, state, style, animate, transition } from '@angular/animations';
 
 interface TechStack {
@@ -16,17 +16,17 @@ interface ProjectMetric {
 @Component({
     selector: 'app-project-card',
     template: `
-    <article 
-      class="project-card" 
-      [@hover]="isHovered ? 'hovered' : 'rest'"
-      (mouseenter)="isHovered = true"
-      (mouseleave)="isHovered = false">
+    <article
+      class="project-card"
+      [@hover]="isHovered() ? 'hovered' : 'rest'"
+      (mouseenter)="isHovered.set(true)"
+      (mouseleave)="isHovered.set(false)">
       <div class="card-content">
         <div class="project-header">
-          <h3 class="project-title">{{ title }}</h3>
+          <h3 class="project-title">{{ title() }}</h3>
           <div class="project-links">
-            @if (demoUrl) {
-            <a [href]="demoUrl" target="_blank" class="link-button demo">
+            @if (demoUrl()) {
+            <a [href]="demoUrl()!" target="_blank" class="link-button demo">
               <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor">
                 <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
                 <polyline points="15 3 21 3 21 9"></polyline>
@@ -38,10 +38,10 @@ interface ProjectMetric {
           </div>
         </div>
 
-        <p class="project-description">{{ description }}</p>
+        <p class="project-description">{{ description() }}</p>
 
         <div class="metrics-grid">
-          @for (metric of metrics; track metric.label) {
+          @for (metric of metrics(); track metric.label) {
           <div class="metric-item" [@metricAppear]="'in'">
             <div class="metric-icon" [innerHTML]="metric.icon"></div>
             <div class="metric-details">
@@ -53,7 +53,7 @@ interface ProjectMetric {
         </div>
 
         <div class="tech-stack">
-          @for (tech of techStack; track tech.name) {
+          @for (tech of techStack(); track tech.name) {
           <span class="tech-badge"
                 [style.backgroundColor]="tech.color + '20'"
                 [style.color]="tech.color">
@@ -65,7 +65,7 @@ interface ProjectMetric {
         <div class="key-achievements">
           <h4>Key Achievements</h4>
           <ul>
-            @for (achievement of achievements; track $index; let i = $index) {
+            @for (achievement of achievements(); track $index; let i = $index) {
             <li [@achievementAppear]="'in'"
                 [style.animation-delay]="i * 100 + 'ms'">
               {{ achievement }}
@@ -75,7 +75,7 @@ interface ProjectMetric {
         </div>
       </div>
 
-      <div class="card-backdrop" [@backdropAnimation]="isHovered ? 'hovered' : 'rest'"></div>
+      <div class="card-backdrop" [@backdropAnimation]="isHovered() ? 'hovered' : 'rest'"></div>
     </article>
   `,
     styleUrls: ['./project-card.component.css'],
@@ -112,21 +112,21 @@ interface ProjectMetric {
     standalone: false
 })
 export class ProjectCardComponent {
-  @Input() title!: string;
-  @Input() description!: string;
-  @Input() demoUrl?: string;
-  @Input() techStack: TechStack[] = [];
-  @Input() metrics: ProjectMetric[] = [];
-  @Input() achievements: string[] = [];
+  readonly title = input.required<string>();
+  readonly description = input.required<string>();
+  readonly demoUrl = input<string>();
+  readonly techStack = input<TechStack[]>([]);
+  readonly metrics = input<ProjectMetric[]>([]);
+  readonly achievements = input<string[]>([]);
 
-  isHovered = false;
+  readonly isHovered = signal(false);
 
   @HostListener('mousemove', ['$event'])
   onMouseMove(event: MouseEvent) {
     const rect = (event.target as HTMLElement).getBoundingClientRect();
     const x = event.clientX - rect.left;
     const y = event.clientY - rect.top;
-    
+
     (event.target as HTMLElement).style.setProperty('--mouse-x', `${x}px`);
     (event.target as HTMLElement).style.setProperty('--mouse-y', `${y}px`);
   }
