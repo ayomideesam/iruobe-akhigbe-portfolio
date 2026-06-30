@@ -107,3 +107,9 @@ Per-card accent overrides (contact page, project cards):
 - **Scroll-to-top button** has bounce + ring-pulse animation; WhatsApp bubble is fixed bottom-right — keep scroll button away from that corner on mobile
 - **Footer YouTube link** has the same pop/shimmer animation rhythm as the header YouTube button but on a slightly different cycle so they don't sync
 - **Header YouTube `::after`** is blocked with `display: none !important` — the nav underline pseudo-element would otherwise apply to it
+
+---
+
+## Git Commit Rules
+
+- **Never add `Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>`** (or any Claude co-author line) to commit messages in this repository.

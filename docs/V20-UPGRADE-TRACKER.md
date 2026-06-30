@@ -13,21 +13,21 @@
 
 Sequential `ng update` hops. Each hop must compile before the next one starts.
 
-- [ ] **v16 → v17** — `ng update @angular/core@17 @angular/cli@17`
-- [ ] **v17 → v18** — `ng update @angular/core@18 @angular/cli@18`
-- [ ] **v18 → v19** — `ng update @angular/core@19 @angular/cli@19`
-- [ ] **v19 → v20** — `ng update @angular/core@20 @angular/cli@20`
-- [ ] Build passes cleanly after all 4 hops (`npm run build`)
+- [x] **v16 → v17** — `ng update @angular/core@17 @angular/cli@17` ✅ 2026-06-30
+- [x] **v17 → v18** — `ng update @angular/core@18 @angular/cli@18` ✅ 2026-06-30 (HttpClientModule → provideHttpClient() auto-migrated)
+- [x] **v18 → v19** — `ng update @angular/core@19 @angular/cli@19` ✅ 2026-06-30 (standalone: false added to all 13 components auto-migrated)
+- [x] **v19 → v20** — `ng update @angular/core@20 @angular/cli@20` ✅ 2026-06-30 (tsconfig moduleResolution → bundler auto-migrated)
+- [x] Build passes cleanly after all 4 hops (`npm run build`) ✅ 2026-06-30
 
 ---
 
 ## Phase 2 — Deprecated API Cleanup (`app.module.ts` + `shared.module.ts`)
 
-- [ ] `BrowserModule.withServerTransition({ appId: 'portfolio' })` → `BrowserModule` (deprecated in v17)
-- [ ] `HttpClientModule` → `provideHttpClient()` in the `providers` array (deprecated in v15, removed path in v20)
+- [x] `BrowserModule.withServerTransition({ appId: 'portfolio' })` → `BrowserModule` ✅ 2026-06-30 (manual fix — v20 fully removed this)
+- [x] `HttpClientModule` → `provideHttpClient(withInterceptorsFromDi())` ✅ 2026-06-30 (v18 auto-migration)
 - [ ] Audit whether `FormsModule` + `ReactiveFormsModule` in `SharedModule` are both needed — `FormsModule` alone may be unused; `ReactiveFormsModule` stays (contact form)
 - [ ] Remove `FormGroupDirective` from `SharedModule` providers — it is a directive, not a service
-- [ ] Add explicit `standalone: false` to all NgModule-declared components (Angular 19 `ng update` migration may automate this — verify it ran)
+- [x] Add explicit `standalone: false` to all NgModule-declared components ✅ 2026-06-30 (v19 auto-migration — 13 files updated)
 - [ ] Delete empty stub files: `src/app/store/app.action.ts` and `src/app/store/app.state.ts`
 - [ ] Remove `StoreModule` / NGXS references if any crept in (none found at audit time — confirm after upgrade)
 
