@@ -116,6 +116,7 @@
     </div>
 </div>
 
+@defer (on viewport) {
 <section class="featured-projects" [@fadeInUp]>
     <div class="sec-shell">
         <div class="sec-head">
@@ -173,6 +174,9 @@
         </div>
     </div>
 </section>
+} @placeholder {
+<div style="min-height: 650px"></div>
+}
 
 <!-- Currently Building -->
 <section class="currently-building-section">
@@ -238,6 +242,7 @@
 </section>
 
 <!-- Skills / Toolkit -->
+@defer (on viewport) {
 <section class="skills-section">
     <div class="section-particles" aria-hidden="true">
         @for (m of motes; track $index) {
@@ -283,6 +288,9 @@
         </div>
     </div>
 </section>
+} @placeholder {
+<div style="min-height: 550px"></div>
+}
 
 <section class="experience-section py-16">
     <div class="section-particles" aria-hidden="true">
@@ -371,6 +379,7 @@
 </section>
 
 <!-- Testimonials / Social Proof -->
+@defer (on viewport) {
 <section class="testimonials-section">
     <div class="section-particles" aria-hidden="true">
         @for (p of particles; track $index) {
@@ -462,6 +471,9 @@
         </div>
     </div>
 </section>
+} @placeholder {
+<div style="min-height: 500px"></div>
+}
 
 <app-company-scroller></app-company-scroller>
 

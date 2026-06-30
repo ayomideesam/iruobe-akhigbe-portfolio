@@ -22,6 +22,7 @@
         </div>
     </section>
 
+    @defer (on viewport) {
     <section class="project-section">
         @for (project of projects; track project.id) {
         <div class="project-card" [id]="'project-' + project.id"
@@ -396,4 +397,7 @@
         </div>
         }
     </section>
+    } @placeholder {
+    <div style="min-height: 800px"></div>
+    }
 </div>

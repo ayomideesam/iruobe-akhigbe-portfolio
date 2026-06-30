@@ -96,6 +96,7 @@
                     </section>
 
                     <!-- Skills Section with improved progress bars -->
+                    @defer (on viewport) {
                     <section class="skills-section">
                         <h3>SKILLS</h3>
                         <div class="skills-list">
@@ -115,6 +116,9 @@
                             }
                         </div>
                     </section>
+                    } @placeholder {
+                    <div style="min-height: 250px"></div>
+                    }
 
                     <!-- Tech I'm Watching Section -->
                     <section class="hobbies-section">
@@ -237,6 +241,7 @@
                     </section>
 
                     <!-- Employment History Section -->
+                    @defer (on viewport) {
                     <section class="employment-section">
                         <h3>EMPLOYMENT HISTORY</h3>
                         <div class="jobs-list">
@@ -324,6 +329,9 @@
                             }
                         </div>
                     </section>
+                    } @placeholder {
+                    <div style="min-height: 800px"></div>
+                    }
 
                     <!-- Education Section -->
                     <section class="education-section">

@@ -185,15 +185,16 @@ Replace all constructor injection with the `inject()` function. Empty constructo
 
 ---
 
-## Phase 8 — `@defer` Blocks (Performance)
+## Phase 8 — `@defer` Blocks (Performance) ✅ COMPLETE
 
-Defer non-critical sections so they hydrate after above-the-fold content is interactive.
+Defer non-critical sections so they render after above-the-fold content is interactive.
 
-- [ ] **Home — Projects grid**: wrap `.featured-projects` section in `@defer (on viewport)` with skeleton placeholder
-- [ ] **Home — Testimonials**: wrap testimonials section in `@defer (on viewport)`
-- [ ] **Home — Skills grid**: wrap `.skills-section` in `@defer (on viewport)`
-- [ ] **Projects page — project cards**: `@defer (on viewport)` per card or for the whole grid
-- [ ] **Resume page**: defer the experience timeline and skills table sections
+- [x] **Home — Projects grid**: `@defer (on viewport)` wrapping `<section class="featured-projects">` with 650px placeholder ✅ 2026-06-30
+- [x] **Home — Skills grid**: `@defer (on viewport)` wrapping `<section class="skills-section">` with 550px placeholder ✅ 2026-06-30
+- [x] **Home — Testimonials**: `@defer (on viewport)` wrapping `<section class="testimonials-section">` with 500px placeholder ✅ 2026-06-30
+- [x] **Projects page — project cards**: `@defer (on viewport)` wrapping entire `<section class="project-section">` (the full `@for` loop) with 800px placeholder ✅ 2026-06-30
+- [x] **Resume page — Skills**: `@defer (on viewport)` wrapping `<section class="skills-section">` with 250px placeholder ✅ 2026-06-30
+- [x] **Resume page — Employment timeline**: `@defer (on viewport)` wrapping `<section class="employment-section">` with 800px placeholder ✅ 2026-06-30
 
 ---
 
@@ -223,7 +224,7 @@ Run after Phase 1 and again after all phases complete.
 
 - [x] `npm run build` — zero errors ✅ 2026-06-30 (post Phase 2–5)
 - [x] `npm run build` — zero errors ✅ 2026-06-30 (post Phase 4 — all control flow conversions)
-- [ ] `npm run build` — zero errors (final, post Phase 8)
+- [x] `npm run build` — zero errors ✅ 2026-06-30 (post Phase 8 — all defer blocks)
 - [ ] Dev server loads: `npm start`
 - [ ] **Desktop (1440px):** Home, Projects, Contact, Resume all render correctly
 - [ ] **Tablet (1024px / 820px / 768px):** Hamburger menu, Lagos status, project cards
