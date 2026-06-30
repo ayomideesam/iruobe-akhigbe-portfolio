@@ -1,0 +1,163 @@
+:host {
+    font-family: "Sora", serif;
+}
+
+.companies-section {
+    padding: 3.5rem 0 1.5rem;
+    overflow: hidden;
+    /* background: var(--background-secondary); */
+    border-radius: 0.5rem;
+    margin-bottom: 2rem;
+}
+
+.section-title {
+    text-align: center;
+    font-size: 2rem;
+    margin: 0;
+    color: var(--text-primary);
+}
+
+.logos-container {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+    margin-top: 1rem;
+    padding: 2rem 0;
+    border-radius: 1rem;
+}
+
+.logos-container::before,
+.logos-container::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    width: 200px;
+    height: 100%;
+    z-index: 2;
+    pointer-events: none;
+}
+
+.logos-container::before {
+    left: 0;
+    background: linear-gradient(to right, var(--background-color), transparent);
+}
+
+.logos-container::after {
+    right: 0;
+    background: linear-gradient(to left, var(--background-color), transparent);
+}
+
+.logos-track {
+    display: flex;
+    width: 310%;
+    cursor: pointer;
+    will-change: transform;
+}
+
+.logos-slide {
+    display: flex;
+    gap: 4rem;
+    padding: 0 2rem;
+    min-width: 50%;
+}
+
+/* .logos-slide {
+    display: flex;
+    gap: 2rem;
+    padding: 0 2rem;
+    min-width: 50%;
+    animation: scroll 30s linear infinite;
+} */
+
+.logos-track,
+.logos-slide {
+    transform: translateZ(0);
+    backface-visibility: hidden;
+}
+
+.logo-wrapper {
+    flex: 0 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 150px;
+    height: 60px;
+}
+
+.company-logo {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0.6;
+    transition: all 0.3s ease;
+}
+
+/* .company-logo:hover {
+    opacity: 1;
+    transform: scale(1.05);
+} */
+
+/* .company-name {
+    color: var(--text-primary);
+    font-size: 1rem;
+    font-weight: 500;
+} */
+
+.logo-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.2rem;
+    width: 100%;
+}
+
+.svg-container {
+    width: 48px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+::ng-deep .svg-container  svg {
+    height: 100%;
+    fill: none;
+}
+
+.company-name {
+    color: var(--text-primary);
+    font-size: 0.875rem;
+    font-weight: 500;
+    text-align: center;
+    opacity: 0;
+    transform: translateY(10px);
+    transition: all 0.3s ease;
+}
+
+.company-logo:hover {
+    opacity: 1;
+    transform: translateY(-5px);
+
+    .company-name {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes scroll {
+    0% {
+        transform: translateX(0);
+    }
+
+    100% {
+        transform: translateX(-100%);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .logos-slide {
+        animation: none;
+    }
+}

@@ -1,0 +1,33 @@
+.tooltip-container {
+   position: absolute;
+   margin: 0.35rem 0 1rem -2rem;
+   display: flex;
+   background-color: #5c5c5c;
+   color: #fff;
+   padding: 0.4rem 1rem;
+   border-radius: 0.5rem;
+   z-index: 1000;
+   opacity: 0;
+   transition: opacity 0.3s;
+   align-items: center;
+   justify-content: center;
+}
+
+.tooltip-container span {
+   font-family: Sora;
+   font-size: 11px;
+}
+
+.show-tooltip {
+   opacity: 1;
+}
+
+.tooltip-container.dark-theme {
+   background-color: #1a1a1a;
+   color: #fff;
+   border: 1px solid #333;
+}
+
+.tooltip-wrapper {
+   position: relative;
+}

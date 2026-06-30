@@ -1,0 +1,326 @@
+<div class="projects-container" [@fadeIn]>
+    <div class="page-sky" aria-hidden="true">
+        <span class="trail"></span>
+        <span class="trail"></span>
+        <span class="trail"></span>
+    </div>
+    <section class="about-section">
+        <h1>About my work<span class="accent-dot">.</span></h1>
+        <div class="about-text-container">
+            <p class="about-text about-text-highlight">{{aboutText.para1}}</p>
+            <p class="about-text">{{aboutText.para2}}</p>
+            <p class="about-text">{{aboutText.para3}}</p>
+            <p class="about-text about-text-emphasis">{{aboutText.para4}}</p>
+        </div>
+        <div class="scroll-container">
+            <div class="scroll-text" [@scrollTextAnimation]="scrollState">
+                <span>Scroll to explore projects</span>
+            </div>
+            <div class="scroll-line-wrapper">
+                <div class="scroll-line"></div>
+            </div>
+        </div>
+    </section>
+
+    <section class="project-section">
+        <div class="project-card" *ngFor="let project of projects" [id]="'project-' + project.id"
+            [@cardHover]="project.isHovered ? 'hover' : 'rest'" (mouseenter)="project.isHovered = true"
+            (mouseleave)="project.isHovered = false">
+            <div class="project-image-grid" [class.has-detail-panel]="project.stats?.length">
+                <div class="top">
+                    <div class="image-container top-left">
+                        <img [src]="project.images[0]" [alt]="project.title + ' preview 1'"
+                            (mouseenter)="onImageHover($event.target)" (mouseleave)="onImageLeave($event.target)">
+                    </div>
+                    <!-- <div class="animation-container top-right" *ngIf="project.id === 1">
+                        <div class="animated-element">
+                            <div class="data-flow"></div>
+                            <div class="ai-indicators"></div>
+                        </div>
+                    </div> -->
+                    <div class="animation-container top-right" *ngIf="project.id === 1">
+                        <div class="ai-network">
+                            <div class="network-nodes">
+                                <div class="node" *ngFor="let i of [1,2,3,4,5,6]">
+                                    <div class="core"></div>
+                                    <div class="pulse"></div>
+                                </div>
+                            </div>
+                            <div class="connections">
+                                <svg viewBox="0 0 100 100">
+                                    <path class="connection-lines" d="M20,20 L80,80" />
+                                    <path class="connection-lines" d="M20,80 L80,20" />
+                                    <path class="connection-lines" d="M50,10 L50,90" />
+                                    <path class="connection-lines" d="M10,50 L90,50" />
+                                    <path class="connection-lines" d="M20,50 L80,80" />
+                                    <path class="connection-lines" d="M20,50 L80,20" />
+                                </svg>
+                            </div>
+                            <div class="data-particles">
+                                <div class="particle" *ngFor="let i of [1,2,3,4,5,6,7,8]"></div>
+                            </div>
+                            <div class="glow-effects">
+                                <div class="glow" *ngFor="let i of [1,2,3]"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="animation-container top-right" *ngIf="project.id === 2">
+                        <div class="trade-animation">
+                            <div class="candlestick-wrapper">
+                                <div class="candlestick" *ngFor="let i of [1,2,3,4,5]"></div>
+                                <div class="chart-line" *ngFor="let i of [1,2,3]"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="animation-container top-right" *ngIf="project.id === 3">
+                        <div class="fraud-detection">
+                            <div class="detection-grid">
+                                <div class="transaction" *ngFor="let i of [1,2,3,4,5,6]">
+                                    <div class="status-indicator"></div>
+                                    <div class="transaction-line"></div>
+                                </div>
+                                <div class="detection-shield">
+                                    <div class="shield-outer"></div>
+                                    <div class="shield-inner"></div>
+                                    <div class="check-mark"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="animation-container top-right" *ngIf="project.id === 4">
+                        <div class="transfer-animation">
+                            <div class="money-particles">
+                                <div class="money-icon" *ngFor="let i of [1,2,3,4,5]">₦</div>
+                            </div>
+                            <div class="transfer-paths">
+                                <div class="path" *ngFor="let i of [1,2,3]">
+                                    <div class="transfer-dot"></div>
+                                </div>
+                            </div>
+                            <div class="devices">
+                                <div class="device source">
+                                    <div class="device-screen"></div>
+                                </div>
+                                <div class="device target">
+                                    <div class="device-screen"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="animation-container top-right" *ngIf="project.id === 6">
+                        <div class="cap-approval-flow">
+                            <div class="flow-stages">
+                                <div class="flow-node" *ngFor="let i of [1,2,3,4,5]">
+                                    <div class="node-dot"></div>
+                                    <div class="node-line"></div>
+                                </div>
+                                <div class="flow-node final">
+                                    <div class="node-dot approved"></div>
+                                </div>
+                            </div>
+                            <div class="flow-document">
+                                <div class="doc-lines">
+                                    <div class="doc-line" *ngFor="let i of [1,2,3]"></div>
+                                </div>
+                            </div>
+                            <div class="flow-stamp">
+                                <div class="stamp-outer"></div>
+                                <div class="stamp-inner"></div>
+                                <div class="stamp-text"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="animation-container top-right" *ngIf="project.id === 5">
+                        <div class="xpath-data-flow">
+                            <div class="data-records">
+                                <div class="record" *ngFor="let i of [1,2,3,4]">
+                                    <div class="record-id"></div>
+                                    <div class="record-data">
+                                        <div class="data-line"></div>
+                                        <div class="data-line"></div>
+                                    </div>
+                                    <div class="validation-check"></div>
+                                </div>
+                            </div>
+                            <div class="branch-network">
+                                <div class="branch-node" *ngFor="let i of [1,2,3,4,5,6]">
+                                    <div class="connection-line"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="bottom">
+                    <div class="animation-container bottom-left" *ngIf="project.id === 1">
+                        <div class="animated-pattern">
+                            <div class="circle"></div>
+                            <div class="circle"></div>
+                            <div class="circle"></div>
+                            <div class="circle"></div>
+                            <div class="circle"></div>
+                        </div>
+                    </div>
+                    <div class="animation-container bottom-left" *ngIf="project.id === 2">
+                        <div class="trade-pattern">
+                            <div class="market-pulse">
+                                <div class="price-bar" *ngFor="let i of [1,2,3,4,5]"></div>
+                            </div>
+                            <div class="trend-lines">
+                                <div class="trend-line" *ngFor="let i of [1,2,3]"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="animation-container bottom-left" *ngIf="project.id === 3">
+                        <div class="fingerprint-scan">
+                            <svg viewBox="0 0 192 192" class="fingerprint-icon">
+                                <path class="fingerprint-path"
+                                    d="M140.424 38.019a3.6 3.6 0 0 1-1.777-.462C123.81 29.934 110.983 26.7 95.528 26.7c-15.223 0-29.75 3.619-42.964 10.857-1.854 1.001-4.172.308-5.254-1.54-1.005-1.848-.31-4.235 1.545-5.236C63.228 22.85 78.992 19 95.528 19c16.537 0 30.91 3.619 46.673 11.55 1.932 1.155 2.628 3.465 1.623 5.313-.695 1.386-1.932 2.156-3.4 2.156ZM29.846 78.444a4.036 4.036 0 0 1-2.24-.693c-1.624-1.232-2.165-3.619-.928-5.39 7.65-10.78 17.386-19.25 28.977-25.179 24.419-12.474 55.328-12.551 79.669-.077 11.591 5.929 21.327 14.245 28.977 25.025 1.237 1.694.773 4.158-.927 5.39-1.777 1.232-4.173.847-5.409-.77-6.955-9.856-15.764-17.479-26.196-22.792-22.177-11.319-50.536-11.319-72.636.077-10.51 5.39-19.319 13.09-26.273 22.715-.618 1.155-1.778 1.694-3.014 1.694Z" />
+                                <path class="fingerprint-path"
+                                    d="M78.142 171.383c-1.005 0-1.932-.385-2.705-1.155-6.722-6.699-10.354-11.011-15.532-20.328-5.332-9.471-8.113-21.021-8.113-33.418 0-22.869 19.627-41.503 43.736-41.503 24.11 0 43.737 18.634 43.737 41.503 0 1.021-.407 2-1.132 2.722a3.87 3.87 0 0 1-5.464 0 3.844 3.844 0 0 1-1.131-2.722c0-18.634-16.15-33.803-36.01-33.803-19.859 0-36.01 15.169-36.01 33.803 0 11.088 2.474 21.329 7.187 29.568 4.946 8.932 8.346 12.705 14.296 18.711a3.943 3.943 0 0 1 0 5.467c-.927.77-1.855 1.155-2.86 1.155Z" />
+                                <path class="fingerprint-path"
+                                    d="M118.015 173h-1.005c-12.286-3.542-20.323-8.085-28.745-16.324-10.819-10.626-16.769-24.948-16.769-40.194 0-12.474 10.664-22.638 23.8-22.638 13.137 0 23.801 10.164 23.801 22.638 0 8.239 7.341 14.938 16.072 14.938 8.887 0 16.073-6.699 16.073-14.938 0-29.029-25.114-52.591-56.023-52.591-21.945 0-42.191 12.166-51.077 31.031-3.014 6.237-4.56 13.552-4.56 21.56 0 6.006.541 15.477 5.178 27.797.773 2.002-.232 4.235-2.241 4.928-2.01.693-4.25-.308-4.946-2.233-3.863-10.087-5.64-20.174-5.64-30.492 0-9.24 1.777-17.633 5.254-24.948 10.277-21.483 33.073-35.42 58.032-35.42 35.082 0 63.751 27.027 63.751 60.291 0 12.474-10.664 22.638-23.801 22.638-13.136 0-23.8-10.164-23.8-22.638 0-8.239-7.186-14.938-16.073-14.938-8.886 0-16.072 6.699-16.072 14.938 0 13.167 5.1 25.487 14.45 34.727 7.341 7.238 14.373 11.242 25.268 14.168 2.086.616 3.246 2.772 2.705 4.774-.387 1.771-2.009 2.926-3.632 2.926Z" />
+                            </svg>
+                            <div class="scan-line"></div>
+                        </div>
+                    </div>
+                    <div class="animation-container bottom-left" *ngIf="project.id === 4">
+                        <div class="payment-animation">
+                            <div class="transaction-cards">
+                                <div class="bank-card" *ngFor="let i of [1,2,3]">
+                                    <div class="card-chip"></div>
+                                    <div class="card-details">
+                                        <div class="card-number"></div>
+                                        <div class="card-date"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="progress-indicators">
+                                <div class="progress-track">
+                                    <div class="progress-bar"></div>
+                                </div>
+                                <div class="status-dots">
+                                    <div class="dot" *ngFor="let i of [1,2,3,4]"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="animation-container bottom-left" *ngIf="project.id === 6">
+                        <div class="cap-committee">
+                            <div class="committee-members">
+                                <div class="member" *ngFor="let i of [1,2,3,4,5,6]">
+                                    <div class="member-avatar"></div>
+                                    <div class="member-vote"></div>
+                                </div>
+                            </div>
+                            <div class="vote-progress">
+                                <div class="vote-track">
+                                    <div class="vote-fill"></div>
+                                </div>
+                                <div class="quorum-line"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="animation-container bottom-left" *ngIf="project.id === 5">
+                        <div class="xpath-payment">
+                            <div class="payment-flow">
+                                <div class="receipt-generator">
+                                    <div class="receipt" *ngFor="let i of [1,2,3]">
+                                        <div class="receipt-header"></div>
+                                        <div class="receipt-body"></div>
+                                    </div>
+                                </div>
+                                <div class="splitting-visualization">
+                                    <div class="split-container">
+                                        <div class="split-segment" *ngFor="let i of [1,2,3]"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- <div class="fraud-animation">
+                            <div class="security-grid">
+                                <div class="grid-cell" *ngFor="let i of [1,2,3,4,5,6,7,8,9]"></div>
+                            </div>
+                            <div class="scan-line"></div>
+                            <div class="alert-circles">
+                                <div class="alert-circle" *ngFor="let i of [1,2,3]"></div>
+                            </div>
+                        </div> -->
+                    </div>
+                    <div class="image-container bottom-right">
+                        <img [src]="project.images[1]" [alt]="project.title + ' preview 2'"
+                            (mouseenter)="onImageHover($event.target)" (mouseleave)="onImageLeave($event.target)">
+                    </div>
+                </div>
+
+                <!-- Dynamic detail panel for any project with stats -->
+                <div class="cap-detail-panel" *ngIf="project.stats?.length">
+                    <div class="cap-stats">
+                        <div class="cap-stat" *ngFor="let stat of project.stats">
+                            <span class="cap-stat-value">{{stat.value}}</span>
+                            <span class="cap-stat-label">{{stat.label}}</span>
+                        </div>
+                    </div>
+
+                    <div class="cap-journey" *ngIf="project.pipeline?.length">
+                        <h4 class="cap-journey-title">{{project.pipelineLabel || 'Project Pipeline'}}</h4>
+                        <p class="cap-journey-subtitle">{{getPipelineSubtitle(project.pipeline)}}</p>
+                        <ul class="cap-pipeline">
+                            <li class="cap-step" *ngFor="let step of project.pipeline; let last = last"
+                                [class.cap-step-final]="last">
+                                <span class="cap-step-marker"></span>
+                                <div class="cap-step-body">
+                                    <span class="cap-step-name">{{step.name}}</span>
+                                    <span class="cap-step-meta">{{step.meta}}</span>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="project-content">
+                <h2>{{project.title}}</h2>
+                <p class="project-description">{{project.description}}</p>
+
+                <div class="tech-stack">
+                    <span *ngFor="let tech of project.techStack" class="tech-badge"
+                        [style.backgroundColor]="tech.color + '20'" [style.color]="tech.color">
+                        {{tech.name}}
+                    </span>
+                </div>
+
+                <!-- <div class="metrics-grid">
+                    <div class="metric" *ngFor="let metric of project.metrics">
+                        <span class="metric-value">{{metric.value}}</span>
+                        <span class="metric-label">{{metric.label}}</span>
+                    </div>
+                </div> -->
+
+                <div class="achievements">
+                    <h3>Key Achievements</h3>
+                    <ul>
+                        <li *ngFor="let achievement of project.achievements">
+                            {{achievement}}
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="project-links">
+                    <span class="project-private-badge">
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none">
+                            <rect x="3" y="11" width="18" height="11" rx="2" stroke="currentColor" stroke-width="2"/>
+                            <path d="M7 11V7a5 5 0 0 1 10 0v4" stroke="currentColor" stroke-width="2"/>
+                        </svg>
+                        Private Codebase
+                    </span>
+                    <a [href]="githubUrl" target="_blank" rel="noopener noreferrer" class="project-github-link">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0 1 12 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/>
+                        </svg>
+                        View GitHub Profile
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>

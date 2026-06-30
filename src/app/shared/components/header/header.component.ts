@@ -1,0 +1,150 @@
+// header.component.ts
+import { Component, HostListener, OnInit } from '@angular/core';
+import { NavigationEnd, Router } from '@angular/router';
+import { ThemeService } from 'src/app/core/services/theme.service';
+import { trigger, state, style, animate, transition } from '@angular/animations';
+import { interval, takeUntil } from 'rxjs';
+import { SubscriptionManagementDirective } from 'src/app/core/directives/unsubscribe.directive';
+
+@Component({
+    selector: 'app-header',
+    template: `
+    <header [class.scrolled]="isScrolled" [ngClass]="{'dark-theme': isDarkTheme}">
+      <nav class="nav-wrapper">
+        <a class="brand" routerLink="/" (click)="onLinkClick()">
+          <div class="brand-name">Akhigbe Iruobe</div>
+          <div class="brand-badge-row">
+            <div class="brand-title">Senior Frontend Engineer</div>
+            <span class="nav-available-badge">
+              <span class="nav-available-dot"></span>
+              Available
+            </span>
+          </div>
+        </a>
+
+        <div class="nav-content" [class.active]="isMenuOpen">
+          <div class="nav-links">
+            <a routerLink="/" 
+               routerLinkActive="active" 
+               [routerLinkActiveOptions]="{exact: true}"
+               (click)="onLinkClick()">Home</a>
+            <a routerLink="/projects" 
+               routerLinkActive="active"
+               (click)="onLinkClick()">Projects</a>
+            <a routerLink="/contact" 
+               routerLinkActive="active"
+               (click)="onLinkClick()">Contact</a>
+            <a routerLink="/resume" 
+               routerLinkActive="active"
+               (click)="onLinkClick()">Resume</a>
+            <div class="tooltip-wrapper">
+              <a href="https://www.youtube.com/@AyomideIruobe" 
+                target="_blank" 
+                class="youtube-link"
+                (mouseenter)="youtubeTooltipShow = true"
+                (mouseleave)="youtubeTooltipShow = false"
+                (click)="closeMenu()">
+                <svg viewBox="0 0 24 24" class="youtube-icon">
+                  <path fill="currentColor" d="M23.5 6.2c-.3-1.1-1.1-1.9-2.2-2.2C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.3.5c-1.1.3-1.9 1.1-2.2 2.2C0 8 0 12 0 12s0 4 .5 5.8c.3 1.1 1.1 1.9 2.2 2.2 1.8.5 9.3.5 9.3.5s7.5 0 9.3-.5c1.1-.3 1.9-1.1 2.2-2.2.5-1.8.5-5.8.5-5.8s0-4-.5-5.8zM9.5 15.5v-7l6.2 3.5-6.2 3.5z"/>
+                </svg>
+                  YouTube
+              </a>
+              <app-tooltip [text]="'Subscribe to my channel🙏🙏🙏'" [show]="youtubeTooltipShow"></app-tooltip>
+            </div>
+          </div>
+
+          <div class="nav-end">
+          <div class="nav-clock" aria-label="Your local time">
+            <span class="nav-clock-dot"></span>
+            <span class="nav-clock-time">{{currentTime}}</span>
+          </div>
+          <div class="tooltip-wrapper">
+            <app-theme-toggle
+              (mouseenter)="themeTooltipShow = true"
+              (mouseleave)="themeTooltipShow = false">
+            </app-theme-toggle>
+            <app-tooltip [text]="isDarkTheme ? 'Toggle light mode' : 'Toggle dark mode'" [show]="themeTooltipShow"></app-tooltip>
+          </div>
+          </div>
+        </div>
+
+        <button class="menu-toggle" 
+                [class.active]="isMenuOpen"
+                (click)="toggleMenu()"
+                aria-label="Toggle menu">
+          <span class="line"></span>
+          <span class="line"></span>
+          <span class="line"></span>
+        </button>
+      </nav>
+    </header>
+  `,
+    styleUrls: ['./header.component.css'],
+    animations: [
+        trigger('fadeSlideDown', [
+            transition(':enter', [
+                style({ transform: 'translateY(-10px)', opacity: 0 }),
+                animate('400ms cubic-bezier(0.35, 0, 0.25, 1)', style({ transform: 'translateY(0)', opacity: 1 }))
+            ])
+        ])
+    ],
+    standalone: false
+})
+export class HeaderComponent extends SubscriptionManagementDirective implements OnInit {
+  youtubeTooltipShow = false;
+  themeTooltipShow = false;
+  isDarkTheme = false;
+  isScrolled = false;
+  isMenuOpen = false;
+  currentTime = '';
+  currentTimezone = '';
+
+  constructor(
+    private router: Router,
+    private themeService: ThemeService
+  ) {
+    super();
+    // Subscribe to router events to handle navigation
+    this.router.events.pipe(
+      takeUntil(this.unSubscribe)
+    ).subscribe((event) => {
+      if (event instanceof NavigationEnd) {
+        window.scrollTo(0, 0);
+        this.closeMenu(); // Close menu after navigation
+      }
+    });
+  }
+
+  ngOnInit() {
+    this.themeService.isDarkTheme$.pipe(takeUntil(this.unSubscribe)).subscribe(
+      isDark => this.isDarkTheme = isDark
+    );
+    this.updateClock();
+    interval(1000).pipe(takeUntil(this.unSubscribe)).subscribe(() => this.updateClock());
+  }
+
+  private updateClock(): void {
+    const now = new Date();
+    this.currentTime = now.toLocaleTimeString('en', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true });
+  }
+
+  @HostListener('window:scroll')
+  onWindowScroll() {
+    this.isScrolled = window.scrollY > 20;
+  }
+
+  toggleMenu() {
+    this.isMenuOpen = !this.isMenuOpen;
+    document.body.style.overflow = this.isMenuOpen ? 'hidden' : '';
+  }
+
+  closeMenu() {
+    this.isMenuOpen = false;
+    document.body.style.overflow = '';
+  }
+
+  onLinkClick() {
+    window.scrollTo(0, 0);
+    this.closeMenu();
+  }
+}

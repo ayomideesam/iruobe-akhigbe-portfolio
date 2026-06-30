@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://iruobeakhigbe.netlify.app/sitemap.xml

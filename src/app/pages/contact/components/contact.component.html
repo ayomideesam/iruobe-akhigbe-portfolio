@@ -1,0 +1,229 @@
+<!-- contact.component.html -->
+<div class="contact-container" [@fadeInUp]>
+    <div class="page-sky" aria-hidden="true">
+        <span class="trail"></span>
+        <span class="trail"></span>
+        <span class="trail"></span>
+    </div>
+    <section class="contact-hero">
+        <h1 class="contact-title">
+            Let's Create Something
+            <span class="gradient-text">Extraordinary</span>
+            <span class="accent-dot">..</span>
+        </h1>
+        <p class="contact-subtitle">
+            I'm actively looking for Senior Frontend Engineer and Tech Lead roles — UK, US, or remote.
+            Also open to contract engagements and consulting. Let's talk.
+        </p>
+
+        <!-- Availability info bar -->
+        <div class="contact-info-bar">
+            <div class="info-chip status-chip">
+                <span class="info-status-dot"></span>
+                Open to opportunities
+            </div>
+            <div class="info-chip">
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                Lagos, Nigeria (WAT — UTC+1)
+            </div>
+            <div class="info-chip">
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                Replies within 24 hours
+            </div>
+            <div class="info-chip">
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+                Open to UK / US relocation
+            </div>
+        </div>
+    </section>
+
+    <div class="contact-content">
+        <!-- Schedule a call — Calendly CTA -->
+        <section class="contact-schedule">
+            <div class="schedule-card">
+                <div class="schedule-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                </div>
+                <div class="schedule-content">
+                    <h3 class="schedule-title">Book a 30-Minute Intro Call</h3>
+                    <p class="schedule-desc">Prefer a conversation? Skip the back-and-forth — pick a slot that works for you and let's talk directly about the role or project.</p>
+                </div>
+                <a href="https://calendly.com/iruobeakhigbe/30min" target="_blank" rel="noopener noreferrer" class="schedule-btn">
+                    Schedule a Call
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                </a>
+            </div>
+        </section>
+
+        <!-- Contact Methods Grid -->
+        <section class="contact-methods">
+            <div class="methods-grid">
+                <a *ngFor="let method of contactMethods" [href]="method.link" target="_blank"
+                    class="method-card" [ngClass]="method.colorClass"
+                    [@methodHover]="method.isHovered ? 'hovered' : 'rest'" (mouseenter)="method.isHovered = true"
+                    (mouseleave)="method.isHovered = false">
+                    <div class="method-icon" [innerHTML]="method.icon | safeHtml"></div>
+                    <div class="method-content">
+                        <h3>{{method.title}}</h3>
+                        <p>{{method.description}}</p>
+                        <span class="method-action">
+                            {{method.action}}
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round">
+                                <path d="M5 12h14M12 5l7 7-7 7" />
+                            </svg>
+                        </span>
+                    </div>
+                    <div class="hover-gradient"></div>
+                </a>
+            </div>
+        </section>
+
+        <!-- Contact Form Section -->
+        <section class="form-section" [@formAnimation]>
+            <div class="form-container">
+                <h2>Send me a message</h2>
+                <p class="form-timezone-note">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                    Lagos time (WAT, UTC+1) — I typically reply within 24 hours
+                </p>
+                <form #emailForm="ngForm" [formGroup]="contactForm" (ngSubmit)="onSubmit($event)" class="contact-form" method="POST" name="contact">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="name">Name</label>
+                            <div class="input-wrapper">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round">
+                                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                                    <circle cx="12" cy="7" r="4"></circle>
+                                </svg>
+                                <input type="text" id="name" name="from_name" formControlName="name" placeholder="Your name">
+                            </div>
+                            <div class="error-message"
+                                *ngIf="contactForm.controls['name'].touched && contactForm.controls['name'].invalid">
+                                Please enter your name
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="email">Email</label>
+                            <div class="input-wrapper">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round">
+                                    <path
+                                        d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z">
+                                    </path>
+                                    <polyline points="22,6 12,13 2,6"></polyline>
+                                </svg>
+                                <input type="email" id="email" name="from_email" formControlName="email"
+                                    placeholder="Your email">
+                            </div>
+                            <div class="error-message"
+                                *ngIf="contactForm.controls['email'].touched && contactForm.controls['email'].invalid">
+                                Please enter a valid email address
+                            </div>
+                        </div>
+
+                        <div class="form-group full-width">
+                            <label for="subject">Subject</label>
+                            <div class="input-wrapper">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round">
+                                    <line x1="4" y1="9" x2="20" y2="9"></line>
+                                    <line x1="4" y1="15" x2="20" y2="15"></line>
+                                    <line x1="4" y1="21" x2="20" y2="21"></line>
+                                    <line x1="4" y1="3" x2="20" y2="3"></line>
+                                </svg>
+                                <input type="text" id="subject" name="subject" formControlName="subject"
+                                    placeholder="Message subject">
+                            </div>
+                            <div class="error-message"
+                                *ngIf="contactForm.controls['subject'].touched && contactForm.controls['subject'].invalid">
+                                Please enter a subject
+                            </div>
+                        </div>
+
+                        <div class="form-group full-width">
+                            <label for="message">Message</label>
+                            <div class="input-wrapper">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round">
+                                    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                                </svg>
+                                <textarea id="message" name="message" formControlName="message" rows="5"
+                                    placeholder="Your message"></textarea>
+                            </div>
+                            <div class="error-message"
+                                *ngIf="contactForm.controls['message'].touched && contactForm.controls['message'].invalid">
+                                Please enter a message (minimum 10 characters)
+                            </div>
+                        </div>
+                    </div>
+
+                    <button type="submit" [disabled]="isSubmitting" class="submit-button">
+                        <span class="button-content">
+                            <span>{{isSubmitting ? 'Sending...' : 'Send Message'}}</span>
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <path
+                                    d="M22 12.5001C22 12.0087 21.9947 11.0172 21.9842 10.5244C21.9189 7.45886 21.8862 5.92609 20.7551 4.79066C19.6239 3.65523 18.0497 3.61568 14.9012 3.53657C12.9607 3.48781 11.0393 3.48781 9.09882 3.53656C5.95033 3.61566 4.37608 3.65521 3.24495 4.79065C2.11382 5.92608 2.08114 7.45885 2.01576 10.5244C1.99474 11.5101 1.99475 12.4899 2.01577 13.4756C2.08114 16.5412 2.11383 18.0739 3.24496 19.2094C4.37608 20.3448 5.95033 20.3843 9.09883 20.4634C9.90159 20.4836 10.7011 20.4954 11.5 20.4989"
+                                    stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                                <path d="M2 6L8.91302 9.92462C11.4387 11.3585 12.5613 11.3585 15.087 9.92462L22 6"
+                                    stroke="#fff" stroke-width="1.5" stroke-linejoin="round" />
+                                <path
+                                    d="M22 17.5L14 17.5M22 17.5C22 16.7998 20.0057 15.4915 19.5 15M22 17.5C22 18.2002 20.0057 19.5085 19.5 20"
+                                    stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                            </svg>
+                            <div class="loader" *ngIf="isSubmitting"></div>
+                        </span>
+                    </button>
+                </form>
+
+                <!-- Success Message -->
+                <div class="success-background" *ngIf="submitSuccess" @successMessageSlide>
+                    <button class="close-button" (click)="closeSuccessMessage()">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="18" y1="6" x2="6" y2="18"></line>
+                            <line x1="6" y1="6" x2="18" y2="18"></line>
+                        </svg>
+                    </button>
+                    <svg class="success-icon" [@checkmarkAnimation] xmlns="http://www.w3.org/2000/svg" width="32"
+                        height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                        <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                    </svg>
+                    <h3>Message Sent Successfully!</h3>
+                    <p>Thank you for reaching out{{submittedName ? ', ' + submittedName : ''}}. I'll get back to you
+                        soon.</p>
+                </div>
+
+                <!-- Add error message -->
+                <div class="error-background" *ngIf="showErrorMessage" @errorMessageSlide>
+                    <button class="close-button" (click)="closeErrorMessage()">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="18" y1="6" x2="6" y2="18"></line>
+                            <line x1="6" y1="6" x2="18" y2="18"></line>
+                        </svg>
+                    </button>
+                    <svg class="error-icon" [@errorAnimation] xmlns="http://www.w3.org/2000/svg" width="32" height="32"
+                        viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <line x1="15" y1="9" x2="9" y2="15"></line>
+                        <line x1="9" y1="9" x2="15" y2="15"></line>
+                    </svg>
+                    <h3>Message Failed to Send</h3>
+                    <p>Sorry, there was an error sending your message. Please try again later.</p>
+                </div>
+            </div>
+        </section>
+    </div>
+</div>

@@ -1,0 +1,967 @@
+/* contact.component.css */
+:host {
+    font-family: "Sora", serif;
+    display: block;
+}
+
+svg {
+    fill: none;
+}
+
+.method-icon svg {
+    fill: none;
+    stroke: transparent;
+    /* This will inherit the parent's text color */
+}
+
+.method-icon svg * {
+    fill: none;
+    stroke: currentColor;
+}
+
+.contact-container {
+    max-width: 1440px;
+    margin: 0 auto;
+    padding: 9.5rem 2rem 3rem;
+}
+
+/* Keep real content above the ambient shooting-star sky */
+.contact-container > *:not(.page-sky) {
+    position: relative;
+    z-index: 1;
+}
+
+/* Hero Section Styles */
+.contact-hero {
+    text-align: center;
+    margin-bottom: 4rem;
+}
+
+.contact-title {
+    font-size: 3.5rem;
+    font-weight: 700;
+    line-height: 1.2;
+    margin-bottom: 1.5rem;
+    font-family: "Outfit", "Sora", Verdana, Tahoma, sans-serif;
+}
+
+.gradient-text {
+    font-family: "Sora", Verdana, Tahoma, sans-serif;
+    display: block;
+    background: linear-gradient(45deg, var(--primary-color), var(--accent-color));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+
+.accent-dot {
+    color: var(--primary-color);
+    font-family: "Sora", Verdana, Tahoma, sans-serif;
+}
+
+.contact-subtitle {
+    font-size: 1.25rem;
+    color: var(--text-secondary);
+    max-width: 600px;
+    margin: 0 auto;
+    line-height: 1.6;
+}
+
+/* Contact Methods Grid */
+.contact-methods {
+    margin-bottom: 4rem;
+}
+
+.methods-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+    justify-content: center;
+}
+
+.method-card {
+    --card-accent: var(--primary-color);
+    --card-accent-rgb: var(--primary-rgb);
+    flex: 0 1 calc(33.33% - 1rem);
+    min-width: 260px;
+    position: relative;
+    padding: 2rem;
+    border-radius: 16px;
+    background: linear-gradient(rgba(var(--card-accent-rgb), 0.04), rgba(var(--card-accent-rgb), 0.04)), var(--card-background);
+    border-top: 3px solid var(--card-accent);
+    box-shadow: var(--shadow-sm);
+    text-decoration: none;
+    color: var(--text-primary);
+    overflow: hidden;
+    isolation: isolate;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Brand accent overrides per method */
+.method-email    { --card-accent: #22c55e; --card-accent-rgb: 34, 197, 94; }
+.method-linkedin { --card-accent: #0077b5; --card-accent-rgb: 0, 119, 181; }
+.method-github   { --card-accent: #8b5cf6; --card-accent-rgb: 139, 92, 246; }
+.method-whatsapp { --card-accent: #25D366; --card-accent-rgb: 37, 211, 102; }
+.method-twitter  { --card-accent: #1d9bf0; --card-accent-rgb: 29, 155, 240; }
+
+.method-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(45deg,
+            rgba(var(--card-accent-rgb), 0.12),
+            rgba(var(--card-accent-rgb), 0.05));
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.method-card:hover::before {
+    opacity: 1;
+}
+
+.method-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 32px rgba(var(--card-accent-rgb), 0.18);
+    border-top-color: var(--card-accent);
+}
+
+.method-icon {
+    width: 48px;
+    height: 48px;
+    margin-bottom: 1.5rem;
+    color: var(--card-accent);
+}
+
+.method-content h3 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+
+.method-content p {
+    color: var(--text-secondary);
+    margin-bottom: 1.5rem;
+    font-size: 0.95rem;
+}
+
+.method-action {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 500;
+    color: var(--card-accent);
+}
+
+.method-action svg {
+    transition: transform 0.3s ease;
+}
+
+.method-card:hover .method-action svg {
+    transform: translateX(5px);
+}
+
+/* Form Section Styles */
+.form-section {
+    border-radius: 24px;
+    padding: 3rem;
+    box-shadow: var(--shadow-lg);
+    font-family: "Macondo", "Sora", serif;
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+}
+
+:host-context(.dark-theme) .form-section::before {
+    background: radial-gradient(1200px circle at var(--x, 50%) var(--y, 50%),
+            rgba(var(--primary-rgb), 0.05) 0%,
+            rgba(var(--primary-rgb), 0.03) 20%,
+            rgba(var(--accent-rgb), 0.02) 40%,
+            transparent 60%);
+}
+
+.form-section::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(1200px circle at var(--x, 50%) var(--y, 50%),
+            rgba(var(--primary-rgb), 0.03) 0%,
+            rgba(var(--primary-rgb), 0.02) 20%,
+            rgba(var(--accent-rgb), 0.01) 40%,
+            transparent 60%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    z-index: -1;
+    mix-blend-mode: screen;
+    filter: blur(40px);
+}
+
+/* Remove existing ::before and ::after */
+/* Add new smoke effect layers */
+.form-section::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(1200px circle at var(--x, 50%) var(--y, 50%),
+            rgba(var(--primary-rgb), 0.03) 0%,
+            rgba(var(--primary-rgb), 0.02) 20%,
+            rgba(var(--accent-rgb), 0.01) 40%,
+            transparent 60%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    z-index: -1;
+    mix-blend-mode: screen;
+    filter: blur(40px);
+}
+
+.form-section::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(800px circle at var(--x, 50%) var(--y, 50%),
+            rgba(var(--accent-rgb), 0.04) 0%,
+            rgba(var(--accent-rgb), 0.02) 30%,
+            rgba(var(--primary-rgb), 0.01) 50%,
+            transparent 70%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    z-index: -1;
+    mix-blend-mode: multiply;
+    filter: blur(30px);
+}
+
+.form-section:hover::before,
+.form-section:hover::after {
+    opacity: 1;
+}
+
+.form-container {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.form-container h2 {
+    text-align: center;
+    margin-bottom: 3rem;
+    font-size: 2.5rem;
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2rem;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.form-group.full-width {
+    grid-column: span 2;
+}
+
+label {
+    font-size: 1.25rem;
+    font-weight: 500;
+    color: var(--text-primary);
+}
+
+.input-wrapper {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    transition: all 0.3s ease;
+}
+
+.input-wrapper::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    width: 0;
+    height: 2px;
+    background: var(--primary-color);
+    transition: all 0.3s ease;
+}
+
+.input-wrapper:focus-within::after {
+    width: 100%;
+    left: 0;
+    /* transform: scale(1.1); */
+    color: var(--primary-color);
+}
+
+.input-wrapper svg {
+    position: absolute;
+    left: 1rem;
+    color: var(--text-secondary);
+    pointer-events: none;
+    transition: color 0.3s ease;
+}
+
+input,
+textarea {
+    width: 100%;
+    padding: 1rem 1rem 1rem 3rem;
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    background: var(--background-color);
+    color: var(--text-primary);
+    font-family: inherit;
+    font-size: 1.2rem;
+    transition: all 0.3s ease;
+}
+
+input:focus,
+textarea:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(var(--primary-rgb), 0.1);
+    transform: translateY(-2px);
+}
+
+input:focus+svg,
+textarea:focus+svg {
+    color: var(--primary-color);
+}
+
+.error-message {
+    font-size: 1.2rem;
+    color: #ef4444;
+    font-family: 'Macondo';
+    transform-origin: left;
+    animation: errorShake 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes errorShake {
+
+    0%,
+    100% {
+        transform: translateX(0);
+    }
+
+    25% {
+        transform: translateX(-5px);
+    }
+
+    75% {
+        transform: translateX(5px);
+    }
+}
+
+.submit-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    margin-top: 2rem;
+    padding: 1.25rem;
+    border: none;
+    border-radius: 12px;
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+    color: white;
+    font-weight: 600;
+    isolation: isolate;
+}
+
+.submit-button::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(45deg,
+            var(--primary-color),
+            rgba(var(--primary-rgb), 0.9));
+    transition: opacity 0.5s ease;
+    z-index: -1;
+}
+
+.submit-button::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(45deg,
+            var(--primary-color),
+            rgba(var(--accent-rgb), 0.9));
+    opacity: 0;
+    transition: opacity 0.5s ease;
+    z-index: -1;
+}
+
+.submit-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 16px rgba(var(--primary-rgb), 0.2);
+}
+
+.submit-button:hover::before {
+    opacity: 0;
+}
+
+.submit-button:hover::after {
+    opacity: 1;
+}
+
+.button-content {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    position: relative;
+    z-index: 1;
+}
+
+.button-content span {
+    font-family: "Macondo", "Sora", serif;
+    font-size: 1.5rem;
+}
+
+.loader {
+    width: 20px;
+    height: 20px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-top-color: white;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* Success Message Styles */
+.success-message,
+.error-message {
+    position: relative;
+    border-radius: 16px;
+    overflow: hidden;
+}
+
+.success-message::before,
+.error-message::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at center,
+            rgba(var(--primary-rgb), 0.1),
+            transparent 70%);
+    animation: pulse 2s infinite;
+}
+
+.success-background,
+.error-background {
+    position: relative;
+    text-align: center;
+    padding: 2.5rem;
+    border-radius: 16px;
+    background: transparent;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    transition: all 0.3s ease;
+    z-index: 1;
+    height: auto;
+    margin-top: 2rem;
+}
+
+.contact-form {
+    margin-bottom: 0;
+}
+
+.success-background {
+    background: rgba(var(--primary-rgb), 0.1);
+    border: 1px solid rgba(var(--primary-rgb), 0.2);
+}
+
+.error-background {
+    background: rgba(239, 68, 68, 0.1);
+    border: 1px solid rgba(239, 68, 68, 0.2);
+}
+
+/* Remove inherited smoky effects */
+.success-background::before,
+.error-background::before {
+    display: none;
+}
+
+/* Add shimmer effect for success/error backgrounds */
+.success-background::after,
+.error-background::after {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    /* width: 200%; */
+    /* height: 200%; */
+    background: linear-gradient(45deg,
+            transparent,
+            rgba(255, 255, 255, 0.1),
+            transparent);
+    transform: translateX(-100%) rotate(45deg);
+    animation: shimmer 3s infinite;
+}
+
+@keyframes shimmer {
+    0% {
+        transform: translateX(-100%) rotate(45deg);
+    }
+
+    100% {
+        transform: translateX(100%) rotate(45deg);
+    }
+}
+
+.success-background h3,
+.error-background h3 {
+    position: relative;
+    z-index: 1;
+    color: var(--text-primary);
+    margin: 1rem 0 0.5rem;
+    font-size: 1.5rem;
+    font-weight: 600;
+}
+
+.success-background p,
+.error-background p {
+    position: relative;
+    z-index: 1;
+    color: var(--text-secondary);
+    font-size: 1.1rem;
+    line-height: 1.6;
+}
+
+.success-background .success-icon,
+.error-background .error-icon {
+    position: relative;
+    z-index: 1;
+    width: 48px;
+    height: 48px;
+    margin-bottom: 1rem;
+}
+
+.success-background .success-icon {
+    color: var(--primary-color);
+}
+
+.error-background .error-icon {
+    color: rgb(239, 68, 68);
+}
+
+.close-button {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background: transparent;
+    border: none;
+    color: var(--text-secondary);
+    cursor: pointer;
+    padding: 0.5rem;
+    transition: all 0.3s ease;
+}
+
+.close-button:hover {
+    color: var(--text-primary);
+    transform: rotate(90deg);
+}
+
+.success-icon {
+    stroke: var(--primary-color);
+    stroke-width: 2;
+    fill: none;
+    width: 48px;
+    height: 48px;
+    margin-bottom: 1rem;
+}
+
+.success-icon path {
+    stroke-dasharray: 60;
+    stroke-dashoffset: 60;
+    animation: drawCircle 0.6s ease forwards;
+}
+
+.success-icon polyline {
+    stroke-dasharray: 30;
+    stroke-dashoffset: 30;
+    animation: drawCheck 0.4s 0.6s ease forwards;
+}
+
+@keyframes drawCircle {
+    to {
+        stroke-dashoffset: 0;
+    }
+}
+
+/* Add these new animations */
+@keyframes pulse {
+
+    0%,
+    100% {
+        transform: scale(1);
+        opacity: 0.5;
+    }
+
+    50% {
+        transform: scale(1.2);
+        opacity: 0.8;
+    }
+}
+
+.error-icon {
+    animation: errorPulse 1s ease infinite;
+}
+
+@keyframes drawCheck {
+    to {
+        stroke-dashoffset: 0;
+    }
+}
+
+@keyframes errorPulse {
+
+    0%,
+    100% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.1);
+    }
+}
+
+/* Dark Mode Adjustments */
+.dark-theme .method-card::before {
+    background: linear-gradient(45deg,
+            rgba(var(--card-accent-rgb), 0.18),
+            rgba(var(--card-accent-rgb), 0.08));
+}
+
+.dark-theme .success-background {
+    background: rgba(var(--primary-rgb), 0.15);
+    border-color: rgba(var(--primary-rgb), 0.25);
+}
+
+.dark-theme .error-background {
+    background: rgba(239, 68, 68, 0.15);
+    border-color: rgba(239, 68, 68, 0.25);
+}
+
+.dark-theme input,
+.dark-theme textarea {
+    background: var(--background-color);
+}
+
+.dark-theme .success-message {
+    background: rgba(var(--primary-rgb), 0.15);
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+    .contact-title {
+        font-size: 3rem;
+    }
+
+    .method-card {
+        flex: 0 1 calc(50% - 0.75rem);
+    }
+}
+
+@media (max-width: 640px) {
+    .method-card {
+        flex: 0 1 100%;
+    }
+}
+
+@media (max-width: 768px) {
+    .contact-container {
+        padding: 7rem 0.5rem 0;
+    }
+
+    .contact-title {
+        font-size: 2.5rem;
+    }
+
+    .contact-subtitle {
+        font-size: 1.1rem;
+    }
+
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .form-group.full-width {
+        grid-column: auto;
+    }
+
+    .form-section {
+        background: var(--background-secondary);
+        padding: 2rem 1.5rem;
+    }
+
+    .success-background,
+    .error-background {
+        padding: 2rem 1.5rem;
+        margin-top: 1.5rem;
+    }
+
+    .success-background h3,
+    .error-background h3 {
+        font-size: 1.25rem;
+    }
+
+    .success-background p,
+    .error-background p {
+        font-size: 1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .contact-container {
+        padding: 7rem 0 0;
+    }
+
+    .form-section {
+        padding: 2rem 1rem;
+    }
+
+    .contact-title {
+        font-size: 2rem;
+    }
+
+    .method-card {
+        padding: 1.5rem;
+    }
+}
+
+/* Touch Device Optimizations */
+@media (hover: none) {
+    .method-card:active {
+        transform: scale(0.98);
+    }
+
+    .submit-button:active {
+        transform: scale(0.98);
+    }
+}
+
+/* ─── Contact Info Bar ─────────────────────────────────────── */
+.contact-info-bar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    margin-top: 2rem;
+}
+
+.info-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.45rem 1rem;
+    border-radius: 999px;
+    background: rgba(var(--primary-rgb), 0.08);
+    border: 1px solid rgba(var(--primary-rgb), 0.18);
+    color: var(--text-secondary);
+    font-size: 0.85rem;
+    font-weight: 500;
+    letter-spacing: 0.01em;
+    white-space: nowrap;
+    transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+    cursor: default;
+}
+
+.info-chip:hover {
+    transform: translateY(-2px);
+    background: rgba(var(--primary-rgb), 0.13);
+    border-color: rgba(var(--primary-rgb), 0.32);
+    box-shadow: 0 4px 14px rgba(var(--primary-rgb), 0.12);
+}
+
+.info-chip svg {
+    flex-shrink: 0;
+    color: var(--primary-color);
+    opacity: 0.85;
+}
+
+.status-chip {
+    background: rgba(34, 197, 94, 0.1);
+    border-color: rgba(34, 197, 94, 0.25);
+    color: #22c55e;
+}
+
+.status-chip:hover {
+    background: rgba(34, 197, 94, 0.16);
+    border-color: rgba(34, 197, 94, 0.45);
+    box-shadow: 0 4px 14px rgba(34, 197, 94, 0.18);
+}
+
+.info-status-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: #22c55e;
+    animation: statusPulse 2.2s ease-in-out infinite;
+    flex-shrink: 0;
+}
+
+@keyframes statusPulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.55; transform: scale(1.25); }
+}
+
+/* ─── Schedule a Call Section ──────────────────────────────── */
+.contact-schedule {
+    margin-bottom: 2rem;
+}
+
+.schedule-card {
+    display: flex;
+    align-items: center;
+    gap: 1.75rem;
+    padding: 1.75rem 2rem;
+    border-radius: 18px;
+    background: linear-gradient(135deg,
+        rgba(var(--primary-rgb), 0.07) 0%,
+        rgba(var(--accent-rgb), 0.05) 100%);
+    border: 1px solid rgba(var(--primary-rgb), 0.2);
+    position: relative;
+    overflow: hidden;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.schedule-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg,
+        rgba(var(--primary-rgb), 0.04) 0%,
+        rgba(var(--accent-rgb), 0.04) 100%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+}
+
+.schedule-card:hover {
+    border-color: rgba(var(--primary-rgb), 0.4);
+    box-shadow: 0 8px 32px rgba(var(--primary-rgb), 0.1);
+}
+
+.schedule-card:hover::before {
+    opacity: 1;
+}
+
+.schedule-icon {
+    flex-shrink: 0;
+    width: 56px;
+    height: 56px;
+    border-radius: 14px;
+    background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+}
+
+.schedule-content {
+    flex: 1;
+    min-width: 0;
+}
+
+.schedule-title {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin: 0 0 0.35rem;
+}
+
+.schedule-desc {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    line-height: 1.55;
+    margin: 0;
+}
+
+.schedule-btn {
+    flex-shrink: 0;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.5rem;
+    border-radius: 10px;
+    background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+    color: #fff;
+    font-size: 0.9rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    white-space: nowrap;
+    cursor: pointer;
+}
+
+.schedule-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(var(--primary-rgb), 0.35);
+}
+
+.schedule-btn svg {
+    transition: transform 0.2s ease;
+}
+
+.schedule-btn:hover svg {
+    transform: translateX(4px);
+}
+
+/* ─── Form timezone note ────────────────────────────────────── */
+.form-timezone-note {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+    font-size: 0.82rem;
+    color: var(--text-secondary);
+    opacity: 0.7;
+    margin: -1.5rem auto 2.5rem;
+    letter-spacing: 0.01em;
+}
+
+.form-timezone-note svg {
+    flex-shrink: 0;
+    color: var(--primary-color);
+    opacity: 0.8;
+}
+
+/* ─── Responsive overrides for new elements ─────────────────── */
+@media (max-width: 768px) {
+    .contact-info-bar {
+        gap: 0.5rem;
+    }
+
+    .info-chip {
+        font-size: 0.78rem;
+        padding: 0.4rem 0.85rem;
+    }
+
+    .schedule-card {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1.25rem;
+        padding: 1.5rem;
+    }
+
+    .schedule-btn {
+        width: 100%;
+        justify-content: center;
+    }
+}
+
+@media (max-width: 480px) {
+    .contact-info-bar {
+        flex-direction: column;
+        align-items: center;
+        gap: 0.5rem;
+    }
+}

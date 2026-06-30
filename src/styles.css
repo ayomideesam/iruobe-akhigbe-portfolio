@@ -1,1 +1,335 @@
 /* You can add global styles to this file, and also import other style files */
+/* styles.css */
+@import "src/assets/styles/font.css";
+
+html {
+    scroll-behavior: smooth;
+    /* Add this if you want to customize the scroll snap */
+    scroll-padding-top: 100px;
+    /* Should match the scroll-margin-top */
+}
+
+:root {
+    /* Light theme variables */
+    --primary-color: #4f46e5;
+    --primary-rgb: 79, 70, 229;
+    --accent-color: #06b6d4;
+    --accent-rgb: 6, 182, 212;
+
+    --background-color: #ffffff;
+    --background-secondary: #f8fafc;
+    --background-color-transparent: rgba(255, 255, 255, 0.8);
+
+    --text-primary: #0f172a;
+    --text-secondary: #475569;
+
+    --border-color: #e2e8f0;
+    --card-background: #ffffff;
+
+    --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.1);
+    --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
+    --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
+
+    /* HEADER */
+    --header-bg-scrolled: rgb(75 74 74 / 95%);
+    --header-line-bg: rgba(16, 16, 28, 0.95);
+
+    --cta-section-bg: linear-gradient(135deg, #ffffff 0%, var(--background-secondary) 100%);
+    --cta-section-box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
+        0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    --cta-gradient-overlay-bg: radial-gradient(circle at center,
+            rgba(var(--primary-rgb), 0.48) 1.5%,
+            rgba(var(--background-secondary), 3.43) 70%);
+    --cta-gradient-overlay-opacity: 1;
+
+    --cta-pattern-overlay-bg: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%239C92AC' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    --cta-pattern-overlay-opacity: 1;
+    --cta-title-color: #0f172a;
+
+    --skills-bg: #f8fafc;
+    --skills-card-bg: #ffffff;
+    --skills-hover-bg: rgba(79, 70, 229, 0.05);
+    --skills-border: rgba(79, 70, 229, 0.1);
+    --skills-progress-bg: rgba(79, 70, 229, 0.1);
+    --skills-progress-fill: linear-gradient(90deg, #4F46E5, #818CF8);
+
+    --exp-timeline-bg: rgba(79, 70, 229, 0.5);
+    --exp-card-bg: #ffffff;
+    --exp-badge-border: #ffffff;
+    --exp-hover-shadow: rgba(0, 0, 0, 0.1);
+}
+
+/* Dark theme variables */
+.dark-theme {
+    --primary-color: #818cf8;
+    --primary-rgb: 129, 140, 248;
+    --accent-color: #22d3ee;
+    --accent-rgb: 34, 211, 238;
+
+    --background-color: #0f172a;
+    --background-secondary: #1e293b;
+    --background-color-transparent: rgba(15, 23, 42, 0.8);
+
+    --text-primary: #f1f5f9;
+    --text-secondary: #94a3b8;
+
+    --border-color: #334155;
+    --card-background: #1e293b;
+
+    --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3);
+    --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.3);
+    --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.3);
+
+    /* HEADER */
+    --header-bg-scrolled: rgba(16, 16, 28, 0.95);
+    --header-line-bg: #f1f5f9;
+
+    /* CTA BG */
+    --cta-section-bg: linear-gradient(135deg, #1a1f35 0%, #0f1629 100%);
+    --cta-section-box-shadow: 0;
+    --cta-gradient-overlay-bg: radial-gradient(circle at center,
+            rgba(var(--primary-rgb), 0.15) 0%,
+            transparent 70%);
+    --cta-gradient-overlay-opacity: 0.5;
+
+    --cta-pattern-overlay-bg: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%239C92AC' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    ;
+    --cta-pattern-overlay-opacity: 1;
+
+    --cta-title-color: #f1f5f9;
+
+    --skills-bg: #1a1f35;
+    --skills-card-bg: #262d43;
+    --skills-hover-bg: rgba(99, 102, 241, 0.1);
+    --skills-border: rgba(99, 102, 241, 0.2);
+    --skills-progress-bg: rgba(99, 102, 241, 0.2);
+    --skills-progress-fill: linear-gradient(90deg, #818CF8, #6366F1);
+
+    --exp-timeline-bg: rgba(99, 102, 241, 0.4);
+    --exp-card-bg: #262d43;
+    --exp-badge-border: #1a1f35;
+    --exp-hover-shadow: rgba(0, 0, 0, 0.3);
+}
+
+/* Global styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html,
+body {
+    height: 100%;
+}
+
+body {
+    font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI',
+        Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue',
+        sans-serif;
+    background-color: var(--background-color);
+    color: var(--text-primary);
+    line-height: 1.5;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    color: var(--text-primary);
+    line-height: 1.2;
+}
+
+h2 {
+    font-size: 2.5rem;
+    margin-bottom: 2rem;
+    text-align: center;
+}
+
+/* Smooth scrolling */
+html {
+    scroll-behavior: smooth;
+}
+
+/* Selection styles */
+::selection {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+/* Scrollbar styles */
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--background-secondary);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--primary-color);
+    border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--accent-color);
+}
+
+/* Common animations */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Common utility classes */
+.gradient-text {
+    background: linear-gradient(45deg, var(--primary-color), var(--accent-color));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+
+.container {
+    max-width: 1440px;
+    margin: 0 auto;
+    padding: 0 2rem;
+}
+
+.text-center {
+    text-align: center;
+}
+
+.hidden {
+    display: none;
+}
+
+.visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    border: 0;
+}
+
+/* Accessibility: honour users who prefer reduced motion */
+@media (prefers-reduced-motion: reduce) {
+
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+}
+
+/* Ambient shooting-star sky — full-page layer reused across routes */
+.page-sky {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    overflow: hidden;
+}
+
+.page-sky .trail {
+    position: absolute;
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: rgba(var(--primary-rgb), 1);
+    box-shadow: 0 0 8px 2px rgba(var(--primary-rgb), 0.85);
+    opacity: 0;
+    rotate: 21deg;
+    animation: pageSkyShoot var(--shoot-dur, 13s) ease-out var(--shoot-delay, 4s) infinite;
+}
+
+.page-sky .trail::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    right: 3px;
+    width: 110px;
+    height: 2px;
+    transform: translateY(-50%);
+    border-radius: 2px;
+    background: linear-gradient(90deg, rgba(var(--primary-rgb), 0) 0%, rgba(var(--primary-rgb), 0.85) 100%);
+}
+
+.page-sky .trail:nth-child(1) {
+    top: 12%;
+    left: 5%;
+    --shoot-dur: 13s;
+    --shoot-delay: 3s;
+}
+
+.page-sky .trail:nth-child(2) {
+    top: 42%;
+    left: 58%;
+    --shoot-dur: 17s;
+    --shoot-delay: 9s;
+}
+
+.page-sky .trail:nth-child(3) {
+    top: 70%;
+    left: 20%;
+    --shoot-dur: 15s;
+    --shoot-delay: 6s;
+}
+
+@keyframes pageSkyShoot {
+    0% {
+        opacity: 0;
+        translate: 0 0;
+    }
+
+    2% {
+        opacity: 1;
+    }
+
+    13% {
+        opacity: 0;
+        translate: 420px 162px;
+    }
+
+    100% {
+        opacity: 0;
+        translate: 420px 162px;
+    }
+}

@@ -1,0 +1,367 @@
+<!-- resume.component.html -->
+<div class="resume-container" [ngClass]="{'dark-theme': isDarkTheme}">
+    <div class="page-sky" aria-hidden="true">
+        <span class="trail"></span>
+        <span class="trail"></span>
+        <span class="trail"></span>
+    </div>
+    <!-- Top Actions -->
+    <div class="resume-actions">
+        <button class="download-btn ats-btn" (click)="downloadATSFriendlyPDF()" title="ATS-Friendly PDF (Recommended for LinkedIn & Job Applications)">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                <polyline points="14 2 14 8 20 8" />
+                <line x1="16" y1="13" x2="8" y2="13" />
+                <line x1="16" y1="17" x2="8" y2="17" />
+                <polyline points="10 9 9 9 8 9" />
+            </svg>
+            Download ATS-Friendly PDF
+        </button>
+        <button class="download-btn visual-btn" (click)="downloadPDF()" title="Visual PDF (High Quality Design)">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                <polyline points="7 10 12 15 17 10" />
+                <line x1="12" y1="15" x2="12" y2="3" />
+            </svg>
+            Download Visual PDF
+        </button>
+    </div>
+
+    <div class="resume-main-content">
+        <div class="resume-bg-left"></div>
+        <!-- Main Resume Content -->
+        <div class="resume-content" id="resume-content">
+            <!-- Header Box that overlaps left section -->
+            <div class="resume-header-wrapper">
+                <header class="resume-header">
+                    <div class="header-box">
+                        <h1>AKHIGBE IRUOBE</h1>
+                        <h2>SENIOR FRONTEND ENGINEER</h2>
+                    </div>
+                </header>
+            </div>
+
+            <div class="resume-grid">
+                <!-- Left Column with colored background -->
+                <div class="resume-left">
+                    <!-- Details Section -->
+                    <section class="details-section">
+                        <h3>DETAILS</h3>
+                        <div class="details-content">
+                            <div class="detail-item">
+                                <span class="label">PHONE</span>
+                                <span>+2347038772342</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="label">EMAIL</span>
+                                <span>iruobeakhigbe&#64;gmail.com</span>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Links Section -->
+                    <section class="links-section">
+                        <h3>LINKS</h3>
+                        <div class="links-content">
+                            <div>
+                                <span>
+                                    LinkedIn:
+                                </span>
+                                <a href="https://linkedin.com/in/akhigbe-iruobe" target="_blank"
+                                    rel="noopener noreferrer" class="link-item">
+                                    IRUOBE AKHIGBE
+                                </a>
+                            </div>
+                            <div>
+                                <span>
+                                    Portfolio:
+                                </span>
+                                <a href="http://iruobeakhigbe.netlify.app/" target="_blank" rel="noopener noreferrer"
+                                    class="link-item second-item">
+                                    iruobeakhigbe.netlify.app
+                                </a>
+                            </div>
+                            <div>
+                                <span>
+                                    GitHub:
+                                </span>
+                                <a href="https://github.com/ayomideesam" target="_blank" rel="noopener noreferrer"
+                                    class="link-item second-item">
+                                    github.com/ayomideesam
+                                </a>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Skills Section with improved progress bars -->
+                    <section class="skills-section">
+                        <h3>SKILLS</h3>
+                        <div class="skills-list">
+                            <div class="skill-item" *ngFor="let skill of skills">
+                                <div class="skill-header">
+                                    <span class="skill-name">{{skill.name}}</span>
+                                    <span class="skill-level">{{skill.level}}%</span>
+                                </div>
+                                <div class="skill-progress">
+                                    <div class="progress-bar" [style.width.%]="skill.level"
+                                        [style.--progress-width]="skill.level + '%'" [class.animated]="isInView">
+                                        <div class="progress-fill"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Tech I'm Watching Section -->
+                    <section class="hobbies-section">
+                        <h3>TECH I'M WATCHING</h3>
+                        <div class="hobbies-list">
+                            <div class="hobby-item">
+                                <div class="hobby-icon">⚡</div>
+                                <span>Angular 21 Signals</span>
+                            </div>
+                            <div class="hobby-item">
+                                <div class="hobby-icon">🤖</div>
+                                <span>AI-Assisted Dev</span>
+                            </div>
+                            <div class="hobby-item">
+                                <div class="hobby-icon">🦀</div>
+                                <span>ml5.js</span>
+                            </div>
+                            <div class="hobby-item">
+                                <div class="hobby-icon">🧪</div>
+                                <span>Playwright / Vitest</span>
+                            </div>
+                            <div class="hobby-item">
+                                <div class="hobby-icon">🏗️</div>
+                                <span>Stocks / Trades</span>
+                            </div>
+                            <div class="hobby-item">
+                                <div class="hobby-icon">☁️</div>
+                                <span>Edge Computing</span>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Languages Section with improved dots -->
+                    <section class="languages-section">
+                        <h3>LANGUAGES</h3>
+                        <div class="languages-list">
+                            <div class="language-item">
+                                <span class="language-name">English</span>
+                                <div class="language-proficiency">
+                                    <div class="proficiency-dot filled" *ngFor="let dot of [1,2,3,4,5]"></div>
+                                </div>
+                            </div>
+                            <div class="language-item">
+                                <span class="language-name">Yoruba</span>
+                                <div class="language-proficiency">
+                                    <div class="proficiency-dot" [class.filled]="dot <= 3"
+                                        *ngFor="let dot of [1,2,3,4,5]">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="language-item">
+                                <span class="language-name">French</span>
+                                <div class="language-proficiency">
+                                    <div class="proficiency-dot" [class.filled]="dot <= 2.5"
+                                        *ngFor="let dot of [1,2,3,4,5]">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="language-item">
+                                <span class="language-name">Hausa</span>
+                                <div class="language-proficiency">
+                                    <div class="proficiency-dot" [class.filled]="dot <= 1"
+                                        *ngFor="let dot of [1,2,3,4,5]">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+
+                <!-- Right Column -->
+                <div class="resume-right">
+                    <!-- Profile Section -->
+                    <section class="profile-section">
+                        <h3>PROFILE</h3>
+                        <div class="profile-content">
+                            <p>
+                                Senior Angular Engineer and Frontend Technical Lead with 9+ years of experience
+                                architecting scalable web applications and leading high-performing development teams.
+                                Proven track record of leading 6+ engineers at Zenith Bank and Globus Bank, driving
+                                architectural decisions across cross-functional teams, and delivering enterprise-grade
+                                solutions serving 100,000+ users.
+                            </p>
+                            <p>
+                                Expert in Angular v4 - v19+, TypeScript, and modern frontend architecture patterns including
+                                micro-frontends and server-side rendering. Demonstrated success in establishing CI/CD
+                                pipelines, implementing secure coding practices, and mentoring teams to achieve 40%
+                                faster delivery cycles.
+                            </p>
+                            <p>
+                                Led architectural review meetings with Designers, Engineers, QA, Product officers, and
+                                Business managers, ensuring technical solutions align with business objectives.
+                                Specialized in fraud detection systems, trade finance applications, and AI-powered
+                                productivity platforms.
+                            </p>
+                            <p>
+                                Results-oriented engineer passionate about leveraging cutting-edge technologies to
+                                deliver measurable business value. Equally comfortable owning hands-on delivery as
+                                mentoring peers, with a proven ability to transform technical challenges into strategic
+                                advantages.
+                            </p>
+                            <p class="profile-availability">
+                                Currently based in Lagos, Nigeria — actively seeking Senior Frontend Engineer and Tech Lead roles in Canada, UK, US, and worldwide. <b>Open to remote work and willing to relocate anywhere</b>.
+                            </p>
+                        </div>
+                    </section>
+
+                    <section class="key-achievements-section">
+                        <h3>🏆 KEY TECHNICAL ACHIEVEMENTS</h3>
+                        <div class="achievements-grid">
+                            <div class="achievement-item"
+                                *ngFor="let achievement of keyTechnicalAchievements; let i = index">
+                                <!-- Parse the achievement to separate icon, title, and description -->
+                                <div class="achievement-content" [innerHTML]="formatAchievement(achievement)"></div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Employment History Section -->
+                    <section class="employment-section">
+                        <h3>EMPLOYMENT HISTORY</h3>
+                        <div class="jobs-list">
+                            <div class="job-item" *ngFor="let job of employmentHistory; let i = index; let first = first"
+                                [class.current-role]="job.period.includes('Present')"
+                                [class.same-company]="i > 0 && employmentHistory[i-1].company === job.company">
+                                <div class="job-header">
+                                    <div class="job-title">
+                                        <h4>
+                                            <span class="promotion-badge" *ngIf="job.period.includes('Present')">CURRENT</span>
+                                            {{job.role}}
+                                            <span class="company-tenure-badge" *ngIf="getCompanyTenure(i)">
+                                                {{getCompanyTenure(i)}} total
+                                            </span>
+                                        </h4>
+                                        <h5>
+                                            <span class="company-icon">🏢</span>
+                                            {{job.company}}
+                                        </h5>
+                                        <span class="job-location">
+                                            📍 {{job.location}}
+                                        </span>
+                                    </div>
+                                    <div class="job-meta">
+                                        <span class="job-tenure">⏳ {{getTenure(job.period)}}</span>
+                                        <span class="job-period" [class.current]="job.period.includes('Present')">
+                                            📅 {{job.period}}
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="job-description" *ngIf="job.description">
+                                    <p>{{job.description}}</p>
+                                </div>
+
+                                <!-- leadership-section -->
+                                <!-- <div class="leadership-section" *ngIf="job.technicalLeadership?.length">
+                                    <h6>🚀 Technical Leadership & Team Management</h6>
+                                    <ul>
+                                        <li *ngFor="let item of job.technicalLeadership">{{item}}</li>
+                                    </ul>
+                                </div> -->
+
+                                <!-- achievements-section  -->
+                                <div class="achievements-section" *ngIf="job.achievements?.length">
+                                    <h6>Key Achievements & Business Impact</h6>
+                                    <ul>
+                                        <li *ngFor="let achievement of job.achievements">
+                                            {{achievement}}</li>
+                                    </ul>
+                                </div>
+
+                                <div class="technical-section" *ngIf="job.technicalAchievements?.length">
+                                    <h6>Technical Architecture & Implementation</h6>
+                                    <!-- <h6>Technical Achievements:</h6> -->
+                                    <ul>
+                                        <li *ngFor="let achievement of job.technicalAchievements">{{achievement}}</li>
+                                    </ul>
+                                </div>
+
+                                <div class="leadership-section" *ngIf="job.technicalLeadership?.length">
+                                    <h6>Technical Leadership:</h6>
+                                    <ul>
+                                        <li *ngFor="let item of job.technicalLeadership">{{item}}</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Education Section -->
+                    <section class="education-section">
+                        <h3>EDUCATION</h3>
+                        <div class="education-item">
+                            <div class="education-header">
+                                <h4>Bachelors of Science</h4>
+                                <span class="education-period">Sep 2011 — Jul 2016</span>
+                            </div>
+                            <div class="education-content">
+                                <h5>Babcock University, Ogun State, Nigeria</h5>
+                                <p>B.Sc Information Resource Management</p>
+                                <p class="education-grade">
+                                    Grade B or 2:1 [Second Class-Upper Division]
+                                </p>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Courses Section -->
+                    <section class="courses-section">
+                        <h3>COURSES / CERTIFICATIONS</h3>
+                        <div class="courses-list">
+                            <div class="course-item" *ngFor="let course of courses">
+                                <div class="course-header">
+                                    <h4>{{course.title}}</h4>
+                                    <span class="course-period">{{course.period}}</span>
+                                </div>
+                                <h5>{{course.institution}}</h5>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- References Section -->
+                    <section class="references-section">
+                        <h3>REFERENCES</h3>
+                        <div class="references-list">
+                            <div class="reference-item" *ngFor="let reference of references">
+                                <div class="reference-content">
+                                    <h4>{{reference.name}}</h4>
+                                    <h5>{{reference.company}}</h5>
+                                    <div class="reference-contact">
+                                        <span class="reference-email reference-on-request">Available upon request</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="download-pdf">
+                            <button class="download-btn" (click)="downloadPDF()">
+                                Download PDF
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round">
+                                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                                    <polyline points="7 10 12 15 17 10" />
+                                    <line x1="12" y1="15" x2="12" y2="3" />
+                                </svg>
+                            </button>
+                        </div>
+                    </section>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
