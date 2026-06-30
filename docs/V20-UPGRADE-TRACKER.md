@@ -203,7 +203,7 @@ Defer non-critical sections so they render after above-the-fold content is inter
 - [x] Removed `src/ANGULAR_19_UPGRADE_COMPLETE.md` — CAP banking project document, wrong repo ✅ 2026-06-30
 - [x] Removed `fix-npm.sh` from repo root — one-time fix script, no longer needed ✅ 2026-06-30
 - [x] Deleted `src/web.config` — IIS redirect config; Netlify uses `src/_redirects` exclusively ✅ 2026-06-30
-- [x] `allowedCommonJsDependencies` audited — all 14 `core-js` entries and `raf`/`rgbcolor`/`html2canvas`/`dompurify` are still needed (all sourced from `canvg` — a `jsPDF` dependency used for PDF export). Build without any entries produced 14 warnings; full list kept. ✅ 2026-06-30
+- [x] `allowedCommonJsDependencies` audited — all 14 `core-js` entries and `raf`/`rgbcolor`/`html2canvas`/`dompurify` are still needed (all 14 `core-js` entries sourced from `canvg` — a `jsPDF` transitive dep used for PDF export). Test: removed only the 14 `core-js` entries and rebuilt → 14 warnings from `/canvg/lib/index.es.js`. All entries restored; list unchanged. ✅ 2026-06-30
 - [x] Removed dead commented-out `downloadPDF` implementation (117 lines) from `resume.component.ts` — replaced by the active ATS-based implementation ✅ 2026-06-30
 
 ---
@@ -231,6 +231,7 @@ Run after Phase 1 and again after all phases complete.
 - [x] `npm run build` — zero errors ✅ 2026-06-30 (post Phase 2–5)
 - [x] `npm run build` — zero errors ✅ 2026-06-30 (post Phase 4 — all control flow conversions)
 - [x] `npm run build` — zero errors ✅ 2026-06-30 (post Phase 8 — all defer blocks)
+- [x] `npm run build` — zero errors ✅ 2026-06-30 (post Phase 9 — housekeeping cleanup, `allowedCommonJsDependencies` confirmed)
 - [ ] Dev server loads: `npm start`
 - [ ] **Desktop (1440px):** Home, Projects, Contact, Resume all render correctly
 - [ ] **Tablet (1024px / 820px / 768px):** Hamburger menu, Lagos status, project cards
