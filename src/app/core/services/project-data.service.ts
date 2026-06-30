@@ -23,6 +23,24 @@ interface Project {
    pipelineLabel?: string;
 }
 
+interface AssessmentProject {
+   id: number;
+   type: 'assessment';
+   title: string;
+   assessmentBy: string;
+   assessmentBrief: string;
+   description: string;
+   techStack: { name: string; color: string; }[];
+   achievements: string[];
+   demoUrl: string;
+   repoUrl: string;
+   level: 'senior' | 'mid';
+   accentColor: string;
+   accentColorRgb: string;
+   isHovered?: boolean;
+   images?: string[];
+}
+
 @Injectable({
    providedIn: 'root'
 })
@@ -260,6 +278,95 @@ export class ProjectDataService {
             ]
          },
          // Add more projects...
+      ];
+   }
+
+   getAssessmentProjects(): AssessmentProject[] {
+      return [
+         {
+            id: 10,
+            type: 'assessment',
+            title: 'LogicBank',
+            assessmentBy: 'First Bank Nigeria',
+            level: 'senior',
+            accentColor: '#DD0031',
+            accentColorRgb: '221, 0, 49',
+            assessmentBrief: 'Build a pixel-perfect, multi-step Digital Account Maintenance Web Portal from a Figma specification, implementing the full Identity Document Update customer flow — NDPR consent, OTP account verification, document upload, and a 4-modal submission sequence.',
+            description: 'A 7-step self-service portal that lets First Bank customers update their identity documents without visiting a branch, faithfully translated from Figma. Demonstrates senior-level Angular 19 patterns across lazy-loaded route steps.',
+            techStack: [
+               { name: 'Angular 19', color: '#DD0031' },
+               { name: 'TypeScript', color: '#3178C6' },
+               { name: 'CSS Grid', color: '#264DE4' },
+               { name: 'CSS3', color: '#339933' },
+            ],
+            achievements: [
+               'Implemented a 7-step IDU flow (NDPR consent → OTP verification → document upload → terms → 4-modal submit sequence) with a 5-minute countdown timer and auto-disabling OTP input on expiry',
+               'Applied Angular 19 signal-based patterns throughout: signal() / computed() / effect(), new @if / @for control flow, inject() DI, and @defer to gate modals out of the initial bundle',
+               'Route-level lazy loading with loadComponent() and canActivate guards; initial bundle held to 81 kB gzipped with background pre-fetch via withPreloading(PreloadAllModules)',
+               'Built a 3-slide upload-guide carousel modal with SVG illustrations and a drag-and-drop upload system with event-bubbling conflict resolution between upload zone and hidden file input',
+               'Fully responsive across 6 breakpoints (1400 px → 360 px): 3-column card grid collapses to single-column; all forms, upload zones, and modals adapt to 300 px minimum viewport width',
+            ],
+            demoUrl: 'https://logicbank.netlify.app',
+            repoUrl: 'https://github.com/ayomideesam/logicbank',
+            images: [],
+         },
+         {
+            id: 11,
+            type: 'assessment',
+            title: 'Work Order Schedule Timeline',
+            assessmentBy: 'Naologic',
+            level: 'senior',
+            accentColor: '#B7178C',
+            accentColorRgb: '183, 23, 140',
+            assessmentBrief: 'Build an interactive timeline component for a manufacturing ERP system that lets planners visualise, create, and edit work orders across multiple work centers at Day, Week, and Month zoom levels.',
+            description: 'An Angular 19 SPA featuring a horizontally-scrollable Gantt-style timeline grid across 9 work centers and 45 work orders, demonstrating advanced Signals state management, overlap detection, and localStorage persistence.',
+            techStack: [
+               { name: 'Angular 19', color: '#DD0031' },
+               { name: 'TypeScript', color: '#3178C6' },
+               { name: 'RxJS', color: '#B7178C' },
+               { name: 'SCSS', color: '#CC6699' },
+               { name: 'Bootstrap 5', color: '#7952B3' },
+               { name: 'date-fns', color: '#F7DF1E' },
+            ],
+            achievements: [
+               'Architected a Gantt timeline grid with Day / Week / Month zoom levels; bar positions pre-computed into a Map<string, BarPosition> for O(1) lookups and a single shared global click listener replacing 45 per-instance listeners',
+               'Implemented full CRUD via a slide-out panel with real-time overlap detection, date pre-fill from click position, and localStorage persistence so all changes survive page refresh',
+               'Managed all reactive state with Angular Signals across 12 single-responsibility services; applied OnPush change detection to all 8 timeline components, reducing detection cycles from 100+ per second to fewer than 5',
+               'Migrated the build pipeline from Webpack to esbuild, cutting cold build time from ~35 s to 3.3 s (10.6×) and production bundle from ~600 KB to 111 KB gzipped',
+               'Implemented Angular CDK BreakpointObserver for responsive device detection with contextual warning banners; added keyboard navigation (arrow keys, Enter, Escape) and auto-dismissing toast notifications',
+            ],
+            demoUrl: 'ASK_AKHIGBE',
+            repoUrl: 'https://github.com/ayomideesam/iruobe-work-order-timeline',
+            images: [],
+         },
+         {
+            id: 12,
+            type: 'assessment',
+            title: 'Featured Books',
+            assessmentBy: 'FAT BEEHIVE',
+            level: 'mid',
+            accentColor: '#CC6699',
+            accentColorRgb: '204, 102, 153',
+            assessmentBrief: 'Recreate a Figma design specification for a featured books UI showcase component using semantic HTML, SCSS, and BEM methodology — no JavaScript frameworks allowed.',
+            description: 'A pixel-perfect, zero-JavaScript books UI component built from a Figma spec, demonstrating a custom SCSS token system, strict BEM naming, and a mobile-first responsive architecture spanning eight breakpoints.',
+            techStack: [
+               { name: 'HTML5', color: '#339933' },
+               { name: 'SCSS', color: '#CC6699' },
+               { name: 'BEM', color: '#1572B6' },
+               { name: 'CSS Grid', color: '#264DE4' },
+               { name: 'Flexbox', color: '#264DE4' },
+            ],
+            achievements: [
+               'Architected a SCSS system with 40+ design tokens — color, spacing, typography, dimension, breakpoint, shadow, and animation variables — compiled to production CSS with no build tooling',
+               'Applied strict BEM naming throughout (.books, .card, .card__image-container, .card--tv-only) for a collision-resistant, scalable component architecture with zero global style bleed',
+               'Combined CSS Grid (1-col → 2-col → 3-col) for the outer layout with Flexbox for each card\'s internal horizontal structure, using grid-auto-rows: 1fr to enforce equal card heights',
+               'Built a mobile-first responsive system across eight breakpoints (20rem to 125rem+), including TV-exclusive cards that activate only at 115rem+ with a 3×2 grid layout',
+               'Delivered WCAG AA-compliant accessibility via semantic HTML5, descriptive aria-label attributes, full keyboard navigation with tabindex, and a prefers-reduced-motion query disabling all shimmer animations',
+            ],
+            demoUrl: 'https://featured-books.netlify.app/',
+            repoUrl: 'https://github.com/ayomideesam/featured-books',
+            images: [],
+         },
       ];
    }
 

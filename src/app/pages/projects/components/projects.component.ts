@@ -18,6 +18,24 @@ interface Project {
   pipelineLabel?: string;
 }
 
+interface AssessmentProject {
+  id: number;
+  type: 'assessment';
+  title: string;
+  assessmentBy: string;
+  assessmentBrief: string;
+  description: string;
+  techStack: { name: string; color: string; }[];
+  achievements: string[];
+  demoUrl: string;
+  repoUrl: string;
+  level: 'senior' | 'mid';
+  accentColor: string;
+  accentColorRgb: string;
+  isHovered?: boolean;
+  images?: string[];
+}
+
 @Component({
     selector: 'app-projects',
     templateUrl: './projects.component.html',
@@ -77,6 +95,7 @@ export class ProjectsComponent implements OnInit {
   };
 
   projects: Project[] = this.projectData.getProjects();
+  assessmentProjects: AssessmentProject[] = this.projectData.getAssessmentProjects();
 
   @HostListener('window:scroll', [])
   onWindowScroll() {

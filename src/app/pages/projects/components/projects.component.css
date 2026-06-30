@@ -2857,6 +2857,567 @@ h2 {
     line-height: 1.45;
 }
 
+/* ══════════════════════════════════════════════════════════════════
+   TECHNICAL ASSESSMENTS SECTION
+   ══════════════════════════════════════════════════════════════════ */
+
+.assessments-section {
+    margin-top: 6rem;
+    padding-bottom: 4rem;
+}
+
+/* Section divider */
+.assessments-divider {
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+    margin-bottom: 3.5rem;
+}
+
+.assessments-divider-line {
+    flex: 1;
+    height: 1px;
+    background: var(--border-color);
+}
+
+.assessments-divider-label {
+    font-family: "Sora", sans-serif;
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 2.5px;
+    color: var(--text-secondary);
+    white-space: nowrap;
+}
+
+/* Section header */
+.assessments-header {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 2rem;
+    margin-bottom: 2.5rem;
+    flex-wrap: wrap;
+}
+
+.assessments-heading {
+    font-family: "Outfit", "Sora", serif;
+    font-size: 2.8rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin: 0 0 0.75rem;
+    line-height: 1.1;
+}
+
+.assessments-subtitle {
+    font-size: 1.05rem;
+    line-height: 1.6;
+    color: var(--text-secondary);
+    margin: 0;
+    max-width: 580px;
+}
+
+.assessments-header-meta {
+    display: flex;
+    gap: 0.6rem;
+    align-items: center;
+    flex-shrink: 0;
+}
+
+.assessments-count-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.35rem 0.75rem;
+    border-radius: 100px;
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    color: var(--text-secondary);
+    border: 1.5px solid var(--border-color);
+    background: var(--card-background);
+}
+
+/* ── Assessment grid ── */
+.assessments-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.75rem;
+    align-items: start;
+}
+
+/* ── Assessment card ── */
+.assessment-card {
+    --card-accent: var(--primary-color);
+    --card-accent-rgb: var(--primary-rgb);
+
+    position: relative;
+    border-radius: 16px;
+    border: 1.5px solid var(--border-color);
+    background: var(--card-background);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    isolation: isolate;
+}
+
+.assessment-card:hover {
+    border-color: rgba(var(--card-accent-rgb), 0.45);
+    box-shadow: 0 12px 40px rgba(var(--card-accent-rgb), 0.12);
+}
+
+/* Subtle radial cursor glow — reuses the --x/--y tracking from onMouseMove */
+.assessment-card::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at var(--x, 50%) var(--y, 50%),
+            rgba(var(--card-accent-rgb), 0.07) 0%,
+            transparent 55%);
+    opacity: 0;
+    transition: opacity 0.3s;
+    z-index: -1;
+    pointer-events: none;
+}
+
+.assessment-card:hover::after {
+    opacity: 1;
+}
+
+/* ── Card visual header ── */
+.assessment-visual {
+    position: relative;
+    height: 110px;
+    overflow: hidden;
+    background: linear-gradient(
+        135deg,
+        rgba(var(--card-accent-rgb), 0.07) 0%,
+        rgba(var(--card-accent-rgb), 0.03) 60%,
+        transparent 100%
+    );
+    border-bottom: 1px solid rgba(var(--card-accent-rgb), 0.12);
+    flex-shrink: 0;
+}
+
+/* ── LogicBank visual: document form + OTP row + step chain ── */
+.av-logicbank {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 14px 20px 12px;
+}
+
+.av-form-block {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+}
+
+.av-form-line {
+    height: 4px;
+    border-radius: 2px;
+    background: rgba(var(--card-accent-rgb), 0.25);
+    transform-origin: left;
+    animation: avFormSlide 2.4s ease-in-out infinite;
+}
+
+.av-form-line:nth-child(1) { width: 65%; animation-delay: 0s; }
+.av-form-line:nth-child(2) { width: 45%; animation-delay: 0.3s; }
+.av-form-line:nth-child(3) { width: 80%; animation-delay: 0.6s; }
+
+.av-otp-row {
+    display: flex;
+    gap: 5px;
+    margin-top: 4px;
+}
+
+.av-otp-dot {
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    border: 1.5px solid rgba(var(--card-accent-rgb), 0.35);
+    animation: avOtpPulse 1.8s ease-in-out infinite;
+}
+
+.av-otp-dot:nth-child(1) { animation-delay: 0s; }
+.av-otp-dot:nth-child(2) { animation-delay: 0.2s; }
+.av-otp-dot:nth-child(3) { animation-delay: 0.4s; }
+.av-otp-dot:nth-child(4) { animation-delay: 0.6s; }
+.av-otp-dot:nth-child(5) { animation-delay: 0.8s; }
+.av-otp-dot:nth-child(6) { animation-delay: 1s; }
+
+.av-step-chain {
+    display: flex;
+    align-items: center;
+    gap: 0;
+}
+
+.av-step-node {
+    flex: 1;
+    height: 6px;
+    background: rgba(var(--card-accent-rgb), 0.12);
+    position: relative;
+    overflow: hidden;
+}
+
+.av-step-node::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: rgba(var(--card-accent-rgb), 0.5);
+    transform: translateX(-100%);
+    animation: avStepFlow 3.5s linear infinite;
+}
+
+.av-step-node:first-child { border-radius: 3px 0 0 3px; }
+.av-step-node:last-child  { border-radius: 0 3px 3px 0; }
+
+.av-step-node:nth-child(1)::after { animation-delay: 0s; }
+.av-step-node:nth-child(2)::after { animation-delay: 0.35s; }
+.av-step-node:nth-child(3)::after { animation-delay: 0.7s; }
+.av-step-node:nth-child(4)::after { animation-delay: 1.05s; }
+.av-step-node:nth-child(5)::after { animation-delay: 1.4s; }
+.av-step-node:nth-child(6)::after { animation-delay: 1.75s; }
+.av-step-node:nth-child(7)::after { animation-delay: 2.1s; }
+
+@keyframes avFormSlide {
+    0%, 100% { transform: scaleX(0.65); opacity: 0.4; }
+    50%       { transform: scaleX(1);    opacity: 1; }
+}
+
+@keyframes avOtpPulse {
+    0%, 100% { opacity: 0.25; transform: scale(0.9); }
+    50%       { opacity: 1;    transform: scale(1.15); }
+}
+
+@keyframes avStepFlow {
+    0%   { transform: translateX(-100%); }
+    100% { transform: translateX(200%); }
+}
+
+/* ── Work Order Timeline visual: Gantt grid ── */
+.av-timeline {
+    position: absolute;
+    inset: 0;
+    padding: 12px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.av-timeline-header {
+    display: flex;
+    gap: 6px;
+    padding-left: 36px;
+    margin-bottom: 2px;
+}
+
+.av-col-label {
+    flex: 1;
+    height: 3px;
+    border-radius: 2px;
+    background: rgba(var(--card-accent-rgb), 0.18);
+}
+
+.av-gantt-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.av-row-label {
+    width: 28px;
+    height: 6px;
+    border-radius: 3px;
+    background: rgba(var(--card-accent-rgb), 0.15);
+    flex-shrink: 0;
+}
+
+.av-gantt-bar {
+    height: 10px;
+    border-radius: 4px;
+    background: rgba(var(--card-accent-rgb), 0.35);
+    transform-origin: left;
+    animation: avGanttGrow 2.8s ease-in-out infinite;
+}
+
+.av-gantt-row:nth-child(2) .av-gantt-bar { width: 55%; animation-delay: 0s; }
+.av-gantt-row:nth-child(3) .av-gantt-bar { width: 35%; margin-left: 20%; animation-delay: 0.5s; }
+.av-gantt-row:nth-child(4) .av-gantt-bar { width: 48%; margin-left: 10%; animation-delay: 1s; }
+.av-gantt-row:nth-child(5) .av-gantt-bar { width: 28%; margin-left: 38%; animation-delay: 1.5s; }
+
+@keyframes avGanttGrow {
+    0%, 100% { transform: scaleX(0.55); opacity: 0.35; }
+    50%       { transform: scaleX(1);    opacity: 0.9; }
+}
+
+/* ── Featured Books visual: 2×2 card grid ── */
+.av-books {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    gap: 8px;
+    padding: 12px 16px;
+}
+
+.av-book-card {
+    border-radius: 5px;
+    background: rgba(var(--card-accent-rgb), 0.1);
+    border: 1px solid rgba(var(--card-accent-rgb), 0.18);
+    display: flex;
+    gap: 5px;
+    padding: 5px;
+    overflow: hidden;
+    animation: avBookAppear 2.6s ease-in-out infinite;
+}
+
+.av-book-card:nth-child(1) { animation-delay: 0s; }
+.av-book-card:nth-child(2) { animation-delay: 0.3s; }
+.av-book-card:nth-child(3) { animation-delay: 0.6s; }
+.av-book-card:nth-child(4) { animation-delay: 0.9s; }
+
+.av-book-img {
+    width: 22px;
+    flex-shrink: 0;
+    border-radius: 3px;
+    background: rgba(var(--card-accent-rgb), 0.25);
+}
+
+.av-book-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    justify-content: center;
+}
+
+.av-book-line {
+    height: 3px;
+    border-radius: 2px;
+    background: rgba(var(--card-accent-rgb), 0.2);
+    width: 100%;
+}
+
+.av-book-line.short { width: 65%; }
+
+@keyframes avBookAppear {
+    0%, 100% { opacity: 0.3; transform: scale(0.95); }
+    50%       { opacity: 0.85; transform: scale(1); }
+}
+
+/* ── Company + level badge row ── */
+.assessment-meta-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.9rem 1.25rem 0;
+    gap: 0.5rem;
+}
+
+.assessment-company-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.7px;
+    color: rgba(var(--card-accent-rgb), 1);
+}
+
+.assessment-level-badge {
+    font-size: 0.67rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    padding: 0.2rem 0.6rem;
+    border-radius: 100px;
+    border: 1.5px solid currentColor;
+}
+
+.assessment-level-badge.level-senior {
+    color: var(--primary-color);
+    background: rgba(var(--primary-rgb), 0.08);
+}
+
+.assessment-level-badge.level-mid {
+    color: var(--accent-color);
+    background: rgba(var(--accent-rgb), 0.08);
+}
+
+/* ── Card body ── */
+.assessment-card-body {
+    padding: 1rem 1.25rem 1.35rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.1rem;
+    flex: 1;
+}
+
+.assessment-card-title {
+    font-family: "Outfit", "Sora", serif;
+    font-size: 1.45rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin: 0;
+    line-height: 1.2;
+    letter-spacing: -0.01em;
+}
+
+/* Brief blockquote */
+.assessment-brief {
+    margin: 0;
+    padding: 0.75rem 1rem;
+    border-left: 3px solid rgba(var(--card-accent-rgb), 0.5);
+    background: rgba(var(--card-accent-rgb), 0.04);
+    border-radius: 0 6px 6px 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+}
+
+.brief-label {
+    font-size: 0.63rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: rgba(var(--card-accent-rgb), 0.9);
+    display: block;
+}
+
+.brief-text {
+    font-size: 0.88rem;
+    line-height: 1.55;
+    color: var(--text-secondary);
+    font-style: italic;
+}
+
+/* Tech stack — reuses global .tech-badge, adds tighter spacing */
+.assessment-tech {
+    gap: 0.5rem;
+}
+
+.assessment-tech .tech-badge {
+    font-size: 0.78rem;
+    padding: 0.3rem 0.75rem;
+}
+
+/* Achievements */
+.assessment-achievements h4 {
+    font-size: 0.72rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--text-secondary);
+    margin: 0 0 0.65rem;
+}
+
+.assessment-achievements ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+}
+
+.assessment-achievements li {
+    position: relative;
+    padding: 0.55rem 0 0.55rem 1.1rem;
+    font-size: 0.875rem;
+    line-height: 1.55;
+    color: var(--text-secondary);
+    border-bottom: 1px solid var(--border-color);
+}
+
+.assessment-achievements li:last-child {
+    border-bottom: none;
+}
+
+.assessment-achievements li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: rgba(var(--card-accent-rgb), 0.7);
+    flex-shrink: 0;
+}
+
+/* Links row */
+.assessment-links {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    flex-wrap: wrap;
+    margin-top: auto;
+    padding-top: 0.25rem;
+}
+
+.assessment-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.45rem 1rem;
+    border-radius: 100px;
+    font-size: 0.78rem;
+    font-weight: 600;
+    text-decoration: none;
+    letter-spacing: 0.01em;
+    transition: all 0.22s ease;
+}
+
+.assessment-link-demo {
+    background: rgba(var(--card-accent-rgb), 1);
+    color: #fff;
+    border: 1.5px solid rgba(var(--card-accent-rgb), 1);
+}
+
+.assessment-link-demo:hover {
+    background: rgba(var(--card-accent-rgb), 0.85);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 14px rgba(var(--card-accent-rgb), 0.3);
+}
+
+.assessment-link-repo {
+    color: var(--text-primary);
+    border: 1.5px solid var(--border-color);
+    background: transparent;
+}
+
+.assessment-link-repo:hover {
+    border-color: rgba(var(--card-accent-rgb), 0.55);
+    color: rgba(var(--card-accent-rgb), 1);
+    background: rgba(var(--card-accent-rgb), 0.06);
+    transform: translateY(-2px);
+}
+
+.assessment-link-tbc {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.45rem 1rem;
+    border-radius: 100px;
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+    border: 1.5px dashed var(--border-color);
+    opacity: 0.6;
+    cursor: default;
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   RESPONSIVE — shared breakpoints
+   ══════════════════════════════════════════════════════════════════ */
+
 @media (max-width: 1024px) {
     .project-card {
         grid-template-columns: 1fr;
@@ -2869,6 +3430,14 @@ h2 {
 
     .project-image {
         aspect-ratio: 16/9;
+    }
+
+    .assessments-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .assessments-heading {
+        font-size: 2.2rem;
     }
 }
 
@@ -2900,6 +3469,32 @@ h2 {
     .circle {
         transform: scale(0.8);
     }
+
+    .assessments-heading {
+        font-size: 2rem;
+    }
+
+    .assessments-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+    }
+
+    .assessments-header-meta {
+        display: none;
+    }
+
+    .assessment-card-title {
+        font-size: 1.3rem;
+    }
+
+    .assessment-brief {
+        padding: 0.65rem 0.85rem;
+    }
+
+    .brief-text {
+        font-size: 0.84rem;
+    }
 }
 
 /* Hide animations on mobile */
@@ -2920,6 +3515,35 @@ h2 {
 
     .coming-soon span {
         display: block;
+    }
+
+    .assessments-section {
+        margin-top: 4rem;
+    }
+
+    .assessments-heading {
+        font-size: 1.75rem;
+    }
+
+    .assessment-visual {
+        height: 88px;
+    }
+
+    .assessment-card-body {
+        padding: 0.875rem 1rem 1.1rem;
+    }
+
+    .assessment-card-title {
+        font-size: 1.2rem;
+    }
+
+    .assessment-achievements li {
+        font-size: 0.84rem;
+    }
+
+    .assessment-link {
+        padding: 0.4rem 0.85rem;
+        font-size: 0.75rem;
     }
 }
 

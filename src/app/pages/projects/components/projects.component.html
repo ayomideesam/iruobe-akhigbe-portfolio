@@ -396,4 +396,174 @@
         </div>
         }
     </section>
+
+    <!-- ═══════════════════════════════════════════════════════════ -->
+    <!-- TECHNICAL ASSESSMENTS                                       -->
+    <!-- ═══════════════════════════════════════════════════════════ -->
+    <section class="assessments-section">
+        <div class="assessments-divider" aria-hidden="true">
+            <span class="assessments-divider-line"></span>
+            <span class="assessments-divider-label">Technical Assessments</span>
+            <span class="assessments-divider-line"></span>
+        </div>
+
+        <div class="assessments-header">
+            <div class="assessments-header-text">
+                <h2 class="assessments-heading">Engineering challenges<span class="accent-dot">.</span></h2>
+                <p class="assessments-subtitle">Senior and mid-level technical assessments from real companies — each delivered against a spec, deployed on Netlify, and open on GitHub.</p>
+            </div>
+            <div class="assessments-header-meta">
+                <span class="assessments-count-badge">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+                    </svg>
+                    {{assessmentProjects.length}} projects
+                </span>
+                <span class="assessments-count-badge">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"/><path d="M2 12h20"/>
+                        <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+                    </svg>
+                    All deployed
+                </span>
+            </div>
+        </div>
+
+        <div class="assessments-grid">
+            @for (ap of assessmentProjects; track ap.id) {
+            <article class="assessment-card"
+                [style.--card-accent]="ap.accentColor"
+                [style.--card-accent-rgb]="ap.accentColorRgb"
+                [@cardHover]="ap.isHovered ? 'hover' : 'rest'"
+                (mouseenter)="ap.isHovered = true"
+                (mouseleave)="ap.isHovered = false">
+
+                <!-- Card visual header -->
+                <div class="assessment-visual" aria-hidden="true">
+                    @if (ap.id === 10) {
+                    <div class="av-logicbank">
+                        <div class="av-form-block">
+                            @for (i of [1,2,3]; track i) {
+                            <div class="av-form-line"></div>
+                            }
+                            <div class="av-otp-row">
+                                @for (i of [1,2,3,4,5,6]; track i) {
+                                <div class="av-otp-dot"></div>
+                                }
+                            </div>
+                        </div>
+                        <div class="av-step-chain">
+                            @for (i of [1,2,3,4,5,6,7]; track i) {
+                            <div class="av-step-node"></div>
+                            }
+                        </div>
+                    </div>
+                    }
+                    @if (ap.id === 11) {
+                    <div class="av-timeline">
+                        <div class="av-timeline-header">
+                            @for (i of [1,2,3,4,5]; track i) {
+                            <div class="av-col-label"></div>
+                            }
+                        </div>
+                        @for (i of [1,2,3,4]; track i) {
+                        <div class="av-gantt-row">
+                            <div class="av-row-label"></div>
+                            <div class="av-gantt-bar"></div>
+                        </div>
+                        }
+                    </div>
+                    }
+                    @if (ap.id === 12) {
+                    <div class="av-books">
+                        @for (i of [1,2,3,4]; track i) {
+                        <div class="av-book-card">
+                            <div class="av-book-img"></div>
+                            <div class="av-book-content">
+                                <div class="av-book-line"></div>
+                                <div class="av-book-line short"></div>
+                            </div>
+                        </div>
+                        }
+                    </div>
+                    }
+                </div>
+
+                <!-- Company + level badge row -->
+                <div class="assessment-meta-row">
+                    <span class="assessment-company-badge">
+                        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                            <rect x="2" y="7" width="20" height="14" rx="2"/>
+                            <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/>
+                        </svg>
+                        {{ap.assessmentBy}}
+                    </span>
+                    <span class="assessment-level-badge" [class.level-senior]="ap.level === 'senior'" [class.level-mid]="ap.level === 'mid'">
+                        {{ap.level === 'senior' ? 'Senior Level' : 'Mid Level'}}
+                    </span>
+                </div>
+
+                <!-- Card body -->
+                <div class="assessment-card-body">
+                    <h3 class="assessment-card-title">{{ap.title}}</h3>
+
+                    <blockquote class="assessment-brief">
+                        <span class="brief-label">Brief</span>
+                        <span class="brief-text">{{ap.assessmentBrief}}</span>
+                    </blockquote>
+
+                    <div class="tech-stack assessment-tech">
+                        @for (tech of ap.techStack; track tech.name) {
+                        <span class="tech-badge"
+                            [style.backgroundColor]="tech.color + '20'"
+                            [style.color]="tech.color">
+                            {{tech.name}}
+                        </span>
+                        }
+                    </div>
+
+                    <div class="assessment-achievements">
+                        <h4>What I delivered</h4>
+                        <ul>
+                            @for (item of ap.achievements; track $index) {
+                            <li>{{item}}</li>
+                            }
+                        </ul>
+                    </div>
+
+                    <div class="assessment-links">
+                        @if (ap.demoUrl && ap.demoUrl !== 'ASK_AKHIGBE') {
+                        <a [href]="ap.demoUrl" target="_blank" rel="noopener noreferrer"
+                            class="assessment-link assessment-link-demo"
+                            (click)="viewProject(ap.id.toString())">
+                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
+                                <polyline points="15 3 21 3 21 9"/>
+                                <line x1="10" y1="14" x2="21" y2="3"/>
+                            </svg>
+                            Live Demo
+                        </a>
+                        } @else {
+                        <span class="assessment-link-tbc">
+                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="12" r="10"/>
+                                <line x1="12" y1="8" x2="12" y2="12"/>
+                                <line x1="12" y1="16" x2="12.01" y2="16"/>
+                            </svg>
+                            Demo TBC
+                        </span>
+                        }
+                        <a [href]="ap.repoUrl" target="_blank" rel="noopener noreferrer"
+                            class="assessment-link assessment-link-repo">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0 1 12 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/>
+                            </svg>
+                            GitHub Repo
+                        </a>
+                    </div>
+                </div>
+            </article>
+            }
+        </div>
+    </section>
 </div>
