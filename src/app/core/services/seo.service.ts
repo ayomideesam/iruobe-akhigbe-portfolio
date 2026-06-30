@@ -1,5 +1,5 @@
 // core/services/seo.service.ts
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { Meta, MetaDefinition, Title } from '@angular/platform-browser';
 import { Router } from '@angular/router';
 
@@ -41,11 +41,9 @@ export class SeoService {
    private readonly twitterHandle = '@akhigbe_dev';
    private readonly linkedInHandle = '@akhigbe-iruobe';
 
-   constructor(
-      private meta: Meta,
-      private title: Title,
-      private router: Router
-   ) { }
+   private meta = inject(Meta);
+   private title = inject(Title);
+   private router = inject(Router);
 
    updateSeo(config: Partial<SeoConfig>) {
       const fullConfig = this.getFullConfig(config);

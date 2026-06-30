@@ -1,18 +1,15 @@
-// components/theme-toggle/theme-toggle.component.ts
-import { Component, OnInit } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { ThemeService } from 'src/app/core/services/theme.service';
 import { trigger, state, style, animate, transition } from '@angular/animations';
-import { takeUntil } from 'rxjs';
-import { SubscriptionManagementDirective } from 'src/app/core/directives/unsubscribe.directive';
 
 @Component({
-    selector: 'app-theme-toggle',
-    template: `
-    <button 
-      class="theme-toggle" 
+  selector: 'app-theme-toggle',
+  template: `
+    <button
+      class="theme-toggle"
       (click)="toggleTheme()"
-      [@themeSwitch]="isDarkTheme ? 'dark' : 'light'"
-      [attr.aria-label]="isDarkTheme ? 'Switch to light theme' : 'Switch to dark theme'">
+      [@themeSwitch]="themeService.isDarkTheme() ? 'dark' : 'light'"
+      [attr.aria-label]="themeService.isDarkTheme() ? 'Switch to light theme' : 'Switch to dark theme'">
       <svg class="sun-and-moon" viewBox="0 0 24 24">
         <mask class="moon" id="moon-mask">
           <rect x="0" y="0" width="100%" height="100%" fill="white" />
@@ -32,40 +29,20 @@ import { SubscriptionManagementDirective } from 'src/app/core/directives/unsubsc
       </svg>
     </button>
   `,
-    styleUrls: ['./theme-toggle.component.css'],
-    animations: [
-        trigger('themeSwitch', [
-            state('light', style({
-                transform: 'rotate(0)'
-            })),
-            state('dark', style({
-                transform: 'rotate(360deg)'
-            })),
-            transition('light <=> dark', [
-                animate('1s cubic-bezier(0.4, 0, 0.2, 1)')
-            ])
-        ])
-    ],
-    standalone: false
+  styleUrls: ['./theme-toggle.component.css'],
+  animations: [
+    trigger('themeSwitch', [
+      state('light', style({ transform: 'rotate(0)' })),
+      state('dark', style({ transform: 'rotate(360deg)' })),
+      transition('light <=> dark', [animate('1s cubic-bezier(0.4, 0, 0.2, 1)')])
+    ])
+  ],
+  standalone: false
 })
-export class ThemeToggleComponent extends SubscriptionManagementDirective implements OnInit {
-  isDarkTheme = false;
+export class ThemeToggleComponent {
+  protected themeService = inject(ThemeService);
 
-  constructor(
-    private themeService: ThemeService
-  ) {
-    super();
-  }
-
-  ngOnInit() {
-    this.themeService.isDarkTheme$.pipe(
-      takeUntil(this.unSubscribe)
-    ).subscribe(
-      isDark => this.isDarkTheme = isDark
-    );
-  }
-
-  toggleTheme() {
+  toggleTheme(): void {
     this.themeService.toggleTheme();
   }
 }

@@ -1,5 +1,5 @@
 // components/company-scroller/company-scroller.component.ts
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, DestroyRef, OnInit, inject } from '@angular/core';
 import { trigger, state, style, animate, transition } from '@angular/animations';
 import { IconService } from 'src/app/core/services/icon.service';
 
@@ -59,6 +59,10 @@ interface Company {
     standalone: false
 })
 export class CompanyScrollerComponent implements OnInit {
+  private iconService = inject(IconService);
+  private cdr = inject(ChangeDetectorRef);
+  private destroyRef = inject(DestroyRef);
+
   companies: Company[] = [
     {
       name: 'HiedBerg LTD',
@@ -104,10 +108,9 @@ export class CompanyScrollerComponent implements OnInit {
   animationState = 'initial';
   private animationInterval: any;
 
-  constructor(
-    private cdr: ChangeDetectorRef,
-    private iconService: IconService
-  )  { }
+  constructor() {
+    this.destroyRef.onDestroy(() => this.stopAnimation());
+  }
 
   ngOnInit() {
     this.startContinuousAnimation();
@@ -161,10 +164,4 @@ export class CompanyScrollerComponent implements OnInit {
     }
   }
 
-  ngOnDestroy() {
-    if (this.animationInterval) {
-      clearInterval(this.animationInterval);
-    }
-    this.stopAnimation();
-  }
 }

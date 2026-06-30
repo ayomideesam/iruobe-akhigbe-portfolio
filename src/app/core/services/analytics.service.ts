@@ -1,21 +1,18 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
 import { filter } from 'rxjs';
 
-declare var gtag : any;
+declare var gtag: any;
 
-@Injectable({providedIn: 'root'})
-
+@Injectable({ providedIn: 'root' })
 export class AnalyticsService {
+  private router = inject(Router);
 
-  constructor(private router: Router) {
-    // Track route changes
+  constructor() {
     this.router.events.pipe(
       filter((event): event is NavigationEnd => event instanceof NavigationEnd)
-    ).subscribe((event) => {
-      gtag('event', 'page_view', {
-        page_path: event.urlAfterRedirects
-      });
+    ).subscribe(event => {
+      gtag('event', 'page_view', { page_path: event.urlAfterRedirects });
     });
   }
 

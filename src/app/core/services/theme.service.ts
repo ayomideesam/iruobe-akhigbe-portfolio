@@ -1,33 +1,26 @@
-import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { Injectable, signal } from '@angular/core';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable({ providedIn: 'root' })
 export class ThemeService {
-  private isDarkThemeSubject = new BehaviorSubject<boolean>(false);
-  isDarkTheme$ = this.isDarkThemeSubject.asObservable();
+  private _isDarkTheme = signal(false);
+  readonly isDarkTheme = this._isDarkTheme.asReadonly();
 
   constructor() {
-    // Check user's preferred color scheme
-    if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-      this.toggleTheme(true);
+    if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+      this.applyTheme(true);
     }
-    
-    // Listen for changes in system theme
     window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
-      this.toggleTheme(e.matches);
+      this.applyTheme(e.matches);
     });
   }
 
-  toggleTheme(isDark?: boolean) {
-    const newTheme = isDark !== undefined ? isDark : !this.isDarkThemeSubject.value;
-    this.isDarkThemeSubject.next(newTheme);
-    
-    if (newTheme) {
-      document.documentElement.classList.add('dark-theme');
-    } else {
-      document.documentElement.classList.remove('dark-theme');
-    }
+  toggleTheme(isDark?: boolean): void {
+    const next = isDark !== undefined ? isDark : !this._isDarkTheme();
+    this.applyTheme(next);
+  }
+
+  private applyTheme(isDark: boolean): void {
+    this._isDarkTheme.set(isDark);
+    document.documentElement.classList.toggle('dark-theme', isDark);
   }
 }

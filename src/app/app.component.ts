@@ -1,10 +1,9 @@
 // app.component.ts - Part 1: Base Setup
-import { Component, OnInit, NgZone } from '@angular/core';
+import { Component, OnInit, NgZone, inject, DestroyRef } from '@angular/core';
 import { ThemeService } from './core/services/theme.service';
 import { trigger, state, style, animate, transition, keyframes } from '@angular/animations';
 import { NavigationEnd, NavigationStart, Router, Event as RouterEvent } from '@angular/router';
-import { SubscriptionManagementDirective } from './core/directives/unsubscribe.directive';
-import { takeUntil } from 'rxjs';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { LoadingService } from './core/services/loading.service';
 
 interface FloatingLetter {
@@ -338,8 +337,14 @@ interface FloatingLetter {
     standalone: false
 })
 
-export class AppComponent extends SubscriptionManagementDirective implements OnInit {
-  isDarkTheme = false;
+export class AppComponent implements OnInit {
+  private themeService = inject(ThemeService);
+  private ngZone = inject(NgZone);
+  private router = inject(Router);
+  private loadingService = inject(LoadingService);
+  private destroyRef = inject(DestroyRef);
+
+  get isDarkTheme(): boolean { return this.themeService.isDarkTheme(); }
   floatingLetters: FloatingLetter[] = [];
   private animationFrame: number | null = null;
   hasExploded = false;
@@ -350,15 +355,15 @@ export class AppComponent extends SubscriptionManagementDirective implements OnI
 
   private readonly HEADER_MARGIN = 5;
   private readonly FOOTER_MARGIN = 5;
-  private readonly LETTER_SIZE = 30; // px, approximate
+  private readonly LETTER_SIZE = 30;
 
-  constructor(
-    private themeService: ThemeService,
-    private ngZone: NgZone,
-    private router: Router,
-    private loadingService: LoadingService
-  ) {
-    super();
+  constructor() {
+    this.destroyRef.onDestroy(() => {
+      if (this.animationFrame) {
+        cancelAnimationFrame(this.animationFrame);
+      }
+    });
+
     const name = "AKHIGBE IRUOBE";
     this.floatingLetters = Array.from(name).map((char, i) => ({
       char,
@@ -377,7 +382,7 @@ export class AppComponent extends SubscriptionManagementDirective implements OnI
       isVisible: false
     }));
 
-    this.router.events.pipe(takeUntil(this.unSubscribe)).subscribe((event: RouterEvent) => {
+    this.router.events.pipe(takeUntilDestroyed()).subscribe((event: RouterEvent) => {
       if (event instanceof NavigationStart) {
         this.isLoading = true;
       }
@@ -386,19 +391,15 @@ export class AppComponent extends SubscriptionManagementDirective implements OnI
       }
     });
 
-    this.loadingService.loading$.pipe(takeUntil(this.unSubscribe)).subscribe(
+    this.loadingService.loading$.pipe(takeUntilDestroyed()).subscribe(
       isLoading => this.isSpinner = isLoading
     );
-    this.loadingService.loadingText$.pipe(takeUntil(this.unSubscribe)).subscribe(
+    this.loadingService.loadingText$.pipe(takeUntilDestroyed()).subscribe(
       text => this.loadingText = text
     );
   }
 
   ngOnInit() {
-    this.themeService.isDarkTheme$.pipe(takeUntil(this.unSubscribe)).subscribe(
-      isDark => this.isDarkTheme = isDark
-    );
-
     this.startLoadingSequence();
   }
 
@@ -572,9 +573,4 @@ export class AppComponent extends SubscriptionManagementDirective implements OnI
     `;
   }
 
-  override ngOnDestroy() {
-    if (this.animationFrame) {
-      cancelAnimationFrame(this.animationFrame);
-    }
-  }
 }

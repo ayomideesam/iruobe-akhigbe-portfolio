@@ -1,7 +1,7 @@
-import { Component, OnInit, ElementRef, HostListener } from '@angular/core';
+import { Component, OnInit, AfterViewInit, ElementRef, HostListener, inject, DestroyRef } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
-import { filter, takeUntil } from 'rxjs';
-import { SubscriptionManagementDirective } from 'src/app/core/directives/unsubscribe.directive';
+import { filter } from 'rxjs';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { AnalyticsService } from 'src/app/core/services/analytics.service';
 import { LoadingService } from 'src/app/core/services/loading.service';
 import { PdfService } from 'src/app/core/services/pdf.service';
@@ -46,63 +46,47 @@ interface Reference {
     standalone: false
 })
 
-export class ResumeComponent extends SubscriptionManagementDirective implements OnInit {
-  isDarkTheme = false;
+export class ResumeComponent implements OnInit, AfterViewInit {
+  private elementRef = inject(ElementRef);
+  private router = inject(Router);
+  private themeService = inject(ThemeService);
+  private loadingService = inject(LoadingService);
+  private resumeData = inject(ResumeDataService);
+  private seoService = inject(SeoService);
+  private pdfService = inject(PdfService);
+  private atsPdfService = inject(AtsPdfService);
+  private analytics = inject(AnalyticsService);
+
+  get isDarkTheme(): boolean { return this.themeService.isDarkTheme(); }
   isGeneratingPDF = false;
   isInView = false;
 
   skills: Skill[] = [];
   employmentHistory: Job[] = [];
-  courses: Course[] = []
-  references: Reference[] = []
+  courses: Course[] = [];
+  references: Reference[] = [];
   keyTechnicalAchievements: string[] = [];
   private isPreparingForPdf = false;
 
-  constructor(
-    private elementRef: ElementRef,
-    private router: Router,
-    private themeService: ThemeService,
-    private loadingService: LoadingService,
-    private resumeData: ResumeDataService,
-    private seoService: SeoService,
-    private pdfService: PdfService,
-    private atsPdfService: AtsPdfService,
-    private analytics: AnalyticsService
-  ) {
-    super();
-
-    // Initialize all data including new achievements section
+  constructor() {
     this.initializeResumeData();
-    this.setupRouterEvents();
+    this.router.events.pipe(
+      takeUntilDestroyed(),
+      filter(event => event instanceof NavigationEnd)
+    ).subscribe(() => this.scrollToTop());
     this.seoService.setResumeSeo();
   }
 
-  // Separated initialization for better code organization
   private initializeResumeData(): void {
     this.skills = this.resumeData.getSkills();
     this.employmentHistory = this.resumeData.getEmploymentHistory();
     this.courses = this.resumeData.getCourses();
     this.references = this.resumeData.getReferences();
-
-    // Load the new key technical achievements
     this.keyTechnicalAchievements = this.resumeData.getKeyTechnicalAchievements();
-  }
-
-  private setupRouterEvents(): void {
-    this.router.events.pipe(
-      takeUntil(this.unSubscribe),
-      filter(event => event instanceof NavigationEnd)
-    ).subscribe(() => {
-      this.scrollToTop();
-    });
   }
 
   ngOnInit() {
     this.initScrollObserver();
-
-    this.themeService.isDarkTheme$.pipe(takeUntil(this.unSubscribe)).subscribe(
-      isDark => this.isDarkTheme = isDark
-    );
   }
 
   ngAfterViewInit() {

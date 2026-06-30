@@ -1,12 +1,10 @@
 // pages/home/home.component.ts
-import { Component, OnInit, ElementRef, AfterViewInit, ViewChild, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ElementRef, AfterViewInit, ViewChild, DestroyRef, inject } from '@angular/core';
 import { trigger, state, style, animate, transition, keyframes, query, stagger } from '@angular/animations';
 import { Router } from '@angular/router';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { ThemeService } from 'src/app/core/services/theme.service';
 import { IconService } from 'src/app/core/services/icon.service';
-import { takeUntil } from 'rxjs';
-import { SubscriptionManagementDirective } from 'src/app/core/directives/unsubscribe.directive';
 import { AnalyticsService } from 'src/app/core/services/analytics.service';
 
 interface Technology {
@@ -184,11 +182,19 @@ interface Experience {
     standalone: false
 })
 
-export class HomeComponent extends SubscriptionManagementDirective implements OnInit {
+export class HomeComponent implements OnInit {
+  private iconService = inject(IconService);
+  private router = inject(Router);
+  private elementRef = inject(ElementRef);
+  private sanitizer = inject(DomSanitizer);
+  private themeService = inject(ThemeService);
+  private analytics = inject(AnalyticsService);
+  private destroyRef = inject(DestroyRef);
+
   @ViewChild('heroCanvas') heroCanvas!: ElementRef<HTMLCanvasElement>;
   @ViewChild('orbitContainer') orbitContainer!: ElementRef;
 
-  isDarkTheme = false;
+  get isDarkTheme(): boolean { return this.themeService.isDarkTheme(); }
   private animationFrame: number | null = null;
   subtitle: string = "";
   mouseX = 0;
@@ -500,25 +506,18 @@ export class HomeComponent extends SubscriptionManagementDirective implements On
 
   private animationInterval: any;
 
-  constructor(
-    private router: Router,
-    private cdr: ChangeDetectorRef,
-    private elementRef: ElementRef,
-    private sanitizer: DomSanitizer,
-    private iconService: IconService,
-    private themeService: ThemeService,
-    private analytics: AnalyticsService
-  ) {
-    super();
-   }
+  constructor() {
+    this.destroyRef.onDestroy(() => {
+      if (this.animationFrame) {
+        cancelAnimationFrame(this.animationFrame);
+        this.animationFrame = null;
+      }
+    });
+  }
 
   ngOnInit() {
     this.initializeOrbitAnimation();
     this.initIntersectionObserver();
-
-    this.themeService.isDarkTheme$.pipe(takeUntil(this.unSubscribe)).subscribe(
-      isDark => this.isDarkTheme = isDark
-    );
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
@@ -840,11 +839,4 @@ export class HomeComponent extends SubscriptionManagementDirective implements On
     this.analytics.trackProjectView(id);
   }
 
-  // Add proper cleanup in ngOnDestroy
-  override ngOnDestroy() {
-    if (this.animationFrame) {
-      cancelAnimationFrame(this.animationFrame);
-      this.animationFrame = null;
-    }
-  }
 }

@@ -1,4 +1,4 @@
-import { Component, HostListener, OnInit } from '@angular/core';
+import { Component, HostListener, OnInit, inject } from '@angular/core';
 import { trigger, state, style, animate, transition } from '@angular/animations';
 import { Router } from '@angular/router';
 import { SeoService } from 'src/app/core/services/seo.service';
@@ -61,6 +61,11 @@ interface Project {
 })
 
 export class ProjectsComponent implements OnInit {
+  private router = inject(Router);
+  private seoService = inject(SeoService);
+  private projectData = inject(ProjectDataService);
+  private analytics = inject(AnalyticsService);
+
   scrollState = 'normal';
   readonly githubUrl = 'https://github.com/ayomideesam';
 
@@ -71,7 +76,7 @@ export class ProjectsComponent implements OnInit {
     para4: 'If you\'re hiring a frontend engineer who delivers under compliance pressure and leads a team while doing it — these are the receipts.'
   };
 
-  projects: Project[] = []
+  projects: Project[] = this.projectData.getProjects();
 
   @HostListener('window:scroll', [])
   onWindowScroll() {
@@ -92,15 +97,6 @@ export class ProjectsComponent implements OnInit {
       (card as HTMLElement).style.setProperty('--x', `${x}%`);
       (card as HTMLElement).style.setProperty('--y', `${y}%`);
     });
-  }
-
-  constructor(
-    private router: Router,
-    private seoService: SeoService,
-    private projectData: ProjectDataService,
-    private analytics: AnalyticsService
-  ) {
-    this.projects = this.projectData.getProjects()
   }
 
   ngOnInit() {

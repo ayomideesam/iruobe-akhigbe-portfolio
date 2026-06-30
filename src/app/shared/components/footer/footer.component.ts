@@ -1,6 +1,7 @@
-// footer.component.ts
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, inject, DestroyRef } from '@angular/core';
 import { trigger, state, style, animate, transition, query, stagger } from '@angular/animations';
+import { interval } from 'rxjs';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { AnalyticsService } from 'src/app/core/services';
 
 @Component({
@@ -59,7 +60,9 @@ import { AnalyticsService } from 'src/app/core/services';
     ],
     standalone: false
 })
-export class FooterComponent implements OnInit, OnDestroy {
+export class FooterComponent implements OnInit {
+  private analyticsService = inject(AnalyticsService);
+  private destroyRef = inject(DestroyRef);
   navLinks = [
     { path: '/', label: 'Home', exact: true, isHovered: false },
     { path: '/projects', label: 'Projects', exact: false, isHovered: false },
@@ -129,20 +132,9 @@ export class FooterComponent implements OnInit, OnDestroy {
     { value: '0', label: 'Post-Launch Bugs' }
   ];
 
-  private clockInterval: any;
-
-  constructor(
-    private analyticsService: AnalyticsService
-  ) {}
-
-  ngOnInit() {
-    this.initializeAnimations();
+  ngOnInit(): void {
     this.updateLagosClock();
-    this.clockInterval = setInterval(() => this.updateLagosClock(), 1000);
-  }
-
-  ngOnDestroy() {
-    if (this.clockInterval) clearInterval(this.clockInterval);
+    interval(1000).pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => this.updateLagosClock());
   }
 
   private updateLagosClock(): void {
@@ -162,8 +154,6 @@ export class FooterComponent implements OnInit, OnDestroy {
     const isSunday = new Intl.DateTimeFormat('en', { timeZone: 'Africa/Lagos', weekday: 'short' }).format(now) === 'Sun';
     this.isBusinessHours = lagosHour >= 8 && lagosHour < 19 && !isSunday;
   }
-
-  private initializeAnimations() {}
 
   scrollToTop(): void {
     window.scrollTo({ top: 0, behavior: 'smooth' });

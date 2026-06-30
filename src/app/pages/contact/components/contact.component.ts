@@ -1,5 +1,5 @@
 // contact.component.ts
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild, inject } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { trigger, state, style, animate, transition, query } from '@angular/animations';
 import { IconService } from 'src/app/core/services/icon.service';
@@ -115,8 +115,20 @@ interface ContactMethod {
 })
 
 export class ContactComponent implements OnInit {
+  private fb = inject(FormBuilder);
+  private iconService = inject(IconService);
+  private analytics = inject(AnalyticsService);
+
   @ViewChild('emailForm') emailForm!: ElementRef;
-  contactForm: FormGroup;
+  contactForm = this.fb.group({
+    name: ['', [Validators.required, Validators.minLength(2)]],
+    email: ['', [
+      Validators.required,
+      Validators.pattern(/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/)
+    ]],
+    subject: ["Akhigbe Iruobe I'd like to hire you!", Validators.required],
+    message: ['', [Validators.required, Validators.minLength(10)]]
+  });
   isSubmitting = false;
   submitSuccess = false;
   showErrorMessage = false;
@@ -167,29 +179,8 @@ export class ContactComponent implements OnInit {
     }
   ];
 
-  constructor(
-    private fb: FormBuilder,
-    private iconService: IconService,
-    private analytics: AnalyticsService
-  ) {
-    this.contactForm = this.fb.group({
-      name: ['', [Validators.required, Validators.minLength(2)]],
-      email: ['', [
-        Validators.required,
-        Validators.pattern(/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/)
-      ]],
-      subject: ["Akhigbe Iruobe I'd like to hire you!", Validators.required],
-      message: ['', [Validators.required, Validators.minLength(10)]]
-    });
-  }
-
   ngOnInit(): void {
     window.scrollTo({ top: 0, behavior: 'smooth' });
-    this.initializeAnimations();
-  }
-
-  private initializeAnimations(): void {
-    // Initialize any animation-related logic here
   }
 
   private scrollToMessage(selector: string): void {
@@ -218,7 +209,7 @@ export class ContactComponent implements OnInit {
       this.isSubmitting = true;
       
       try {
-        this.submittedName = this.contactForm.get('name')?.value;
+        this.submittedName = this.contactForm.get('name')?.value ?? '';
         
         const form = e.target as HTMLFormElement;
         const response = await emailjs.sendForm(
