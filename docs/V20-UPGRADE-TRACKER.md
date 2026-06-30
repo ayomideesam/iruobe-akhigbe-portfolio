@@ -198,13 +198,13 @@ Defer non-critical sections so they render after above-the-fold content is inter
 
 ---
 
-## Phase 9 — Housekeeping
+## Phase 9 — Housekeeping ✅ COMPLETE
 
-- [ ] Remove `src/ANGULAR_19_UPGRADE_COMPLETE.md` — CAP banking project document, wrong repo
-- [ ] Remove `fix-npm.sh` from repo root (one-time fix script)
-- [ ] Confirm `web.config` (IIS redirect) is redundant on Netlify (already have `_redirects`) — delete if so
-- [ ] `allowedCommonJsDependencies` in `angular.json` — audit post-upgrade; remove entries for packages no longer in use
-- [ ] Remove stale comments throughout codebase (`// Add proper cleanup in ngOnDestroy` etc.)
+- [x] Removed `src/ANGULAR_19_UPGRADE_COMPLETE.md` — CAP banking project document, wrong repo ✅ 2026-06-30
+- [x] Removed `fix-npm.sh` from repo root — one-time fix script, no longer needed ✅ 2026-06-30
+- [x] Deleted `src/web.config` — IIS redirect config; Netlify uses `src/_redirects` exclusively ✅ 2026-06-30
+- [x] `allowedCommonJsDependencies` audited — all 14 `core-js` entries and `raf`/`rgbcolor`/`html2canvas`/`dompurify` are still needed (all sourced from `canvg` — a `jsPDF` dependency used for PDF export). Build without any entries produced 14 warnings; full list kept. ✅ 2026-06-30
+- [x] Removed dead commented-out `downloadPDF` implementation (117 lines) from `resume.component.ts` — replaced by the active ATS-based implementation ✅ 2026-06-30
 
 ---
 
