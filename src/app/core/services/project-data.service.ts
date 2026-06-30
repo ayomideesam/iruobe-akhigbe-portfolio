@@ -291,8 +291,8 @@ export class ProjectDataService {
             level: 'senior',
             accentColor: '#DD0031',
             accentColorRgb: '221, 0, 49',
-            assessmentBrief: 'You were recently hired as a Snr. Analyst Frontend Development in which role you are required to build a seamless business solution. You’ve been asked to build a simple web app for ID Card Document Update as part of Account Maintenance Services for Logic Bank customers. Build a pixel-perfect, multi-step Digital Account Maintenance Web Portal from the Figma specification, Your solution will be evaluated based on the following: Implementation of screens and features as per the design and specifications in case study, - Error handling, Responsiveness, - Code Quality (readability, state management, scalability), - Performance (load time, resource usage), - Documentation implementing the full Identity Document Update customer flow — NDPR consent, OTP account verification, document upload, and a 4-modal submission sequence.',
-            description: 'A 7-step self-service portal that lets First Bank customers update their identity documents without visiting a branch, faithfully translated from Figma. Demonstrates senior-level Angular 19 patterns across lazy-loaded route steps.',
+            assessmentBrief: 'Engaged as Senior Analyst, Frontend Development to build a pixel-perfect multi-step ID Document Update portal for LogicBank Account Maintenance Services from a Figma specification — evaluated on design fidelity, error handling, responsiveness, code quality (state management, scalability), performance, and documentation.',
+            description: 'A production-grade, 7-route Angular 19 portal guiding LogicBank customers through a self-service Identity Document Update flow — NDPR consent, OTP-verified account lookup, identity document upload with drag-and-drop, and a sequential 4-modal submission process — without requiring a branch visit.',
             techStack: [
                { name: 'Angular 19', color: '#DD0031' },
                { name: 'TypeScript', color: '#3178C6' },
