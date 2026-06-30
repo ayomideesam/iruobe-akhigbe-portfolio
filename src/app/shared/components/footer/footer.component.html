@@ -35,7 +35,8 @@
             <div class="footer-section" @fadeSlideUp>
                <h3>Quick Links</h3>
                <nav class="quick-links">
-                  <a *ngFor="let link of navLinks" [routerLink]="link.path"
+                  @for (link of navLinks; track link.path) {
+                  <a [routerLink]="link.path"
                      [@linkHover]="link.isHovered ? 'hovered' : 'rest'" (mouseenter)="link.isHovered = true"
                      (mouseleave)="link.isHovered = false">
                      <span class="link-text">{{ link.label }}</span>
@@ -43,6 +44,7 @@
                         <path d="M5 12h14M12 5l7 7-7 7" />
                      </svg>
                   </a>
+                  }
                </nav>
             </div>
 
@@ -50,13 +52,15 @@
             <div class="footer-section" @fadeSlideUp>
                <h3>Connect</h3>
                <div class="social-links">
-                  <a *ngFor="let social of socialLinks" [href]="social.url" target="_blank" class="social-link"
+                  @for (social of socialLinks; track social.name) {
+                  <a [href]="social.url" target="_blank" class="social-link"
                      [@socialHover]="social.isHovered ? 'hovered' : 'rest'" (mouseenter)="social.isHovered = true"
                      (mouseleave)="social.isHovered = false">
                      <div class="social-icon" [innerHTML]="social.icon | safeHtml"></div>
                      <span class="social-name">{{ social.name }}</span>
                      <div class="hover-background"></div>
                   </a>
+                  }
                </div>
             </div>
 
@@ -114,10 +118,12 @@
 
       <!-- Portfolio stats strip -->
       <div class="footer-stats" @fadeSlideUp>
-         <div class="footer-stat" *ngFor="let stat of portfolioStats">
+         @for (stat of portfolioStats; track stat.label) {
+         <div class="footer-stat">
             <span class="footer-stat-value">{{stat.value}}</span>
             <span class="footer-stat-label">{{stat.label}}</span>
          </div>
+         }
       </div>
 
       <!-- Footer Bottom -->

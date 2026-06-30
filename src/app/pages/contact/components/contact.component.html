@@ -58,7 +58,8 @@
         <!-- Contact Methods Grid -->
         <section class="contact-methods">
             <div class="methods-grid">
-                <a *ngFor="let method of contactMethods" [href]="method.link" target="_blank"
+                @for (method of contactMethods; track method.title) {
+                <a [href]="method.link" target="_blank"
                     class="method-card" [ngClass]="method.colorClass"
                     [@methodHover]="method.isHovered ? 'hovered' : 'rest'" (mouseenter)="method.isHovered = true"
                     (mouseleave)="method.isHovered = false">
@@ -77,6 +78,7 @@
                     </div>
                     <div class="hover-gradient"></div>
                 </a>
+                }
             </div>
         </section>
 
@@ -101,10 +103,11 @@
                                 </svg>
                                 <input type="text" id="name" name="from_name" formControlName="name" placeholder="Your name">
                             </div>
-                            <div class="error-message"
-                                *ngIf="contactForm.controls['name'].touched && contactForm.controls['name'].invalid">
+                            @if (contactForm.controls['name'].touched && contactForm.controls['name'].invalid) {
+                            <div class="error-message">
                                 Please enter your name
                             </div>
+                            }
                         </div>
 
                         <div class="form-group">
@@ -121,10 +124,11 @@
                                 <input type="email" id="email" name="from_email" formControlName="email"
                                     placeholder="Your email">
                             </div>
-                            <div class="error-message"
-                                *ngIf="contactForm.controls['email'].touched && contactForm.controls['email'].invalid">
+                            @if (contactForm.controls['email'].touched && contactForm.controls['email'].invalid) {
+                            <div class="error-message">
                                 Please enter a valid email address
                             </div>
+                            }
                         </div>
 
                         <div class="form-group full-width">
@@ -141,10 +145,11 @@
                                 <input type="text" id="subject" name="subject" formControlName="subject"
                                     placeholder="Message subject">
                             </div>
-                            <div class="error-message"
-                                *ngIf="contactForm.controls['subject'].touched && contactForm.controls['subject'].invalid">
+                            @if (contactForm.controls['subject'].touched && contactForm.controls['subject'].invalid) {
+                            <div class="error-message">
                                 Please enter a subject
                             </div>
+                            }
                         </div>
 
                         <div class="form-group full-width">
@@ -158,10 +163,11 @@
                                 <textarea id="message" name="message" formControlName="message" rows="5"
                                     placeholder="Your message"></textarea>
                             </div>
-                            <div class="error-message"
-                                *ngIf="contactForm.controls['message'].touched && contactForm.controls['message'].invalid">
+                            @if (contactForm.controls['message'].touched && contactForm.controls['message'].invalid) {
+                            <div class="error-message">
                                 Please enter a message (minimum 10 characters)
                             </div>
+                            }
                         </div>
                     </div>
 
@@ -179,13 +185,14 @@
                                     d="M22 17.5L14 17.5M22 17.5C22 16.7998 20.0057 15.4915 19.5 15M22 17.5C22 18.2002 20.0057 19.5085 19.5 20"
                                     stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
                             </svg>
-                            <div class="loader" *ngIf="isSubmitting"></div>
+                            @if (isSubmitting) {<div class="loader"></div>}
                         </span>
                     </button>
                 </form>
 
                 <!-- Success Message -->
-                <div class="success-background" *ngIf="submitSuccess" @successMessageSlide>
+                @if (submitSuccess) {
+                <div class="success-background" @successMessageSlide>
                     <button class="close-button" (click)="closeSuccessMessage()">
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
                             stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -203,9 +210,11 @@
                     <p>Thank you for reaching out{{submittedName ? ', ' + submittedName : ''}}. I'll get back to you
                         soon.</p>
                 </div>
+                }
 
                 <!-- Add error message -->
-                <div class="error-background" *ngIf="showErrorMessage" @errorMessageSlide>
+                @if (showErrorMessage) {
+                <div class="error-background" @errorMessageSlide>
                     <button class="close-button" (click)="closeErrorMessage()">
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
                             stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -223,6 +232,7 @@
                     <h3>Message Failed to Send</h3>
                     <p>Sorry, there was an error sending your message. Please try again later.</p>
                 </div>
+                }
             </div>
         </section>
     </div>

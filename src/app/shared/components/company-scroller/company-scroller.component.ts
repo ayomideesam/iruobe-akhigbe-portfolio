@@ -16,7 +16,8 @@ interface Company {
       <div class="logos-container">
         <div class="logos-track">
           <div class="logos-slide" [@scrollAnimation]="animationState">
-            <div class="logo-wrapper" *ngFor="let company of companies">
+            @for (company of companies; track company.name) {
+            <div class="logo-wrapper">
               <div class="company-logo" [attr.aria-label]="company.name">
               <div class="logo-content">
                 <div class="svg-container" [innerHTML]="company.logo | safeHtml"></div>
@@ -24,9 +25,11 @@ interface Company {
               </div>
               </div>
             </div>
+            }
           </div>
           <div class="logos-slide" [@scrollAnimation]="animationState">
-            <div class="logo-wrapper" *ngFor="let company of companies">
+            @for (company of companies; track company.name) {
+            <div class="logo-wrapper">
               <div class="company-logo" [attr.aria-label]="company.name">
               <div class="logo-content">
                 <div class="svg-container" [innerHTML]="company.logo | safeHtml"></div>
@@ -34,6 +37,7 @@ interface Company {
               </div>
               </div>
             </div>
+            }
           </div>
         </div>
       </div>

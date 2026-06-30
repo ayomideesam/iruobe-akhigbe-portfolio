@@ -1,6 +1,8 @@
 <div class="hero-section" [ngClass]="{'dark-theme': isDarkTheme}">
     <div class="hero-particles" aria-hidden="true">
-        <span class="star" *ngFor="let p of particles"></span>
+        @for (p of particles; track $index) {
+        <span class="star"></span>
+        }
         <span class="shooting-star shooting-star--a"></span>
         <span class="shooting-star shooting-star--b"></span>
     </div>
@@ -79,13 +81,15 @@
             <div class="orbit-container">
                 <div class="orbit-ring"></div>
                 <div class="tech-items">
-                    <div *ngFor="let tech of technologies; let i = index" class="tech-item"
+                    @for (tech of technologies; track $index; let i = $index) {
+                    <div class="tech-item"
                         [style.transform]="getInitialPosition(i)"
                         [@techItemAnimation]="hoveredTechIndex === i ? 'hovered' : 'normal'"
                         (mouseenter)="onTechHover(i)" (mouseleave)="onTechLeave()">
                         <div class="tech-icon" [innerHTML]="sanitizeIcon(tech.icon)"></div>
                         <div class="tech-name">{{tech.name}}</div>
                     </div>
+                    }
                 </div>
                 <div class="center-item">
                     <div class="tech-item">
@@ -123,7 +127,8 @@
         </div>
 
         <div class="projects-grid">
-            <div class="project-preview" *ngFor="let project of featuredProjects">
+            @for (project of featuredProjects; track project.id) {
+            <div class="project-preview">
                 <div class="project-card" [@projectHover]="project.isHovered ? 'hovered' : 'rest'"
                     (mouseenter)="project.isHovered = true" (mouseleave)="project.isHovered = false">
                     <div class="project-image">
@@ -132,10 +137,11 @@
                         <div class="project-info">
                             <h3 class="project-title">{{project.title}}</h3>
                             <div class="project-badges">
-                                <span *ngFor="let tech of project.techStack" class="project-badge"
-                                    [style.borderColor]="tech.color + '66'">
+                                @for (tech of project.techStack; track tech.name) {
+                                <span class="project-badge" [style.borderColor]="tech.color + '66'">
                                     {{tech.name}}
                                 </span>
+                                }
                             </div>
                             <div class="project-reveal">
                                 <div class="project-reveal-inner">
@@ -153,6 +159,7 @@
                     </div>
                 </div>
             </div>
+            }
         </div>
 
         <div class="view-all-projects">
@@ -170,7 +177,9 @@
 <!-- Currently Building -->
 <section class="currently-building-section">
     <div class="section-particles" aria-hidden="true">
-        <span class="star" *ngFor="let p of particles"></span>
+        @for (p of particles; track $index) {
+        <span class="star"></span>
+        }
         <span class="shooting-star shooting-star--a"></span>
     </div>
     <div class="cb-shell">
@@ -191,8 +200,8 @@
         </div>
 
         <div class="cb-modules-grid">
-            <div *ngFor="let module of currentlyBuilding.modules"
-                class="cb-module-card"
+            @for (module of currentlyBuilding.modules; track module.name) {
+            <div class="cb-module-card"
                 [class.cb-module--active]="module.status === 'finalising'"
                 [class.cb-module--upcoming]="module.status === 'upcoming'">
 
@@ -200,7 +209,9 @@
                     <div class="cb-module-name-row">
                         <h3 class="cb-module-name">{{module.name}}</h3>
                         <span class="cb-module-status-badge" [class.badge--active]="module.status === 'finalising'" [class.badge--upcoming]="module.status === 'upcoming'">
-                            <span class="badge-dot" *ngIf="module.status === 'finalising'"></span>
+                            @if (module.status === 'finalising') {
+                            <span class="badge-dot"></span>
+                            }
                             {{module.statusLabel}}
                         </span>
                     </div>
@@ -216,9 +227,12 @@
                 <p class="cb-module-desc">{{module.description}}</p>
 
                 <div class="cb-module-tech">
-                    <span *ngFor="let t of module.tech" class="cb-tech-pill">{{t}}</span>
+                    @for (t of module.tech; track $index) {
+                    <span class="cb-tech-pill">{{t}}</span>
+                    }
                 </div>
             </div>
+            }
         </div>
     </div>
 </section>
@@ -226,7 +240,9 @@
 <!-- Skills / Toolkit -->
 <section class="skills-section">
     <div class="section-particles" aria-hidden="true">
-        <span class="star" *ngFor="let m of motes"></span>
+        @for (m of motes; track $index) {
+        <span class="star"></span>
+        }
     </div>
     <div class="sec-shell">
         <div class="sec-head">
@@ -238,7 +254,8 @@
         </div>
 
         <div class="skill-grid">
-            <div *ngFor="let category of skillCategories; let i = index" class="skill-category-card"
+            @for (category of skillCategories; track category.name; let i = $index) {
+            <div class="skill-category-card"
                 [@cardAnimation]="{value: '*', params: {delay: i * 100}}">
                 <div class="skill-category-header">
                     <div class="category-icon">
@@ -248,7 +265,8 @@
                 </div>
 
                 <ul class="skills-list">
-                    <li *ngFor="let skill of category.skills" class="skill-row">
+                    @for (skill of category.skills; track skill.name) {
+                    <li class="skill-row">
                         <span class="skill-row-icon" [innerHTML]="sanitizeIcon(skill.icon)"></span>
                         <span class="skill-row-name">{{skill.name}}</span>
                         <span class="skill-row-meta">
@@ -258,15 +276,19 @@
                             <span class="skill-years">{{skill.experience}}</span>
                         </span>
                     </li>
+                    }
                 </ul>
             </div>
+            }
         </div>
     </div>
 </section>
 
 <section class="experience-section py-16">
     <div class="section-particles" aria-hidden="true">
-        <span class="star" *ngFor="let m of motes"></span>
+        @for (m of motes; track $index) {
+        <span class="star"></span>
+        }
     </div>
     <div class="exp-shell">
         <div class="sec-head">
@@ -278,7 +300,8 @@
         </div>
 
         <div class="exp-timeline">
-            <div *ngFor="let exp of experiences; let i = index" class="exp-entry"
+            @for (exp of experiences; track $index; let i = $index) {
+            <div class="exp-entry"
                 [class.is-current]="exp.current" [@timelineAnimation]="{value: '*', params: {delay: i * 120}}"
                 (mouseenter)="hoveredExp = exp" (mouseleave)="hoveredExp = null">
 
@@ -295,12 +318,16 @@
                             <div class="exp-company-line">
                                 <span class="exp-company"
                                     [style.color]="getCompanyColor(exp.company)">{{exp.company}}</span>
-                                <span class="exp-type" *ngIf="exp.type">{{exp.type}}</span>
+                                @if (exp.type) {
+                                <span class="exp-type">{{exp.type}}</span>
+                                }
                             </div>
                         </div>
-                        <span class="exp-current-chip" *ngIf="exp.current">
+                        @if (exp.current) {
+                        <span class="exp-current-chip">
                             <span class="exp-current-dot"></span> Current
                         </span>
+                        }
                     </div>
 
                     <div class="exp-meta">
@@ -329,11 +356,16 @@
                         </span>
                     </div>
 
-                    <div class="exp-tech" *ngIf="exp.technologies">
-                        <span *ngFor="let tech of exp.technologies" class="exp-tech-pill">{{tech}}</span>
+                    @if (exp.technologies) {
+                    <div class="exp-tech">
+                        @for (tech of exp.technologies; track $index) {
+                        <span class="exp-tech-pill">{{tech}}</span>
+                        }
                     </div>
+                    }
                 </article>
             </div>
+            }
         </div>
     </div>
 </section>
@@ -341,7 +373,9 @@
 <!-- Testimonials / Social Proof -->
 <section class="testimonials-section">
     <div class="section-particles" aria-hidden="true">
-        <span class="star" *ngFor="let p of particles"></span>
+        @for (p of particles; track $index) {
+        <span class="star"></span>
+        }
         <span class="shooting-star shooting-star--b"></span>
     </div>
 
@@ -369,13 +403,15 @@
 
             <!-- Scrollable track -->
             <div class="testimonials-track" #testimonialsTrack (scroll)="onTrackScroll($event)">
-                <article *ngFor="let t of testimonials; let i = index"
-                    class="testimonial-card" [attr.data-index]="i">
+                @for (t of testimonials; track $index; let i = $index) {
+                <article class="testimonial-card" [attr.data-index]="i">
                     <div class="testimonial-top-row">
                         <div class="testimonial-stars">
-                            <svg *ngFor="let s of [1,2,3,4,5]" width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                            @for (s of [1,2,3,4,5]; track s) {
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
                                 <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
                             </svg>
+                            }
                         </div>
                         <a href="https://www.linkedin.com/in/akhigbe-iruobe/" target="_blank" rel="noopener noreferrer"
                             class="testimonial-linkedin-badge" title="View recommendation on LinkedIn">
@@ -401,6 +437,7 @@
                         </div>
                     </div>
                 </article>
+                }
             </div>
 
             <!-- Next arrow -->
@@ -433,7 +470,9 @@
         <div class="gradient-overlay"></div>
         <div class="pattern-overlay"></div>
         <div class="cta-stars" aria-hidden="true">
-            <span class="star" *ngFor="let p of particles"></span>
+            @for (p of particles; track $index) {
+            <span class="star"></span>
+            }
             <span class="shooting-star shooting-star--a"></span>
             <span class="shooting-star shooting-star--b"></span>
         </div>

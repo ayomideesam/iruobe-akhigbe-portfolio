@@ -25,7 +25,8 @@ interface ProjectMetric {
         <div class="project-header">
           <h3 class="project-title">{{ title }}</h3>
           <div class="project-links">
-            <a *ngIf="demoUrl" [href]="demoUrl" target="_blank" class="link-button demo">
+            @if (demoUrl) {
+            <a [href]="demoUrl" target="_blank" class="link-button demo">
               <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor">
                 <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
                 <polyline points="15 3 21 3 21 9"></polyline>
@@ -33,38 +34,43 @@ interface ProjectMetric {
               </svg>
               Live Demo
             </a>
+            }
           </div>
         </div>
 
         <p class="project-description">{{ description }}</p>
 
         <div class="metrics-grid">
-          <div *ngFor="let metric of metrics" class="metric-item" [@metricAppear]="'in'">
+          @for (metric of metrics; track metric.label) {
+          <div class="metric-item" [@metricAppear]="'in'">
             <div class="metric-icon" [innerHTML]="metric.icon"></div>
             <div class="metric-details">
               <span class="metric-value">{{ metric.value }}</span>
               <span class="metric-label">{{ metric.label }}</span>
             </div>
           </div>
+          }
         </div>
 
         <div class="tech-stack">
-          <span *ngFor="let tech of techStack" 
-                class="tech-badge"
+          @for (tech of techStack; track tech.name) {
+          <span class="tech-badge"
                 [style.backgroundColor]="tech.color + '20'"
                 [style.color]="tech.color">
             {{ tech.name }}
           </span>
+          }
         </div>
 
         <div class="key-achievements">
           <h4>Key Achievements</h4>
           <ul>
-            <li *ngFor="let achievement of achievements; let i = index"
-                [@achievementAppear]="'in'"
+            @for (achievement of achievements; track $index; let i = $index) {
+            <li [@achievementAppear]="'in'"
                 [style.animation-delay]="i * 100 + 'ms'">
               {{ achievement }}
             </li>
+            }
           </ul>
         </div>
       </div>

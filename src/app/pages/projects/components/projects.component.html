@@ -23,7 +23,8 @@
     </section>
 
     <section class="project-section">
-        <div class="project-card" *ngFor="let project of projects" [id]="'project-' + project.id"
+        @for (project of projects; track project.id) {
+        <div class="project-card" [id]="'project-' + project.id"
             [@cardHover]="project.isHovered ? 'hover' : 'rest'" (mouseenter)="project.isHovered = true"
             (mouseleave)="project.isHovered = false">
             <div class="project-image-grid" [class.has-detail-panel]="project.stats?.length">
@@ -38,13 +39,16 @@
                             <div class="ai-indicators"></div>
                         </div>
                     </div> -->
-                    <div class="animation-container top-right" *ngIf="project.id === 1">
+                    @if (project.id === 1) {
+                    <div class="animation-container top-right">
                         <div class="ai-network">
                             <div class="network-nodes">
-                                <div class="node" *ngFor="let i of [1,2,3,4,5,6]">
+                                @for (i of [1,2,3,4,5,6]; track i) {
+                                <div class="node">
                                     <div class="core"></div>
                                     <div class="pulse"></div>
                                 </div>
+                                }
                             </div>
                             <div class="connections">
                                 <svg viewBox="0 0 100 100">
@@ -57,28 +61,42 @@
                                 </svg>
                             </div>
                             <div class="data-particles">
-                                <div class="particle" *ngFor="let i of [1,2,3,4,5,6,7,8]"></div>
+                                @for (i of [1,2,3,4,5,6,7,8]; track i) {
+                                <div class="particle"></div>
+                                }
                             </div>
                             <div class="glow-effects">
-                                <div class="glow" *ngFor="let i of [1,2,3]"></div>
+                                @for (i of [1,2,3]; track i) {
+                                <div class="glow"></div>
+                                }
                             </div>
                         </div>
                     </div>
-                    <div class="animation-container top-right" *ngIf="project.id === 2">
+                    }
+                    @if (project.id === 2) {
+                    <div class="animation-container top-right">
                         <div class="trade-animation">
                             <div class="candlestick-wrapper">
-                                <div class="candlestick" *ngFor="let i of [1,2,3,4,5]"></div>
-                                <div class="chart-line" *ngFor="let i of [1,2,3]"></div>
+                                @for (i of [1,2,3,4,5]; track i) {
+                                <div class="candlestick"></div>
+                                }
+                                @for (i of [1,2,3]; track i) {
+                                <div class="chart-line"></div>
+                                }
                             </div>
                         </div>
                     </div>
-                    <div class="animation-container top-right" *ngIf="project.id === 3">
+                    }
+                    @if (project.id === 3) {
+                    <div class="animation-container top-right">
                         <div class="fraud-detection">
                             <div class="detection-grid">
-                                <div class="transaction" *ngFor="let i of [1,2,3,4,5,6]">
+                                @for (i of [1,2,3,4,5,6]; track i) {
+                                <div class="transaction">
                                     <div class="status-indicator"></div>
                                     <div class="transaction-line"></div>
                                 </div>
+                                }
                                 <div class="detection-shield">
                                     <div class="shield-outer"></div>
                                     <div class="shield-inner"></div>
@@ -87,15 +105,21 @@
                             </div>
                         </div>
                     </div>
-                    <div class="animation-container top-right" *ngIf="project.id === 4">
+                    }
+                    @if (project.id === 4) {
+                    <div class="animation-container top-right">
                         <div class="transfer-animation">
                             <div class="money-particles">
-                                <div class="money-icon" *ngFor="let i of [1,2,3,4,5]">₦</div>
+                                @for (i of [1,2,3,4,5]; track i) {
+                                <div class="money-icon">₦</div>
+                                }
                             </div>
                             <div class="transfer-paths">
-                                <div class="path" *ngFor="let i of [1,2,3]">
+                                @for (i of [1,2,3]; track i) {
+                                <div class="path">
                                     <div class="transfer-dot"></div>
                                 </div>
+                                }
                             </div>
                             <div class="devices">
                                 <div class="device source">
@@ -107,20 +131,26 @@
                             </div>
                         </div>
                     </div>
-                    <div class="animation-container top-right" *ngIf="project.id === 6">
+                    }
+                    @if (project.id === 6) {
+                    <div class="animation-container top-right">
                         <div class="cap-approval-flow">
                             <div class="flow-stages">
-                                <div class="flow-node" *ngFor="let i of [1,2,3,4,5]">
+                                @for (i of [1,2,3,4,5]; track i) {
+                                <div class="flow-node">
                                     <div class="node-dot"></div>
                                     <div class="node-line"></div>
                                 </div>
+                                }
                                 <div class="flow-node final">
                                     <div class="node-dot approved"></div>
                                 </div>
                             </div>
                             <div class="flow-document">
                                 <div class="doc-lines">
-                                    <div class="doc-line" *ngFor="let i of [1,2,3]"></div>
+                                    @for (i of [1,2,3]; track i) {
+                                    <div class="doc-line"></div>
+                                    }
                                 </div>
                             </div>
                             <div class="flow-stamp">
@@ -130,10 +160,13 @@
                             </div>
                         </div>
                     </div>
-                    <div class="animation-container top-right" *ngIf="project.id === 5">
+                    }
+                    @if (project.id === 5) {
+                    <div class="animation-container top-right">
                         <div class="xpath-data-flow">
                             <div class="data-records">
-                                <div class="record" *ngFor="let i of [1,2,3,4]">
+                                @for (i of [1,2,3,4]; track i) {
+                                <div class="record">
                                     <div class="record-id"></div>
                                     <div class="record-data">
                                         <div class="data-line"></div>
@@ -141,17 +174,22 @@
                                     </div>
                                     <div class="validation-check"></div>
                                 </div>
+                                }
                             </div>
                             <div class="branch-network">
-                                <div class="branch-node" *ngFor="let i of [1,2,3,4,5,6]">
+                                @for (i of [1,2,3,4,5,6]; track i) {
+                                <div class="branch-node">
                                     <div class="connection-line"></div>
                                 </div>
+                                }
                             </div>
                         </div>
                     </div>
+                    }
                 </div>
                 <div class="bottom">
-                    <div class="animation-container bottom-left" *ngIf="project.id === 1">
+                    @if (project.id === 1) {
+                    <div class="animation-container bottom-left">
                         <div class="animated-pattern">
                             <div class="circle"></div>
                             <div class="circle"></div>
@@ -160,17 +198,25 @@
                             <div class="circle"></div>
                         </div>
                     </div>
-                    <div class="animation-container bottom-left" *ngIf="project.id === 2">
+                    }
+                    @if (project.id === 2) {
+                    <div class="animation-container bottom-left">
                         <div class="trade-pattern">
                             <div class="market-pulse">
-                                <div class="price-bar" *ngFor="let i of [1,2,3,4,5]"></div>
+                                @for (i of [1,2,3,4,5]; track i) {
+                                <div class="price-bar"></div>
+                                }
                             </div>
                             <div class="trend-lines">
-                                <div class="trend-line" *ngFor="let i of [1,2,3]"></div>
+                                @for (i of [1,2,3]; track i) {
+                                <div class="trend-line"></div>
+                                }
                             </div>
                         </div>
                     </div>
-                    <div class="animation-container bottom-left" *ngIf="project.id === 3">
+                    }
+                    @if (project.id === 3) {
+                    <div class="animation-container bottom-left">
                         <div class="fingerprint-scan">
                             <svg viewBox="0 0 192 192" class="fingerprint-icon">
                                 <path class="fingerprint-path"
@@ -183,34 +229,44 @@
                             <div class="scan-line"></div>
                         </div>
                     </div>
-                    <div class="animation-container bottom-left" *ngIf="project.id === 4">
+                    }
+                    @if (project.id === 4) {
+                    <div class="animation-container bottom-left">
                         <div class="payment-animation">
                             <div class="transaction-cards">
-                                <div class="bank-card" *ngFor="let i of [1,2,3]">
+                                @for (i of [1,2,3]; track i) {
+                                <div class="bank-card">
                                     <div class="card-chip"></div>
                                     <div class="card-details">
                                         <div class="card-number"></div>
                                         <div class="card-date"></div>
                                     </div>
                                 </div>
+                                }
                             </div>
                             <div class="progress-indicators">
                                 <div class="progress-track">
                                     <div class="progress-bar"></div>
                                 </div>
                                 <div class="status-dots">
-                                    <div class="dot" *ngFor="let i of [1,2,3,4]"></div>
+                                    @for (i of [1,2,3,4]; track i) {
+                                    <div class="dot"></div>
+                                    }
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div class="animation-container bottom-left" *ngIf="project.id === 6">
+                    }
+                    @if (project.id === 6) {
+                    <div class="animation-container bottom-left">
                         <div class="cap-committee">
                             <div class="committee-members">
-                                <div class="member" *ngFor="let i of [1,2,3,4,5,6]">
+                                @for (i of [1,2,3,4,5,6]; track i) {
+                                <div class="member">
                                     <div class="member-avatar"></div>
                                     <div class="member-vote"></div>
                                 </div>
+                                }
                             </div>
                             <div class="vote-progress">
                                 <div class="vote-track">
@@ -220,18 +276,24 @@
                             </div>
                         </div>
                     </div>
-                    <div class="animation-container bottom-left" *ngIf="project.id === 5">
+                    }
+                    @if (project.id === 5) {
+                    <div class="animation-container bottom-left">
                         <div class="xpath-payment">
                             <div class="payment-flow">
                                 <div class="receipt-generator">
-                                    <div class="receipt" *ngFor="let i of [1,2,3]">
+                                    @for (i of [1,2,3]; track i) {
+                                    <div class="receipt">
                                         <div class="receipt-header"></div>
                                         <div class="receipt-body"></div>
                                     </div>
+                                    }
                                 </div>
                                 <div class="splitting-visualization">
                                     <div class="split-container">
-                                        <div class="split-segment" *ngFor="let i of [1,2,3]"></div>
+                                        @for (i of [1,2,3]; track i) {
+                                        <div class="split-segment"></div>
+                                        }
                                     </div>
                                 </div>
                             </div>
@@ -246,6 +308,7 @@
                             </div>
                         </div> -->
                     </div>
+                    }
                     <div class="image-container bottom-right">
                         <img [src]="project.images[1]" [alt]="project.title + ' preview 2'"
                             (mouseenter)="onImageHover($event.target)" (mouseleave)="onImageLeave($event.target)">
@@ -253,29 +316,36 @@
                 </div>
 
                 <!-- Dynamic detail panel for any project with stats -->
-                <div class="cap-detail-panel" *ngIf="project.stats?.length">
+                @if (project.stats?.length) {
+                <div class="cap-detail-panel">
                     <div class="cap-stats">
-                        <div class="cap-stat" *ngFor="let stat of project.stats">
+                        @for (stat of project.stats!; track stat.label) {
+                        <div class="cap-stat">
                             <span class="cap-stat-value">{{stat.value}}</span>
                             <span class="cap-stat-label">{{stat.label}}</span>
                         </div>
+                        }
                     </div>
 
-                    <div class="cap-journey" *ngIf="project.pipeline?.length">
+                    @if (project.pipeline?.length) {
+                    <div class="cap-journey">
                         <h4 class="cap-journey-title">{{project.pipelineLabel || 'Project Pipeline'}}</h4>
                         <p class="cap-journey-subtitle">{{getPipelineSubtitle(project.pipeline)}}</p>
                         <ul class="cap-pipeline">
-                            <li class="cap-step" *ngFor="let step of project.pipeline; let last = last"
-                                [class.cap-step-final]="last">
+                            @for (step of project.pipeline!; track $index; let last = $last) {
+                            <li class="cap-step" [class.cap-step-final]="last">
                                 <span class="cap-step-marker"></span>
                                 <div class="cap-step-body">
                                     <span class="cap-step-name">{{step.name}}</span>
                                     <span class="cap-step-meta">{{step.meta}}</span>
                                 </div>
                             </li>
+                            }
                         </ul>
                     </div>
+                    }
                 </div>
+                }
             </div>
 
             <div class="project-content">
@@ -283,10 +353,12 @@
                 <p class="project-description">{{project.description}}</p>
 
                 <div class="tech-stack">
-                    <span *ngFor="let tech of project.techStack" class="tech-badge"
+                    @for (tech of project.techStack; track tech.name) {
+                    <span class="tech-badge"
                         [style.backgroundColor]="tech.color + '20'" [style.color]="tech.color">
                         {{tech.name}}
                     </span>
+                    }
                 </div>
 
                 <!-- <div class="metrics-grid">
@@ -299,9 +371,9 @@
                 <div class="achievements">
                     <h3>Key Achievements</h3>
                     <ul>
-                        <li *ngFor="let achievement of project.achievements">
-                            {{achievement}}
-                        </li>
+                        @for (achievement of project.achievements; track $index) {
+                        <li>{{achievement}}</li>
+                        }
                     </ul>
                 </div>
 
@@ -322,5 +394,6 @@
                 </div>
             </div>
         </div>
+        }
     </section>
 </div>

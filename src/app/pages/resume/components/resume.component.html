@@ -99,7 +99,8 @@
                     <section class="skills-section">
                         <h3>SKILLS</h3>
                         <div class="skills-list">
-                            <div class="skill-item" *ngFor="let skill of skills">
+                            @for (skill of skills; track skill.name) {
+                            <div class="skill-item">
                                 <div class="skill-header">
                                     <span class="skill-name">{{skill.name}}</span>
                                     <span class="skill-level">{{skill.level}}%</span>
@@ -111,6 +112,7 @@
                                     </div>
                                 </div>
                             </div>
+                            }
                         </div>
                     </section>
 
@@ -152,31 +154,33 @@
                             <div class="language-item">
                                 <span class="language-name">English</span>
                                 <div class="language-proficiency">
-                                    <div class="proficiency-dot filled" *ngFor="let dot of [1,2,3,4,5]"></div>
+                                    @for (dot of [1,2,3,4,5]; track dot) {
+                                    <div class="proficiency-dot filled"></div>
+                                    }
                                 </div>
                             </div>
                             <div class="language-item">
                                 <span class="language-name">Yoruba</span>
                                 <div class="language-proficiency">
-                                    <div class="proficiency-dot" [class.filled]="dot <= 3"
-                                        *ngFor="let dot of [1,2,3,4,5]">
-                                    </div>
+                                    @for (dot of [1,2,3,4,5]; track dot) {
+                                    <div class="proficiency-dot" [class.filled]="dot <= 3"></div>
+                                    }
                                 </div>
                             </div>
                             <div class="language-item">
                                 <span class="language-name">French</span>
                                 <div class="language-proficiency">
-                                    <div class="proficiency-dot" [class.filled]="dot <= 2.5"
-                                        *ngFor="let dot of [1,2,3,4,5]">
-                                    </div>
+                                    @for (dot of [1,2,3,4,5]; track dot) {
+                                    <div class="proficiency-dot" [class.filled]="dot <= 2.5"></div>
+                                    }
                                 </div>
                             </div>
                             <div class="language-item">
                                 <span class="language-name">Hausa</span>
                                 <div class="language-proficiency">
-                                    <div class="proficiency-dot" [class.filled]="dot <= 1"
-                                        *ngFor="let dot of [1,2,3,4,5]">
-                                    </div>
+                                    @for (dot of [1,2,3,4,5]; track dot) {
+                                    <div class="proficiency-dot" [class.filled]="dot <= 1"></div>
+                                    }
                                 </div>
                             </div>
                         </div>
@@ -223,11 +227,12 @@
                     <section class="key-achievements-section">
                         <h3>🏆 KEY TECHNICAL ACHIEVEMENTS</h3>
                         <div class="achievements-grid">
-                            <div class="achievement-item"
-                                *ngFor="let achievement of keyTechnicalAchievements; let i = index">
+                            @for (achievement of keyTechnicalAchievements; track $index) {
+                            <div class="achievement-item">
                                 <!-- Parse the achievement to separate icon, title, and description -->
                                 <div class="achievement-content" [innerHTML]="formatAchievement(achievement)"></div>
                             </div>
+                            }
                         </div>
                     </section>
 
@@ -235,17 +240,22 @@
                     <section class="employment-section">
                         <h3>EMPLOYMENT HISTORY</h3>
                         <div class="jobs-list">
-                            <div class="job-item" *ngFor="let job of employmentHistory; let i = index; let first = first"
+                            @for (job of employmentHistory; track $index; let i = $index; let first = $first) {
+                            <div class="job-item"
                                 [class.current-role]="job.period.includes('Present')"
                                 [class.same-company]="i > 0 && employmentHistory[i-1].company === job.company">
                                 <div class="job-header">
                                     <div class="job-title">
                                         <h4>
-                                            <span class="promotion-badge" *ngIf="job.period.includes('Present')">CURRENT</span>
+                                            @if (job.period.includes('Present')) {
+                                            <span class="promotion-badge">CURRENT</span>
+                                            }
                                             {{job.role}}
-                                            <span class="company-tenure-badge" *ngIf="getCompanyTenure(i)">
+                                            @if (getCompanyTenure(i)) {
+                                            <span class="company-tenure-badge">
                                                 {{getCompanyTenure(i)}} total
                                             </span>
+                                            }
                                         </h4>
                                         <h5>
                                             <span class="company-icon">🏢</span>
@@ -262,9 +272,11 @@
                                         </span>
                                     </div>
                                 </div>
-                                <div class="job-description" *ngIf="job.description">
+                                @if (job.description) {
+                                <div class="job-description">
                                     <p>{{job.description}}</p>
                                 </div>
+                                }
 
                                 <!-- leadership-section -->
                                 <!-- <div class="leadership-section" *ngIf="job.technicalLeadership?.length">
@@ -275,29 +287,41 @@
                                 </div> -->
 
                                 <!-- achievements-section  -->
-                                <div class="achievements-section" *ngIf="job.achievements?.length">
+                                @if (job.achievements?.length) {
+                                <div class="achievements-section">
                                     <h6>Key Achievements & Business Impact</h6>
                                     <ul>
-                                        <li *ngFor="let achievement of job.achievements">
-                                            {{achievement}}</li>
+                                        @for (achievement of job.achievements!; track $index) {
+                                        <li>{{achievement}}</li>
+                                        }
                                     </ul>
                                 </div>
+                                }
 
-                                <div class="technical-section" *ngIf="job.technicalAchievements?.length">
+                                @if (job.technicalAchievements?.length) {
+                                <div class="technical-section">
                                     <h6>Technical Architecture & Implementation</h6>
                                     <!-- <h6>Technical Achievements:</h6> -->
                                     <ul>
-                                        <li *ngFor="let achievement of job.technicalAchievements">{{achievement}}</li>
+                                        @for (achievement of job.technicalAchievements!; track $index) {
+                                        <li>{{achievement}}</li>
+                                        }
                                     </ul>
                                 </div>
+                                }
 
-                                <div class="leadership-section" *ngIf="job.technicalLeadership?.length">
+                                @if (job.technicalLeadership?.length) {
+                                <div class="leadership-section">
                                     <h6>Technical Leadership:</h6>
                                     <ul>
-                                        <li *ngFor="let item of job.technicalLeadership">{{item}}</li>
+                                        @for (item of job.technicalLeadership!; track $index) {
+                                        <li>{{item}}</li>
+                                        }
                                     </ul>
                                 </div>
+                                }
                             </div>
+                            }
                         </div>
                     </section>
 
@@ -323,13 +347,15 @@
                     <section class="courses-section">
                         <h3>COURSES / CERTIFICATIONS</h3>
                         <div class="courses-list">
-                            <div class="course-item" *ngFor="let course of courses">
+                            @for (course of courses; track course.title) {
+                            <div class="course-item">
                                 <div class="course-header">
                                     <h4>{{course.title}}</h4>
                                     <span class="course-period">{{course.period}}</span>
                                 </div>
                                 <h5>{{course.institution}}</h5>
                             </div>
+                            }
                         </div>
                     </section>
 
@@ -337,7 +363,8 @@
                     <section class="references-section">
                         <h3>REFERENCES</h3>
                         <div class="references-list">
-                            <div class="reference-item" *ngFor="let reference of references">
+                            @for (reference of references; track reference.name) {
+                            <div class="reference-item">
                                 <div class="reference-content">
                                     <h4>{{reference.name}}</h4>
                                     <h5>{{reference.company}}</h5>
@@ -346,6 +373,7 @@
                                     </div>
                                 </div>
                             </div>
+                            }
                         </div>
                         <div class="download-pdf">
                             <button class="download-btn" (click)="downloadPDF()">

@@ -6,7 +6,8 @@ import { animate, style, transition, trigger } from '@angular/animations';
     template: `
       <div class="spinner-overlay" [class.active]="isLoading">
          <div class="spinner"></div>
-         <div class="spinner-text" *ngIf="isLoading" [@fadeInOut]>
+         @if (isLoading) {
+         <div class="spinner-text" [@fadeInOut]>
             {{displayText}}
             <span class="dots">
                <span class="dot">.</span>
@@ -15,6 +16,7 @@ import { animate, style, transition, trigger } from '@angular/animations';
                <span class="dot">.</span>
             </span>
          </div>
+         }
       </div>
   `,
     styles: [`
