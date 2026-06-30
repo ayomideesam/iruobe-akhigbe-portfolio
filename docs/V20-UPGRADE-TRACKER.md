@@ -122,7 +122,7 @@ Replace all constructor injection with the `inject()` function. Empty constructo
 
 ---
 
-## Phase 6 — Signals
+## Phase 6 — Signals ✅ COMPLETE
 
 ### `ThemeService` — `BehaviorSubject` → `signal()` ✅ COMPLETE
 
@@ -131,32 +131,32 @@ Replace all constructor injection with the `inject()` function. Empty constructo
 - [x] `isDarkTheme$` observable removed; all subscribers updated ✅ 2026-06-30
 - [x] `toggleTheme()` calls `this._isDarkTheme.set(next)` ✅ 2026-06-30
 
-### `HeaderComponent` — state as signals
+### `HeaderComponent` — state as signals ✅ 2026-06-30
 
-- [x] `isDarkTheme` → `computed(() => this.themeService.isDarkTheme())` ✅ 2026-06-30
-- [ ] `isScrolled` → `signal(false)`
-- [ ] `isMenuOpen` → `signal(false)`
-- [ ] `currentTime` → `signal('')`
-- [ ] `youtubeTooltipShow` / `themeTooltipShow` → `signal(false)`
+- [x] `isDarkTheme` → `computed(() => this.themeService.isDarkTheme())`
+- [x] `isScrolled` → `signal(false)` + `isScrolled.set()` in `onWindowScroll`
+- [x] `isMenuOpen` → `signal(false)` + `.set()` in `toggleMenu` / `closeMenu`
+- [x] `currentTime` → `signal('')` + `currentTime.set()` in `updateClock`
+- [x] `youtubeTooltipShow` / `themeTooltipShow` → `signal(false)` + `.set(true/false)` in template event bindings
 
-### `FooterComponent` — state as signals
+### `FooterComponent` — state as signals ✅ 2026-06-30
 
-- [ ] `lagosTime` → `signal('')`
-- [ ] `isBusinessHours` → `signal(false)`
-- [ ] `emailHovered` / `phoneHovered` / `youtubeHovered` → `signal(false)`
+- [x] `lagosTime` → `signal('')` + `lagosTime.set()` in `updateLagosClock`
+- [x] `isBusinessHours` → `signal(false)` + `isBusinessHours.set()` in `updateLagosClock`
+- [x] `emailHovered` / `phoneHovered` / `youtubeHovered` → `signal(false)` + `.set(true/false)` in template
 
-### `ContactComponent` — form state as signals
+### `ContactComponent` — form state as signals ✅ 2026-06-30
 
-- [ ] `isSubmitting` → `signal(false)`
-- [ ] `submitSuccess` → `signal(false)`
-- [ ] `showErrorMessage` → `signal(false)`
+- [x] `isSubmitting` → `signal(false)` + `.set(true/false)` in `onSubmit` / `finally`
+- [x] `submitSuccess` → `signal(false)` + `.set(true/false)` in `onSubmit` / `closeSuccessMessage`
+- [x] `showErrorMessage` → `signal(false)` + `.set(true/false)` in `onSubmit` / `closeErrorMessage`
 
-### `LoadingService` — BehaviorSubject → signal()
+### `LoadingService` — BehaviorSubject → signal() ✅ 2026-06-30
 
-- [ ] `loading$` → `loading = signal(false)` with `set()`/`asReadonly()` pattern
-- [ ] `loadingText$` → `loadingText = signal('')`
-- [ ] Update `AppComponent` to read signal directly (no subscription needed)
-- [ ] Update `ResumeComponent` to call `loadingService.show()` / `hide()` (API unchanged)
+- [x] `loading$` BehaviorSubject → `private readonly _loading = signal(false)` + `readonly loading = _loading.asReadonly()`
+- [x] `loadingText$` BehaviorSubject → `private readonly _loadingText = signal('')` + `readonly loadingText = _loadingText.asReadonly()`
+- [x] `AppComponent` subscriptions removed → `isSpinner` / `loadingText` replaced with getters calling `loadingService.loading()` / `loadingService.loadingText()`; dead router subscription + import also cleaned up
+- [x] `ResumeComponent` API unchanged (calls `show()` / `hide()` only — no subscription updates needed)
 
 ---
 

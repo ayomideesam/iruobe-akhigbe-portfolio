@@ -1,4 +1,4 @@
-import { Component, OnInit, inject, DestroyRef } from '@angular/core';
+import { Component, OnInit, inject, signal, DestroyRef } from '@angular/core';
 import { trigger, state, style, animate, transition, query, stagger } from '@angular/animations';
 import { interval } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -118,12 +118,12 @@ export class FooterComponent implements OnInit {
     }
   ];
 
-  emailHovered = false;
-  phoneHovered = false;
-  youtubeHovered = false;
+  readonly emailHovered = signal(false);
+  readonly phoneHovered = signal(false);
+  readonly youtubeHovered = signal(false);
 
-  lagosTime = '';
-  isBusinessHours = false;
+  readonly lagosTime = signal('');
+  readonly isBusinessHours = signal(false);
 
   portfolioStats = [
     { value: '9+', label: 'Years Experience' },
@@ -139,20 +139,20 @@ export class FooterComponent implements OnInit {
 
   private updateLagosClock(): void {
     const now = new Date();
-    this.lagosTime = now.toLocaleTimeString('en', {
+    this.lagosTime.set(now.toLocaleTimeString('en', {
       timeZone: 'Africa/Lagos',
       hour: '2-digit',
       minute: '2-digit',
       second: '2-digit',
       hour12: true
-    });
+    }));
     const lagosHour = parseInt(new Intl.DateTimeFormat('en', {
       timeZone: 'Africa/Lagos',
       hour: 'numeric',
       hour12: false
     }).format(now), 10);
     const isSunday = new Intl.DateTimeFormat('en', { timeZone: 'Africa/Lagos', weekday: 'short' }).format(now) === 'Sun';
-    this.isBusinessHours = lagosHour >= 8 && lagosHour < 19 && !isSunday;
+    this.isBusinessHours.set(lagosHour >= 8 && lagosHour < 19 && !isSunday);
   }
 
   scrollToTop(): void {

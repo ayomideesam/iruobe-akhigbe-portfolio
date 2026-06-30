@@ -1,4 +1,4 @@
-import { Component, HostListener, OnInit, inject, computed, DestroyRef } from '@angular/core';
+import { Component, HostListener, OnInit, inject, computed, signal, DestroyRef } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
 import { ThemeService } from 'src/app/core/services/theme.service';
 import { trigger, state, style, animate, transition } from '@angular/animations';
@@ -8,7 +8,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 @Component({
   selector: 'app-header',
   template: `
-    <header [class.scrolled]="isScrolled" [ngClass]="{'dark-theme': isDarkTheme()}">
+    <header [class.scrolled]="isScrolled()" [ngClass]="{'dark-theme': isDarkTheme()}">
       <nav class="nav-wrapper">
         <a class="brand" routerLink="/" (click)="onLinkClick()">
           <div class="brand-name">Akhigbe Iruobe</div>
@@ -21,7 +21,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
           </div>
         </a>
 
-        <div class="nav-content" [class.active]="isMenuOpen">
+        <div class="nav-content" [class.active]="isMenuOpen()">
           <div class="nav-links">
             <a routerLink="/"
                routerLinkActive="active"
@@ -40,35 +40,35 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
               <a href="https://www.youtube.com/@AyomideIruobe"
                 target="_blank"
                 class="youtube-link"
-                (mouseenter)="youtubeTooltipShow = true"
-                (mouseleave)="youtubeTooltipShow = false"
+                (mouseenter)="youtubeTooltipShow.set(true)"
+                (mouseleave)="youtubeTooltipShow.set(false)"
                 (click)="closeMenu()">
                 <svg viewBox="0 0 24 24" class="youtube-icon">
                   <path fill="currentColor" d="M23.5 6.2c-.3-1.1-1.1-1.9-2.2-2.2C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.3.5c-1.1.3-1.9 1.1-2.2 2.2C0 8 0 12 0 12s0 4 .5 5.8c.3 1.1 1.1 1.9 2.2 2.2 1.8.5 9.3.5 9.3.5s7.5 0 9.3-.5c1.1-.3 1.9-1.1 2.2-2.2.5-1.8.5-5.8.5-5.8s0-4-.5-5.8zM9.5 15.5v-7l6.2 3.5-6.2 3.5z"/>
                 </svg>
                 YouTube
               </a>
-              <app-tooltip [text]="'Subscribe to my channel🙏🙏🙏'" [show]="youtubeTooltipShow"></app-tooltip>
+              <app-tooltip [text]="'Subscribe to my channel🙏🙏🙏'" [show]="youtubeTooltipShow()"></app-tooltip>
             </div>
           </div>
 
           <div class="nav-end">
             <div class="nav-clock" aria-label="Your local time">
               <span class="nav-clock-dot"></span>
-              <span class="nav-clock-time">{{ currentTime }}</span>
+              <span class="nav-clock-time">{{ currentTime() }}</span>
             </div>
             <div class="tooltip-wrapper">
               <app-theme-toggle
-                (mouseenter)="themeTooltipShow = true"
-                (mouseleave)="themeTooltipShow = false">
+                (mouseenter)="themeTooltipShow.set(true)"
+                (mouseleave)="themeTooltipShow.set(false)">
               </app-theme-toggle>
-              <app-tooltip [text]="isDarkTheme() ? 'Toggle light mode' : 'Toggle dark mode'" [show]="themeTooltipShow"></app-tooltip>
+              <app-tooltip [text]="isDarkTheme() ? 'Toggle light mode' : 'Toggle dark mode'" [show]="themeTooltipShow()"></app-tooltip>
             </div>
           </div>
         </div>
 
         <button class="menu-toggle"
-                [class.active]="isMenuOpen"
+                [class.active]="isMenuOpen()"
                 (click)="toggleMenu()"
                 aria-label="Toggle menu">
           <span class="line"></span>
@@ -96,11 +96,11 @@ export class HeaderComponent implements OnInit {
 
   readonly isDarkTheme = computed(() => this.themeService.isDarkTheme());
 
-  youtubeTooltipShow = false;
-  themeTooltipShow = false;
-  isScrolled = false;
-  isMenuOpen = false;
-  currentTime = '';
+  readonly isScrolled = signal(false);
+  readonly isMenuOpen = signal(false);
+  readonly currentTime = signal('');
+  readonly youtubeTooltipShow = signal(false);
+  readonly themeTooltipShow = signal(false);
 
   constructor() {
     this.router.events
@@ -119,23 +119,24 @@ export class HeaderComponent implements OnInit {
   }
 
   private updateClock(): void {
-    this.currentTime = new Date().toLocaleTimeString('en', {
+    this.currentTime.set(new Date().toLocaleTimeString('en', {
       hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true
-    });
+    }));
   }
 
   @HostListener('window:scroll')
   onWindowScroll(): void {
-    this.isScrolled = window.scrollY > 20;
+    this.isScrolled.set(window.scrollY > 20);
   }
 
   toggleMenu(): void {
-    this.isMenuOpen = !this.isMenuOpen;
-    document.body.style.overflow = this.isMenuOpen ? 'hidden' : '';
+    const open = !this.isMenuOpen();
+    this.isMenuOpen.set(open);
+    document.body.style.overflow = open ? 'hidden' : '';
   }
 
   closeMenu(): void {
-    this.isMenuOpen = false;
+    this.isMenuOpen.set(false);
     document.body.style.overflow = '';
   }
 

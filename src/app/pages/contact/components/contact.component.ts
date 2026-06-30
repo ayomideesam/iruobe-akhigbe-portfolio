@@ -1,5 +1,5 @@
 // contact.component.ts
-import { Component, ElementRef, OnInit, ViewChild, inject } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild, inject, signal } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { trigger, state, style, animate, transition, query } from '@angular/animations';
 import { IconService } from 'src/app/core/services/icon.service';
@@ -129,9 +129,9 @@ export class ContactComponent implements OnInit {
     subject: ["Akhigbe Iruobe I'd like to hire you!", Validators.required],
     message: ['', [Validators.required, Validators.minLength(10)]]
   });
-  isSubmitting = false;
-  submitSuccess = false;
-  showErrorMessage = false;
+  readonly isSubmitting = signal(false);
+  readonly submitSuccess = signal(false);
+  readonly showErrorMessage = signal(false);
   submittedName = '';
 
   readonly githubUrl = 'https://github.com/ayomideesam';
@@ -205,12 +205,12 @@ export class ContactComponent implements OnInit {
   async onSubmit(e: Event): Promise<void> {
     e.preventDefault();
     
-    if (this.contactForm.valid && !this.isSubmitting) {
-      this.isSubmitting = true;
-      
+    if (this.contactForm.valid && !this.isSubmitting()) {
+      this.isSubmitting.set(true);
+
       try {
         this.submittedName = this.contactForm.get('name')?.value ?? '';
-        
+
         const form = e.target as HTMLFormElement;
         const response = await emailjs.sendForm(
           'service_2n4p82e',
@@ -222,7 +222,7 @@ export class ContactComponent implements OnInit {
         this.analytics.trackEvent('Contact', 'Form Submit', 'Contact Form');
 
         if (response.status === 200) {
-          this.submitSuccess = true;
+          this.submitSuccess.set(true);
           this.contactForm.reset();
           this.contactForm.get('subject')?.setValue("Akhigbe Iruobe I'd like to hire you!");
           this.scrollToMessage('.success-background');
@@ -230,11 +230,11 @@ export class ContactComponent implements OnInit {
         }
       } catch (error) {
         console.error('Error:', error);
-        this.showErrorMessage = true;
+        this.showErrorMessage.set(true);
         this.scrollToMessage('.error-background');
         console.log('FAILED...', (error as EmailJSResponseStatus).text);
       } finally {
-        this.isSubmitting = false;
+        this.isSubmitting.set(false);
       }
     } else {
       this.markFormGroupTouched(this.contactForm);
@@ -255,10 +255,10 @@ export class ContactComponent implements OnInit {
   }
 
   closeSuccessMessage() {
-    this.submitSuccess = false;
+    this.submitSuccess.set(false);
   }
 
   closeErrorMessage() {
-    this.showErrorMessage = false;
+    this.showErrorMessage.set(false);
   }
 }

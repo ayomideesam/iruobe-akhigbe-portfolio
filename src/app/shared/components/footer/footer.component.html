@@ -69,8 +69,8 @@
                <h3>Get in Touch</h3>
                <div class="contact-info">
                   <a href="mailto:iruobeakhigbe@gmail.com?subject=🤘 Hi Akhigbe, I'd like to hire you"
-                     class="contact-item" [@contactHover]="emailHovered ? 'hovered' : 'rest'"
-                     (mouseenter)="emailHovered = true" (mouseleave)="emailHovered = false">
+                     class="contact-item" [@contactHover]="emailHovered() ? 'hovered' : 'rest'"
+                     (mouseenter)="emailHovered.set(true)" (mouseleave)="emailHovered.set(false)">
                      <div class="contact-icon email-icon">
                         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
                            stroke="currentColor">
@@ -86,8 +86,8 @@
                      <div class="hover-effect"></div>
                   </a>
 
-                  <a href="tel:+2347038772342" class="contact-item" [@contactHover]="phoneHovered ? 'hovered' : 'rest'"
-                     (mouseenter)="phoneHovered = true" (mouseleave)="phoneHovered = false">
+                  <a href="tel:+2347038772342" class="contact-item" [@contactHover]="phoneHovered() ? 'hovered' : 'rest'"
+                     (mouseenter)="phoneHovered.set(true)" (mouseleave)="phoneHovered.set(false)">
                      <div class="contact-icon phone-icon">
                         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
                            stroke="currentColor">
@@ -105,10 +105,10 @@
 
                   <!-- Lagos availability indicator -->
                   <div class="lagos-status">
-                     <span class="lagos-dot" [class.open]="isBusinessHours"></span>
-                     <span class="lagos-label">Lagos {{lagosTime}}</span>
-                     <span class="lagos-availability" [class.open]="isBusinessHours">
-                        {{isBusinessHours ? 'Open for outreach' : 'After hours'}}
+                     <span class="lagos-dot" [class.open]="isBusinessHours()"></span>
+                     <span class="lagos-label">Lagos {{lagosTime()}}</span>
+                     <span class="lagos-availability" [class.open]="isBusinessHours()">
+                        {{isBusinessHours() ? 'Open for outreach' : 'After hours'}}
                      </span>
                   </div>
                </div>

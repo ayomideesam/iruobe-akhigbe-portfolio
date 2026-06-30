@@ -2,8 +2,6 @@
 import { Component, OnInit, NgZone, inject, DestroyRef } from '@angular/core';
 import { ThemeService } from './core/services/theme.service';
 import { trigger, state, style, animate, transition, keyframes } from '@angular/animations';
-import { NavigationEnd, NavigationStart, Router, Event as RouterEvent } from '@angular/router';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { LoadingService } from './core/services/loading.service';
 
 interface FloatingLetter {
@@ -350,7 +348,6 @@ interface FloatingLetter {
 export class AppComponent implements OnInit {
   private themeService = inject(ThemeService);
   private ngZone = inject(NgZone);
-  private router = inject(Router);
   private loadingService = inject(LoadingService);
   private destroyRef = inject(DestroyRef);
 
@@ -359,9 +356,8 @@ export class AppComponent implements OnInit {
   private animationFrame: number | null = null;
   hasExploded = false;
   isLoadingComplete = false;
-  isLoading = false;
-  isSpinner = false;
-  loadingText = '';
+  get isSpinner(): boolean { return this.loadingService.loading(); }
+  get loadingText(): string { return this.loadingService.loadingText(); }
 
   private readonly HEADER_MARGIN = 5;
   private readonly FOOTER_MARGIN = 5;
@@ -392,21 +388,6 @@ export class AppComponent implements OnInit {
       isVisible: false
     }));
 
-    this.router.events.pipe(takeUntilDestroyed()).subscribe((event: RouterEvent) => {
-      if (event instanceof NavigationStart) {
-        this.isLoading = true;
-      }
-      if (event instanceof NavigationEnd) {
-        this.isLoading = false;
-      }
-    });
-
-    this.loadingService.loading$.pipe(takeUntilDestroyed()).subscribe(
-      isLoading => this.isSpinner = isLoading
-    );
-    this.loadingService.loadingText$.pipe(takeUntilDestroyed()).subscribe(
-      text => this.loadingText = text
-    );
   }
 
   ngOnInit() {

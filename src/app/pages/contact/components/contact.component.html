@@ -171,9 +171,9 @@
                         </div>
                     </div>
 
-                    <button type="submit" [disabled]="isSubmitting" class="submit-button">
+                    <button type="submit" [disabled]="isSubmitting()" class="submit-button">
                         <span class="button-content">
-                            <span>{{isSubmitting ? 'Sending...' : 'Send Message'}}</span>
+                            <span>{{isSubmitting() ? 'Sending...' : 'Send Message'}}</span>
                             <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
                                 xmlns="http://www.w3.org/2000/svg">
                                 <path
@@ -185,13 +185,13 @@
                                     d="M22 17.5L14 17.5M22 17.5C22 16.7998 20.0057 15.4915 19.5 15M22 17.5C22 18.2002 20.0057 19.5085 19.5 20"
                                     stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
                             </svg>
-                            @if (isSubmitting) {<div class="loader"></div>}
+                            @if (isSubmitting()) {<div class="loader"></div>}
                         </span>
                     </button>
                 </form>
 
                 <!-- Success Message -->
-                @if (submitSuccess) {
+                @if (submitSuccess()) {
                 <div class="success-background" @successMessageSlide>
                     <button class="close-button" (click)="closeSuccessMessage()">
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
@@ -213,7 +213,7 @@
                 }
 
                 <!-- Add error message -->
-                @if (showErrorMessage) {
+                @if (showErrorMessage()) {
                 <div class="error-background" @errorMessageSlide>
                     <button class="close-button" (click)="closeErrorMessage()">
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
