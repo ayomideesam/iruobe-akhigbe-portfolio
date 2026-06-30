@@ -335,7 +335,7 @@ export class ProjectDataService {
                'Migrated the build pipeline from Webpack to esbuild, cutting cold build time from ~35 s to 3.3 s (10.6×) and production bundle from ~600 KB to 111 KB gzipped',
                'Implemented Angular CDK BreakpointObserver for responsive device detection with contextual warning banners; added keyboard navigation (arrow keys, Enter, Escape) and auto-dismissing toast notifications',
             ],
-            demoUrl: 'ASK_AKHIGBE',
+            demoUrl: 'https://naologicerp.netlify.app/',
             repoUrl: 'https://github.com/ayomideesam/iruobe-work-order-timeline',
             images: [],
          },
