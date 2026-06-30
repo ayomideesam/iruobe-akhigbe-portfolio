@@ -185,16 +185,14 @@ Replace all constructor injection with the `inject()` function. Empty constructo
 
 ---
 
-## Phase 8 — `@defer` Blocks (Performance) ✅ COMPLETE
+## Phase 8 — `@defer` Blocks (Performance) ⛔ REVERTED
 
-Defer non-critical sections so they render after above-the-fold content is interactive.
+`@defer (on viewport)` was implemented across 6 sections then reverted. Root cause:
+`@defer (on viewport)` observes when the **placeholder** enters the viewport. Real section content is much taller than the static placeholder heights (e.g., `featured-projects` is 1500–3000px depending on device; placeholder was only 650px). When the swap fires, the layout expands by the height difference, shifting the user's scroll position upward past the freshly-rendered content — causing sections to appear then immediately "disappear" above the viewport.
 
-- [x] **Home — Projects grid**: `@defer (on viewport)` wrapping `<section class="featured-projects">` with 650px placeholder ✅ 2026-06-30
-- [x] **Home — Skills grid**: `@defer (on viewport)` wrapping `<section class="skills-section">` with 550px placeholder ✅ 2026-06-30
-- [x] **Home — Testimonials**: `@defer (on viewport)` wrapping `<section class="testimonials-section">` with 500px placeholder ✅ 2026-06-30
-- [x] **Projects page — project cards**: `@defer (on viewport)` wrapping entire `<section class="project-section">` (the full `@for` loop) with 800px placeholder ✅ 2026-06-30
-- [x] **Resume page — Skills**: `@defer (on viewport)` wrapping `<section class="skills-section">` with 250px placeholder ✅ 2026-06-30
-- [x] **Resume page — Employment timeline**: `@defer (on viewport)` wrapping `<section class="employment-section">` with 800px placeholder ✅ 2026-06-30
+For this portfolio (webpack browser builder, no async component imports inside defer blocks), `@defer` provides no code-splitting benefit — only rendering laziness, which the layout-shift bug negates. All blocks removed. Build: 0 errors, 0 warnings post-revert.
+
+- [~] All 6 `@defer (on viewport)` blocks removed ⛔ reverted 2026-06-30
 
 ---
 
