@@ -208,13 +208,19 @@ Defer non-critical sections so they render after above-the-fold content is inter
 
 ---
 
-## Phase 10 — Standards Doc Rewrite
+## Phase 10 — Standards Doc Rewrite ✅ COMPLETE
 
-- [ ] Rewrite `docs/ANGULAR-19-STANDARDS.md` for this portfolio specifically
-  - Remove all CAP / NGXS / Angular Material references
-  - Update "Standalone First" to "NgModule architecture — signals and modern APIs within modules"
-  - Add portfolio-specific examples for each pattern (inject, signals, control flow, defer)
-  - Lock version header to Angular 20.x
+- [x] Rewrote `docs/ANGULAR-19-STANDARDS.md` for this portfolio ✅ 2026-06-30
+  - Removed all CAP / NgRx / Angular Material / `gb-*` / standalone references
+  - Replaced "Standalone First" with "NgModule architecture (intentional)" — explains `standalone: false` decision
+  - Added portfolio-specific code examples from real components (`HeaderComponent`, `ThemeService`, `SpinnerComponent`, `resume.component.html`)
+  - Added `@defer` section with full table of all deferred sections in the codebase
+  - Added `input()` / `input.required()` signal API section (replaces `@Input()`)
+  - Added `takeUntilDestroyed()` patterns (replaces `SubscriptionManagementDirective`)
+  - Added animation GPU-composited-only rules
+  - Added responsiveness breakpoint table
+  - Added portfolio key conventions (Lagos clock, project-data service, `_redirects`, `allowedCommonJsDependencies`)
+  - Version header locked to Angular 20.x
 
 ---
 
