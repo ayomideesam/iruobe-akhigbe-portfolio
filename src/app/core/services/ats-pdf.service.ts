@@ -1,3 +1,4 @@
+// core/services/ats-pdf.service.ts
 import { Injectable } from '@angular/core';
 import type { jsPDF } from 'jspdf';
 
@@ -56,8 +57,8 @@ interface PDFColors {
   providedIn: 'root'
 })
 export class AtsPdfService {
-  private readonly PAGE_WIDTH = 595.28; // A4 width in points
-  private readonly PAGE_HEIGHT = 841.89; // A4 height in points
+  private readonly PAGE_WIDTH = 595.28;
+  private readonly PAGE_HEIGHT = 841.89;
   private readonly MARGIN = 40;
   private readonly LEFT_COLUMN_WIDTH = 180;
   private readonly RIGHT_COLUMN_X = this.MARGIN + this.LEFT_COLUMN_WIDTH + 15;
@@ -66,6 +67,9 @@ export class AtsPdfService {
   private pdf!: jsPDF;
   private currentY = 0;
   private colors!: PDFColors;
+  private isDark = false;
+  private leftTotalPages = 0;
+  private rightCurrentPage = 1;
 
   async generateATSFriendlyPDF(resumeData: ResumeData, isDarkTheme: boolean): Promise<void> {
     const { jsPDF } = await import('jspdf');
@@ -77,7 +81,8 @@ export class AtsPdfService {
       compress: true
     });
 
-    // Set colors based on theme
+    this.isDark = isDarkTheme;
+
     this.colors = isDarkTheme ? {
       primary: '#F1F5F9',
       secondary: '#94A3B8',
@@ -96,17 +101,18 @@ export class AtsPdfService {
       border: '#E2E8F0'
     };
 
-    // Draw background
     this.drawBackground(isDarkTheme);
-
-    // Header
     this.drawHeader(resumeData);
 
-    // Main content - Two column layout
+    // Left column runs first and may add pages — track how many it creates
     this.drawLeftColumn(resumeData);
+    this.leftTotalPages = this.pdf.getNumberOfPages();
+
+    // Right column navigates existing pages then adds more if needed
+    this.pdf.setPage(1);
+    this.rightCurrentPage = 1;
     this.drawRightColumn(resumeData);
 
-    // Save the PDF
     const fileName = isDarkTheme
       ? 'AkhigbeIruobe-Resume-Dark-ATS.pdf'
       : 'AkhigbeIruobe-Resume-Light-ATS.pdf';
@@ -114,47 +120,69 @@ export class AtsPdfService {
     this.pdf.save(fileName);
   }
 
-  private drawBackground(isDarkTheme: boolean): void {
-    // Left column background
-    if (isDarkTheme) {
-      this.pdf.setFillColor(30, 30, 30); // #1E1E1E
+  // ─── Page helpers ────────────────────────────────────────────────────────────
+
+  /** Add a new left-column page and return the reset Y position. */
+  private newLeftPage(): number {
+    this.pdf.addPage();
+    this.drawBackground(this.isDark);
+    return this.MARGIN + 20;
+  }
+
+  /**
+   * Advance the right column to the next page.
+   * Navigates to an existing page (created by the left column) when available,
+   * otherwise creates a fresh page with backgrounds drawn.
+   * Returns the reset Y position.
+   */
+  private advanceRightPage(): number {
+    this.rightCurrentPage++;
+    if (this.rightCurrentPage <= this.leftTotalPages) {
+      this.pdf.setPage(this.rightCurrentPage);
     } else {
-      this.pdf.setFillColor(244, 244, 244); // #F4F4F4
+      this.pdf.addPage();
+      this.drawBackground(this.isDark);
+    }
+    return this.MARGIN + 20;
+  }
+
+  // ─── Backgrounds & Header ────────────────────────────────────────────────────
+
+  private drawBackground(isDarkTheme: boolean): void {
+    if (isDarkTheme) {
+      this.pdf.setFillColor(30, 30, 30);
+    } else {
+      this.pdf.setFillColor(244, 244, 244);
     }
     this.pdf.rect(0, 0, this.LEFT_COLUMN_WIDTH + this.MARGIN + 15, this.PAGE_HEIGHT, 'F');
 
-    // Right column background
     if (isDarkTheme) {
-      this.pdf.setFillColor(18, 18, 18); // #121212
+      this.pdf.setFillColor(18, 18, 18);
     } else {
-      this.pdf.setFillColor(255, 255, 255); // #FFFFFF
+      this.pdf.setFillColor(255, 255, 255);
     }
     this.pdf.rect(this.LEFT_COLUMN_WIDTH + this.MARGIN + 15, 0, this.PAGE_WIDTH, this.PAGE_HEIGHT, 'F');
   }
 
   private drawHeader(data: ResumeData): void {
-    // Header box with border
     const headerHeight = 85;
     const headerY = this.MARGIN;
     const boxX = this.MARGIN + 15;
     const boxWidth = this.PAGE_WIDTH - (2 * this.MARGIN) - 30;
 
-    // Draw border using RGB
     if (this.colors.background === '#1E1E1E') {
-      this.pdf.setDrawColor(255, 255, 255); // White border for dark theme
+      this.pdf.setDrawColor(255, 255, 255);
     } else {
-      this.pdf.setDrawColor(0, 0, 0); // Black border for light theme
+      this.pdf.setDrawColor(0, 0, 0);
     }
     this.pdf.setLineWidth(2);
     this.pdf.rect(boxX, headerY, boxWidth, headerHeight);
 
-    // Name
     this.pdf.setFontSize(26);
     this.pdf.setFont('helvetica', 'bold');
     this.pdf.setTextColor(this.colors.primary);
     this.pdf.text(data.name.toUpperCase(), this.PAGE_WIDTH / 2, headerY + 38, { align: 'center' });
 
-    // Title
     this.pdf.setFontSize(11);
     this.pdf.setFont('helvetica', 'normal');
     this.pdf.setTextColor(this.colors.secondary);
@@ -163,109 +191,111 @@ export class AtsPdfService {
     this.currentY = headerY + headerHeight + 25;
   }
 
+  // ─── Left Column ─────────────────────────────────────────────────────────────
+
   private drawLeftColumn(data: ResumeData): void {
     let leftY = this.currentY;
     const leftX = this.MARGIN;
-    const columnWidth = this.LEFT_COLUMN_WIDTH;
+    const w = this.LEFT_COLUMN_WIDTH;
 
-    // Details Section
-    leftY = this.drawSectionTitle('DETAILS', leftX, leftY, columnWidth);
-    leftY = this.drawDetail('PHONE', data.phone, leftX, leftY, columnWidth);
-    leftY = this.drawDetail('EMAIL', data.email, leftX, leftY, columnWidth);
+    // DETAILS
+    leftY = this.drawSectionTitle('DETAILS', leftX, leftY, w);
+    leftY = this.drawDetail('PHONE', data.phone, leftX, leftY, w);
+    leftY = this.drawDetail('EMAIL', data.email, leftX, leftY, w);
     leftY += 20;
 
-    // Links Section
-    leftY = this.drawSectionTitle('LINKS', leftX, leftY, columnWidth);
-    leftY = this.drawDetail('LinkedIn', data.linkedin, leftX, leftY, columnWidth, true);
-    leftY = this.drawDetail('Portfolio', data.portfolio, leftX, leftY, columnWidth, true);
+    // LINKS
+    if (leftY > this.PAGE_HEIGHT - 80) leftY = this.newLeftPage();
+    leftY = this.drawSectionTitle('LINKS', leftX, leftY, w);
+    leftY = this.drawDetail('LinkedIn', data.linkedin, leftX, leftY, w, true);
+    leftY = this.drawDetail('Portfolio', data.portfolio, leftX, leftY, w, true);
     leftY += 20;
 
-    // Skills Section
-    leftY = this.drawSectionTitle('SKILLS', leftX, leftY, columnWidth);
-    leftY = this.drawSkills(data.skills, leftX, leftY, columnWidth);
+    // SKILLS — handles its own page breaks
+    if (leftY > this.PAGE_HEIGHT - 80) leftY = this.newLeftPage();
+    leftY = this.drawSectionTitle('SKILLS', leftX, leftY, w);
+    leftY = this.drawSkills(data.skills, leftX, leftY, w);
     leftY += 20;
 
-    // Hobbies Section
-    leftY = this.drawSectionTitle('HOBBIES', leftX, leftY, columnWidth);
-    leftY = this.drawHobbies(data.hobbies, leftX, leftY, columnWidth);
+    // HOBBIES
+    if (leftY > this.PAGE_HEIGHT - 80) leftY = this.newLeftPage();
+    leftY = this.drawSectionTitle('HOBBIES', leftX, leftY, w);
+    leftY = this.drawHobbies(data.hobbies, leftX, leftY, w);
     leftY += 20;
 
-    // Languages Section
-    leftY = this.drawSectionTitle('LANGUAGES', leftX, leftY, columnWidth);
-    leftY = this.drawLanguages(data.languages, leftX, leftY, columnWidth);
+    // TECH I'M WATCHING
+    if (leftY > this.PAGE_HEIGHT - 80) leftY = this.newLeftPage();
+    leftY = this.drawSectionTitle("TECH I'M WATCHING", leftX, leftY, w);
+    leftY = this.drawTechWatching(leftX, leftY, w);
+    leftY += 20;
+
+    // LANGUAGES
+    if (leftY > this.PAGE_HEIGHT - 60) leftY = this.newLeftPage();
+    leftY = this.drawSectionTitle('LANGUAGES', leftX, leftY, w);
+    this.drawLanguages(data.languages, leftX, leftY, w);
   }
+
+  // ─── Right Column ─────────────────────────────────────────────────────────────
 
   private drawRightColumn(data: ResumeData): void {
     let rightY = this.currentY;
     const rightX = this.RIGHT_COLUMN_X;
-    const columnWidth = this.RIGHT_COLUMN_WIDTH;
+    const w = this.RIGHT_COLUMN_WIDTH;
 
-    // Profile Section
-    rightY = this.drawSectionTitle('PROFILE', rightX, rightY, columnWidth);
-    rightY = this.drawParagraphs(data.profile, rightX, rightY, columnWidth);
+    // PROFILE
+    rightY = this.drawSectionTitle('PROFILE', rightX, rightY, w);
+    rightY = this.drawParagraphs(data.profile, rightX, rightY, w);
     rightY += 15;
 
-    // Key Achievements Section - Remove emoji for ATS compatibility
-    rightY = this.drawSectionTitle('KEY TECHNICAL ACHIEVEMENTS', rightX, rightY, columnWidth);
-    rightY = this.drawBulletList(data.keyAchievements, rightX, rightY, columnWidth, true);
+    // KEY TECHNICAL ACHIEVEMENTS
+    rightY = this.drawSectionTitle('KEY TECHNICAL ACHIEVEMENTS', rightX, rightY, w);
+    rightY = this.drawBulletList(data.keyAchievements, rightX, rightY, w, true);
     rightY += 15;
 
-    // Employment History
-    rightY = this.drawSectionTitle('EMPLOYMENT HISTORY', rightX, rightY, columnWidth);
-    rightY = this.drawEmploymentHistory(data.employment, rightX, rightY, columnWidth);
+    // EMPLOYMENT HISTORY
+    rightY = this.drawSectionTitle('EMPLOYMENT HISTORY', rightX, rightY, w);
+    rightY = this.drawEmploymentHistory(data.employment, rightX, rightY, w);
+    rightY += 10;
 
-    // Check if we have enough space for Education, Certifications, and References
-    // If not enough space on current page, add new page
-    const estimatedRemainingContent = 250; // Approximate height needed for remaining sections
-    if (rightY > this.PAGE_HEIGHT - estimatedRemainingContent) {
-      this.pdf.addPage();
-      this.drawBackground(this.colors.background === '#1E1E1E');
-      rightY = this.MARGIN;
-    } else {
-      rightY += 10; // Just add some spacing
+    // EDUCATION — check if enough room (Education ~55pt + Certs ~115pt = ~170pt min)
+    if (rightY > this.PAGE_HEIGHT - 170) {
+      rightY = this.advanceRightPage();
     }
 
-    // Education Section
-    rightY = this.drawSectionTitle('EDUCATION', rightX, rightY, columnWidth);
-    rightY = this.drawEducation(data.education, rightX, rightY, columnWidth);
+    rightY = this.drawSectionTitle('EDUCATION', rightX, rightY, w);
+    rightY = this.drawEducation(data.education, rightX, rightY, w);
     rightY += 15;
 
-    // Check if we need a new page for Certifications
+    // CERTIFICATIONS
+    if (rightY > this.PAGE_HEIGHT - 120) {
+      rightY = this.advanceRightPage();
+    }
+
+    rightY = this.drawSectionTitle('COURSES / CERTIFICATIONS', rightX, rightY, w);
+    rightY = this.drawCertifications(data.certifications, rightX, rightY, w);
+    rightY += 15;
+
+    // REFERENCES
     if (rightY > this.PAGE_HEIGHT - 200) {
-      this.pdf.addPage();
-      this.drawBackground(this.colors.background === '#1E1E1E');
-      rightY = this.MARGIN;
+      rightY = this.advanceRightPage();
     }
 
-    // Certifications Section
-    rightY = this.drawSectionTitle('COURSES / CERTIFICATIONS', rightX, rightY, columnWidth);
-    rightY = this.drawCertifications(data.certifications, rightX, rightY, columnWidth);
-    rightY += 15;
-
-    // Check if we need a new page for References
-    if (rightY > this.PAGE_HEIGHT - 180) {
-      this.pdf.addPage();
-      this.drawBackground(this.colors.background === '#1E1E1E');
-      rightY = this.MARGIN;
-    }
-
-    // References Section
-    rightY = this.drawSectionTitle('REFERENCES', rightX, rightY, columnWidth);
-    rightY = this.drawReferences(data.references, rightX, rightY, columnWidth);
+    rightY = this.drawSectionTitle('REFERENCES', rightX, rightY, w);
+    this.drawReferences(data.references, rightX, rightY, w);
   }
+
+  // ─── Shared Section Title & Detail ───────────────────────────────────────────
 
   private drawSectionTitle(title: string, x: number, y: number, width: number): number {
     this.pdf.setFontSize(10);
     this.pdf.setFont('helvetica', 'bold');
     this.pdf.setTextColor(this.colors.primary);
-
     this.pdf.text(title, x, y);
 
-    // Draw underline using RGB for accent color
     if (this.colors.background === '#1E1E1E') {
-      this.pdf.setDrawColor(96, 165, 250); // Dark theme #60A5FA
+      this.pdf.setDrawColor(96, 165, 250);
     } else {
-      this.pdf.setDrawColor(37, 99, 235); // Light theme #2563EB
+      this.pdf.setDrawColor(37, 99, 235);
     }
     this.pdf.setLineWidth(1.5);
     this.pdf.line(x, y + 3, x + width, y + 3);
@@ -288,21 +318,26 @@ export class AtsPdfService {
     return y + 12 + (lines.length * 10) + 8;
   }
 
+  // ─── Left Column Content ─────────────────────────────────────────────────────
+
   private drawSkills(skills: Array<{ name: string; level: number }>, x: number, y: number, width: number): number {
     let currentY = y;
 
     skills.forEach(skill => {
-      // Skill name
+      const lines = this.pdf.splitTextToSize(skill.name, width - 35);
+      const skillHeight = (lines.length * 10) + 2 + 3 + 12; // text + gap + bar + spacing
+
+      if (currentY + skillHeight > this.PAGE_HEIGHT - this.MARGIN) {
+        currentY = this.newLeftPage();
+      }
+
       this.pdf.setFontSize(8);
       this.pdf.setFont('helvetica', 'normal');
       this.pdf.setTextColor(this.colors.textDark);
-
-      const lines = this.pdf.splitTextToSize(skill.name, width - 35);
       this.pdf.text(lines, x, currentY);
 
       const skillTextHeight = lines.length * 10;
 
-      // Draw percentage aligned to the right
       this.pdf.setFont('helvetica', 'bold');
       this.pdf.setFontSize(7);
       this.pdf.setTextColor(this.colors.textLight);
@@ -310,24 +345,21 @@ export class AtsPdfService {
 
       currentY += skillTextHeight + 2;
 
-      // Draw progress bar background
       const barHeight = 3;
       const barY = currentY;
 
-      // Background bar (gray) - use RGB values
       if (this.colors.background === '#1E1E1E') {
-        this.pdf.setFillColor(51, 65, 85); // Dark theme border #334155
+        this.pdf.setFillColor(51, 65, 85);
       } else {
-        this.pdf.setFillColor(226, 232, 240); // Light theme border #E2E8F0
+        this.pdf.setFillColor(226, 232, 240);
       }
       this.pdf.rect(x, barY, width, barHeight, 'F');
 
-      // Progress bar (accent color) - use RGB values
       const progressWidth = (skill.level / 100) * width;
       if (this.colors.background === '#1E1E1E') {
-        this.pdf.setFillColor(96, 165, 250); // Dark theme accent #60A5FA
+        this.pdf.setFillColor(96, 165, 250);
       } else {
-        this.pdf.setFillColor(37, 99, 235); // Light theme accent #2563EB
+        this.pdf.setFillColor(37, 99, 235);
       }
       this.pdf.rect(x, barY, progressWidth, barHeight, 'F');
 
@@ -339,7 +371,6 @@ export class AtsPdfService {
 
   private drawHobbies(hobbies: string[], x: number, y: number, width: number): number {
     let currentY = y;
-
     hobbies.forEach(hobby => {
       this.pdf.setFontSize(9);
       this.pdf.setFont('helvetica', 'normal');
@@ -347,13 +378,24 @@ export class AtsPdfService {
       this.pdf.text(`• ${hobby}`, x, currentY);
       currentY += 15;
     });
-
     return currentY;
   }
 
-  private drawLanguages(languages: string[], x: number, y: number, width: number): number {
+  private drawTechWatching(x: number, y: number, _width: number): number {
+    const items = ['Angular 21 Signals', 'AI-Assisted Dev', 'ml5.js', 'Playwright / Vitest', 'Stocks / Trades'];
     let currentY = y;
+    items.forEach(item => {
+      this.pdf.setFontSize(9);
+      this.pdf.setFont('helvetica', 'normal');
+      this.pdf.setTextColor(this.colors.textDark);
+      this.pdf.text(`• ${item}`, x, currentY);
+      currentY += 15;
+    });
+    return currentY;
+  }
 
+  private drawLanguages(languages: string[], x: number, y: number, _width: number): number {
+    let currentY = y;
     languages.forEach(language => {
       this.pdf.setFontSize(9);
       this.pdf.setFont('helvetica', 'normal');
@@ -361,90 +403,53 @@ export class AtsPdfService {
       this.pdf.text(language, x, currentY);
       currentY += 15;
     });
-
     return currentY;
   }
 
+  // ─── Right Column Content ─────────────────────────────────────────────────────
+
   private drawParagraphs(paragraphs: string[], x: number, y: number, width: number): number {
     let currentY = y;
-
     paragraphs.forEach(para => {
       this.pdf.setFontSize(9);
       this.pdf.setFont('helvetica', 'normal');
       this.pdf.setTextColor(this.colors.textDark);
-
       const lines = this.pdf.splitTextToSize(para, width);
       this.pdf.text(lines, x, currentY);
       currentY += lines.length * 12 + 8;
     });
-
     return currentY;
   }
 
   private drawBulletList(items: string[], x: number, y: number, width: number, removeBold: boolean = false): number {
     let currentY = y;
+    const bulletIndent = 8;
+    const textWidth = width - bulletIndent - 5;
 
-    items.forEach((item, index) => {
-      // Check if we need a new page before drawing this bullet
-      if (currentY > this.PAGE_HEIGHT - 60) {
-        this.pdf.addPage();
-        this.drawBackground(this.colors.background === '#1E1E1E');
-        currentY = this.MARGIN + 20;
-      }
-
-      // Clean text for ATS compatibility
-      let cleanText = this.cleanTextForATS(item, removeBold);
+    items.forEach(item => {
+      const cleanText = this.cleanTextForATS(item, removeBold);
 
       this.pdf.setFontSize(9);
       this.pdf.setFont('helvetica', 'normal');
-      this.pdf.setTextColor(this.colors.textDark);
 
-      // Use proper text wrapping with bullet indent
-      const bulletWidth = 8;
-      const textWidth = width - bulletWidth - 5;
       const lines = this.pdf.splitTextToSize(cleanText, textWidth);
+      const neededHeight = lines.length * 11 + 4;
 
-      // Draw bullet
+      if (currentY + neededHeight > this.PAGE_HEIGHT - this.MARGIN) {
+        currentY = this.advanceRightPage();
+      }
+
+      this.pdf.setTextColor(this.colors.textDark);
       this.pdf.text('•', x, currentY);
 
-      // Draw text with proper indent for wrapped lines
       lines.forEach((line: string, lineIndex: number) => {
-        this.pdf.text(line, x + bulletWidth, currentY + (lineIndex * 11));
+        this.pdf.text(line, x + bulletIndent, currentY + (lineIndex * 11));
       });
 
-      currentY += lines.length * 11 + 4;
+      currentY += neededHeight;
     });
 
     return currentY;
-  }
-
-  /**
-   * Clean text for ATS compatibility - removes emojis, special characters, and formatting
-   */
-  private cleanTextForATS(text: string, removeBold: boolean = false): string {
-    let cleanText = text;
-
-    // Remove all emojis and special unicode characters
-    cleanText = cleanText.replace(/[\u{1F300}-\u{1F9FF}]|[\u{2600}-\u{26FF}]|[\u{2700}-\u{27BF}]|[\u{1F000}-\u{1F02F}]|[\u{1F0A0}-\u{1F0FF}]|[\u{1F100}-\u{1F64F}]|[\u{1F680}-\u{1F6FF}]|[\u{1F910}-\u{1F96B}]|[\u{1F980}-\u{1F9E0}]/gu, '');
-
-    // Remove variation selectors and zero-width joiners
-    cleanText = cleanText.replace(/[\u{FE00}-\u{FE0F}]|[\u{200D}]/gu, '');
-
-    // Replace arrow characters with text equivalents
-    cleanText = cleanText.replace(/→/g, ' to ');
-    cleanText = cleanText.replace(/←/g, ' from ');
-    cleanText = cleanText.replace(/↳/g, '');
-    cleanText = cleanText.replace(/⬆️/g, '');
-
-    if (removeBold) {
-      // Remove bold markers
-      cleanText = cleanText.replace(/\*\*/g, '');
-    }
-
-    // Clean up multiple spaces
-    cleanText = cleanText.replace(/\s+/g, ' ').trim();
-
-    return cleanText;
   }
 
   private drawEmploymentHistory(
@@ -465,44 +470,51 @@ export class AtsPdfService {
     let currentY = y;
 
     jobs.forEach((job, index) => {
-      // Check if we need a new page
       if (currentY > this.PAGE_HEIGHT - 100) {
-        this.pdf.addPage();
-        this.drawBackground(this.colors.background === '#1E1E1E');
-        currentY = this.MARGIN + 20;
+        currentY = this.advanceRightPage();
       }
 
-      // Job role and period on same line
+      // Role + period on same line
       this.pdf.setFontSize(11);
       this.pdf.setFont('helvetica', 'bold');
       this.pdf.setTextColor(this.colors.accent);
 
-      // Split role if too long, accounting for period width
-      const periodWidth = 100;
+      const periodWidth = 120;
       const roleLines = this.pdf.splitTextToSize(job.role, width - periodWidth - 10);
       this.pdf.text(roleLines, x, currentY);
 
-      // Period aligned to the right
+      // Period · tenure aligned right
+      const tenure = this.calculateTenure(job.period);
+      const periodText = tenure ? `${job.period}  ·  ${tenure}` : job.period;
       this.pdf.setFontSize(9);
       this.pdf.setFont('helvetica', 'normal');
       this.pdf.setTextColor(this.colors.textLight);
-      this.pdf.text(job.period, x + width, currentY, { align: 'right' });
+      this.pdf.text(periodText, x + width, currentY, { align: 'right' });
 
       currentY += Math.max(roleLines.length * 13, 13);
 
-      // Company name and location on same line
+      // Company + location on same line
       this.pdf.setFontSize(10);
       this.pdf.setFont('helvetica', 'bold');
       this.pdf.setTextColor(this.colors.primary);
       this.pdf.text(job.company, x, currentY);
 
-      // Location aligned to the right
       this.pdf.setFontSize(9);
       this.pdf.setFont('helvetica', 'normal');
       this.pdf.setTextColor(this.colors.textLight);
       this.pdf.text(job.location, x + width, currentY, { align: 'right' });
 
-      currentY += 18;
+      currentY += 14;
+
+      // Company tenure badge — only on the first (most recent) role of a multi-role company
+      const companyTenure = this.calculateCompanyTenure(jobs, index);
+      if (companyTenure) {
+        this.pdf.setFontSize(8);
+        this.pdf.setFont('helvetica', 'italic');
+        this.pdf.setTextColor(this.colors.accent);
+        this.pdf.text(`Total at ${job.company}: ${companyTenure}`, x + width, currentY, { align: 'right' });
+        currentY += 12;
+      }
 
       // Description
       if (job.description) {
@@ -516,13 +528,9 @@ export class AtsPdfService {
 
       // Technical Leadership
       if (job.technicalLeadership && job.technicalLeadership.length > 0) {
-        // Check if section header + first bullet will fit
         if (currentY > this.PAGE_HEIGHT - 80) {
-          this.pdf.addPage();
-          this.drawBackground(this.colors.background === '#1E1E1E');
-          currentY = this.MARGIN + 20;
+          currentY = this.advanceRightPage();
         }
-
         this.pdf.setFontSize(9);
         this.pdf.setFont('helvetica', 'bold');
         this.pdf.setTextColor(this.colors.accent);
@@ -532,15 +540,11 @@ export class AtsPdfService {
         currentY += 8;
       }
 
-      // Key Achievements
+      // Key Achievements & Business Impact
       if (job.achievements && job.achievements.length > 0) {
-        // Check if section header + first bullet will fit
         if (currentY > this.PAGE_HEIGHT - 80) {
-          this.pdf.addPage();
-          this.drawBackground(this.colors.background === '#1E1E1E');
-          currentY = this.MARGIN + 20;
+          currentY = this.advanceRightPage();
         }
-
         this.pdf.setFontSize(9);
         this.pdf.setFont('helvetica', 'bold');
         this.pdf.setTextColor(this.colors.accent);
@@ -550,15 +554,11 @@ export class AtsPdfService {
         currentY += 8;
       }
 
-      // Technical Achievements
+      // Technical Architecture & Implementation
       if (job.technicalAchievements && job.technicalAchievements.length > 0) {
-        // Check if section header + first bullet will fit
         if (currentY > this.PAGE_HEIGHT - 80) {
-          this.pdf.addPage();
-          this.drawBackground(this.colors.background === '#1E1E1E');
-          currentY = this.MARGIN + 20;
+          currentY = this.advanceRightPage();
         }
-
         this.pdf.setFontSize(9);
         this.pdf.setFont('helvetica', 'bold');
         this.pdf.setTextColor(this.colors.accent);
@@ -597,6 +597,7 @@ export class AtsPdfService {
     currentY += 12;
 
     this.pdf.setFontSize(9);
+    this.pdf.setFont('helvetica', 'normal');
     this.pdf.setTextColor(this.colors.textLight);
     this.pdf.text(`${education.period} | ${education.grade}`, x, currentY);
 
@@ -623,7 +624,6 @@ export class AtsPdfService {
       this.pdf.setFont('helvetica', 'normal');
       this.pdf.setTextColor(this.colors.textLight);
       this.pdf.text(cert.institution, x, currentY);
-
       this.pdf.text(cert.period, x + width - 80, currentY, { align: 'right' });
 
       currentY += 18;
@@ -646,37 +646,102 @@ export class AtsPdfService {
       const cardX = isLeft ? x : x + cardWidth + 10;
 
       if (!isLeft && index > 0) {
-        // Don't increment Y for right column
+        // right card — same row, no Y increment
       } else if (index >= 2) {
         currentY += 65;
       }
 
-      // Draw card border
       this.pdf.setDrawColor(this.colors.border);
       this.pdf.setLineWidth(0.5);
       this.pdf.rect(cardX, currentY - 10, cardWidth, 60);
 
-      // Name
       this.pdf.setFontSize(9);
       this.pdf.setFont('helvetica', 'bold');
       this.pdf.setTextColor(this.colors.primary);
       this.pdf.text(ref.name, cardX + 5, currentY);
 
-      // Company
       this.pdf.setFontSize(8);
       this.pdf.setFont('helvetica', 'normal');
       this.pdf.setTextColor(this.colors.accent);
       this.pdf.text(ref.company, cardX + 5, currentY + 12);
 
-      // Email
       this.pdf.setFontSize(7);
       this.pdf.setTextColor(this.colors.textLight);
       this.pdf.text(ref.email, cardX + 5, currentY + 28);
-
-      // Phone
       this.pdf.text(ref.phone, cardX + 5, currentY + 40);
     });
 
     return currentY + 75;
+  }
+
+  // ─── Tenure Calculation ───────────────────────────────────────────────────────
+
+  private calculateTenure(period: string): string {
+    const monthMap: { [key: string]: number } = {
+      jan: 0, feb: 1, mar: 2, apr: 3, may: 4, jun: 5,
+      jul: 6, aug: 7, sep: 8, sept: 8, oct: 9, nov: 10, dec: 11
+    };
+
+    const parseDate = (raw: string): Date | null => {
+      const text = raw.trim();
+      if (/present/i.test(text)) return new Date();
+      const m = text.match(/([A-Za-z]+)\s+(\d{4})/);
+      if (!m) return null;
+      const mo = monthMap[m[1].toLowerCase()];
+      if (mo === undefined) return null;
+      return new Date(parseInt(m[2], 10), mo, 1);
+    };
+
+    const parts = period.split('—');
+    if (parts.length < 2) return '';
+    const start = parseDate(parts[0]);
+    const end = parseDate(parts[1]);
+    if (!start || !end) return '';
+
+    let total = (end.getFullYear() - start.getFullYear()) * 12 + (end.getMonth() - start.getMonth()) + 1;
+    if (total < 1) total = 1;
+
+    const yrs = Math.floor(total / 12);
+    const mos = total % 12;
+    const yLabel = yrs > 0 ? `${yrs} yr${yrs > 1 ? 's' : ''}` : '';
+    const mLabel = mos > 0 ? `${mos} mo${mos > 1 ? 's' : ''}` : '';
+    return [yLabel, mLabel].filter(Boolean).join(' ') || '1 mo';
+  }
+
+  private calculateCompanyTenure(jobs: Array<{ company: string; period: string }>, index: number): string {
+    const job = jobs[index];
+    const prev = jobs[index - 1];
+    // Only annotate the most-recent (head) role of a company group
+    if (prev && prev.company === job.company) return '';
+
+    const group = [job];
+    for (let i = index + 1; i < jobs.length; i++) {
+      if (jobs[i].company === job.company) group.push(jobs[i]);
+      else break;
+    }
+    if (group.length < 2) return '';
+
+    const earliest = group[group.length - 1].period.split('—')[0];
+    const latest = group[0].period.split('—')[1];
+    return this.calculateTenure(`${earliest}—${latest}`);
+  }
+
+  // ─── ATS Text Cleaning ────────────────────────────────────────────────────────
+
+  private cleanTextForATS(text: string, removeBold: boolean = false): string {
+    let clean = text;
+
+    clean = clean.replace(/[\u{1F300}-\u{1F9FF}]|[\u{2600}-\u{26FF}]|[\u{2700}-\u{27BF}]|[\u{1F000}-\u{1F02F}]|[\u{1F0A0}-\u{1F0FF}]|[\u{1F100}-\u{1F64F}]|[\u{1F680}-\u{1F6FF}]|[\u{1F910}-\u{1F96B}]|[\u{1F980}-\u{1F9E0}]/gu, '');
+    clean = clean.replace(/[\u{FE00}-\u{FE0F}]|[\u{200D}]/gu, '');
+    clean = clean.replace(/→/g, ' to ');
+    clean = clean.replace(/←/g, ' from ');
+    clean = clean.replace(/↳/g, '');
+    clean = clean.replace(/⬆️/g, '');
+
+    if (removeBold) {
+      clean = clean.replace(/\*\*/g, '');
+    }
+
+    return clean.replace(/\s+/g, ' ').trim();
   }
 }

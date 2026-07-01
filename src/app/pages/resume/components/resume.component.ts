@@ -350,8 +350,8 @@ export class ResumeComponent implements OnInit, AfterViewInit {
         portfolio: 'iruobeakhigbe.netlify.app',
         profile: [
           'Senior Angular Engineer and Frontend Technical Lead with 9+ years of experience architecting scalable web applications and leading high-performing development teams. Proven track record of leading 6+ engineers at Zenith Bank and Globus Bank, driving architectural decisions across cross-functional teams, and delivering enterprise-grade solutions serving 100,000+ users.',
-          'Expert in Angular 17+/19, TypeScript, and modern frontend architecture patterns including standalone components, signals, micro-frontends, and server-side rendering. Demonstrated success in establishing CI/CD pipelines, implementing secure coding practices, and mentoring teams to achieve 40% faster delivery cycles.',
-          'Led architectural review meetings with designers, engineers, QA, product officers, and business managers, ensuring technical solutions align with business objectives. Specialized in fraud detection systems, trade finance applications, and AI-powered productivity platforms.',
+          'Expert in Angular 17+/20, TypeScript, and modern frontend architecture patterns including standalone components, signals, micro-frontends, and server-side rendering. Demonstrated success in establishing CI/CD pipelines, implementing secure coding practices, and mentoring teams to achieve 40% faster delivery cycles.',
+          'Led architectural review meetings with designers, engineers, QA, product officers, and business managers, ensuring technical solutions align with business objectives. Specialized in fraud detection systems, credit approval platforms, trade finance applications, and AI-powered productivity platforms.',
           'Results-oriented engineer passionate about leveraging cutting-edge technologies to deliver measurable business value. Equally comfortable owning hands-on delivery as mentoring peers, with a proven ability to transform technical challenges into strategic advantages.'
         ],
         keyAchievements: this.keyTechnicalAchievements.map(stripEmoji),

@@ -6,6 +6,7 @@ import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { ThemeService } from 'src/app/core/services/theme.service';
 import { IconService } from 'src/app/core/services/icon.service';
 import { AnalyticsService } from 'src/app/core/services/analytics.service';
+import { SeoService } from 'src/app/core/services/seo.service';
 
 interface Technology {
   name: string;
@@ -190,6 +191,7 @@ export class HomeComponent implements OnInit {
   private themeService = inject(ThemeService);
   private analytics = inject(AnalyticsService);
   private destroyRef = inject(DestroyRef);
+  private seoService = inject(SeoService);
 
   @ViewChild('heroCanvas') heroCanvas!: ElementRef<HTMLCanvasElement>;
   @ViewChild('orbitContainer') orbitContainer!: ElementRef;
@@ -516,6 +518,7 @@ export class HomeComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.seoService.setHomeSeo();
     this.initializeOrbitAnimation();
     this.initIntersectionObserver();
     window.scrollTo({ top: 0, behavior: 'smooth' });

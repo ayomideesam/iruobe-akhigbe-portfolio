@@ -106,19 +106,37 @@ export class SeoService {
          description: config.description || this.defaultDescription,
          keywords: config.keywords || [
             'Angular',
+            'Angular 20',
             'Angular Developer',
             'Angular Engineer',
+            'Angular Signals',
+            'Signal Store',
+            'Frontend',
             'Frontend Engineer',
             'Frontend Developer',
+            'Frontend Development',
+            'TypeScript',
             'TypeScript Expert',
             'Enterprise Applications',
-            'Css Developer',
-            'Frontend Development',
+            'Enterprise Banking',
+            'Banking Software',
+            'Fintech',
+            'Fintech Engineer',
+            'CBN Compliance',
+            'RxJS',
+            'NgRx',
+            'NGXS',
+            'Micro-frontend',
+            'CSS',
+            'CSS Engineer',
             'Web Development',
             'UI/UX',
             'JavaScript',
             'HTML5',
-            'CSS3'
+            'CSS3',
+            'Senior Angular Engineer',
+            'Technical Lead',
+            'Frontend Tech Lead'
          ],
          ...config
       };
@@ -149,39 +167,17 @@ export class SeoService {
       document.head.appendChild(script);
    }
 
-   // Helper method for project pages
-   setProjectSeo(project: Project) {
+   setHomeSeo() {
       this.updateSeo({
-         title: project.title,
-         description: project.description,
-         image: project.images?.[0] || undefined,
-         type: 'article',
-         structuredData: {
-            '@context': 'https://schema.org',
-            '@type': 'Project',
-            name: project.title,
-            description: project.description,
-            image: project.images?.[0] || undefined,
-            author: {
-               '@type': 'Person',
-               name: 'Akhigbe Iruobe',
-               url: this.baseUrl
-            }
-         }
-      });
-   }
-
-   // Helper method for resume page
-   setResumeSeo() {
-      this.updateSeo({
-         title: 'Resume - Senior Frontend Engineer',
-         description: 'View my professional experience, skills, and achievements in frontend development and enterprise applications.',
-         type: 'profile',
+         title: 'Senior Angular Engineer & Frontend Technical Lead',
+         description: 'Akhigbe Iruobe — Senior Angular Engineer with 9+ years delivering enterprise banking applications at Globus Bank and Zenith Bank. Specialising in Angular 20, TypeScript, micro-frontends, and CBN-compliant financial platforms serving 100,000+ daily users.',
+         canonical: this.baseUrl,
          structuredData: {
             '@context': 'https://schema.org',
             '@type': 'Person',
             name: 'Akhigbe Iruobe',
             jobTitle: 'Senior Frontend Engineer',
+            description: 'Senior Angular Engineer with 9+ years of experience building enterprise-grade banking and fintech applications.',
             email: 'iruobeakhigbe@gmail.com',
             telephone: '+2347038772342',
             url: this.baseUrl,
@@ -194,9 +190,68 @@ export class SeoService {
       });
    }
 
-   // Update your SeoService
-   updateProjectMeta(project: Project) {
-      this.meta.updateTag({ property: 'og:title', content: project.title });
-      this.meta.updateTag({ name: 'description', content: project.description });
+   setContactSeo() {
+      this.updateSeo({
+         title: 'Contact - Hire a Senior Angular Engineer',
+         description: 'Get in touch with Akhigbe Iruobe — Senior Angular Engineer available for senior frontend, technical lead, and contract roles. Quick response guaranteed.',
+         canonical: `${this.baseUrl}/contact`,
+         structuredData: {
+            '@context': 'https://schema.org',
+            '@type': 'ContactPage',
+            name: 'Contact Akhigbe Iruobe',
+            url: `${this.baseUrl}/contact`,
+            mainEntity: {
+               '@type': 'Person',
+               name: 'Akhigbe Iruobe',
+               email: 'iruobeakhigbe@gmail.com',
+               url: this.baseUrl
+            }
+         }
+      });
+   }
+
+   setProjectSeo(project: Project) {
+      this.updateSeo({
+         title: project.title,
+         description: project.description,
+         image: project.images?.[0] || undefined,
+         type: 'article',
+         structuredData: {
+            '@context': 'https://schema.org',
+            '@type': 'SoftwareApplication',
+            name: project.title,
+            description: project.description,
+            image: project.images?.[0] || undefined,
+            author: {
+               '@type': 'Person',
+               name: 'Akhigbe Iruobe',
+               url: this.baseUrl
+            }
+         }
+      });
+   }
+
+   setResumeSeo() {
+      this.updateSeo({
+         title: 'Resume - Senior Angular Engineer & Technical Lead',
+         description: '9+ years of enterprise Angular engineering — Globus Bank Credit Approval Platform, Zenith Bank micro-frontends, fraud detection systems, and team leadership across CBN-regulated financial applications. Download ATS-friendly PDF.',
+         type: 'profile',
+         canonical: `${this.baseUrl}/resume`,
+         structuredData: {
+            '@context': 'https://schema.org',
+            '@type': 'Person',
+            name: 'Akhigbe Iruobe',
+            jobTitle: 'Senior Frontend Engineer',
+            email: 'iruobeakhigbe@gmail.com',
+            telephone: '+2347038772342',
+            url: this.baseUrl,
+            sameAs: [
+               'https://www.linkedin.com/in/akhigbe-iruobe/',
+               'https://iruobeakhigbe.netlify.app/',
+               'https://github.com/ayomideesam',
+               'https://twitter.com/akhigbe_dev'
+            ]
+         }
+      });
    }
 }

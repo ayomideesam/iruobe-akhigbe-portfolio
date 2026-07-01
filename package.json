@@ -24,8 +24,8 @@
     "@angular/router": "^20.3.25",
     "@emailjs/browser": "^4.4.1",
     "html2canvas": "^1.4.1",
-    "jspdf": "^2.5.2",
-    "netlify-cli": "^18.0.2",
+    "jspdf": "^4.2.1",
+    "netlify-cli": "^26.1.0",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.15.1"
@@ -34,6 +34,7 @@
     "@angular-devkit/build-angular": "^20.3.30",
     "@angular/cli": "^20.3.30",
     "@angular/compiler-cli": "^20.3.25",
+    "@babel/core": "^7.29.6",
     "@types/jasmine": "~4.3.0",
     "jasmine-core": "~4.6.0",
     "karma": "~6.4.0",
@@ -42,5 +43,24 @@
     "karma-jasmine": "~5.1.0",
     "karma-jasmine-html-reporter": "~2.1.0",
     "typescript": "~5.8.3"
+  },
+  "overrides": {
+    "uuid": ">=11.1.1",
+    "ws": ">=8.21.0",
+    "tar": ">=7.5.16",
+    "tmp": ">=0.2.6",
+    "qs": ">=6.15.2",
+    "picomatch": ">=2.3.2",
+    "http-proxy-middleware": ">=3.0.7",
+    "multiparty": ">=4.3.0",
+    "esbuild": ">=0.28.1",
+    "@opentelemetry/core": ">=2.8.0",
+    "@opentelemetry/resources": ">=2.8.0",
+    "@opentelemetry/sdk-trace-base": ">=2.8.0",
+    "@opentelemetry/sdk-trace-node": ">=2.8.0",
+    "express": {
+      "path-to-regexp": "0.1.13"
+    },
+    "@babel/core": "^7.29.6"
   }
 }

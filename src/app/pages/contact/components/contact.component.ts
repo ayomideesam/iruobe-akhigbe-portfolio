@@ -5,6 +5,7 @@ import { trigger, state, style, animate, transition, query } from '@angular/anim
 import { IconService } from 'src/app/core/services/icon.service';
 import emailjs, { type EmailJSResponseStatus } from '@emailjs/browser';
 import { AnalyticsService } from 'src/app/core/services/analytics.service';
+import { SeoService } from 'src/app/core/services/seo.service';
 
 interface ContactMethod {
   icon: string;
@@ -118,6 +119,7 @@ export class ContactComponent implements OnInit {
   private fb = inject(FormBuilder);
   private iconService = inject(IconService);
   private analytics = inject(AnalyticsService);
+  private seoService = inject(SeoService);
 
   @ViewChild('emailForm') emailForm!: ElementRef;
   contactForm = this.fb.group({
@@ -180,6 +182,7 @@ export class ContactComponent implements OnInit {
   ];
 
   ngOnInit(): void {
+    this.seoService.setContactSeo();
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
