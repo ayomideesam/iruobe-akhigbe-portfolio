@@ -289,8 +289,8 @@ export class ProjectDataService {
             title: 'LogicBank',
             assessmentBy: 'First Bank Nigeria',
             level: 'senior',
-            accentColor: '#DD0031',
-            accentColorRgb: '221, 0, 49',
+            accentColor: '#818cf8',
+            accentColorRgb: '129, 140, 248',
             assessmentBrief: 'Engaged as Senior Analyst, Frontend Development to build a pixel-perfect multi-step ID Document Update portal for LogicBank Account Maintenance Services from a Figma specification — evaluated on design fidelity, error handling, responsiveness, code quality (state management, scalability), performance, and documentation.',
             description: 'A production-grade, 7-route Angular 19 portal guiding LogicBank customers through a self-service Identity Document Update flow — NDPR consent, OTP-verified account lookup, identity document upload with drag-and-drop, and a sequential 4-modal submission process — without requiring a branch visit.',
             techStack: [
@@ -308,7 +308,13 @@ export class ProjectDataService {
             ],
             demoUrl: 'https://logicbank.netlify.app',
             repoUrl: 'https://github.com/ayomideesam/logicbank',
-            images: [],
+            images: [
+               'assets/img/assessment/logic-bank/logic1.jpeg',
+               'assets/img/assessment/logic-bank/logic2.jpeg',
+               'assets/img/assessment/logic-bank/logic3.jpeg',
+               'assets/img/assessment/logic-bank/logic4.jpeg',
+               'assets/img/assessment/logic-bank/logic5.jpeg',
+            ],
          },
          {
             id: 11,
@@ -316,8 +322,8 @@ export class ProjectDataService {
             title: 'Work Order Schedule Timeline',
             assessmentBy: 'Naologic',
             level: 'senior',
-            accentColor: '#B7178C',
-            accentColorRgb: '183, 23, 140',
+            accentColor: '#2dd4bf',
+            accentColorRgb: '45, 212, 191',
             assessmentBrief: 'Build a pixel-perfect Work Order Schedule Timeline from a Sketch design specification for a manufacturing ERP — Gantt-style grid across multiple work centers with Day / Week / Month zoom levels, a Reactive Forms CRUD slide-out panel using ng-select and ngb-datepicker, and real-time work order overlap detection.',
             description: 'An Angular 19 SPA that fully satisfies every required deliverable of the Naologic brief and implements all 11 listed bonus features — including localStorage persistence, inactivity detection, keyboard navigation, a "Today" jump button, and a Webpack → esbuild migration that achieved a 10.6× cold build improvement.',
             techStack: [
@@ -336,7 +342,10 @@ export class ProjectDataService {
             ],
             demoUrl: 'https://naologicerp.netlify.app/',
             repoUrl: 'https://github.com/ayomideesam/iruobe-work-order-timeline',
-            images: [],
+            images: [
+               'assets/img/assessment/naologic/naologic1.jpeg',
+               'assets/img/assessment/naologic/naologic2.jpeg',
+            ],
          },
          {
             id: 12,
@@ -344,8 +353,8 @@ export class ProjectDataService {
             title: 'Featured Books',
             assessmentBy: 'FAT BEEHIVE',
             level: 'mid',
-            accentColor: '#CC6699',
-            accentColorRgb: '204, 102, 153',
+            accentColor: '#fbbf24',
+            accentColorRgb: '251, 191, 36',
             assessmentBrief: 'Recreate a Figma design specification for a featured books UI showcase component using semantic HTML, SCSS, and BEM methodology — no JavaScript frameworks allowed.',
             description: 'A pixel-perfect, zero-JavaScript books UI component built from a Figma spec, demonstrating a custom SCSS token system, strict BEM naming, and a mobile-first responsive architecture spanning eight breakpoints.',
             techStack: [
@@ -364,7 +373,9 @@ export class ProjectDataService {
             ],
             demoUrl: 'https://featured-books.netlify.app/',
             repoUrl: 'https://github.com/ayomideesam/featured-books',
-            images: [],
+            images: [
+               'assets/img/assessment/fat-beehive/fat-beehive1.jpeg',
+            ],
          },
       ];
    }

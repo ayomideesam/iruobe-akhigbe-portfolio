@@ -28,7 +28,7 @@ interface FloatingLetter {
       <app-spinner [isLoading]="isSpinner" [text]="loadingText"></app-spinner>
       <!-- Rest of your template -->
       <div class="floating-letters-container">
-        @for (letter of floatingLetters; track letter.char) {
+        @for (letter of floatingLetters; track $index) {
         <div
           [ngStyle]="{
             'left.%': letter.isVisible ? letter.x : 50,

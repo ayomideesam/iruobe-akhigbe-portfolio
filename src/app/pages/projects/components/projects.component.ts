@@ -1,4 +1,4 @@
-import { Component, HostListener, OnInit, inject } from '@angular/core';
+import { Component, HostListener, OnInit, AfterViewInit, OnDestroy, NgZone, inject } from '@angular/core';
 import { trigger, state, style, animate, transition } from '@angular/animations';
 import { Router } from '@angular/router';
 import { SeoService } from 'src/app/core/services/seo.service';
@@ -78,11 +78,13 @@ interface AssessmentProject {
     standalone: false
 })
 
-export class ProjectsComponent implements OnInit {
+export class ProjectsComponent implements OnInit, AfterViewInit, OnDestroy {
   private router = inject(Router);
   private seoService = inject(SeoService);
   private projectData = inject(ProjectDataService);
   private analytics = inject(AnalyticsService);
+  private zone = inject(NgZone);
+  private cardListeners: Array<{ el: HTMLElement; enter: EventListener; move: EventListener; leave: EventListener; cancel: () => void }> = [];
 
   scrollState = 'normal';
   readonly githubUrl = 'https://github.com/ayomideesam';
@@ -107,15 +109,88 @@ export class ProjectsComponent implements OnInit {
     }
   }
 
+  tiltEnabled = !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
   onMouseMove(event: MouseEvent) {
-    const cards = document.querySelectorAll('.project-card');
+    const cards = document.querySelectorAll('.project-card, .assessment-card');
     cards.forEach(card => {
-      const rect = (card as HTMLElement).getBoundingClientRect();
+      const el = card as HTMLElement;
+      const rect = el.getBoundingClientRect();
       const x = ((event.clientX - rect.left) / rect.width) * 100;
       const y = ((event.clientY - rect.top) / rect.height) * 100;
-      (card as HTMLElement).style.setProperty('--x', `${x}%`);
-      (card as HTMLElement).style.setProperty('--y', `${y}%`);
+      el.style.setProperty('--x', `${x}%`);
+      el.style.setProperty('--y', `${y}%`);
     });
+  }
+
+  ngAfterViewInit() {
+    if (!this.tiltEnabled) return;
+    this.zone.runOutsideAngular(() => {
+      document.querySelectorAll<HTMLElement>('.assessment-card').forEach(card => {
+        let targetRx = 0, targetRy = 0;
+        let currentRx = 0, currentRy = 0, currentLift = 0;
+        let isOver = false;
+        let rafId: number | null = null;
+        let restRect: DOMRect | null = null;
+        const LERP = 0.10;
+
+        const tick = () => {
+          currentRx += ((isOver ? targetRx : 0) - currentRx) * LERP;
+          currentRy += ((isOver ? targetRy : 0) - currentRy) * LERP;
+          currentLift += ((isOver ? -6 : 0) - currentLift) * LERP;
+
+          if (!isOver && Math.abs(currentRx) < 0.01 && Math.abs(currentRy) < 0.01 && Math.abs(currentLift) < 0.01) {
+            card.style.transform = '';
+            rafId = null;
+            return;
+          }
+          card.style.transform =
+            `translateY(${currentLift.toFixed(2)}px) perspective(1200px) ` +
+            `rotateX(${currentRx.toFixed(3)}deg) rotateY(${currentRy.toFixed(3)}deg)`;
+          rafId = requestAnimationFrame(tick);
+        };
+
+        const enter = () => {
+          restRect = card.getBoundingClientRect();
+          isOver = true;
+          if (!rafId) rafId = requestAnimationFrame(tick);
+        };
+
+        const move = (e: Event) => {
+          if (!restRect) return;
+          const me = e as MouseEvent;
+          const fx = Math.max(0, Math.min(1, (me.clientX - restRect.left) / restRect.width));
+          const fy = Math.max(0, Math.min(1, (me.clientY - restRect.top) / restRect.height));
+          targetRx = (fy - 0.5) * -4;
+          targetRy = (fx - 0.5) * 4;
+        };
+
+        const leave = () => {
+          isOver = false;
+          restRect = null;
+          if (!rafId) rafId = requestAnimationFrame(tick);
+        };
+
+        const cancel = () => {
+          if (rafId) { cancelAnimationFrame(rafId); rafId = null; }
+        };
+
+        card.addEventListener('mouseenter', enter);
+        card.addEventListener('mousemove', move);
+        card.addEventListener('mouseleave', leave);
+        this.cardListeners.push({ el: card, enter, move, leave, cancel });
+      });
+    });
+  }
+
+  ngOnDestroy() {
+    this.cardListeners.forEach(({ el, enter, move, leave, cancel }) => {
+      el.removeEventListener('mouseenter', enter);
+      el.removeEventListener('mousemove', move);
+      el.removeEventListener('mouseleave', leave);
+      cancel();
+    });
+    this.cardListeners = [];
   }
 
   ngOnInit() {
@@ -157,7 +232,7 @@ export class ProjectsComponent implements OnInit {
 
   onImageHover(element: EventTarget | null) {
     if (element instanceof HTMLImageElement) {
-      element.style.transform = 'scale(1.1)';
+      element.style.transform = 'scale(1.05)';
       element.style.transition = 'transform 0.6s cubic-bezier(0.4, 0, 0.2, 1)';
     }
   }
@@ -166,6 +241,38 @@ export class ProjectsComponent implements OnInit {
     if (element instanceof HTMLImageElement) {
       element.style.transform = 'scale(1)';
     }
+  }
+
+  imageIndices: Record<number, number> = {};
+  achievementsExpanded: Record<number, boolean> = {};
+
+  getImageIndex(id: number): number {
+    return this.imageIndices[id] ?? 0;
+  }
+
+  nextImage(id: number, total: number, event: Event): void {
+    event.stopPropagation();
+    this.imageIndices[id] = ((this.imageIndices[id] ?? 0) + 1) % total;
+  }
+
+  prevImage(id: number, total: number, event: Event): void {
+    event.stopPropagation();
+    const cur = this.imageIndices[id] ?? 0;
+    this.imageIndices[id] = cur === 0 ? total - 1 : cur - 1;
+  }
+
+  toggleAchievements(id: number, event: Event): void {
+    event.stopPropagation();
+    this.achievementsExpanded[id] = !this.achievementsExpanded[id];
+  }
+
+  isExpanded(id: number): boolean {
+    return this.achievementsExpanded[id] ?? false;
+  }
+
+  getFrameUrl(url: string): string {
+    if (!url || url === 'ASK_AKHIGBE') return '';
+    return url.replace(/^https?:\/\//, '').replace(/\/$/, '');
   }
 
   private initScrollReveal() {

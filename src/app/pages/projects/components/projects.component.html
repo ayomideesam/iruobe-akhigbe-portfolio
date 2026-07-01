@@ -30,7 +30,7 @@
             <div class="project-image-grid" [class.has-detail-panel]="project.stats?.length">
                 <div class="top">
                     <div class="image-container top-left">
-                        <img [src]="project.images[0]" [alt]="project.title + ' preview 1'"
+                        <img [src]="project.images[0]" alt="Project preview 1" [attr.alt]="(project?.title || 'Project') + ' preview 1'"
                             (mouseenter)="onImageHover($event.target)" (mouseleave)="onImageLeave($event.target)">
                     </div>
                     <!-- <div class="animation-container top-right" *ngIf="project.id === 1">
@@ -310,7 +310,7 @@
                     </div>
                     }
                     <div class="image-container bottom-right">
-                        <img [src]="project.images[1]" [alt]="project.title + ' preview 2'"
+                        <img [src]="project.images[1]" alt="Project image 1" [alt]="project.title + ' preview 2'"
                             (mouseenter)="onImageHover($event.target)" (mouseleave)="onImageLeave($event.target)">
                     </div>
                 </div>
@@ -401,6 +401,7 @@
     <!-- TECHNICAL ASSESSMENTS                                       -->
     <!-- ═══════════════════════════════════════════════════════════ -->
     <section class="assessments-section">
+        <div class="assessments-dotgrid" aria-hidden="true"></div>
         <div class="assessments-divider" aria-hidden="true">
             <span class="assessments-divider-line"></span>
             <span class="assessments-divider-label">Technical Assessments</span>
@@ -410,22 +411,11 @@
         <div class="assessments-header">
             <div class="assessments-header-text">
                 <h2 class="assessments-heading">Engineering challenges<span class="accent-dot">.</span></h2>
-                <p class="assessments-subtitle">Senior and mid-level technical assessments from real companies — each delivered against a spec, deployed on Netlify, and open on GitHub.</p>
+                <p class="assessments-subtitle">Senior and mid-level technical assessments from real companies — each delivered against a spec, deployed live, and open on GitHub.</p>
             </div>
             <div class="assessments-header-meta">
-                <span class="assessments-count-badge">
-                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
-                    </svg>
-                    {{assessmentProjects.length}} projects
-                </span>
-                <span class="assessments-count-badge">
-                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <circle cx="12" cy="12" r="10"/><path d="M2 12h20"/>
-                        <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
-                    </svg>
-                    All deployed
-                </span>
+                <span class="assessments-count-badge"><span class="badge-dot"></span>{{assessmentProjects.length}} projects</span>
+                <span class="assessments-count-badge"><span class="badge-dot badge-dot-accent"></span>All deployed</span>
             </div>
         </div>
 
@@ -433,85 +423,72 @@
             @for (ap of assessmentProjects; track ap.id) {
             <article class="assessment-card"
                 [style.--card-accent]="ap.accentColor"
-                [style.--card-accent-rgb]="ap.accentColorRgb"
-                [@cardHover]="ap.isHovered ? 'hover' : 'rest'"
-                (mouseenter)="ap.isHovered = true"
-                (mouseleave)="ap.isHovered = false">
+                [style.--card-accent-rgb]="ap.accentColorRgb">
 
-                <!-- Card visual header -->
-                <div class="assessment-visual" aria-hidden="true">
-                    @if (ap.id === 10) {
-                    <div class="av-logicbank">
-                        <div class="av-form-block">
-                            @for (i of [1,2,3]; track i) {
-                            <div class="av-form-line"></div>
-                            }
-                            <div class="av-otp-row">
-                                @for (i of [1,2,3,4,5,6]; track i) {
-                                <div class="av-otp-dot"></div>
-                                }
-                            </div>
+                <span class="assessment-spotlight" aria-hidden="true"></span>
+
+                <!-- Browser-framed screenshot -->
+                <div class="assessment-frame-wrap">
+                    <div class="assessment-frame">
+                        <div class="assessment-frame-bar">
+                            <span class="frame-dot"></span>
+                            <span class="frame-dot"></span>
+                            <span class="frame-dot"></span>
+                            <span class="frame-url">{{getFrameUrl(ap.demoUrl)}}</span>
                         </div>
-                        <div class="av-step-chain">
-                            @for (i of [1,2,3,4,5,6,7]; track i) {
-                            <div class="av-step-node"></div>
+                        <div class="assessment-shot">
+                            @if (ap.images?.length) {
+                            <img [src]="ap.images![getImageIndex(ap.id)]"
+                                [alt]="ap.title + ' screenshot ' + (getImageIndex(ap.id) + 1)"
+                                [title]="ap.title"
+                                (mouseenter)="onImageHover($event.target)"
+                                (mouseleave)="onImageLeave($event.target)">
+                            } @else {
+                            <span class="assessment-shot-empty">Screenshot</span>
                             }
                         </div>
                     </div>
-                    }
-                    @if (ap.id === 11) {
-                    <div class="av-timeline">
-                        <div class="av-timeline-header">
-                            @for (i of [1,2,3,4,5]; track i) {
-                            <div class="av-col-label"></div>
+                    <div class="frame-nav"
+                        [class.frame-nav--single]="(ap.images?.length ?? 0) <= 1"
+                        (click)="$event.stopPropagation()">
+                        <button type="button" class="frame-nav-btn"
+                            [disabled]="(ap.images?.length ?? 0) <= 1"
+                            (click)="prevImage(ap.id, ap.images!.length, $event)"
+                            aria-label="Previous screenshot">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+                        </button>
+                        <span class="frame-nav-dots">
+                            @for (img of ap.images!; track $index) {
+                            <span class="frame-nav-dot" [class.active]="getImageIndex(ap.id) === $index"></span>
                             }
-                        </div>
-                        @for (i of [1,2,3,4]; track i) {
-                        <div class="av-gantt-row">
-                            <div class="av-row-label"></div>
-                            <div class="av-gantt-bar"></div>
-                        </div>
-                        }
+                        </span>
+                        <button type="button" class="frame-nav-btn"
+                            [disabled]="(ap.images?.length ?? 0) <= 1"
+                            (click)="nextImage(ap.id, ap.images!.length, $event)"
+                            aria-label="Next screenshot">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                        </button>
                     </div>
-                    }
-                    @if (ap.id === 12) {
-                    <div class="av-books">
-                        @for (i of [1,2,3,4]; track i) {
-                        <div class="av-book-card">
-                            <div class="av-book-img"></div>
-                            <div class="av-book-content">
-                                <div class="av-book-line"></div>
-                                <div class="av-book-line short"></div>
-                            </div>
-                        </div>
-                        }
-                    </div>
-                    }
                 </div>
 
-                <!-- Company + level badge row -->
-                <div class="assessment-meta-row">
-                    <span class="assessment-company-badge">
-                        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                            <rect x="2" y="7" width="20" height="14" rx="2"/>
-                            <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/>
-                        </svg>
-                        {{ap.assessmentBy}}
-                    </span>
-                    <span class="assessment-level-badge" [class.level-senior]="ap.level === 'senior'" [class.level-mid]="ap.level === 'mid'">
-                        {{ap.level === 'senior' ? 'Senior Level' : 'Mid Level'}}
-                    </span>
-                </div>
-
-                <!-- Card body -->
                 <div class="assessment-card-body">
+                    <div class="assessment-meta-row">
+                        <span class="assessment-company-badge">{{ap.assessmentBy}}</span>
+                        <span class="assessment-level-badge"
+                            [class.level-senior]="ap.level === 'senior'"
+                            [class.level-mid]="ap.level === 'mid'">
+                            {{ap.level === 'senior' ? 'Senior Level' : 'Mid Level'}}
+                        </span>
+                    </div>
+
                     <h3 class="assessment-card-title">{{ap.title}}</h3>
                     <p class="assessment-description">{{ap.description}}</p>
 
-                    <blockquote class="assessment-brief">
-                        <span class="brief-label">Brief</span>
+                    <div class="assessment-brief">
+                        <span class="brief-watermark" aria-hidden="true">&rdquo;</span>
+                        <span class="brief-label"><span class="brief-dot"></span>The brief</span>
                         <span class="brief-text">{{ap.assessmentBrief}}</span>
-                    </blockquote>
+                    </div>
 
                     <div class="tech-stack assessment-tech">
                         @for (tech of ap.techStack; track tech.name) {
@@ -523,13 +500,24 @@
                         }
                     </div>
 
-                    <div class="assessment-achievements">
+                    <div class="assessment-achievements" [class.is-expanded]="isExpanded(ap.id)">
                         <h4>What I delivered</h4>
                         <ul>
                             @for (item of ap.achievements; track $index) {
                             <li>{{item}}</li>
                             }
                         </ul>
+                        @if (ap.achievements.length > 2) {
+                        <button type="button" class="achievements-toggle"
+                            (click)="toggleAchievements(ap.id, $event)">
+                            <span>{{isExpanded(ap.id) ? 'Show less' : 'View more'}}</span>
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"
+                                class="toggle-chevron"
+                                [style.transform]="isExpanded(ap.id) ? 'rotate(180deg)' : 'rotate(0deg)'">
+                                <polyline points="6 9 12 15 18 9"></polyline>
+                            </svg>
+                        </button>
+                        }
                     </div>
 
                     <div class="assessment-links">
