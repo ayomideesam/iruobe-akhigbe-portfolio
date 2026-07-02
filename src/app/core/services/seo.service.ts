@@ -58,8 +58,10 @@ export class SeoService {
       this.updateMetaTag({ property: 'og:description', content: fullConfig.description });
       this.updateMetaTag({ property: 'og:url', content: this.getFullUrl() });
       this.updateMetaTag({ property: 'og:type', content: fullConfig.type || 'website' });
-      this.updateMetaTag({ property: 'og:image', content: fullConfig.image || this.defaultImage });
-      this.updateMetaTag({ property: 'og:locale', content: fullConfig.locale || 'en_US' });
+      const ogImage = fullConfig.image || this.defaultImage;
+      this.updateMetaTag({ property: 'og:image', content: ogImage });
+      this.updateMetaTag({ property: 'og:image:type', content: this.getImageMimeType(ogImage) });
+      this.updateMetaTag({ property: 'og:locale', content: fullConfig.locale || 'en_GB' });
 
       // Twitter
       this.updateMetaTag({ name: 'twitter:card', content: 'summary_large_image' });
@@ -109,12 +111,19 @@ export class SeoService {
             'Angular 20',
             'Angular Developer',
             'Angular Engineer',
+            'Akhigbe',
+            'Iruobe',
+            'Ayomide',
             'Angular Signals',
             'Signal Store',
             'Frontend',
             'Frontend Engineer',
             'Frontend Developer',
             'Frontend Development',
+            'Javascript',
+            'Tech',
+            'React',
+            'React Engineer',
             'TypeScript',
             'TypeScript Expert',
             'Enterprise Applications',
@@ -132,11 +141,17 @@ export class SeoService {
             'Web Development',
             'UI/UX',
             'JavaScript',
+            'Senior',
+            'Html',
+            'Css',
             'HTML5',
             'CSS3',
             'Senior Angular Engineer',
             'Technical Lead',
-            'Frontend Tech Lead'
+            'Frontend Tech Lead',
+            'Remote Angular Developer',
+            'Angular Developer Worldwide',
+            'Relocation'
          ],
          ...config
       };
@@ -161,10 +176,29 @@ export class SeoService {
    }
 
    private addStructuredData(data: any) {
+      // Remove the static pre-hydration fallback (index.html) and any structured
+      // data injected by a previous route, so only one JSON-LD block is ever live —
+      // otherwise every navigation stacks a duplicate/conflicting entity in <head>.
+      document.getElementById('ld-json-static')?.remove();
+      document.getElementById('ld-json-dynamic')?.remove();
+
       const script = document.createElement('script');
       script.type = 'application/ld+json';
+      script.id = 'ld-json-dynamic';
       script.text = JSON.stringify(data);
       document.head.appendChild(script);
+   }
+
+   private getImageMimeType(url: string): string {
+      const ext = url.split('.').pop()?.toLowerCase().split('?')[0];
+      switch (ext) {
+         case 'jpg':
+         case 'jpeg': return 'image/jpeg';
+         case 'webp': return 'image/webp';
+         case 'avif': return 'image/avif';
+         case 'svg': return 'image/svg+xml';
+         default: return 'image/png';
+      }
    }
 
    setHomeSeo() {
@@ -193,7 +227,7 @@ export class SeoService {
    setContactSeo() {
       this.updateSeo({
          title: 'Contact - Hire a Senior Angular Engineer',
-         description: 'Get in touch with Akhigbe Iruobe — Senior Angular Engineer available for senior frontend, technical lead, and contract roles. Quick response guaranteed.',
+         description: 'Get in touch with Akhigbe Iruobe — Senior Angular Engineer available for senior frontend, technical lead, and contract roles, open to remote and relocation worldwide. Quick response guaranteed.',
          canonical: `${this.baseUrl}/contact`,
          structuredData: {
             '@context': 'https://schema.org',
@@ -205,6 +239,34 @@ export class SeoService {
                name: 'Akhigbe Iruobe',
                email: 'iruobeakhigbe@gmail.com',
                url: this.baseUrl
+            }
+         }
+      });
+   }
+
+   setProjectsListSeo(projects: Project[]) {
+      this.updateSeo({
+         title: 'Projects - Enterprise Angular Case Studies',
+         description: `${projects.length} enterprise Angular projects — fraud detection, trade finance, credit approval, and AI-powered platforms built for CBN-regulated banks. Real production case studies with measurable outcomes.`,
+         canonical: `${this.baseUrl}/projects`,
+         structuredData: {
+            '@context': 'https://schema.org',
+            '@type': 'CollectionPage',
+            name: 'Akhigbe Iruobe — Projects',
+            url: `${this.baseUrl}/projects`,
+            mainEntity: {
+               '@type': 'ItemList',
+               itemListElement: projects.map((project, index) => ({
+                  '@type': 'ListItem',
+                  position: index + 1,
+                  item: {
+                     '@type': 'SoftwareApplication',
+                     name: project.title,
+                     description: project.description,
+                     image: project.images?.[0] || undefined,
+                     url: `${this.baseUrl}/projects#project-${project.id}`
+                  }
+               }))
             }
          }
       });

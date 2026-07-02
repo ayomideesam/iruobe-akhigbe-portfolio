@@ -200,7 +200,7 @@ export class ProjectsComponent implements OnInit, AfterViewInit, OnDestroy {
 
     this.scrollToTop();
     if (this.projects.length > 0) {
-      this.seoService.setProjectSeo(this.projects[0]);
+      this.seoService.setProjectsListSeo(this.projects);
     }
   }
 

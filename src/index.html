@@ -13,8 +13,8 @@
 
   <!-- Primary SEO — static fallbacks so scrapers/bots always get content before JS loads -->
   <title>Akhigbe Iruobe | Senior Frontend Engineer</title>
-  <meta name="description" content="Senior Frontend Engineer and Tech Lead with 9+ years building Angular enterprise applications — fraud detection, trade finance, and credit approval systems for CBN-regulated banks. Based in Lagos, open to UK/US remote roles.">
-  <meta name="keywords" content="Angular Developer, Senior Frontend Engineer, TypeScript, RxJS, NgRx, Enterprise Banking, Globus Bank, Angular 20, Fraud Detection, Trade Finance, Credit Approval, Frontend Tech Lead, Nigeria, Lagos, UK Remote">
+  <meta name="description" content="Senior Frontend Engineer and Tech Lead with 9+ years building Angular enterprise applications — fraud detection, trade finance, and credit approval systems for CBN-regulated banks. Based in Lagos, open to remote and relocation roles worldwide — UK, US, Canada, EU and beyond.">
+  <meta name="keywords" content="Angular, Angular Developer, Senior Frontend Engineer, TypeScript, RxJS, NgRx, Enterprise Banking, Fintech, Angular 20, Fraud Detection, Trade Finance, Credit Approval, Frontend Tech Lead, Remote Angular Developer, Angular Developer Worldwide, Relocation, Lagos, Nigeria, UK, US, Canada, Europe">
   <meta name="author" content="Akhigbe Iruobe">
   <meta name="robots" content="index, follow">
 
@@ -22,9 +22,10 @@
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="Akhigbe Iruobe — Portfolio">
   <meta property="og:title" content="Akhigbe Iruobe | Senior Frontend Engineer">
-  <meta property="og:description" content="9+ years Angular expertise. Built fraud detection, trade finance, and credit approval systems serving 100,000+ daily users at CBN-regulated banks. Available for UK/US remote roles.">
+  <meta property="og:description" content="9+ years Angular expertise. Built fraud detection, trade finance, and credit approval systems serving 100,000+ daily users at CBN-regulated banks. Available for remote and relocation roles worldwide.">
   <meta property="og:url" content="https://iruobeakhigbe.netlify.app/">
   <meta property="og:image" content="https://iruobeakhigbe.netlify.app/assets/img/fraud-dashboard-dark.png">
+  <meta property="og:image:type" content="image/png">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
   <meta property="og:image:alt" content="Akhigbe Iruobe — Senior Frontend Engineer portfolio">
@@ -35,14 +36,15 @@
   <meta name="twitter:site" content="@akhigbe_dev">
   <meta name="twitter:creator" content="@akhigbe_dev">
   <meta name="twitter:title" content="Akhigbe Iruobe | Senior Frontend Engineer">
-  <meta name="twitter:description" content="9+ years Angular expertise. Fraud detection, trade finance, credit approval — 100,000+ daily users. Available for UK/US remote.">
+  <meta name="twitter:description" content="9+ years Angular expertise. Fraud detection, trade finance, credit approval — 100,000+ daily users. Available for remote & relocation worldwide.">
   <meta name="twitter:image" content="https://iruobeakhigbe.netlify.app/assets/img/fraud-dashboard-dark.png">
 
   <!-- Canonical -->
   <link rel="canonical" href="https://iruobeakhigbe.netlify.app/">
 
-  <!-- JSON-LD Person schema — Google rich results -->
-  <script type="application/ld+json">
+  <!-- JSON-LD Person schema — Google rich results. id lets SeoService remove this static
+       fallback once Angular boots and injects the route-specific version, avoiding duplicates. -->
+  <script type="application/ld+json" id="ld-json-static">
   {
     "@context": "https://schema.org",
     "@type": "Person",
@@ -79,7 +81,7 @@
 
   <base href="/">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="icon" type="image/x-icon" href="logo.svg">
+  <link rel="icon" href="favicon.ico" sizes="any">
   <link rel="preload" href="assets/styles/font.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
   <noscript>
     <link rel="stylesheet" href="assets/styles/font.css">

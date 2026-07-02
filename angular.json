@@ -42,6 +42,7 @@
             ],
             "assets": [
               "src/logo.svg",
+              "src/favicon.ico",
               "src/assets",
               "src/_redirects",
               "src/robots.txt",
@@ -91,7 +92,8 @@
               "buildTarget": "iruobe-portfolio:build:production"
             },
             "development": {
-              "buildTarget": "iruobe-portfolio:build:development"
+              "buildTarget": "iruobe-portfolio:build:development",
+              "hmr": true
             }
           },
           "defaultConfiguration": "development"
