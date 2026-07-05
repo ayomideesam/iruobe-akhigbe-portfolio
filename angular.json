@@ -43,6 +43,7 @@
             "assets": [
               "src/logo.svg",
               "src/favicon.ico",
+              "src/manifest.json",
               "src/assets",
               "src/_redirects",
               "src/robots.txt",

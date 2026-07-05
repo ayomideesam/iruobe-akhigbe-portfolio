@@ -11,6 +11,7 @@ import { ProjectCardComponent } from './components/project-card/project-card.com
 import { SpinnerComponent } from './components/spinner/spinner.component';
 import { SafeHtmlPipe } from './pipes/safehtml.pipe';
 import { ToolTipComponent } from './components/tooltips/tooltip.component';
+import { RainbowHoverDirective } from './directives/rainbow-hover.directive';
 
 @NgModule({
   declarations: [
@@ -21,7 +22,8 @@ import { ToolTipComponent } from './components/tooltips/tooltip.component';
     ProjectCardComponent,
     SpinnerComponent,
     ToolTipComponent,
-    SafeHtmlPipe
+    SafeHtmlPipe,
+    RainbowHoverDirective
   ],
   imports: [CommonModule, RouterModule, ReactiveFormsModule],
   exports: [
@@ -33,6 +35,7 @@ import { ToolTipComponent } from './components/tooltips/tooltip.component';
     SpinnerComponent,
     ToolTipComponent,
     SafeHtmlPipe,
+    RainbowHoverDirective,
     CommonModule,
     RouterModule,
     ReactiveFormsModule

@@ -3,7 +3,13 @@
 }
 
 .companies-section {
-    padding: 3.5rem 0 1.5rem;
+    position: relative;
+    z-index: 1;
+    max-width: 1240px;
+    margin: 0px auto;
+    padding: clamp(40px, 6vw, 72px) 24px 0px;
+
+    /* padding: 3.5rem 0 1.5rem; */
     overflow: hidden;
     /* background: var(--background-secondary); */
     border-radius: 0.5rem;

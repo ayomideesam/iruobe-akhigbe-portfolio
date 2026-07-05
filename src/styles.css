@@ -111,6 +111,47 @@ html {
     --exp-hover-shadow: rgba(0, 0, 0, 0.3);
 }
 
+/* ─────────────────────────────────────────────────────────────
+   Home v2 design tokens (separate names from the legacy --primary-color
+   set above, so both systems coexist). Default is DARK (:root/.thm-dark);
+   .thm-light overrides. ThemeService applies .thm-dark+.dark-theme (dark)
+   or .thm-light (light) on <html>. Keep .thm-light AFTER :root for the
+   equal-specificity tie-break.
+   ───────────────────────────────────────────────────────────── */
+:root,
+.thm-dark {
+    --bg: #090e1c;
+    --tx: #f1f5f9;
+    --tx2: #94a3b8;
+    --pr: #818cf8;
+    --prr: 129, 140, 248;
+    --ac: #22d3ee;
+    --acr: 34, 211, 238;
+    --glass: rgba(255, 255, 255, 0.05);
+    --glass2: rgba(255, 255, 255, 0.085);
+    --gbrd: rgba(255, 255, 255, 0.10);
+    --gbrd2: rgba(255, 255, 255, 0.18);
+    --shdw: 0 1px 0 rgba(255, 255, 255, 0.10) inset, 0 22px 50px -22px rgba(0, 0, 0, 0.75);
+    --blur: 18px;
+    --btntx: #0b1120;
+}
+
+.thm-light {
+    --bg: #f3f4fa;
+    --tx: #0f172a;
+    --tx2: #475569;
+    --pr: #4f46e5;
+    --prr: 79, 70, 229;
+    --ac: #0891b2;
+    --acr: 8, 145, 178;
+    --glass: rgba(255, 255, 255, 0.60);
+    --glass2: rgba(255, 255, 255, 0.78);
+    --gbrd: rgba(15, 23, 42, 0.09);
+    --gbrd2: rgba(15, 23, 42, 0.16);
+    --shdw: 0 1px 0 rgba(255, 255, 255, 0.9) inset, 0 18px 40px -20px rgba(15, 23, 42, 0.22);
+    --btntx: #ffffff;
+}
+
 /* Global styles */
 * {
     margin: 0;

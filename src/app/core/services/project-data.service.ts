@@ -50,7 +50,7 @@ export class ProjectDataService {
          {
             id: 6,
             title: 'Credit Approval Process (CAP)',
-            description: 'Built Globus Bank\'s Credit Approval Process Automation Solution — a CBN-compliant platform digitising end-to-end credit lifecycle management across four facility modules (Retail, Corporate, Staff Loan, Product Program) through a two-stage governance structure: Stage 1 routes applications through a 10+ role sequential chain culminating in MCC online committee voting with configurable MD/CEO veto power; Stage 2 escalates facilities above ₦100M to the Board Credit Committee (BCC) for majority vote, after which the platform enables disbursement or deferral workflows.',
+            description: 'Built Globus Bank\'s Credit Approval Process Automation Solution — a CBN-compliant platform digitising end-to-end credit lifecycle management across 4 facility modules (Retail, Corporate, Staff Loan, Product) through a 2 stage governance structure: Stage 1 routes applications through a 10+ role sequential chain culminating in MCC online committee voting with configurable MD/CEO veto power; Stage 2 escalates facilities above ₦100M to the Board Credit Committee (BCC) for majority vote, after which the platform enables disbursement or deferral workflows.',
             techStack: [
                { name: 'Angular 20', color: '#DD0031' },
                { name: 'TypeScript', color: '#3178C6' },
@@ -58,11 +58,11 @@ export class ProjectDataService {
                { name: 'HTML5 | CSS3', color: '#339933' }
             ],
             achievements: [
-               'Implemented four parallel facility module tracks on a shared signal-based architecture — Retail (individual customers), Corporate (SMEs and large corporates with mandatory E&S governance review), Staff Loan (streamlined RM → BM → MD path), and Product Program (government MDA/parastatal employee lending) — each with track-specific multi-step forms, document compliance gates, and governance review paths',
-               'Encoded the full two-stage approval hierarchy as application routing and UI state: Stage 1 Business Approval Flow (RM → BM → BFGH → ZH → GH), Governance Review Flow (CRM Officer → CRM Approver → E&S → Head Risk Management → ED → ED Risk → MD/CEO), and MCC Committee deliberation (online/offline mode, individual vote capture per member, Yes/No vote count compilation, MD/CEO configurable veto power); Stage 2 BCC escalation for ₦100M+ facilities with board majority-vote resolution and automated re-vote trigger on tied result',
-               'Automated pre-submission background checks at origination stage: real-time PEP and blacklisted BVN screening via local list and third-party API, CRC/Credit Registry API returning live credit score and report, director-related customer account flagging, and collateral management notification trigger — all system-initiated before the request enters the approval chain',
-               'Designed a section-scoped real-time comment system operating across all three workflow stages (Facility, Disbursement, Deferral): CommentContextService tracks active section name, RequestEntityType, parent tab, inner section, disbursement ID, and disbursement index via RxJS BehaviorSubject; CommentManagementService exposes a single loadAndTransformCommentsBySection() Observable consumed by every child component — eliminating comment-loading boilerplate across 190+ components',
-               'Built 190+ fully standalone Angular 20 components and 26 shared reusable components with signal-based contracts (input(), output(), linkedSignal(), resource()) and zero NgModules; led Angular 19 → 20 migration resolving Vite 6/7 API incompatibility that caused complete dev-server failure'
+               'Implemented 4 parallel facility module tracks on a shared signal-based architecture — Retail (individual customers), Corporate (SMEs & large corporates with mandatory E&S governance review), Staff Loan (streamlined RM → BM → MD path), & Product Program (government MDA/parastatal employee lending) — each with track-specific multi-step forms, document compliance gates, & governance review paths',
+               'Encoded the full 2 stage approval hierarchy as application routing & UI state: Stage 1 Business Approval Flow (RM → BM → BFGH → ZH → GH), Governance Review Flow (CRM Officer → CRM Approver → E&S → Head Risk Mgt → ED → ED Risk → MD/CEO), & MCC Committee deliberation (online/offline mode, individual vote capture per member, Yes/No vote count compilation, MD/CEO configurable veto power); Stage 2 BCC escalation for ₦100M+ facilities with board majority-vote resolution & automated re-vote trigger on tied result',
+               'Automated pre-submission BG checks at origination stage: real-time PEP & blacklisted BVN screening via local list & third-party API, CRC/Credit Registry API returning live credit score & report, director-related customer account flagging, & collateral management notification trigger — all system-initiated before the request enters approval chain',
+               'Designed a section-scoped real-time comment system operating across all three workflow stages (Facility, Disbursement, Deferral): CommentContextService tracks active section name, RequestEntityType, parent tab, inner section, disbursement ID, & disbursement index via RxJS BehaviorSubject; CommentManagementService exposes a single loadAndTransformCommentsBySection() Observable consumed by every child component — eliminating comment-loading boilerplate across 190+ components',
+               'Built 190+ fully standalone Angular 20 comps & 26 shared reusable comps with signal-based contracts (input(), output(), linkedSignal(), resource()) & zero NgModules; led Angular 19 → 20 migration resolving Vite 6/7 API incompatibility that caused complete dev-server failure'
             ],
             images: [
                '/assets/img/cap-overview.jpeg',
@@ -98,12 +98,12 @@ export class ProjectDataService {
                { name: 'HTML5 | CSS3', color: '#339933' }
             ],
             achievements: [
-               'Reduced calendar management time by 85% via AI-powered event creation, Google Calendar API integration, and timezone-aware scheduling across 8 Middle Eastern markets',
-               'Delivered Gmail-integrated email module with ML-powered categorisation and AI reply generation, processing high-volume inboxes with sub-second load times through RxJS stream optimisation',
+               'Reduced calendar management time by 85% via AI-powered event creation, Google Calendar API integration, & timezone-aware scheduling across 8 Middle Eastern markets',
+               'Delivered Gmail-integrated email module with ML-powered categorisation & AI reply generation, processing high-volume inboxes with sub-second load times through RxJS stream optimisation',
                'Automated invoice generation pipeline handling 10,000+ invoices monthly at 99.9% accuracy — replacing a fully manual finance workflow',
                'Reduced client operational costs by an average of 50% by automating task assignment, booking management, document handling, and inventory tracking across a single unified platform',
-               'Achieved 99.9% uptime through NestJS rate-limiting (100 req/sec), JWT refresh interceptor, and centralised error handling — with zero auth-related production incidents',
-               'Cut application load time by 65% via lazy-loaded feature modules across 8 domains, OnPush change detection, and production bundle optimisation enforcing a 2 MB size budget'
+               'Achieved 99.9% uptime through NestJS rate-limiting (100 req/sec), JWT refresh interceptor, & centralised error handling — with zero auth-related production incidents',
+               'Cut application load time by 65% via lazy-loaded feature modules across 8 domains, OnPush change detection, & production bundle optimisation enforcing a 2 MB size budget'
             ],
             images: [
                '/assets/img/costaff-home.jpeg',
