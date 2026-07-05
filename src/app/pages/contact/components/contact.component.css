@@ -38,11 +38,16 @@ svg {
 }
 
 .contact-title {
-    font-size: 3.5rem;
-    font-weight: 700;
-    line-height: 1.2;
+    font-size: clamp(2.4rem, 1.6rem + 3.4vw, 4.2rem);
+    font-weight: 800;
+    line-height: 1.12;
+    letter-spacing: -0.03em;
     margin-bottom: 1.5rem;
     font-family: "Outfit", "Sora", Verdana, Tahoma, sans-serif;
+}
+
+.contact-title-line {
+    display: inline-block;
 }
 
 .gradient-text {
@@ -94,7 +99,7 @@ svg {
     color: var(--text-primary);
     overflow: hidden;
     isolation: isolate;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.35s ease, border-top-color 0.3s ease;
 }
 
 /* Brand accent overrides per method */
@@ -104,10 +109,17 @@ svg {
 .method-whatsapp { --card-accent: #25D366; --card-accent-rgb: 37, 211, 102; }
 .method-twitter  { --card-accent: #1d9bf0; --card-accent-rgb: 29, 155, 240; }
 
+.method-icon,
+.method-content {
+    position: relative;
+    z-index: 2;
+}
+
 .method-card::before {
     content: '';
     position: absolute;
     inset: 0;
+    z-index: 0;
     background: linear-gradient(45deg,
             rgba(var(--card-accent-rgb), 0.12),
             rgba(var(--card-accent-rgb), 0.05));
@@ -119,9 +131,58 @@ svg {
     opacity: 1;
 }
 
+/* ambient idle glow — subtle "always alive" corner light, independent of hover */
+.method-card::after {
+    content: '';
+    position: absolute;
+    top: -55px;
+    right: -55px;
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(var(--card-accent-rgb), 0.35), transparent 70%);
+    pointer-events: none;
+    z-index: 0;
+    will-change: transform;
+    animation: methodGlowPulse 5.5s ease-in-out infinite;
+}
+
+@keyframes methodGlowPulse {
+    0%, 100% { transform: scale(1) translate(0, 0); opacity: 0.35; }
+    50%      { transform: scale(1.25) translate(-8px, 8px); opacity: 0.65; }
+}
+
+.methods-grid > a:nth-child(1)::after { animation-delay: 0s; }
+.methods-grid > a:nth-child(2)::after { animation-delay: 0.9s; }
+.methods-grid > a:nth-child(3)::after { animation-delay: 1.8s; }
+.methods-grid > a:nth-child(4)::after { animation-delay: 2.7s; }
+.methods-grid > a:nth-child(5)::after { animation-delay: 3.6s; }
+
+/* cursor-tracking spotlight — reveals on hover, follows --x/--y set in TS */
+.hover-gradient {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    opacity: 0;
+    pointer-events: none;
+    background: radial-gradient(340px circle at var(--x, 50%) var(--y, 50%),
+            rgba(var(--card-accent-rgb), 0.22), transparent 60%);
+    transition: opacity 0.35s ease;
+}
+
+.method-card:hover .hover-gradient {
+    opacity: 1;
+}
+
 .method-card:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 12px 32px rgba(var(--card-accent-rgb), 0.18);
+    transform:
+        translateY(-7px)
+        perspective(900px)
+        rotateX(calc((50 - var(--yn, 50)) * 0.045deg))
+        rotateY(calc((var(--xn, 50) - 50) * 0.045deg));
+    box-shadow:
+        0 18px 40px -14px rgba(var(--card-accent-rgb), 0.35),
+        0 0 0 1px rgba(var(--card-accent-rgb), 0.4);
     border-top-color: var(--card-accent);
 }
 
@@ -130,6 +191,12 @@ svg {
     height: 48px;
     margin-bottom: 1.5rem;
     color: var(--card-accent);
+    transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1), filter 0.35s ease;
+}
+
+.method-card:hover .method-icon {
+    transform: translateY(-3px) scale(1.1) rotate(-5deg);
+    filter: drop-shadow(0 6px 14px rgba(var(--card-accent-rgb), 0.5));
 }
 
 .method-content h3 {
@@ -145,11 +212,28 @@ svg {
 }
 
 .method-action {
+    position: relative;
     display: flex;
     align-items: center;
     gap: 0.5rem;
     font-weight: 500;
     color: var(--card-accent);
+    width: fit-content;
+}
+
+.method-action::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: -3px;
+    width: 0;
+    height: 1.5px;
+    background: currentColor;
+    transition: width 0.3s ease;
+}
+
+.method-card:hover .method-action::after {
+    width: 100%;
 }
 
 .method-action svg {
@@ -165,12 +249,74 @@ svg {
     border-radius: 24px;
     padding: 3rem;
     box-shadow: var(--shadow-lg);
-    font-family: "Macondo", "Sora", serif;
+    font-family: "Sora", sans-serif;
     position: relative;
     isolation: isolate;
     overflow: hidden;
-    backdrop-filter: blur(5px);
-    -webkit-backdrop-filter: blur(5px);
+    background: linear-gradient(160deg, rgba(255, 255, 255, 0.82), rgba(255, 255, 255, 0.55));
+    border: 1px solid rgba(22, 24, 50, 0.1);
+    backdrop-filter: blur(14px) saturate(130%);
+    -webkit-backdrop-filter: blur(14px) saturate(130%);
+    transition: border-color 0.4s ease, box-shadow 0.4s ease;
+}
+
+.form-section:hover {
+    border-color: rgba(var(--primary-rgb), 0.28);
+    box-shadow: var(--shadow-lg), 0 0 0 1px rgba(var(--primary-rgb), 0.18), 0 30px 70px -34px rgba(var(--primary-rgb), 0.35);
+}
+
+/* idle ambient aurora — same drifting-blob language as the Assessments section */
+.form-aura {
+    position: absolute;
+    z-index: 0;
+    border-radius: 50%;
+    pointer-events: none;
+    filter: blur(70px);
+    will-change: transform;
+}
+
+.form-aura-a {
+    width: 340px;
+    height: 340px;
+    top: -120px;
+    left: -80px;
+    background: radial-gradient(circle, rgba(var(--primary-rgb), 0.22), transparent 70%);
+    animation: formAuraDrift 18s ease-in-out infinite;
+}
+
+.form-aura-b {
+    width: 300px;
+    height: 300px;
+    bottom: -110px;
+    right: -70px;
+    background: radial-gradient(circle, rgba(var(--accent-rgb), 0.18), transparent 70%);
+    animation: formAuraDrift 22s ease-in-out infinite reverse;
+}
+
+@keyframes formAuraDrift {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    50%      { transform: translate(5%, -4%) scale(1.12); }
+}
+
+/* glass sheen — sweeps once across the whole panel on hover-in */
+.form-sheen {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    pointer-events: none;
+    background: linear-gradient(100deg, transparent 40%, rgba(255, 255, 255, 0.10) 50%, transparent 60%);
+    transform: translateX(-140%);
+    transition: transform 1s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.form-section:hover .form-sheen {
+    transform: translateX(140%);
+}
+
+.dark-theme .form-section,
+:host-context(.dark-theme) .form-section {
+    background: linear-gradient(160deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.02));
+    border-color: rgba(255, 255, 255, 0.1);
 }
 
 :host-context(.dark-theme) .form-section::before {
@@ -181,24 +327,7 @@ svg {
             transparent 60%);
 }
 
-.form-section::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: radial-gradient(1200px circle at var(--x, 50%) var(--y, 50%),
-            rgba(var(--primary-rgb), 0.03) 0%,
-            rgba(var(--primary-rgb), 0.02) 20%,
-            rgba(var(--accent-rgb), 0.01) 40%,
-            transparent 60%);
-    opacity: 0;
-    transition: opacity 0.3s ease;
-    z-index: -1;
-    mix-blend-mode: screen;
-    filter: blur(40px);
-}
-
-/* Remove existing ::before and ::after */
-/* Add new smoke effect layers */
+/* Smoke effect layers */
 .form-section::before {
     content: '';
     position: absolute;
@@ -237,14 +366,51 @@ svg {
 }
 
 .form-container {
+    position: relative;
+    z-index: 1;
     max-width: 800px;
     margin: 0 auto;
 }
 
+.form-header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.9rem;
+    margin-bottom: 3rem;
+}
+
 .form-container h2 {
     text-align: center;
-    margin-bottom: 3rem;
-    font-size: 2.5rem;
+    margin: 0;
+    font-family: "Outfit", "Sora", sans-serif;
+    font-size: clamp(1.9rem, 1.4rem + 2vw, 2.5rem);
+    font-weight: 800;
+    letter-spacing: -0.02em;
+}
+
+.form-tech-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.4rem 0.9rem;
+    border-radius: 100px;
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.03em;
+    color: var(--text-secondary);
+    background: rgba(var(--primary-rgb), 0.07);
+    border: 1px solid rgba(var(--primary-rgb), 0.18);
+}
+
+.form-tech-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--primary-color);
+    box-shadow: 0 0 7px rgba(var(--primary-rgb), 0.7);
+    animation: statusPulse 2.4s ease-in-out infinite;
+    flex-shrink: 0;
 }
 
 .form-grid {
@@ -264,9 +430,11 @@ svg {
 }
 
 label {
-    font-size: 1.25rem;
-    font-weight: 500;
-    color: var(--text-primary);
+    font-size: 0.82rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1.4px;
+    color: var(--text-secondary);
 }
 
 .input-wrapper {
@@ -312,8 +480,13 @@ textarea {
     background: var(--background-color);
     color: var(--text-primary);
     font-family: inherit;
-    font-size: 1.2rem;
+    font-size: 1rem;
     transition: all 0.3s ease;
+}
+
+input:hover:not(:focus),
+textarea:hover:not(:focus) {
+    border-color: rgba(var(--primary-rgb), 0.4);
 }
 
 input:focus,
@@ -330,9 +503,10 @@ textarea:focus+svg {
 }
 
 .error-message {
-    font-size: 1.2rem;
+    font-size: 0.85rem;
+    font-weight: 500;
     color: #ef4444;
-    font-family: 'Macondo';
+    font-family: inherit;
     transform-origin: left;
     animation: errorShake 0.5s cubic-bezier(0.4, 0, 0.2, 1);
 }
@@ -415,8 +589,10 @@ textarea:focus+svg {
 }
 
 .button-content span {
-    font-family: "Macondo", "Sora", serif;
-    font-size: 1.5rem;
+    font-family: "Sora", sans-serif;
+    font-size: 1.05rem;
+    font-weight: 600;
+    letter-spacing: 0.02em;
 }
 
 .loader {
@@ -697,7 +873,6 @@ textarea:focus+svg {
     }
 
     .form-section {
-        background: var(--background-secondary);
         padding: 2rem 1.5rem;
     }
 
@@ -744,6 +919,48 @@ textarea:focus+svg {
 
     .submit-button:active {
         transform: scale(0.98);
+    }
+}
+
+/* Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+    .info-status-dot,
+    .success-background::after,
+    .error-background::after,
+    .error-icon,
+    .method-card::after,
+    .form-aura-a,
+    .form-aura-b,
+    .form-tech-dot,
+    .schedule-card::after,
+    .schedule-btn-ping::before,
+    .schedule-btn-ping::after,
+    .schedule-btn-shine::before {
+        animation: none;
+    }
+
+    .method-card,
+    .method-icon,
+    .method-action svg,
+    .method-action::after,
+    .hover-gradient,
+    .schedule-btn,
+    .schedule-btn svg,
+    .schedule-card,
+    .schedule-icon,
+    .submit-button,
+    .info-chip,
+    .input-wrapper,
+    .input-wrapper::after,
+    .form-section,
+    .form-sheen,
+    input,
+    textarea {
+        transition: none;
+    }
+
+    .method-card:hover {
+        transform: translateY(-4px);
     }
 }
 
@@ -829,14 +1046,16 @@ textarea:focus+svg {
         rgba(var(--accent-rgb), 0.05) 100%);
     border: 1px solid rgba(var(--primary-rgb), 0.2);
     position: relative;
+    isolation: isolate;
     overflow: hidden;
-    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease;
 }
 
 .schedule-card::before {
     content: '';
     position: absolute;
     inset: 0;
+    z-index: 0;
     background: linear-gradient(135deg,
         rgba(var(--primary-rgb), 0.04) 0%,
         rgba(var(--accent-rgb), 0.04) 100%);
@@ -845,9 +1064,37 @@ textarea:focus+svg {
     pointer-events: none;
 }
 
+/* occasional glint — catches the light every few seconds without looping distractingly */
+.schedule-card::after {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -20%;
+    width: 60%;
+    height: 200%;
+    z-index: 1;
+    pointer-events: none;
+    background: linear-gradient(100deg, transparent, rgba(255, 255, 255, 0.16), transparent);
+    animation: cardGlint 7s ease-in-out infinite;
+}
+
+@keyframes cardGlint {
+    0%   { transform: translateX(-160%) rotate(8deg); }
+    10%  { transform: translateX(160%) rotate(8deg); }
+    100% { transform: translateX(160%) rotate(8deg); }
+}
+
+.schedule-icon,
+.schedule-content,
+.schedule-btn {
+    position: relative;
+    z-index: 2;
+}
+
 .schedule-card:hover {
     border-color: rgba(var(--primary-rgb), 0.4);
-    box-shadow: 0 8px 32px rgba(var(--primary-rgb), 0.1);
+    box-shadow: 0 8px 32px rgba(var(--primary-rgb), 0.1), 0 0 0 1px rgba(var(--primary-rgb), 0.22);
+    transform: translateY(-3px);
 }
 
 .schedule-card:hover::before {
@@ -864,6 +1111,11 @@ textarea:focus+svg {
     align-items: center;
     justify-content: center;
     color: #fff;
+    transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.schedule-card:hover .schedule-icon {
+    transform: scale(1.08) rotate(-6deg);
 }
 
 .schedule-content {
@@ -886,6 +1138,7 @@ textarea:focus+svg {
 }
 
 .schedule-btn {
+    position: relative;
     flex-shrink: 0;
     display: inline-flex;
     align-items: center;
@@ -897,14 +1150,79 @@ textarea:focus+svg {
     font-size: 0.9rem;
     font-weight: 600;
     text-decoration: none;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    isolation: isolate;
+    box-shadow: 0 4px 16px -4px rgba(var(--primary-rgb), 0.45);
+    transition: transform 0.25s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.3s ease, filter 0.3s ease;
     white-space: nowrap;
     cursor: pointer;
 }
 
+.schedule-btn-label,
+.schedule-btn svg {
+    position: relative;
+    z-index: 2;
+}
+
+/* idle "invite to click" beacon — two rings pinging outward, always on */
+.schedule-btn-ping {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    border-radius: inherit;
+    pointer-events: none;
+}
+
+.schedule-btn-ping::before,
+.schedule-btn-ping::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    border: 1.5px solid rgba(255, 255, 255, 0.65);
+    opacity: 0;
+    animation: btnPing 2.6s cubic-bezier(0.22, 1, 0.36, 1) infinite;
+}
+
+.schedule-btn-ping::after {
+    animation-delay: 1.3s;
+}
+
+@keyframes btnPing {
+    0%   { transform: scale(1); opacity: 0.6; }
+    75%  { transform: scale(1.35); opacity: 0; }
+    100% { transform: scale(1.35); opacity: 0; }
+}
+
+/* occasional shine — clipped to the pill so it never pokes past the rounded edge */
+.schedule-btn-shine {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    overflow: hidden;
+    border-radius: inherit;
+    pointer-events: none;
+}
+
+.schedule-btn-shine::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -20%;
+    width: 35%;
+    height: 200%;
+    background: linear-gradient(100deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+    animation: cardGlint 5s ease-in-out infinite;
+    animation-delay: 0.6s;
+}
+
 .schedule-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(var(--primary-rgb), 0.35);
+    transform: translateY(-3px) scale(1.03);
+    box-shadow: 0 10px 28px -6px rgba(var(--primary-rgb), 0.55);
+    filter: brightness(1.06);
+}
+
+.schedule-btn:active {
+    transform: translateY(-1px) scale(0.99);
 }
 
 .schedule-btn svg {
@@ -912,7 +1230,7 @@ textarea:focus+svg {
 }
 
 .schedule-btn:hover svg {
-    transform: translateX(4px);
+    transform: translateX(6px) scale(1.1);
 }
 
 /* ─── Form timezone note ────────────────────────────────────── */

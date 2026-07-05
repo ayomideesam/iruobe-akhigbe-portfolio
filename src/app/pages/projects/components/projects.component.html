@@ -14,7 +14,7 @@
             <span class="intro-eyebrow-label">Enterprise Angular &middot; CBN-Regulated Fintech &middot; 9+ Years</span>
             <span class="intro-eyebrow-line"></span>
         </div>
-        <h1>About my work<span class="accent-dot">.</span></h1>
+        <h1><span appRainbowHover>About my work</span><span class="accent-dot">.</span></h1>
         <div class="about-text-container">
             <p class="about-text about-text-highlight">{{aboutText.para1}}</p>
             <p class="about-text">{{aboutText.para2}}</p>
@@ -60,7 +60,7 @@
                 <span class="fp-index" aria-hidden="true">{{ i < 9 ? '0' : '' }}{{ i + 1 }}</span>
                 <div class="fp-head-id">
                     <span class="fp-eyebrow"><span class="fp-eyebrow-dot"></span>{{getSceneMeta(project.id).eyebrow}}</span>
-                    <h2 class="fp-title">{{project.title}}</h2>
+                    <h2 class="fp-title" appRainbowHover>{{project.title}}</h2>
                 </div>
                 <span class="fp-private">
                     <svg width="13" height="13" viewBox="0 0 24 24" fill="none">

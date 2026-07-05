@@ -7,7 +7,7 @@
     </div>
     <section class="contact-hero">
         <h1 class="contact-title">
-            Let's Create Something
+            <span appRainbowHover class="contact-title-line">Let's Create Something</span>
             <span class="gradient-text">Extraordinary</span>
             <span class="accent-dot">..</span>
         </h1>
@@ -49,7 +49,9 @@
                     <p class="schedule-desc">Prefer a conversation? Skip the back-and-forth — pick a slot that works for you and let's talk directly about the role or project.</p>
                 </div>
                 <a href="https://calendly.com/iruobeakhigbe/30min" target="_blank" rel="noopener noreferrer" class="schedule-btn">
-                    Schedule a Call
+                    <span class="schedule-btn-ping" aria-hidden="true"></span>
+                    <span class="schedule-btn-shine" aria-hidden="true"></span>
+                    <span class="schedule-btn-label">Schedule a Call</span>
                     <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
                 </a>
             </div>
@@ -84,8 +86,17 @@
 
         <!-- Contact Form Section -->
         <section class="form-section" [@formAnimation]>
+            <span class="form-aura form-aura-a" aria-hidden="true"></span>
+            <span class="form-aura form-aura-b" aria-hidden="true"></span>
+            <span class="form-sheen" aria-hidden="true"></span>
             <div class="form-container">
-                <h2>Send me a message</h2>
+                <div class="form-header">
+                    <h2>Send me a message</h2>
+                    <span class="form-tech-badge">
+                        <span class="form-tech-dot" aria-hidden="true"></span>
+                        Reactive Forms &middot; Signals &middot; EmailJS
+                    </span>
+                </div>
                 <p class="form-timezone-note">
                     <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
                     Lagos time (WAT, UTC+1) — I typically reply within 24 hours

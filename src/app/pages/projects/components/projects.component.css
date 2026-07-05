@@ -489,6 +489,14 @@ h2 {
     -webkit-backdrop-filter: blur(12px);
     backdrop-filter: blur(12px);
     overflow: hidden;
+    cursor: default;
+    transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1), border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.fp-stat:hover {
+    transform: translateY(-4px);
+    border-color: rgba(var(--fp-acc-rgb), 0.45);
+    box-shadow: 0 14px 32px -16px rgba(var(--fp-acc-rgb), 0.5);
 }
 
 .fp-stat::before {
@@ -499,7 +507,11 @@ h2 {
     right: 12%;
     height: 1px;
     background: linear-gradient(90deg, transparent, rgba(var(--fp-acc-rgb), 0.7), transparent);
+    opacity: 0.7;
+    transition: opacity 0.3s ease;
 }
+
+.fp-stat:hover::before { opacity: 1; }
 
 .fp-stat-value {
     display: block;
@@ -514,6 +526,14 @@ h2 {
     -webkit-text-fill-color: transparent;
     margin-bottom: 0.3rem;
     white-space: nowrap;
+    transform-origin: left bottom;
+    transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1), filter 0.3s ease;
+}
+
+/* the numeral answers the hover — lifts and ignites */
+.fp-stat:hover .fp-stat-value {
+    transform: translateY(-2px) scale(1.06);
+    filter: brightness(1.15) saturate(1.25);
 }
 
 .fp-stat-label {
@@ -688,6 +708,20 @@ h2 {
     box-shadow: var(--fp-shot-sh), 0 0 0 1px rgba(var(--fp-acc-rgb), 0.3);
 }
 
+/* glass sheen sweeps the frame once per hover — transform only */
+.fp-shot::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    pointer-events: none;
+    background: linear-gradient(105deg, transparent 42%, rgba(255, 255, 255, 0.16) 50%, transparent 58%);
+    transform: translateX(-130%);
+    transition: transform 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.fp-shot:hover::after { transform: translateX(130%); }
+
 .fp-shot-bar {
     display: flex;
     align-items: center;
@@ -704,10 +738,16 @@ h2 {
     border-radius: 50%;
     background: var(--fp-shot-dot);
     flex-shrink: 0;
+    transition: background 0.3s ease, opacity 0.3s ease;
 }
 
 .fp-shot-dot:nth-child(2) { opacity: 0.75; }
 .fp-shot-dot:nth-child(3) { opacity: 0.55; }
+
+/* traffic lights wake up when the frame is hovered */
+.fp-shot:hover .fp-shot-dot:nth-child(1) { background: #ff5f57; opacity: 1; }
+.fp-shot:hover .fp-shot-dot:nth-child(2) { background: #febc2e; opacity: 1; }
+.fp-shot:hover .fp-shot-dot:nth-child(3) { background: #28c840; opacity: 1; }
 
 .fp-shot-tag {
     margin-left: auto;
@@ -719,7 +759,10 @@ h2 {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+    transition: color 0.3s ease;
 }
+
+.fp-shot:hover .fp-shot-tag { color: var(--fp-acc-text); }
 
 .fp-shot img {
     display: block;
@@ -884,7 +927,10 @@ h2 {
     letter-spacing: -0.01em;
     color: var(--fp-ink);
     margin-bottom: 0.25rem;
+    transition: color 0.25s ease;
 }
+
+.fp-rail-step:hover .fp-rail-name { color: var(--fp-acc-text); }
 
 .fp-rail-meta {
     display: block;
@@ -3748,9 +3794,15 @@ h2 {
 
     .fp-scene,
     .fp-shot,
+    .fp-shot::after,
+    .fp-shot-dot,
     .fp-github,
+    .fp-stat,
+    .fp-stat-value,
     .fp-tech .tech-badge,
     .fp-spotlight {
         transition: none;
     }
+
+    .fp-shot::after { display: none; }
 }

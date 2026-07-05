@@ -194,13 +194,15 @@ export class ContactComponent implements OnInit {
   }
 
   onMouseMove(event: MouseEvent) {
-    const cards = document.querySelectorAll('.form-section');
+    const cards = document.querySelectorAll<HTMLElement>('.form-section, .method-card, .schedule-card');
     cards.forEach(card => {
-      const rect = (card as HTMLElement).getBoundingClientRect();
+      const rect = card.getBoundingClientRect();
       const x = ((event.clientX - rect.left) / rect.width) * 100;
       const y = ((event.clientY - rect.top) / rect.height) * 100;
-      (card as HTMLElement).style.setProperty('--x', `${x}%`);
-      (card as HTMLElement).style.setProperty('--y', `${y}%`);
+      card.style.setProperty('--x', `${x}%`);
+      card.style.setProperty('--y', `${y}%`);
+      card.style.setProperty('--xn', `${x}`);
+      card.style.setProperty('--yn', `${y}`);
     });
   }
 
