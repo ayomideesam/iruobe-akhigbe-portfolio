@@ -53,7 +53,9 @@ interface HdrTier {
           }
           @if (tier().showYouTube) {
             <a href="https://www.youtube.com/@AyomideIruobe" target="_blank" rel="noopener noreferrer" class="yt-link">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M23.5 6.2c-.3-1.1-1.1-1.9-2.2-2.2C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.3.5c-1.1.3-1.9 1.1-2.2 2.2C0 8 0 12 0 12s0 4 .5 5.8c.3 1.1 1.1 1.9 2.2 2.2 1.8.5 9.3.5 9.3.5s7.5 0 9.3-.5c1.1-.3 1.9-1.1 2.2-2.2.5-1.8.5-5.8.5-5.8s0-4-.5-5.8zM9.5 15.5v-7l6.2 3.5-6.2 3.5z"></path></svg>
+              <span class="yt-icon-ring">
+                <svg class="yt-icon" width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M23.5 6.2c-.3-1.1-1.1-1.9-2.2-2.2C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.3.5c-1.1.3-1.9 1.1-2.2 2.2C0 8 0 12 0 12s0 4 .5 5.8c.3 1.1 1.1 1.9 2.2 2.2 1.8.5 9.3.5 9.3.5s7.5 0 9.3-.5c1.1-.3 1.9-1.1 2.2-2.2.5-1.8.5-5.8.5-5.8s0-4-.5-5.8zM9.5 15.5v-7l6.2 3.5-6.2 3.5z"></path></svg>
+              </span>
               YouTube
             </a>
           }
@@ -63,7 +65,7 @@ interface HdrTier {
           <button class="theme-switch" (click)="toggleTheme()" role="switch" [attr.aria-checked]="isDarkTheme()" aria-label="Toggle theme">
             <span class="ts-sun"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"></path></svg></span>
             <span class="ts-moon"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg></span>
-            <span class="ts-knob" [style.transform]="knobTransform()"></span>
+            <span class="ts-knob" [style.transform]="knobTransform()"><span class="ts-knob-face" [class.ts-spin-a]="spinFlip()" [class.ts-spin-b]="!spinFlip()"></span></span>
           </button>
         </div>
       }
@@ -77,7 +79,7 @@ interface HdrTier {
           <button class="theme-switch" (click)="toggleTheme()" role="switch" [attr.aria-checked]="isDarkTheme()" aria-label="Toggle theme">
             <span class="ts-sun"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"></path></svg></span>
             <span class="ts-moon"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg></span>
-            <span class="ts-knob" [style.transform]="knobTransform()"></span>
+            <span class="ts-knob" [style.transform]="knobTransform()"><span class="ts-knob-face" [class.ts-spin-a]="spinFlip()" [class.ts-spin-b]="!spinFlip()"></span></span>
           </button>
           <button class="burger" (click)="toggleMenu()" aria-label="Toggle menu">
             <span></span><span></span><span></span>
@@ -145,7 +147,7 @@ interface HdrTier {
             <button class="theme-switch theme-switch-plain" (click)="toggleTheme()" role="switch" [attr.aria-checked]="isDarkTheme()" aria-label="Toggle theme">
               <span class="ts-sun"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"></path></svg></span>
               <span class="ts-moon"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg></span>
-              <span class="ts-knob ts-knob-white" [style.transform]="knobTransform()"></span>
+              <span class="ts-knob ts-knob-white" [style.transform]="knobTransform()"><span class="ts-knob-face" [class.ts-spin-a]="spinFlip()" [class.ts-spin-b]="!spinFlip()"></span></span>
             </button>
           </div>
           <div class="mm-social-row">
@@ -180,6 +182,13 @@ export class HeaderComponent implements OnInit, AfterViewInit {
 
   readonly isDarkTheme = computed(() => this.themeService.isDarkTheme());
   readonly knobTransform = computed(() => this.isDarkTheme() ? 'translateX(28px)' : 'translateX(0px)');
+
+  // rotate(0deg)->rotate(360deg) resolves to the same matrix once committed, so a
+  // plain CSS transition can't re-interpolate it on the next toggle (nothing to
+  // diff against). Alternating between two identically-defined keyframe names
+  // forces the animation to restart every click regardless of the knob's resting
+  // transform state.
+  readonly spinFlip = signal(false);
 
   readonly tier = signal<HdrTier>(HeaderComponent.computeHdr(window.innerWidth));
   readonly isMenuOpen = signal(false);
@@ -237,6 +246,7 @@ export class HeaderComponent implements OnInit, AfterViewInit {
 
   toggleTheme(): void {
     this.themeService.toggleTheme();
+    this.spinFlip.update(v => !v);
   }
 
   toggleMenu(): void {

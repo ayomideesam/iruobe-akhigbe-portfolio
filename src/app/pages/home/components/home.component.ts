@@ -175,14 +175,25 @@ export class HomeComponent implements OnInit, AfterViewInit {
     });
   }
 
+  // While a slot is mid-swap its card plays the cardSwapExit animation; the
+  // actual data swap (and the new card's cardEnter animation) is deferred
+  // until that exit finishes, giving a real crossfade instead of a hard cut.
+  readonly swappingIndex = signal<number | null>(null);
+  private swapTimer: ReturnType<typeof setTimeout> | null = null;
+
   swapProject(index: number): void {
-    const vis = [...this.visKeys()];
-    const bench = [...this.benchKeys()];
-    const out = vis[index];
-    vis[index] = bench.shift()!;
-    bench.push(out);
-    this.visKeys.set(vis);
-    this.benchKeys.set(bench);
+    if (this.swappingIndex() !== null) return;
+    this.swappingIndex.set(index);
+    this.swapTimer = setTimeout(() => {
+      const vis = [...this.visKeys()];
+      const bench = [...this.benchKeys()];
+      const out = vis[index];
+      vis[index] = bench.shift()!;
+      bench.push(out);
+      this.visKeys.set(vis);
+      this.benchKeys.set(bench);
+      this.swappingIndex.set(null);
+    }, 260);
   }
 
   expandProject(key: ProjectKey): void {
@@ -355,9 +366,35 @@ export class HomeComponent implements OnInit, AfterViewInit {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
+  private revealObserver: IntersectionObserver | null = null;
+
   ngAfterViewInit(): void {
     const t = setTimeout(() => this.progressStarted.set(true), 700);
     this.destroyRef.onDestroy(() => clearTimeout(t));
+    this.destroyRef.onDestroy(() => { if (this.swapTimer) clearTimeout(this.swapTimer); });
+    this.initProjectReveal();
+  }
+
+  // Scroll-choreographed entrance for the Featured Projects grid — same
+  // IntersectionObserver + one-shot-reveal pattern as ProjectsComponent's
+  // flagship scenes, kept local since Home only needs it for this one grid.
+  private initProjectReveal(): void {
+    const grid = document.querySelector('.projects-grid');
+    if (!grid) return;
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      grid.classList.add('in-view');
+      return;
+    }
+    this.revealObserver = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('in-view');
+          this.revealObserver!.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.12, rootMargin: '0px 0px -5% 0px' });
+    this.revealObserver.observe(grid);
+    this.destroyRef.onDestroy(() => this.revealObserver?.disconnect());
   }
 
   // ─── Helpers reused across templates ───
@@ -434,7 +471,14 @@ export class HomeComponent implements OnInit, AfterViewInit {
     this.router.navigate(['/contact']).then(() => window.scrollTo(0, 0));
   }
 
-  viewProject(id: string): void {
-    this.analytics.trackProjectView(id);
+  // Maps this component's project pool keys to the numeric ids ProjectDataService
+  // and ProjectsComponent's [id]="'project-' + project.id" anchors actually use.
+  private static readonly PROJECT_DATA_ID: Record<ProjectKey, number> = {
+    costaff: 1, trade: 2, fms: 3, tiger: 4, xpath: 5, cap: 6
+  };
+
+  viewProject(key: ProjectKey): void {
+    this.analytics.trackProjectView(key);
+    this.navigateToProject(HomeComponent.PROJECT_DATA_ID[key]);
   }
 }

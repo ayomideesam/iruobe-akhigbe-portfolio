@@ -74,7 +74,7 @@
 
   <div class="projects-grid">
     @for (p of visibleProjects; track p.key) {
-      <article class="project-card">
+      <article class="project-card" [class.card-swap-exit]="p.swapIndex === swappingIndex()">
         <div class="tl-bar">
           <div class="tl">
             <button type="button" class="tl-btn tl-red" (click)="swapProject(p.swapIndex)" aria-label="Close — swap in another project" title="Close (swaps in another project)">
@@ -89,7 +89,7 @@
           </div>
           <span class="tl-url">{{ p.url }}</span>
         </div>
-        <div class="project-shot">
+        <div class="project-shot" tabindex="0" role="button" [attr.aria-label]="'Expand ' + p.title + ' screenshot'" [title]="'Expand ' + p.title + ' screenshot'" (click)="expandProject(p.key)" (keydown.enter)="expandProject(p.key)">
           <img [src]="p.img" [alt]="p.title + ' screenshot'" [title]="p.title" loading="lazy">
         </div>
         <div class="carousel-bar">
@@ -113,7 +113,7 @@
             }
           </div>
           <p class="project-desc">{{ p.desc }}</p>
-          <span class="view-project-link" (click)="navigateToProjects()">
+          <span class="view-project-link" tabindex="0" role="link" [attr.aria-label]="'View ' + p.title + ' case study'" [title]="'View ' + p.title + ' case study'" (click)="viewProject(p.key)" (keydown.enter)="viewProject(p.key)">
             View Project
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"></path></svg>
           </span>
@@ -346,7 +346,13 @@
           }
         </div>
         <p class="expand-desc">{{ ep.desc }}</p>
-        <span class="expand-hint">Press Esc or the red button to close</span>
+        <div class="expand-footer">
+          <span class="expand-hint">Press Esc or the red button to close</span>
+          <button type="button" class="expand-cta" (click)="closeExpand(); viewProject(ep.key)">
+            View Full Case Study
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"></path></svg>
+          </button>
+        </div>
       </div>
     </article>
   </div>

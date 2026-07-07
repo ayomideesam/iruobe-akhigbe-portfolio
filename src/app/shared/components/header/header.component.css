@@ -171,8 +171,30 @@
 }
 .yt-link:hover {
     background: rgba(244, 63, 94, 0.10);
-    transform: translateY(-1px);
+    transform: translateY(-1px) scale(1.04);
 }
+/* Idle attention pulse — entices clicks before any hover. Paused on hover
+   per project convention (clean, non-distracting click interaction). */
+.yt-icon-ring { position: relative; display: flex; align-items: center; justify-content: center; }
+.yt-icon-ring::after {
+    content: '';
+    position: absolute;
+    inset: -5px;
+    border-radius: 50%;
+    background: rgba(244, 63, 94, 0.35);
+    transform: scale(0.6);
+    opacity: 0;
+    animation: ytRing 2.4s ease-out infinite;
+    pointer-events: none;
+}
+.yt-icon { position: relative; z-index: 1; display: block; animation: ytPulse 2.4s ease-in-out infinite; }
+@keyframes ytRing {
+    0%        { transform: scale(0.6); opacity: 0.55; }
+    70%, 100% { transform: scale(2); opacity: 0; }
+}
+.yt-link:hover .yt-icon,
+.yt-link:hover .yt-icon-ring::after { animation-play-state: paused; }
+.yt-link:hover .yt-icon { transform: scale(1.15); }
 
 /* ─── Right side / clock / switch ─── */
 .nav-end {
@@ -218,11 +240,13 @@
     cursor: pointer;
     background: linear-gradient(135deg, rgba(var(--prr), 0.28), rgba(var(--acr), 0.20));
     box-shadow: 0 1px 0 rgba(255, 255, 255, 0.12) inset, 0 4px 12px -4px rgba(0, 0, 0, 0.35);
-    transition: box-shadow 0.3s;
+    transition: box-shadow 0.3s, background 0.4s ease, transform 0.25s cubic-bezier(0.22, 1, 0.36, 1);
 }
 .theme-switch:hover {
-    box-shadow: 0 1px 0 rgba(255, 255, 255, 0.15) inset, 0 6px 18px -4px rgba(var(--prr), 0.5);
+    box-shadow: 0 1px 0 rgba(255, 255, 255, 0.15) inset, 0 8px 22px -4px rgba(var(--prr), 0.65);
+    transform: scale(1.06);
 }
+.theme-switch:active .ts-knob { transform: scale(0.92) !important; }
 .ts-sun {
     position: absolute;
     left: 8px;
@@ -230,6 +254,7 @@
     transform: translateY(-50%);
     display: flex;
     color: #fbbf24;
+    transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), filter 0.3s ease;
 }
 .ts-moon {
     position: absolute;
@@ -238,6 +263,12 @@
     transform: translateY(-50%);
     display: flex;
     color: #a5b4fc;
+    transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), filter 0.3s ease;
+}
+.theme-switch:hover .ts-sun,
+.theme-switch:hover .ts-moon {
+    transform: translateY(-50%) scale(1.2);
+    filter: drop-shadow(0 0 4px currentColor);
 }
 .ts-knob {
     position: absolute;
@@ -248,7 +279,23 @@
     border-radius: 50%;
     background: linear-gradient(135deg, var(--pr), var(--ac));
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
-    transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+    transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+    overflow: hidden;
+}
+/* One-shot coin-flip on the knob face each toggle. rotate(0->360deg) resolves to
+   the same matrix once committed, so a plain transition can't re-animate it on
+   the next click (nothing to diff against) — alternating between two
+   identically-defined keyframe names forces a fresh restart every time. */
+.ts-knob-face { position: absolute; inset: 0; border-radius: 50%; background: rgba(255, 255, 255, 0.22); }
+.ts-spin-a { animation: knobSpinA 0.5s cubic-bezier(0.34, 1.56, 0.64, 1); }
+.ts-spin-b { animation: knobSpinB 0.5s cubic-bezier(0.34, 1.56, 0.64, 1); }
+@keyframes knobSpinA {
+    from { transform: rotate(0deg) scale(0.6); opacity: 0.9; }
+    to   { transform: rotate(360deg) scale(1); opacity: 0; }
+}
+@keyframes knobSpinB {
+    from { transform: rotate(0deg) scale(0.6); opacity: 0.9; }
+    to   { transform: rotate(360deg) scale(1); opacity: 0; }
 }
 .theme-switch-plain {
     background: rgba(var(--prr), 0.25);

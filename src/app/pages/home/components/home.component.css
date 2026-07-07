@@ -416,11 +416,35 @@ h2 {
   border: 1px solid var(--gbrd);
   box-shadow: var(--shdw);
   transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1), border-color 0.3s, box-shadow 0.3s;
+  animation: cardEnter 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation-play-state: paused;
 }
 .project-card:hover {
   transform: translateY(-6px);
   border-color: rgba(var(--prr), 0.45);
   box-shadow: 0 1px 0 rgba(255, 255, 255, 0.12) inset, 0 30px 60px -22px rgba(var(--prr), 0.35);
+}
+/* Scroll-triggered entrance — .in-view is added once by an IntersectionObserver
+   on .projects-grid (see initProjectReveal()). Cards created later by a swap
+   inherit .in-view immediately from the already-revealed grid, so the same
+   animation doubles as the swap's "pop in". */
+.projects-grid.in-view .project-card { animation-play-state: running; }
+.projects-grid.in-view .project-card:nth-child(1) { animation-delay: 0s; }
+.projects-grid.in-view .project-card:nth-child(2) { animation-delay: 0.08s; }
+.projects-grid.in-view .project-card:nth-child(3) { animation-delay: 0.16s; }
+@keyframes cardEnter {
+  from { opacity: 0; transform: translateY(30px) scale(0.97); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+/* Swap crossfade — plays while the outgoing project is still in the DOM;
+   swapProject() defers the actual data swap until this finishes, so the
+   incoming card's cardEnter never overlaps this exit. */
+.card-swap-exit {
+  animation: cardSwapExit 0.26s cubic-bezier(0.4, 0, 1, 1) forwards;
+  pointer-events: none;
+}
+@keyframes cardSwapExit {
+  to { opacity: 0; transform: translateY(-14px) scale(0.95); }
 }
 
 .tl-bar {
@@ -464,7 +488,7 @@ h2 {
   white-space: nowrap;
 }
 
-.project-shot { aspect-ratio: 16/10; position: relative; overflow: hidden; }
+.project-shot { aspect-ratio: 16/10; position: relative; overflow: hidden; cursor: pointer; }
 .project-shot img {
   position: absolute;
   inset: 0;
@@ -474,6 +498,7 @@ h2 {
   transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
 }
 .project-shot:hover img { transform: scale(1.04); }
+.project-shot:focus-visible { outline: 2px solid var(--pr); outline-offset: -2px; }
 
 .carousel-bar {
   display: flex;
@@ -522,6 +547,7 @@ h2 {
   transition: gap 0.25s cubic-bezier(0.22, 1, 0.36, 1), color 0.25s, transform 0.25s;
 }
 .view-project-link:hover { gap: 14px; color: var(--ac); transform: translateX(2px); }
+.view-project-link:focus-visible { outline: 2px solid var(--pr); outline-offset: 3px; border-radius: 4px; }
 
 /* ─────────────────────────────────────────────────────────────
    CURRENTLY BUILDING
@@ -903,6 +929,30 @@ h2 {
 .expand-title { margin: 0; font: 700 clamp(1.4rem, 2.4vw, 1.8rem) / 1.2 Outfit, sans-serif; letter-spacing: -0.01em; color: var(--tx); }
 .expand-desc { margin: 0; font: 300 15px / 1.75 Sora, sans-serif; color: var(--tx2); }
 .expand-hint { font: 400 11.5px Sora, sans-serif; color: var(--tx2); opacity: 0.65; }
+.expand-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 4px;
+}
+.expand-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font: 600 13px Sora, sans-serif;
+  color: var(--btntx);
+  background: linear-gradient(135deg, var(--pr), var(--ac));
+  border: none;
+  padding: 10px 18px;
+  border-radius: 12px;
+  cursor: pointer;
+  box-shadow: 0 8px 20px -10px rgba(var(--prr), 0.6);
+  transition: transform 0.25s, box-shadow 0.25s;
+}
+.expand-cta:hover { transform: translateY(-2px); box-shadow: 0 14px 28px -10px rgba(var(--prr), 0.75); }
+.expand-cta:focus-visible { outline: 2px solid var(--pr); outline-offset: 2px; }
 
 /* ─── Desktop-only expand affordance: hide the green traffic light below the
    canExpand gate so touch users aren't shown a control that no-ops. ─── */
