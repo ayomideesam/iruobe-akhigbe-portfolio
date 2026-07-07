@@ -7,6 +7,7 @@
         Open to Senior Frontend &amp; Tech Lead roles
       </span>
       <h1 class="hero-h1">
+        <span class="visually-hidden">Akhigbe Iruobe — </span>
         <span appRainbowHover class="hero-line1">Turning Complex Problems</span>
         <span class="hero-line2">Into Beautiful Solutions</span>
       </h1>
@@ -89,7 +90,7 @@
           <span class="tl-url">{{ p.url }}</span>
         </div>
         <div class="project-shot">
-          <img [src]="p.img" [alt]="p.title + ' screenshot'" loading="lazy">
+          <img [src]="p.img" [alt]="p.title + ' screenshot'" [title]="p.title" loading="lazy">
         </div>
         <div class="carousel-bar">
           <button type="button" class="car-btn" (click)="navImg(p.key, -1, $event)" aria-label="Previous screenshot">
@@ -322,7 +323,7 @@
         <span class="tl-url">{{ ep.url }}</span>
       </div>
       <div class="expand-shot">
-        <img [src]="ep.img" [alt]="ep.title + ' screenshot'" loading="lazy">
+        <img [src]="ep.img" [alt]="ep.title + ' screenshot'" [title]="ep.title" loading="lazy">
       </div>
       <div class="carousel-bar carousel-bar-lg">
         <button type="button" class="car-btn car-btn-lg" (click)="navImg(ep.key, -1, $event)" aria-label="Previous screenshot">

@@ -50,7 +50,7 @@ export class ProjectDataService {
          {
             id: 6,
             title: 'Credit Approval Process (CAP)',
-            description: 'Built Globus Bank\'s Credit Approval Process Automation Solution — a CBN-compliant platform digitising end-to-end credit lifecycle management across 4 facility modules (Retail, Corporate, Staff Loan, Product) through a 2 stage governance structure: Stage 1 routes applications through a 10+ role sequential chain culminating in MCC online committee voting with configurable MD/CEO veto power; Stage 2 escalates facilities above ₦100M to the Board Credit Committee (BCC) for majority vote, after which the platform enables disbursement or deferral workflows.',
+            description: 'Akhigbe Iruobe built Globus Bank\'s Credit Approval Process Automation Solution — a CBN-compliant platform digitising end-to-end credit lifecycle management across 4 facility modules (Retail, Corporate, Staff Loan, Product) through a 2 stage governance structure: Stage 1 routes applications through a 10+ role sequential chain culminating in MCC online committee voting with configurable MD/CEO veto power; Stage 2 escalates facilities above ₦100M to the Board Credit Committee (BCC) for majority vote, after which the platform enables disbursement or deferral workflows.',
             techStack: [
                { name: 'Angular 20', color: '#DD0031' },
                { name: 'TypeScript', color: '#3178C6' },
@@ -88,7 +88,7 @@ export class ProjectDataService {
          {
             id: 1,
             title: 'COSTAFF AI Digital Worker Platform',
-            description: 'Architected a full-stack AI productivity suite for enterprise clients, integrating Gmail, Google Calendar, and OpenAI APIs into a unified Angular 16 platform that automates email, scheduling, invoicing, and document workflows.',
+            description: 'Akhigbe Iruobe architected a full-stack AI productivity suite for enterprise clients, integrating Gmail, Google Calendar, and OpenAI APIs into a unified Angular 16 platform that automates email, scheduling, invoicing, and document workflows.',
             techStack: [
                { name: 'Angular 16', color: '#DD0031' },
                { name: 'TypeScript', color: '#3178C6' },
@@ -128,7 +128,7 @@ export class ProjectDataService {
          {
             id: 2,
             title: 'Globus Trade Application (GTA)',
-            description: 'Architected and delivered Globus Bank\'s CBN-mandated trade finance platform — digitising Letter of Credit (LC), Bills for Collection (BC), and end-to-end trade workflow management across all bank trade operations personas.',
+            description: 'Akhigbe Iruobe architected and delivered Globus Bank\'s CBN-mandated trade finance platform — digitising Letter of Credit (LC), Bills for Collection (BC), and end-to-end trade workflow management across all bank trade operations personas.',
             techStack: [
                { name: 'Angular 17', color: '#DD0031' },
                { name: 'TypeScript', color: '#3178C6' },
@@ -165,7 +165,7 @@ export class ProjectDataService {
          {
             id: 3,
             title: 'Fraud Management System',
-            description: 'Architected Globus Bank\'s real-time Fraud Management System — a 14-engine rule-based detection platform monitoring every bank transaction for behavioral anomalies, velocity breaches, and blacklist matches with zero-delay alerting.',
+            description: 'Akhigbe Iruobe architected Globus Bank\'s real-time Fraud Management System — a 14-engine rule-based detection platform monitoring every bank transaction for behavioral anomalies, velocity breaches, and blacklist matches with zero-delay alerting.',
             techStack: [
                { name: 'Angular 16', color: '#DD0031' },
                { name: 'TypeScript', color: '#3178C6' },
@@ -204,7 +204,7 @@ export class ProjectDataService {
          {
             id: 4,
             title: 'ProjectTiger — Domestic Transfer Platform',
-            description: 'Led frontend delivery of Zenith Bank\'s ProjectTiger — a mission-critical payment system handling NIP, NEFT, and NAPS transfers across 350+ branches, replacing a legacy payment infrastructure serving 100,000+ daily banking customers.',
+            description: 'Akhigbe Iruobe led frontend delivery of Zenith Bank\'s ProjectTiger — a mission-critical payment system handling NIP, NEFT, and NAPS transfers across 350+ branches, replacing a legacy payment infrastructure serving 100,000+ daily banking customers.',
             techStack: [
                { name: 'Angular', color: '#DD0031' },
                { name: 'TypeScript', color: '#3178C6' },
@@ -242,7 +242,7 @@ export class ProjectDataService {
          {
             id: 5,
             title: 'X-Path — Merchant Collection Platform',
-            description: 'Architected XPath, Zenith Bank\'s merchant collection platform — a three-application micro-frontend suite (Admin, Teller, Data-Store) serving 350 branches with direct ERP integration for fully automated payment reconciliation.',
+            description: 'Akhigbe Iruobe architected XPath, Zenith Bank\'s merchant collection platform — a three-application micro-frontend suite (Admin, Teller, Data-Store) serving 350 branches with direct ERP integration for fully automated payment reconciliation.',
             techStack: [
                { name: 'Angular', color: '#DD0031' },
                { name: 'TypeScript', color: '#3178C6' },
@@ -292,7 +292,7 @@ export class ProjectDataService {
             accentColor: '#818cf8',
             accentColorRgb: '129, 140, 248',
             assessmentBrief: 'Engaged as Senior Analyst, Frontend Development to build a pixel-perfect multi-step ID Document Update portal for LogicBank Account Maintenance Services from a Figma specification — evaluated on design fidelity, error handling, responsiveness, code quality (state management, scalability), performance, and documentation.',
-            description: 'A production-grade, 7-route Angular 19 portal guiding LogicBank customers through a self-service Identity Document Update flow — NDPR consent, OTP-verified account lookup, identity document upload with drag-and-drop, and a sequential 4-modal submission process — without requiring a branch visit.',
+            description: 'Akhigbe Iruobe built a production-grade, 7-route Angular 19 portal guiding LogicBank customers through a self-service Identity Document Update flow — NDPR consent, OTP-verified account lookup, identity document upload with drag-and-drop, and a sequential 4-modal submission process — without requiring a branch visit.',
             techStack: [
                { name: 'Angular 19', color: '#DD0031' },
                { name: 'TypeScript', color: '#3178C6' },
@@ -325,7 +325,7 @@ export class ProjectDataService {
             accentColor: '#2dd4bf',
             accentColorRgb: '45, 212, 191',
             assessmentBrief: 'Build a pixel-perfect Work Order Schedule Timeline from a Sketch design specification for a manufacturing ERP — Gantt-style grid across multiple work centers with Day / Week / Month zoom levels, a Reactive Forms CRUD slide-out panel using ng-select and ngb-datepicker, and real-time work order overlap detection.',
-            description: 'An Angular 19 SPA that fully satisfies every required deliverable of the Naologic brief and implements all 11 listed bonus features — including localStorage persistence, inactivity detection, keyboard navigation, a "Today" jump button, and a Webpack → esbuild migration that achieved a 10.6× cold build improvement.',
+            description: 'Akhigbe Iruobe built an Angular 19 SPA that fully satisfies every required deliverable of the Naologic brief and implements all 11 listed bonus features — including localStorage persistence, inactivity detection, keyboard navigation, a "Today" jump button, and a Webpack → esbuild migration that achieved a 10.6× cold build improvement.',
             techStack: [
                { name: 'Angular 19', color: '#DD0031' },
                { name: 'TypeScript', color: '#3178C6' },
@@ -356,7 +356,7 @@ export class ProjectDataService {
             accentColor: '#fbbf24',
             accentColorRgb: '251, 191, 36',
             assessmentBrief: 'Recreate a Figma design specification for a featured books UI showcase component using semantic HTML, SCSS, and BEM methodology — no JavaScript frameworks allowed.',
-            description: 'A pixel-perfect, zero-JavaScript books UI component built from a Figma spec, demonstrating a custom SCSS token system, strict BEM naming, and a mobile-first responsive architecture spanning eight breakpoints.',
+            description: 'Akhigbe Iruobe built a pixel-perfect, zero-JavaScript books UI component from a Figma spec, demonstrating a custom SCSS token system, strict BEM naming, and a mobile-first responsive architecture spanning eight breakpoints.',
             techStack: [
                { name: 'HTML5', color: '#339933' },
                { name: 'SCSS', color: '#CC6699' },

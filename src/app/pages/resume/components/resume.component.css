@@ -43,7 +43,7 @@ section {
     margin: 0 auto;
     background-color: var(--right-bg);
     position: relative;
-    padding-top: 3rem;
+    padding-top: 4.5rem !important;
     min-height: 100vh;
 }
 
