@@ -1,5 +1,6 @@
 // footer.component.ts — Home v2 redesign: glass panel footer
 import { Component, DestroyRef, OnInit, inject, signal } from '@angular/core';
+import { Router } from '@angular/router';
 import { interval } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
@@ -11,6 +12,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 })
 export class FooterComponent implements OnInit {
   private destroyRef = inject(DestroyRef);
+  private router = inject(Router);
 
   navLinks = [
     { path: '/', label: 'Home', exact: true },
@@ -67,6 +69,20 @@ export class FooterComponent implements OnInit {
     }).format(now), 10);
     const isSunday = new Intl.DateTimeFormat('en', { timeZone: 'Africa/Lagos', weekday: 'short' }).format(now) === 'Sun';
     this.isBusinessHours.set(lagosHour >= 8 && lagosHour < 19 && !isSunday);
+  }
+
+  // Clicking the "Open for outreach" / "After hours" status jumps straight to
+  // the Calendly booking card — on the contact page already, just scroll; from
+  // anywhere else, navigate and let ContactComponent's history.state check
+  // (scrollToSchedule) finish the scroll once the page has rendered.
+  goToSchedule(event: Event): void {
+    event.preventDefault();
+    const currentPath = this.router.url.split('?')[0].split('#')[0];
+    if (currentPath === '/contact') {
+      document.querySelector('.contact-schedule')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    } else {
+      this.router.navigate(['/contact'], { state: { scrollToSchedule: true } });
+    }
   }
 
   scrollToTop(): void {

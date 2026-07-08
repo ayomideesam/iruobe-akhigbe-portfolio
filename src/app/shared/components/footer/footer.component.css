@@ -155,7 +155,9 @@
 .touch-clock-row { display: inline-flex; align-items: center; gap: 7px; font: 500 12px ui-monospace, Menlo, monospace; color: var(--tx); white-space: nowrap; }
 .touch-dot { width: 6px; height: 6px; border-radius: 50%; background: #f59e0b; }
 .touch-dot-open { background: #34d399; }
-.touch-status { font-family: Sora, sans-serif; font-size: 11.5px; color: #f59e0b; }
+.touch-status { font-family: Sora, sans-serif; font-size: 11.5px; color: #f59e0b; cursor: pointer; border-radius: 4px; transition: text-decoration-color 0.2s; text-decoration: underline; text-decoration-color: transparent; text-underline-offset: 2px; }
+.touch-status:hover { text-decoration-color: currentColor; }
+.touch-status:focus-visible { outline: 2px solid var(--pr); outline-offset: 2px; }
 .touch-status-open { color: #34d399; }
 
 .stats-strip {

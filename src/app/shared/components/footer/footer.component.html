@@ -71,7 +71,7 @@
               <span class="touch-clock-row">
                 <span>{{ lagosTime() }}</span>
                 <span class="touch-dot" [class.touch-dot-open]="isBusinessHours()"></span>
-                <span class="touch-status" [class.touch-status-open]="isBusinessHours()">{{ isBusinessHours() ? 'Open for outreach' : 'After hours' }}</span>
+                <span class="touch-status" [class.touch-status-open]="isBusinessHours()" tabindex="0" role="link" aria-label="Book a call — go to contact page" title="Book a call" (click)="goToSchedule($event)" (keydown.enter)="goToSchedule($event)">{{ isBusinessHours() ? 'Open for outreach' : 'After hours' }}</span>
               </span>
             </span>
           </div>
