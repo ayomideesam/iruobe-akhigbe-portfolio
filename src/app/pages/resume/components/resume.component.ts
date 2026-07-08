@@ -319,7 +319,7 @@ export class ResumeComponent implements OnInit, AfterViewInit {
       });
 
     } catch (error) {
-      console.error('Error generating PDF:', error);
+      // PDF generation error — user will see loading state timeout
     } finally {
       this.isPreparingForPdf = false;
       this.loadingService.hide();
@@ -374,7 +374,7 @@ export class ResumeComponent implements OnInit, AfterViewInit {
       await this.atsPdfService.generateATSFriendlyPDF(resumeData, this.isDarkTheme);
 
     } catch (error) {
-      console.error('Error generating ATS-friendly PDF:', error);
+      // ATS PDF generation error — user will see loading state timeout
     } finally {
       this.loadingService.hide();
     }
@@ -412,8 +412,6 @@ export class ResumeComponent implements OnInit, AfterViewInit {
 
     // Disable any ongoing intersection observers during PDF generation
     this.pauseIntersectionObservers();
-
-    console.log('Animations prepared for PDF generation');
   }
 
   // Method to restore normal animation behavior after PDF generation
@@ -437,8 +435,6 @@ export class ResumeComponent implements OnInit, AfterViewInit {
 
     // Re-enable intersection observers
     this.resumeIntersectionObservers();
-
-    console.log('Animations restored for normal viewing');
   }
 
   // Method to temporarily disable intersection observers during PDF generation
@@ -455,6 +451,5 @@ export class ResumeComponent implements OnInit, AfterViewInit {
   private resumeIntersectionObservers(): void {
     // If you need to restart observers, you can do so here
     // For now, we'll leave the items in their visible state
-    console.log('Intersection observers resumed');
   }
 }

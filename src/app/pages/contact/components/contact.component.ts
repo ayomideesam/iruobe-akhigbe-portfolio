@@ -3,7 +3,7 @@ import { Component, ElementRef, OnInit, ViewChild, inject, signal } from '@angul
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { trigger, state, style, animate, transition, query } from '@angular/animations';
 import { IconService } from 'src/app/core/services/icon.service';
-import emailjs, { type EmailJSResponseStatus } from '@emailjs/browser';
+import emailjs from '@emailjs/browser';
 import { AnalyticsService } from 'src/app/core/services/analytics.service';
 import { SeoService } from 'src/app/core/services/seo.service';
 
@@ -235,13 +235,10 @@ export class ContactComponent implements OnInit {
           this.contactForm.reset();
           this.contactForm.get('subject')?.setValue("Akhigbe Iruobe I'd like to hire you!");
           this.scrollToMessage('.success-background');
-          console.log('SUCCESS!');
         }
       } catch (error) {
-        console.error('Error:', error);
         this.showErrorMessage.set(true);
         this.scrollToMessage('.error-background');
-        console.log('FAILED...', (error as EmailJSResponseStatus).text);
       } finally {
         this.isSubmitting.set(false);
       }
