@@ -397,6 +397,12 @@ export class HomeComponent implements OnInit, AfterViewInit {
     this.destroyRef.onDestroy(() => this.revealObserver?.disconnect());
   }
 
+  // WebP format helper for responsive image delivery. Converts .png/.jpg to
+  // .webp for modern browsers, while the <picture> fallback uses the original.
+  getWebpPath(originalPath: string): string {
+    return originalPath.replace(/\.(png|jpg|jpeg)$/i, '.webp');
+  }
+
   // ─── Helpers reused across templates ───
   // Verbatim from the prototype's catsData paths (code / terminal / shield-check),
   // not IconService — these three are prototype-specific glyphs, not brand icons.

@@ -90,7 +90,10 @@
           <span class="tl-url">{{ p.url }}</span>
         </div>
         <div class="project-shot" tabindex="0" role="button" [attr.aria-label]="'Expand ' + p.title + ' screenshot'" [title]="'Expand ' + p.title + ' screenshot'" (click)="expandProject(p.key)" (keydown.enter)="expandProject(p.key)">
-          <img [src]="p.img" [alt]="p.title + ' screenshot'" [title]="p.title" loading="lazy">
+          <picture>
+            <source [srcset]="getWebpPath(p.img)" type="image/webp">
+            <img [src]="p.img" width="1280" height="720" [alt]="p.title + ' screenshot'" [title]="p.title" loading="lazy">
+          </picture>
         </div>
         <div class="carousel-bar">
           <button type="button" class="car-btn" (click)="navImg(p.key, -1, $event)" aria-label="Previous screenshot">
@@ -323,7 +326,10 @@
         <span class="tl-url">{{ ep.url }}</span>
       </div>
       <div class="expand-shot">
-        <img [src]="ep.img" [alt]="ep.title + ' screenshot'" [title]="ep.title" loading="lazy">
+        <picture>
+          <source [srcset]="getWebpPath(ep.img)" type="image/webp">
+          <img [src]="ep.img" width="1280" height="720" [alt]="ep.title + ' screenshot'" [title]="ep.title" loading="eager">
+        </picture>
       </div>
       <div class="carousel-bar carousel-bar-lg">
         <button type="button" class="car-btn car-btn-lg" (click)="navImg(ep.key, -1, $event)" aria-label="Previous screenshot">
