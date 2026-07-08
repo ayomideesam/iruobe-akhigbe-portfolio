@@ -344,6 +344,8 @@ export class HomeComponent implements OnInit, AfterViewInit {
   canScrollPrev = false;
   canScrollNext = true;
   @ViewChild('testimonialsTrack') testimonialsTrack!: ElementRef;
+  @ViewChild('tPinWrap') tPinWrap!: ElementRef<HTMLElement>;
+  @ViewChild('tPinInner') tPinInner!: ElementRef<HTMLElement>;
 
   scrollTestimonials(dir: number): void {
     const track = this.testimonialsTrack?.nativeElement as HTMLElement;
@@ -360,6 +362,120 @@ export class HomeComponent implements OnInit, AfterViewInit {
     this.canScrollNext = el.scrollLeft < (el.scrollWidth - el.clientWidth - 10);
   }
 
+  // Vertical page scroll drives the testimonials track's horizontal scrollLeft
+  // while the section is pinned (position: sticky). No preventDefault/wheel
+  // hijacking — the browser owns the scroll, we just read its progress each
+  // frame, so trackpads, keyboard PageDown, and scrollbar drag all just work.
+  // Desktop + fine-pointer + motion-allowed only: touch devices already swipe
+  // the track natively, and scroll-jacking a touchscreen fights the gesture.
+  //
+  // Motion is eased (lerp) rather than snapped 1:1 to scroll position, so the
+  // horizontal glide trails smoothly instead of feeling like a hard jump. As
+  // the eased position crosses each card boundary, the matching carousel-nav
+  // button gets a brief "pressed" flash — visual confirmation each card has
+  // been seen, echoing what clicking that button would look like.
+  private static readonly PIN_STICKY_TOP = 96;
+  private static readonly PIN_EASE = 0.15;
+  private static readonly CARD_GAP = 22;
+  readonly pinScrollActive = signal(false);
+  readonly navBtnPulse = signal<'prev' | 'next' | null>(null);
+
+  private initTestimonialPinScroll(): void {
+    const wrap = this.tPinWrap?.nativeElement;
+    const inner = this.tPinInner?.nativeElement;
+    const track = this.testimonialsTrack?.nativeElement as HTMLElement;
+    if (!wrap || !inner || !track) return;
+
+    const canPin = () =>
+      window.matchMedia('(min-width: 1025px)').matches &&
+      window.matchMedia('(pointer: fine)').matches &&
+      !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    const measure = () => {
+      if (!canPin()) {
+        this.pinScrollActive.set(false);
+        wrap.style.height = '';
+        return;
+      }
+      this.pinScrollActive.set(true);
+      const runway = Math.min(
+        Math.max(track.scrollWidth - track.clientWidth, 300),
+        window.innerHeight * 1.3
+      );
+      wrap.style.height = `${inner.offsetHeight + runway}px`;
+    };
+
+    const cardStep = () => {
+      const card = track.querySelector('.t-card') as HTMLElement | null;
+      return (card ? card.offsetWidth : 380) + HomeComponent.CARD_GAP;
+    };
+
+    let targetProgress = 0;
+    let currentScrollLeft = 0;
+    let lastCardIndex = 0;
+    let easeRafId: number | null = null;
+    let pulseTimer: ReturnType<typeof setTimeout> | null = null;
+
+    const triggerPulse = (dir: 'prev' | 'next') => {
+      this.navBtnPulse.set(dir);
+      if (pulseTimer) clearTimeout(pulseTimer);
+      pulseTimer = setTimeout(() => this.navBtnPulse.set(null), 220);
+    };
+
+    const ease = () => {
+      easeRafId = null;
+      if (!this.pinScrollActive()) return;
+      const maxScroll = track.scrollWidth - track.clientWidth;
+      const diff = targetProgress * maxScroll - currentScrollLeft;
+      if (Math.abs(diff) < 0.5) return;
+
+      currentScrollLeft += diff * HomeComponent.PIN_EASE;
+      track.scrollLeft = currentScrollLeft;
+
+      const cardIndex = Math.round(currentScrollLeft / cardStep());
+      if (cardIndex !== lastCardIndex) {
+        triggerPulse(cardIndex > lastCardIndex ? 'next' : 'prev');
+        lastCardIndex = cardIndex;
+      }
+
+      easeRafId = requestAnimationFrame(ease);
+    };
+
+    let scrollRafId: number | null = null;
+    const onScroll = () => {
+      if (scrollRafId !== null) return;
+      scrollRafId = requestAnimationFrame(() => {
+        scrollRafId = null;
+        if (!this.pinScrollActive()) return;
+        const rect = wrap.getBoundingClientRect();
+        const runway = wrap.offsetHeight - inner.offsetHeight;
+        if (runway <= 0) return;
+        targetProgress = Math.min(Math.max((HomeComponent.PIN_STICKY_TOP - rect.top) / runway, 0), 1);
+        if (easeRafId === null) easeRafId = requestAnimationFrame(ease);
+      });
+    };
+
+    let resizeTimer: ReturnType<typeof setTimeout> | null = null;
+    const onResize = () => {
+      if (resizeTimer) clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(measure, 120);
+    };
+
+    measure();
+    document.fonts?.ready?.then(measure).catch(() => {});
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onResize);
+
+    this.destroyRef.onDestroy(() => {
+      window.removeEventListener('scroll', onScroll);
+      window.removeEventListener('resize', onResize);
+      if (resizeTimer) clearTimeout(resizeTimer);
+      if (pulseTimer) clearTimeout(pulseTimer);
+      if (scrollRafId !== null) cancelAnimationFrame(scrollRafId);
+      if (easeRafId !== null) cancelAnimationFrame(easeRafId);
+    });
+  }
+
   // ─── Lifecycle ───
   ngOnInit(): void {
     this.seoService.setHomeSeo();
@@ -373,6 +489,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
     this.destroyRef.onDestroy(() => clearTimeout(t));
     this.destroyRef.onDestroy(() => { if (this.swapTimer) clearTimeout(this.swapTimer); });
     this.initProjectReveal();
+    this.initTestimonialPinScroll();
   }
 
   // Scroll-choreographed entrance for the Featured Projects grid — same

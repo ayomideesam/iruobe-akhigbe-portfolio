@@ -754,6 +754,15 @@ h2 {
 /* ─────────────────────────────────────────────────────────────
    TESTIMONIALS
    ───────────────────────────────────────────────────────────── */
+/* Scroll-jack pin: wrap height is set in JS (stickyHeight + runway) only when
+   pinScrollActive() is true (desktop, fine pointer, motion allowed) — see
+   initTestimonialPinScroll(). Everywhere else this is a plain static block. */
+.t-pin-wrap { position: relative; }
+.t-pin-wrap.t-pin-active .t-pin-inner {
+  position: sticky;
+  top: 96px;
+}
+
 .carousel-nav { display: flex; gap: 9px; }
 .carousel-nav-btn {
   display: flex;
@@ -778,6 +787,16 @@ h2 {
   box-shadow: 0 16px 32px -8px rgba(var(--prr), 0.6);
 }
 .carousel-nav-btn:active { transform: translateY(0) scale(0.88); box-shadow: 0 6px 14px -8px rgba(var(--prr), 0.5); }
+/* Synced with pin-scroll card crossings (see initTestimonialPinScroll) —
+   mirrors the :active state so it reads as a real "press" confirming the
+   card was seen, using the button's existing transitions for the fade. */
+.carousel-nav-btn.nav-pulse {
+  background: linear-gradient(135deg, var(--pr), var(--ac));
+  border-color: transparent;
+  color: #fff;
+  transform: scale(0.9);
+  box-shadow: 0 10px 22px -8px rgba(var(--prr), 0.55);
+}
 
 .t-track {
   display: flex;
