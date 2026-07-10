@@ -3304,7 +3304,12 @@ h2 {
     0%, 100% { transform: translate(0, 0) scale(1); }
     50%       { transform: translate(6%, -4%) scale(1.12); }
 }
-.assessments-section > *:not(.assessments-dotgrid) { position: relative; z-index: 1; }
+/* .assessment-expand-overlay excluded like .assessments-dotgrid: this generic
+   reset's specificity (0,2,0) beats a lone .assessment-expand-overlay class
+   rule (0,1,0), which was silently downgrading its position: fixed to
+   relative — trapping the "viewport overlay" inside the section's normal
+   document flow instead of pinning it to the viewport. */
+.assessments-section > *:not(.assessments-dotgrid):not(.assessment-expand-overlay) { position: relative; z-index: 1; }
 
 .assessments-dotgrid {
     position: absolute; inset: 0; z-index: 0; pointer-events: none;
@@ -3421,9 +3426,36 @@ h2 {
     border-bottom: 1px solid var(--ta-bar-bd);
     -webkit-backdrop-filter: var(--ta-bar-blur); backdrop-filter: var(--ta-bar-blur);
 }
-.frame-dot { width: 9px; height: 9px; border-radius: 50%; background: var(--ta-dot1); }
-.frame-dot:nth-child(2) { background: var(--ta-dot2); }
-.frame-dot:nth-child(3) { background: var(--ta-dot3); }
+.frame-dots { display: flex; align-items: center; gap: 7px; }
+/* Traffic-light controls — mirror the home Featured Projects tl-bar. Muted at
+   rest (matching the original frame-dot look); on hovering the browser chrome
+   the real red/yellow/green surface with their glyphs, exactly like tl-bar. */
+.frame-dot {
+    width: 11px; height: 11px; border-radius: 50%; padding: 0; border: none;
+    display: flex; align-items: center; justify-content: center;
+    background: var(--ta-dot1);
+    transition: background 0.18s ease, transform 0.18s cubic-bezier(0.22, 1, 0.36, 1);
+}
+button.frame-dot { cursor: pointer; }
+.frame-dot-yellow { background: var(--ta-dot2); }
+.frame-dot-green { background: var(--ta-dot3); }
+.frame-glyph { opacity: 0; transition: opacity 0.15s ease; pointer-events: none; }
+.assessment-frame-bar:hover .frame-glyph { opacity: 1; }
+.assessment-frame-bar:hover .frame-dot-red { background: #f87171; }
+.assessment-frame-bar:hover .frame-dot-yellow { background: #fbbf24; }
+.assessment-frame-bar:hover .frame-dot-green { background: #34d399; }
+/* Matches home's .tl-btn:hover/:active (applied uniformly, not just to green) —
+   in the small card only green is a real <button>, so this naturally only
+   affects green there; in the expand overlay all three dots are real buttons
+   and all three correctly get the same tactile feedback. */
+button.frame-dot:hover { transform: scale(1.18); }
+button.frame-dot:active { transform: scale(0.9); }
+button.frame-dot:focus-visible { outline: 2px solid var(--card-accent, #34d399); outline-offset: 2px; }
+/* Below the expand breakpoint (1024px) the green maximise is a no-op — don't
+   imply it's clickable, and don't reveal the pointer cursor on the screenshot. */
+@media (max-width: 1023px) {
+    button.frame-dot-green { cursor: default; }
+}
 .frame-url {
     margin-left: 8px; flex: 1; max-width: 200px; height: 18px; border-radius: 100px;
     background: var(--ta-url-bg); padding: 0 10px;
@@ -3433,10 +3465,90 @@ h2 {
 }
 .assessment-shot { position: absolute; top: 34px; left: 0; right: 0; bottom: 0; }
 .assessment-shot img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1); }
+.assessment-shot-expandable { cursor: pointer; }
+.assessment-shot-expandable:focus-visible { outline: 2px solid var(--card-accent, #34d399); outline-offset: -2px; }
 .assessment-shot-empty {
     display: flex; align-items: center; justify-content: center; width: 100%; height: 100%;
     font-family: monospace; font-size: 0.78rem; letter-spacing: 0.08em; text-transform: uppercase;
     color: var(--ta-shot-c); background: var(--ta-shot-bg);
+}
+
+/* ── Assessment expand overlay (>=1024px only) — mirrors home Featured Projects ──
+   The app's <main> is position:relative;z-index:1, forming a stacking context, so
+   this fixed overlay (z-75) is trapped BELOW the fixed header (z-70, sibling of
+   <main>). The header therefore always paints on top — we can't cover it, so we
+   pin the window's top BELOW the header instead (--ae-top clearance), keeping the
+   traffic-light buttons and URL bar fully visible. Height is capped to the space
+   left under the header so the window never runs off-screen. */
+.assessment-expand-overlay {
+    --ae-top: clamp(102px, 10vh, 114px);
+    position: fixed; inset: 0; z-index: 75;
+    display: flex; align-items: flex-start; justify-content: center;
+    padding: var(--ae-top) 4vw 4vh;
+    background: rgba(9, 14, 28, 0.55);
+    -webkit-backdrop-filter: blur(14px) saturate(130%);
+    backdrop-filter: blur(14px) saturate(130%);
+    animation: aeOverlayIn 0.25s ease both;
+}
+@keyframes aeOverlayIn { from { opacity: 0; } to { opacity: 1; } }
+.assessment-expand-window {
+    display: flex; flex-direction: column;
+    width: min(900px, 94vw);
+    max-height: calc(100vh - var(--ae-top) - 4vh);
+    overflow-y: auto;
+    border-radius: 20px; position: relative;
+    background: var(--ta-card-bg, rgba(20, 22, 45, 0.92));
+    border: 1px solid rgba(var(--card-accent-rgb, 52, 211, 153), 0.4);
+    box-shadow: 0 1px 0 rgba(255, 255, 255, 0.1) inset, 0 50px 100px -30px rgba(0, 0, 0, 0.85);
+    animation: aeWindowIn 0.35s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+@keyframes aeWindowIn { from { opacity: 0; transform: translateY(18px) scale(0.98); } to { opacity: 1; transform: translateY(0) scale(1); } }
+/* Overrides the base .assessment-frame-bar (position:absolute) since the element
+   carries both classes. Sticky keeps the close/minimise/expand controls reachable
+   at the top of the window while the body scrolls, however long the achievements. */
+.assessment-expand-bar {
+    position: sticky; top: 0; z-index: 3; flex: none;
+    height: 38px; border-radius: 20px 20px 0 0;
+    /* --ta-card-bg is a subtle glass tint meant to sit over a static screenshot
+       in the small card (light theme: 88%-58% white, opaque enough on its own).
+       Once sticky, real text scrolls underneath it — dark theme's version of
+       that same token (8%-2.2% white) is far too transparent for that and let
+       titles bleed through and overlap the URL label, so dark theme gets an
+       explicit opaque override below; light theme's own token is fine as-is. */
+    background: var(--ta-card-bg, rgba(20, 22, 45, 0.96));
+    -webkit-backdrop-filter: blur(16px) saturate(140%);
+    backdrop-filter: blur(16px) saturate(140%);
+    border-bottom: 1px solid rgba(var(--card-accent-rgb, 52, 211, 153), 0.25);
+}
+.dark-theme .assessments-section .assessment-expand-bar,
+:host-context(.dark-theme) .assessments-section .assessment-expand-bar {
+    background: rgba(20, 22, 45, 0.96);
+}
+/* In the small in-grid card, dots/glyphs reveal on hover as a declutter
+   affordance. Once expanded you've already committed to this focused view —
+   there's no more discovery step, and Close/Minimize/Restore are now the
+   primary way to interact with the modal — so show them always, colored,
+   with no hover gate required. */
+.assessment-expand-bar .frame-glyph { opacity: 1; }
+.assessment-expand-bar .frame-dot-red { background: #f87171; }
+.assessment-expand-bar .frame-dot-yellow { background: #fbbf24; }
+.assessment-expand-bar .frame-dot-green { background: #34d399; }
+.assessment-expand-shot { position: relative; width: 100%; aspect-ratio: 16 / 9; overflow: hidden; flex: none; background: var(--ta-shot-bg); }
+.assessment-expand-shot img { width: 100%; height: 100%; object-fit: cover; object-position: top; }
+.assessment-expand-nav {
+    position: absolute; bottom: 12px; left: 50%; transform: translateX(-50%);
+    display: flex; align-items: center; gap: 12px;
+    padding: 6px 10px; border-radius: 100px;
+    background: rgba(9, 14, 28, 0.6);
+    -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+}
+.assessment-expand-body { display: flex; flex-direction: column; gap: 16px; padding: 26px 30px 32px; }
+.assessment-expand-body .assessment-description { font-size: 0.95rem; }
+.assessment-expand-body .assessment-achievements { max-height: none; }
+
+@media (prefers-reduced-motion: reduce) {
+    .assessment-expand-overlay, .assessment-expand-window { animation: none; }
 }
 
 /* ── Frame nav (image carousel) ── */

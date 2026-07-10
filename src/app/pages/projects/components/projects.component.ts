@@ -274,6 +274,7 @@ export class ProjectsComponent implements OnInit, AfterViewInit, OnDestroy {
     this.filmObserver = null;
     this.revealObserver?.disconnect();
     this.revealObserver = null;
+    if (this.expandedAssessmentId !== null) this.unlockBodyScroll();
   }
 
   ngOnInit() {
@@ -356,6 +357,68 @@ export class ProjectsComponent implements OnInit, AfterViewInit, OnDestroy {
 
   viewProject(id: string) {
     this.analytics.trackProjectView(id);
+  }
+
+  // ─── Assessment expand overlay ───
+  // Mirrors the home Featured Projects expand pattern: the browser-frame's green
+  // "maximise" light (and the screenshot itself) blows the card up into a large
+  // read-first overlay. Red/yellow lights are decorative here — with only three
+  // assessments there's nothing to swap, so only maximise is wired.
+  // Gated to >=1024px: excludes phones + small tablets (iPad Mini 768, Air 820,
+  // 11" 834) and targets 12.9"+ iPad Pro / laptops / desktops — the trackpad &
+  // mouse audiences the large read-first overlay is designed for.
+  private static readonly EXPAND_MIN_WIDTH = 1024;
+  expandedAssessmentId: number | null = null;
+  canExpandAssessment = typeof window !== 'undefined'
+    ? window.innerWidth >= ProjectsComponent.EXPAND_MIN_WIDTH : true;
+
+  get expandedAssessment(): AssessmentProject | null {
+    return this.expandedAssessmentId === null
+      ? null
+      : this.assessmentProjects.find(a => a.id === this.expandedAssessmentId) ?? null;
+  }
+
+  expandAssessment(id: number, event?: Event): void {
+    event?.stopPropagation();
+    if (!this.canExpandAssessment) return;
+    this.expandedAssessmentId = id;
+    this.lockBodyScroll();
+  }
+
+  closeAssessmentExpand(): void {
+    this.expandedAssessmentId = null;
+    this.unlockBodyScroll();
+  }
+
+  // Without this, the underlying page keeps scrolling behind the overlay and
+  // its own (globally-styled, same indigo) scrollbar stays pinned to the
+  // viewport edge — reading as disconnected from the modal card floating in
+  // front of it. padding-right compensates the removed scrollbar's width so
+  // the page behind the blur doesn't visibly reflow when it disappears.
+  private lockBodyScroll(): void {
+    const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
+    document.body.style.overflow = 'hidden';
+    if (scrollbarWidth > 0) document.body.style.paddingRight = `${scrollbarWidth}px`;
+  }
+
+  private unlockBodyScroll(): void {
+    document.body.style.overflow = '';
+    document.body.style.paddingRight = '';
+  }
+
+  @HostListener('window:keydown.escape')
+  onAssessmentEscape(): void {
+    if (this.expandedAssessmentId !== null) this.closeAssessmentExpand();
+  }
+
+  // Matches home's identical onResize(): only the gate updates here. An overlay
+  // already open stays open through a resize (its CSS is responsive down to any
+  // width via 94vw fallbacks) rather than being force-closed — force-closing
+  // previously bypassed closeAssessmentExpand() and left body scroll locked
+  // forever after a resize below the breakpoint while the overlay was open.
+  @HostListener('window:resize')
+  onAssessmentResize(): void {
+    this.canExpandAssessment = window.innerWidth >= ProjectsComponent.EXPAND_MIN_WIDTH;
   }
 
   private initCircleAnimations() {

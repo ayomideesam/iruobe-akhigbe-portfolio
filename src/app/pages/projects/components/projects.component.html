@@ -490,12 +490,27 @@
                 <div class="assessment-frame-wrap">
                     <div class="assessment-frame">
                         <div class="assessment-frame-bar">
-                            <span class="frame-dot"></span>
-                            <span class="frame-dot"></span>
-                            <span class="frame-dot"></span>
+                            <div class="frame-dots" (click)="$event.stopPropagation()">
+                                <span class="frame-dot frame-dot-red" aria-hidden="true" title="Close (single assessment — nothing to swap)">
+                                    <svg class="frame-glyph" width="7" height="7" viewBox="0 0 8 8" fill="none" stroke="rgba(0,0,0,0.6)" stroke-width="1.5" stroke-linecap="round"><path d="M1.6 1.6l4.8 4.8M6.4 1.6L1.6 6.4"></path></svg>
+                                </span>
+                                <span class="frame-dot frame-dot-yellow" aria-hidden="true" title="Minimize (single assessment — nothing to swap)">
+                                    <svg class="frame-glyph" width="7" height="7" viewBox="0 0 8 8" fill="none" stroke="rgba(0,0,0,0.6)" stroke-width="1.5" stroke-linecap="round"><path d="M1.4 4h5.2"></path></svg>
+                                </span>
+                                <button type="button" class="frame-dot frame-dot-green" (click)="expandAssessment(ap.id, $event)" aria-label="Expand assessment to full view" title="Expand (desktop only)">
+                                    <svg class="frame-glyph" width="7" height="7" viewBox="0 0 8 8" fill="rgba(0,0,0,0.6)"><path d="M1.2 4.8V1.2h3.6z"></path><path d="M6.8 3.2v3.6H3.2z"></path></svg>
+                                </button>
+                            </div>
                             <span class="frame-url">{{getFrameUrl(ap.demoUrl)}}</span>
                         </div>
-                        <div class="assessment-shot">
+                        <div class="assessment-shot"
+                            [class.assessment-shot-expandable]="canExpandAssessment"
+                            [attr.tabindex]="canExpandAssessment ? 0 : null"
+                            [attr.role]="canExpandAssessment ? 'button' : null"
+                            [attr.aria-label]="canExpandAssessment ? 'Expand ' + ap.title + ' screenshot' : null"
+                            [attr.title]="canExpandAssessment ? 'Expand ' + ap.title + ' screenshot' : null"
+                            (click)="expandAssessment(ap.id, $event)"
+                            (keydown.enter)="expandAssessment(ap.id, $event)">
                             @if (ap.images?.length) {
                             <img [src]="ap.images![getImageIndex(ap.id)]"
                                 [alt]="ap.title + ' screenshot ' + (getImageIndex(ap.id) + 1)"
@@ -613,5 +628,113 @@
             </article>
             }
         </div>
+
+        <!-- ============ ASSESSMENT EXPAND OVERLAY (desktop only) ============ -->
+        <!-- Nested inside .assessments-section (not just a page-level sibling) so it
+             inherits that section's --ta-* theme tokens (card bg, text colors, badge
+             tints, etc.) via normal CSS custom-property inheritance. position:fixed
+             still escapes to the viewport regardless of nesting depth — verified no
+             ancestor between here and <body> sets transform/filter/perspective/
+             contain, any of which would otherwise trap a fixed-position descendant. -->
+        @if (expandedAssessment; as ea) {
+        <div class="assessment-expand-overlay" (click)="closeAssessmentExpand()"
+    [style.--card-accent]="ea.accentColor" [style.--card-accent-rgb]="ea.accentColorRgb">
+    <article class="assessment-expand-window" (click)="$event.stopPropagation()">
+        <div class="assessment-frame-bar assessment-expand-bar">
+            <div class="frame-dots">
+                <button type="button" class="frame-dot frame-dot-red" (click)="closeAssessmentExpand()" aria-label="Close expanded view" title="Close">
+                    <svg class="frame-glyph" width="8" height="8" viewBox="0 0 8 8" fill="none" stroke="rgba(0,0,0,0.6)" stroke-width="1.5" stroke-linecap="round"><path d="M1.6 1.6l4.8 4.8M6.4 1.6L1.6 6.4"></path></svg>
+                </button>
+                <button type="button" class="frame-dot frame-dot-yellow" (click)="closeAssessmentExpand()" aria-label="Minimize expanded view" title="Minimize">
+                    <svg class="frame-glyph" width="8" height="8" viewBox="0 0 8 8" fill="none" stroke="rgba(0,0,0,0.6)" stroke-width="1.5" stroke-linecap="round"><path d="M1.4 4h5.2"></path></svg>
+                </button>
+                <button type="button" class="frame-dot frame-dot-green" (click)="closeAssessmentExpand()" aria-label="Restore size" title="Restore">
+                    <svg class="frame-glyph" width="8" height="8" viewBox="0 0 8 8" fill="rgba(0,0,0,0.6)"><path d="M4.6 1.2v3.4H1.2z"></path><path d="M3.4 6.8V3.4h3.4z"></path></svg>
+                </button>
+            </div>
+            <span class="frame-url">{{getFrameUrl(ea.demoUrl)}}</span>
+        </div>
+
+        <div class="assessment-expand-shot">
+            @if (ea.images?.length) {
+            <img [src]="ea.images![getImageIndex(ea.id)]"
+                [alt]="ea.title + ' screenshot ' + (getImageIndex(ea.id) + 1)"
+                [title]="ea.title" loading="eager">
+            } @else {
+            <span class="assessment-shot-empty">Screenshot</span>
+            }
+            @if ((ea.images?.length ?? 0) > 1) {
+            <div class="assessment-expand-nav" (click)="$event.stopPropagation()">
+                <button type="button" class="frame-nav-btn" (click)="prevImage(ea.id, ea.images!.length, $event)" aria-label="Previous screenshot">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+                </button>
+                <span class="frame-nav-dots">
+                    @for (img of ea.images!; track $index) {
+                    <span class="frame-nav-dot" [class.active]="getImageIndex(ea.id) === $index"></span>
+                    }
+                </span>
+                <button type="button" class="frame-nav-btn" (click)="nextImage(ea.id, ea.images!.length, $event)" aria-label="Next screenshot">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                </button>
+            </div>
+            }
+        </div>
+
+        <div class="assessment-expand-body">
+            <div class="assessment-meta-row">
+                <span class="assessment-company-badge">{{ea.assessmentBy}}</span>
+                <span class="assessment-level-badge" [class.level-senior]="ea.level === 'senior'" [class.level-mid]="ea.level === 'mid'">
+                    {{ea.level === 'senior' ? 'Senior Level' : 'Mid Level'}}
+                </span>
+            </div>
+            <h3 class="assessment-card-title">{{ea.title}}</h3>
+            <p class="assessment-description">{{ea.description}}</p>
+
+            <div class="assessment-brief">
+                <span class="brief-watermark" aria-hidden="true">&rdquo;</span>
+                <span class="brief-label"><span class="brief-dot"></span>The brief</span>
+                <span class="brief-text">{{ea.assessmentBrief}}</span>
+            </div>
+
+            <div class="tech-stack assessment-tech">
+                @for (tech of ea.techStack; track tech.name) {
+                <span class="tech-badge" [style.backgroundColor]="tech.color + '20'" [style.color]="tech.color">{{tech.name}}</span>
+                }
+            </div>
+
+            <div class="assessment-achievements is-expanded">
+                <h4>What I delivered</h4>
+                <ul>
+                    @for (item of ea.achievements; track $index) {
+                    <li>{{item}}</li>
+                    }
+                </ul>
+            </div>
+
+            <div class="assessment-links">
+                @if (ea.demoUrl && ea.demoUrl !== 'ASK_AKHIGBE') {
+                <a [href]="ea.demoUrl" target="_blank" rel="noopener noreferrer" class="assessment-link assessment-link-demo" (click)="viewProject(ea.id.toString())">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+                    Live Demo
+                </a>
+                } @else {
+                <span class="assessment-link-tbc">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"/>
+                        <line x1="12" y1="8" x2="12" y2="12"/>
+                        <line x1="12" y1="16" x2="12.01" y2="16"/>
+                    </svg>
+                    Demo TBC
+                </span>
+                }
+                <a [href]="ea.repoUrl" target="_blank" rel="noopener noreferrer" class="assessment-link assessment-link-repo">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0 1 12 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/></svg>
+                    GitHub Repo
+                </a>
+            </div>
+        </div>
+    </article>
+</div>
+}
     </section>
 </div>

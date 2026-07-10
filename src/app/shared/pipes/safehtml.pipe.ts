@@ -1,4 +1,4 @@
-import { Pipe, PipeTransform, SecurityContext, inject } from '@angular/core';
+import { Pipe, PipeTransform, inject } from '@angular/core';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 
 @Pipe({
@@ -8,10 +8,13 @@ import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 export class SafeHtmlPipe implements PipeTransform {
   private sanitizer = inject(DomSanitizer);
 
-  // Sanitize HTML input (defense-in-depth), then bypass for trusted SVG sources (IconService).
-  // This ensures even if the source is compromised, injected scripts are stripped.
+  // Values are ONLY ever static, inline SVG strings hardcoded in IconService and
+  // the footer component — compiled into the bundle, never user input or API data.
+  // We must bypass (not sanitize): DomSanitizer.sanitize(SecurityContext.HTML, …)
+  // strips <svg>/<path> as they're not on the HTML allowlist, which blanks every
+  // icon. Do NOT "harden" this with sanitize() — there is no untrusted input path
+  // here, so it adds zero security while breaking all SVG rendering.
   transform(value: string): SafeHtml {
-    const sanitized = this.sanitizer.sanitize(SecurityContext.HTML, value) || '';
-    return this.sanitizer.bypassSecurityTrustHtml(sanitized);
+    return this.sanitizer.bypassSecurityTrustHtml(value);
   }
 }

@@ -197,11 +197,30 @@ export class HomeComponent implements OnInit, AfterViewInit {
   }
 
   expandProject(key: ProjectKey): void {
-    if (this.canExpand()) this.expandedKey.set(key);
+    if (!this.canExpand()) return;
+    this.expandedKey.set(key);
+    this.lockBodyScroll();
   }
 
   closeExpand(): void {
     this.expandedKey.set(null);
+    this.unlockBodyScroll();
+  }
+
+  // Without this, the page keeps scrolling behind the overlay and its own
+  // (globally-styled) scrollbar stays pinned to the viewport edge — reading
+  // as disconnected from the modal card floating in front of it. padding-right
+  // compensates the removed scrollbar's width so the page behind the blur
+  // doesn't visibly reflow when it disappears.
+  private lockBodyScroll(): void {
+    const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
+    document.body.style.overflow = 'hidden';
+    if (scrollbarWidth > 0) document.body.style.paddingRight = `${scrollbarWidth}px`;
+  }
+
+  private unlockBodyScroll(): void {
+    document.body.style.overflow = '';
+    document.body.style.paddingRight = '';
   }
 
   @HostListener('window:keydown.escape')
@@ -488,6 +507,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
     const t = setTimeout(() => this.progressStarted.set(true), 700);
     this.destroyRef.onDestroy(() => clearTimeout(t));
     this.destroyRef.onDestroy(() => { if (this.swapTimer) clearTimeout(this.swapTimer); });
+    this.destroyRef.onDestroy(() => { if (this.expandedKey()) this.unlockBodyScroll(); });
     this.initProjectReveal();
     this.initTestimonialPinScroll();
   }
