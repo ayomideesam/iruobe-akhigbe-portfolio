@@ -3498,6 +3498,7 @@ button.frame-dot:focus-visible { outline: 2px solid var(--card-accent, #34d399);
     overflow-y: auto;
     border-radius: 20px; position: relative;
     background: var(--ta-card-bg, rgba(20, 22, 45, 0.92));
+    scrollbar-width: none;
     border: 1px solid rgba(var(--card-accent-rgb, 52, 211, 153), 0.4);
     box-shadow: 0 1px 0 rgba(255, 255, 255, 0.1) inset, 0 50px 100px -30px rgba(0, 0, 0, 0.85);
     animation: aeWindowIn 0.35s cubic-bezier(0.22, 1, 0.36, 1) both;
