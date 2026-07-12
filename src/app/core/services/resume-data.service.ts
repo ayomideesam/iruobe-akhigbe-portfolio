@@ -111,11 +111,11 @@ export class ResumeDataService {
 
    getKeyTechnicalAchievements(): string[] {
       return [
-         "🏗️ **Architectural Leadership**: Designed micro-frontend architecture at Zenith Bank and architected 3 mission-critical banking applications at Globus Bank (Fraud Management, Trade Finance, Credit Approval Portal), enabling independent team deployment and reducing inter-team dependencies by 70%",
+         "🏗️ **Architectural Leadership**: Partnered in technical and product design reviews to shape Zenith Bank's frontend solution (X-PATH, Tax Clearance, Domestic Transfer), and also actively participated in the design and review process of 5 mission-critical banking applications at Globus Bank (Trade Finance, Pay-with-Transfer On POS, Anti-Fraud Management, NRBVN (Non Resident Bank Verification Number), Credit Approval Portal), enabling independent team deployment and reducing inter-team dependencies by 70%.",
 
          "👥 **Team Leadership & Mentoring**: Led and mentored 6+ frontend engineers across multiple projects, establishing code review processes that improved code quality by 35% and team velocity by 45%, resulting in 3 team promotions",
 
-         "🚀 **Angular Migration Excellence**: Led Angular v16→v19 migrations implementing hybrid security architecture (in-memory + sessionStorage), eliminating 11 vulnerabilities per application to zero production vulnerabilities with 40% performance improvements",
+         "🚀 **Angular Migration Excellence**: Led Angular v16→v19 migrations implementing hybrid security enhancements (in-memory + sessionStorage), eliminating 11 vulnerabilities per application to zero production vulnerabilities with 40% performance improvements",
 
          "🎯 **Business Impact**: Architected real-time fraud detection system processing all bank transactions, achieving 100% coverage within first week of deployment and reducing fraudulent activities by 45%"
       ];
@@ -131,7 +131,7 @@ export class ResumeDataService {
             description: "Promoted to Associate Designate grade, leading the architectural evolution of the Credit Approval Process (CAP) platform — Globus Bank's CBN-compliant credit lifecycle automation system covering four facility modules, a two-stage committee governance engine, and full disbursement and deferral workflows across 10+ approval roles.",
 
             technicalLeadership: [
-               "Lead architecture and delivery of CAP across its full lifecycle: 190+ standalone Angular 20 components, 26 reusable shared components, 48 services, and 20 lazy-loaded routes — supporting four facility module tracks (Retail, Corporate, Staff Loan, Product Program) and three workflow stages (Facility Approval, Disbursement, Deferral)",
+               "Collaborated and Lead Designs, architecture and delivery of CAP across its full lifecycle: 190+ standalone Angular 20 components, 26 reusable shared components, 48 services, and 20 lazy-loaded routes — supporting four facility module tracks (Retail, Corporate, Staff Loan, Product Program) and three workflow stages (Facility Approval, Disbursement, Deferral)",
                "Drive Angular v19 → v20 migration across the entire codebase, adopting fully signal-based component contracts (input(), output(), viewChild(), linkedSignal(), resource()) and eliminating NgModules — including resolving a critical Vite 6/7 API incompatibility that caused complete dev-server failure blocking the team",
                "Own engineering standards across a two-team parallel development model (AIBranch + EIBranch): authored and maintain ANGULAR-20-STANDARDS.md and the EIBranch Merge Protocol, governing code quality, component contracts, signal graph discipline, and conflict resolution rules for all contributors",
                "Mentor development team on modern Angular patterns — standalone components, @if/@for control flow, inject() dependency injection, and reactive signal architecture — conducting code reviews and establishing quality gates that govern every merge into the working branch"
@@ -175,7 +175,7 @@ export class ResumeDataService {
             ],
 
             technicalAchievements: [
-               "Designed hybrid security architecture separating sensitive data into in-memory storage while maintaining auth tokens in sessionStorage",
+               "Designed hybrid security enhancements separating sensitive data into in-memory storage while maintaining auth tokens in sessionStorage",
                "Architected fraud detection system with 14 configurable rule engines covering customer behavioral patterns and transaction monitoring",
                "Built advanced dashboards with real-time visualization of transaction patterns, risk scoring, and alert management",
                "Created reusable component library reducing development time by 40% across all three applications",
@@ -232,9 +232,9 @@ export class ResumeDataService {
             ],
 
             technicalAchievements: [
-               "Architected scalable micro-frontend solution (Admin, Teller, Data-Store) serving 100,000+ daily banking customers",
+               "Collaborated on the architecture of a couple of scalable frontend solutions (X-path Admin, X-path Teller, X-path Data-Store, Tax Clearance, Domestic Transfer) serving 100,000+ daily banking customers",
                "Implemented Angular Universal for SSR improving load times by 40% and SEO performance by 60%",
-               "Designed reusable component library reducing development time across projects by 60%",
+               "Designed reusable component library reducing development time across projects by 60%+",
                "Maintained 99.9% application uptime with comprehensive error handling and monitoring"
             ]
          },
@@ -246,7 +246,7 @@ export class ResumeDataService {
             description: "Developed core banking applications and established technical foundations for enterprise-scale frontend architecture.",
 
             achievements: [
-               "Designed and implemented XPATH Core Banking System architecture achieving 90% completion with zero security incidents",
+               "Partnered and Collaborated in Design sessions and implemented XPATH Core Banking System architecture achieving 90% completion with zero security incidents",
                "Integrated with 15+ banking APIs while maintaining PCI DSS compliance and real-time transaction monitoring",
                "Implemented progressive web app (PWA) capabilities increasing mobile user engagement by 45%",
                "Achieved 90%+ code coverage through comprehensive testing strategies reducing production bugs by 50%"
