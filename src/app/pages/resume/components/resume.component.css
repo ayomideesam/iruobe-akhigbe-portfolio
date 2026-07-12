@@ -485,13 +485,13 @@ h3 {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
     /* Slightly wider for better text flow */
-    gap: 1.2rem;
+    gap: 1rem;
 }
 
 .achievement-item {
     background: rgba(255, 255, 255, 0.95);
     /* Slightly more opaque for better readability */
-    padding: 1.25rem;
+    padding: 1rem;
     border-radius: 8px;
     border-left: 4px solid #3b82f6;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -525,7 +525,7 @@ h3 {
 
 .key-achievements-section .achievement-item .achievement-content ::ng-deep .achievement-description {
     color: var(--text-secondary) !important;
-    font-size: 0.92rem !important;
+    font-size: 0.85rem !important;
     line-height: 1.6 !important;
     display: block !important;
     margin: 0 !important;
