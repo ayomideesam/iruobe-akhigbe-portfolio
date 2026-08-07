@@ -1,0 +1,1650 @@
+/* services.component.css
+   Built on the Home v2 token set (--pr/--ac/--tx/--tx2/--glass/--gbrd/--shdw) rather
+   than the legacy --primary-color set, so this route matches the most current surface
+   in the app. Component-scoped, so the shared vocabulary (.eyebrow, .section-h2,
+   .btn-primary, .cta-panel) is redeclared here — that is the architecture, not
+   duplication by accident.
+
+   Animation rule: only transform and opacity inside @keyframes. Glow/sheen effects
+   live on ::before/::after pseudo-elements with pointer-events: none. */
+
+:host {
+  display: block;
+  font-family: "Sora", sans-serif;
+  color: var(--tx);
+}
+
+/* ─────────────────────────────────────────────────────────────
+   SHARED PRIMITIVES
+   ───────────────────────────────────────────────────────────── */
+@keyframes pulseDotRing {
+  0%        { opacity: 0.55; transform: translate(-50%, -50%) scale(1); }
+  55%, 100% { opacity: 0; transform: translate(-50%, -50%) scale(3.4); }
+}
+@keyframes svcFadeUp {
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes svcFloat {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-5px); }
+}
+
+.pulse-dot {
+  position: relative;
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  background: #34d399;
+  flex: none;
+}
+.pulse-dot::after {
+  content: '';
+  position: absolute;
+  left: 50%; top: 50%;
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  background: rgba(52, 211, 153, 0.55);
+  transform: translate(-50%, -50%) scale(1);
+  animation: pulseDotRing 2.4s ease-out infinite;
+  pointer-events: none;
+}
+.pulse-dot-fast::after { animation-duration: 1.8s; }
+
+.shine { position: relative; overflow: hidden; isolation: isolate; }
+.shine::after {
+  content: '';
+  position: absolute;
+  top: 0; left: -90%;
+  width: 55%; height: 100%;
+  background: linear-gradient(105deg, transparent, rgba(255, 255, 255, 0.38), transparent);
+  transform: skewX(-18deg);
+  transition: left 0.55s ease;
+  pointer-events: none;
+}
+.shine:hover::after { left: 130%; }
+
+.eyebrow {
+  display: block;
+  font: 600 12px Sora, sans-serif;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--pr);
+}
+
+/* Beats the global `h2 { text-align:center; font-size:2.5rem }` in styles.css on
+   specificity (0-1-0 vs 0-0-1) — no !important needed. */
+.section-h2 {
+  margin: 10px 0 12px;
+  font: 700 clamp(1.7rem, 3.6vw, 2.7rem) / 1.1 Outfit, sans-serif;
+  letter-spacing: -0.02em;
+  text-align: start;
+  color: var(--tx);
+  cursor: default;
+}
+.section-sub {
+  margin: 0;
+  font: 300 clamp(0.92rem, 1.3vw, 1.05rem) / 1.7 Sora, sans-serif;
+  color: var(--tx2);
+}
+
+.section {
+  position: relative;
+  z-index: 1;
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: clamp(48px, 7vw, 96px) 24px 0;
+}
+.section-narrow { max-width: 940px; }
+.section-head { max-width: 660px; margin-bottom: clamp(26px, 4vw, 46px); }
+
+/* Scroll reveal — set by IntersectionObserver in the component.
+   --rvl-i is the item's index within its grid, bound in the template. Cards
+   cascade rather than all snapping in together. Capped at 5 steps x 45ms =
+   225ms max, so a fast scroll can never outrun the reveal and show blank cards.
+
+   The reveal offset uses the INDEPENDENT `translate` property, not `transform`.
+   Cards need `transform` for their hover lift, and a single element cannot hold
+   two competing transform values — keeping the two on separate properties lets
+   reveal and hover run without either overwriting the other. */
+.reveal {
+  opacity: 0;
+  translate: 0 22px;
+  transition: opacity 0.6s cubic-bezier(0.22, 1, 0.36, 1),
+              translate 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+  transition-delay: calc(min(var(--rvl-i, 0), 5) * 45ms);
+  will-change: opacity, translate;
+}
+.reveal.revealed {
+  opacity: 1;
+  translate: 0 0;
+  will-change: auto;
+}
+
+/* Card surfaces need one transition declaration covering BOTH the reveal and the
+   hover response. A `transition:` shorthand on the card would reset
+   transition-delay to 0s and silently kill the stagger, so these are written as
+   longhand lists with the delay applied only to the two reveal properties. */
+.diff-card,
+.svc-card,
+.ind-card,
+.eng-card,
+.tst-card,
+.gua-card,
+.proc-card,
+.faq-item {
+  transition-property: opacity, translate, transform, border-color, box-shadow, background;
+  transition-duration: 0.6s, 0.6s, 0.3s, 0.3s, 0.3s, 0.3s;
+  transition-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+  transition-delay:
+    calc(min(var(--rvl-i, 0), 5) * 45ms),
+    calc(min(var(--rvl-i, 0), 5) * 45ms),
+    0s, 0s, 0s, 0s;
+}
+
+/* ── Shared card surface behaviour ──
+   ::before is the cursor-tracked accent wash (PointerGlowDirective feeds --mx/--my
+   and falls back to a fixed origin before the pointer has entered).
+   ::after is a hairline top edge that lights up on hover. */
+.diff-card::before,
+.svc-card::before,
+.ind-card::before,
+.eng-card::before,
+.tst-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: radial-gradient(340px circle at var(--mx, 85%) var(--my, 0%),
+              rgba(var(--card-accent-rgb, var(--prr)), 0.17), transparent 68%);
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  pointer-events: none;
+}
+.diff-card:hover::before,
+.svc-card:hover::before,
+.ind-card:hover::before,
+.eng-card:hover::before,
+.tst-card:hover::before { opacity: 1; }
+
+.diff-card::after,
+.svc-card::after,
+.ind-card::after,
+.eng-card::after,
+.tst-card::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 12%; right: 12%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent,
+              rgba(var(--card-accent-rgb, var(--prr)), 0.85), transparent);
+  opacity: 0;
+  transform: scaleX(0.4);
+  transition: opacity 0.4s ease, transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+  pointer-events: none;
+}
+.diff-card:hover::after,
+.svc-card:hover::after,
+.ind-card:hover::after,
+.eng-card:hover::after,
+.tst-card:hover::after { opacity: 1; transform: scaleX(1); }
+
+/* ── Per-icon motion signatures ──
+   Every icon moves the way the object it depicts would move. The container's tint
+   response is shared; the transform is not. Assigned in the component via
+   iconMotion(), so no two adjacent icons in a grid ever animate identically. */
+.diff-icon,
+.svc-icon,
+.ind-icon,
+.eng-icon {
+  transition: background 0.32s ease, border-color 0.32s ease, box-shadow 0.32s ease;
+  transform-origin: 50% 50%;
+  backface-visibility: hidden;
+}
+.diff-card:hover .diff-icon,
+.svc-card:hover .svc-icon,
+.ind-card:hover .ind-icon,
+.eng-card:hover .eng-icon {
+  background: rgba(var(--card-accent-rgb), 0.22);
+  border-color: rgba(var(--card-accent-rgb), 0.55);
+  box-shadow: 0 12px 24px -10px rgba(var(--card-accent-rgb), 0.75);
+}
+
+@keyframes moSpark {
+  0%   { transform: rotate(0) scale(1); }
+  45%  { transform: rotate(120deg) scale(1.22); }
+  75%  { transform: rotate(160deg) scale(1.02); }
+  100% { transform: rotate(180deg) scale(1.12); }
+}
+@keyframes moTilt {
+  0%   { transform: perspective(320px) rotateY(0) rotateX(0) translateY(0); }
+  100% { transform: perspective(320px) rotateY(-22deg) rotateX(12deg) translateY(-4px); }
+}
+@keyframes moRise {
+  0%   { transform: translateY(0) scaleY(1); }
+  40%  { transform: translateY(-10px) scaleY(1.1); }
+  70%  { transform: translateY(-3px) scaleY(0.97); }
+  100% { transform: translateY(-6px) scaleY(1); }
+}
+/* Swings from the handle and comes to rest — but settles on a small residual
+   angle rather than exactly 0, so the icon still holds a pose while hovered
+   instead of looking untouched once the pendulum stops. */
+@keyframes moSwing {
+  0%   { transform: rotate(0) translateY(0); }
+  25%  { transform: rotate(15deg) translateY(-3px); }
+  55%  { transform: rotate(-11deg) translateY(-4px); }
+  80%  { transform: rotate(7deg) translateY(-3px); }
+  100% { transform: rotate(4deg) translateY(-3px); }
+}
+@keyframes moFlip {
+  0%   { transform: perspective(340px) rotateY(0); }
+  100% { transform: perspective(340px) rotateY(180deg); }
+}
+@keyframes moToss {
+  0%   { transform: translateY(0) rotate(0); }
+  40%  { transform: translateY(-14px) rotate(-16deg); }
+  70%  { transform: translateY(-2px) rotate(6deg); }
+  100% { transform: translateY(-5px) rotate(0); }
+}
+@keyframes moStack {
+  0%   { transform: scale(1, 1); }
+  35%  { transform: scale(1.16, 0.84); }
+  62%  { transform: scale(0.94, 1.12); }
+  100% { transform: scale(1.08, 1.08); }
+}
+@keyframes moZoom {
+  0%   { transform: scale(1) translate(0, 0); }
+  50%  { transform: scale(1.28) translate(2px, -2px); }
+  100% { transform: scale(1.18) translate(0, -3px); }
+}
+@keyframes moTwist {
+  0%   { transform: rotate(0); }
+  30%  { transform: rotate(-28deg); }
+  60%  { transform: rotate(20deg); }
+  100% { transform: rotate(-8deg); }
+}
+@keyframes moStep {
+  0%   { transform: translate(0, 0); }
+  40%  { transform: translate(4px, -9px); }
+  70%  { transform: translate(6px, -3px); }
+  100% { transform: translate(5px, -6px); }
+}
+@keyframes moPump {
+  0%   { transform: translateY(0) scaleY(1); }
+  30%  { transform: translateY(3px) scaleY(0.88); }
+  60%  { transform: translateY(-6px) scaleY(1.12); }
+  100% { transform: translateY(-4px) scaleY(1); }
+}
+
+/* `forwards` holds the resting pose while hovered; removing the hover drops the
+   animation and the icon transitions back to its natural state. */
+.svc-card:hover .mo-spark, .diff-card:hover .mo-spark,
+.ind-card:hover .mo-spark, .eng-card:hover .mo-spark { animation: moSpark 0.62s cubic-bezier(0.34, 1.4, 0.64, 1) forwards; }
+.svc-card:hover .mo-tilt, .diff-card:hover .mo-tilt,
+.ind-card:hover .mo-tilt, .eng-card:hover .mo-tilt { animation: moTilt 0.45s cubic-bezier(0.22, 1, 0.36, 1) forwards; }
+.svc-card:hover .mo-rise, .diff-card:hover .mo-rise,
+.ind-card:hover .mo-rise, .eng-card:hover .mo-rise { animation: moRise 0.58s cubic-bezier(0.34, 1.5, 0.64, 1) forwards; }
+.svc-card:hover .mo-swing, .diff-card:hover .mo-swing,
+.ind-card:hover .mo-swing, .eng-card:hover .mo-swing { animation: moSwing 0.85s cubic-bezier(0.36, 0, 0.28, 1) forwards; }
+.svc-card:hover .mo-flip, .diff-card:hover .mo-flip,
+.ind-card:hover .mo-flip, .eng-card:hover .mo-flip { animation: moFlip 0.55s cubic-bezier(0.55, 0, 0.3, 1) forwards; }
+.svc-card:hover .mo-toss, .diff-card:hover .mo-toss,
+.ind-card:hover .mo-toss, .eng-card:hover .mo-toss { animation: moToss 0.68s cubic-bezier(0.34, 1.45, 0.64, 1) forwards; }
+.svc-card:hover .mo-stack, .diff-card:hover .mo-stack,
+.ind-card:hover .mo-stack, .eng-card:hover .mo-stack { animation: moStack 0.6s cubic-bezier(0.34, 1.5, 0.64, 1) forwards; }
+.svc-card:hover .mo-zoom, .diff-card:hover .mo-zoom,
+.ind-card:hover .mo-zoom, .eng-card:hover .mo-zoom { animation: moZoom 0.5s cubic-bezier(0.34, 1.4, 0.64, 1) forwards; }
+.svc-card:hover .mo-twist, .diff-card:hover .mo-twist,
+.ind-card:hover .mo-twist, .eng-card:hover .mo-twist { animation: moTwist 0.72s cubic-bezier(0.36, 0, 0.28, 1) forwards; }
+.svc-card:hover .mo-step, .diff-card:hover .mo-step,
+.ind-card:hover .mo-step, .eng-card:hover .mo-step { animation: moStep 0.55s cubic-bezier(0.34, 1.45, 0.64, 1) forwards; }
+.svc-card:hover .mo-pump, .diff-card:hover .mo-pump,
+.ind-card:hover .mo-pump, .eng-card:hover .mo-pump { animation: moPump 0.6s cubic-bezier(0.34, 1.45, 0.64, 1) forwards; }
+
+/* ── Buttons ── */
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  font: 600 clamp(0.86rem, 1.2vw, 0.95rem) Sora, sans-serif;
+  text-decoration: none;
+  color: var(--btntx);
+  background: linear-gradient(135deg, var(--pr), var(--ac));
+  background-size: 160% 160%;
+  padding: 14px 26px;
+  border-radius: 14px;
+  border: none;
+  box-shadow: 0 12px 30px -10px rgba(var(--prr), 0.55);
+  transition: transform 0.25s, box-shadow 0.25s, background-position 0.4s;
+  cursor: pointer;
+}
+.btn-primary:hover {
+  transform: translateY(-3px) scale(1.02);
+  box-shadow: 0 20px 44px -10px rgba(var(--prr), 0.7);
+  background-position: 100% 100%;
+}
+.btn-ghost {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  font: 600 clamp(0.86rem, 1.2vw, 0.95rem) Sora, sans-serif;
+  text-decoration: none;
+  color: var(--tx);
+  background: var(--glass);
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+  border: 1px solid var(--gbrd2);
+  padding: 14px 26px;
+  border-radius: 14px;
+  transition: transform 0.25s, border-color 0.25s, background 0.25s, box-shadow 0.25s;
+  cursor: pointer;
+}
+.btn-ghost:hover {
+  transform: translateY(-3px);
+  border-color: rgba(var(--prr), 0.55);
+  background: rgba(var(--prr), 0.10);
+  box-shadow: 0 14px 30px -12px rgba(var(--prr), 0.45);
+}
+.btn-wa:hover {
+  border-color: rgba(37, 211, 102, 0.6);
+  background: rgba(37, 211, 102, 0.12);
+  box-shadow: 0 14px 30px -12px rgba(37, 211, 102, 0.45);
+}
+.btn-wa svg { color: #25d366; }
+
+/* Focus visibility — WCAG 2.4.7. Applies across every interactive element here. */
+.btn-primary:focus-visible,
+.btn-ghost:focus-visible,
+.faq-q:focus-visible {
+  outline: 2px solid var(--ac);
+  outline-offset: 3px;
+}
+
+/* ─────────────────────────────────────────────────────────────
+   HERO
+   ───────────────────────────────────────────────────────────── */
+.svc-hero {
+  position: relative;
+  z-index: 1;
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: clamp(104px, 15vw, 150px) 24px 0;
+  text-align: center;
+  animation: svcFadeUp 0.8s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.status-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font: 600 11px Sora, sans-serif;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--tx2);
+  padding: 7px 14px;
+  border-radius: 99px;
+  border: 1px solid var(--gbrd);
+  background: var(--glass);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  margin-bottom: 22px;
+}
+
+.svc-h1 {
+  margin: 0 0 20px;
+  font: 800 clamp(1.95rem, 5.4vw, 3.8rem) / 1.06 Outfit, sans-serif;
+  letter-spacing: -0.03em;
+}
+.svc-h1-line1 { display: block; color: var(--tx); cursor: default; }
+.svc-h1-line2 {
+  display: block;
+  background: linear-gradient(90deg, var(--pr), var(--ac));
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+}
+
+.svc-hero-copy {
+  margin: 0 auto 30px;
+  max-width: 660px;
+  font: 300 clamp(0.95rem, 1.45vw, 1.1rem) / 1.75 Sora, sans-serif;
+  color: var(--tx2);
+}
+.svc-hero-copy strong { font-weight: 600; color: var(--tx); }
+
+.svc-cta-row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 14px;
+  margin-bottom: clamp(38px, 6vw, 60px);
+}
+
+.trust-strip {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  list-style: none;
+  margin: 0;
+  padding: 20px 18px;
+  border-radius: 18px;
+  border: 1px solid var(--gbrd);
+  background: var(--glass);
+  -webkit-backdrop-filter: blur(var(--blur, 18px));
+  backdrop-filter: blur(var(--blur, 18px));
+  box-shadow: var(--shdw);
+}
+.trust-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  text-align: center;
+  min-width: 0;
+}
+.trust-value {
+  font: 700 clamp(1.15rem, 2.4vw, 1.75rem) / 1 Outfit, sans-serif;
+  background: linear-gradient(135deg, var(--pr), var(--ac));
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  letter-spacing: -0.01em;
+}
+.trust-label {
+  font: 500 clamp(0.6rem, 1.05vw, 0.72rem) / 1.35 Sora, sans-serif;
+  letter-spacing: 0.04em;
+  color: var(--tx2);
+  text-wrap: balance;
+}
+
+/* ─────────────────────────────────────────────────────────────
+   WHY ME
+   ───────────────────────────────────────────────────────────── */
+.diff-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 290px), 1fr));
+  gap: clamp(14px, 2vw, 20px);
+}
+.diff-card {
+  position: relative;
+  padding: clamp(22px, 3vw, 30px);
+  border-radius: 20px;
+  border: 1px solid var(--gbrd);
+  background: var(--glass);
+  -webkit-backdrop-filter: blur(var(--blur, 18px));
+  backdrop-filter: blur(var(--blur, 18px));
+  box-shadow: var(--shdw);
+  overflow: hidden;
+}
+.diff-card:hover {
+  transform: translateY(-5px);
+  border-color: rgba(var(--card-accent-rgb), 0.45);
+  box-shadow: 0 26px 54px -24px rgba(var(--card-accent-rgb), 0.55);
+}
+.diff-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 46px; height: 46px;
+  border-radius: 14px;
+  color: var(--card-accent);
+  background: rgba(var(--card-accent-rgb), 0.12);
+  border: 1px solid rgba(var(--card-accent-rgb), 0.28);
+  margin-bottom: 16px;
+}
+.diff-title {
+  margin: 0 0 10px;
+  font: 600 clamp(1rem, 1.5vw, 1.14rem) / 1.35 Outfit, sans-serif;
+  color: var(--tx);
+}
+.diff-body {
+  margin: 0;
+  font: 300 clamp(0.85rem, 1.15vw, 0.93rem) / 1.72 Sora, sans-serif;
+  color: var(--tx2);
+}
+
+/* ─────────────────────────────────────────────────────────────
+   SERVICES GRID
+   ───────────────────────────────────────────────────────────── */
+.svc-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr));
+  gap: clamp(14px, 2vw, 20px);
+}
+.svc-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  padding: clamp(22px, 3vw, 30px);
+  border-radius: 20px;
+  border: 1px solid var(--gbrd);
+  background: var(--glass);
+  -webkit-backdrop-filter: blur(var(--blur, 18px));
+  backdrop-filter: blur(var(--blur, 18px));
+  box-shadow: var(--shdw);
+  overflow: hidden;
+}
+.svc-card:hover {
+  transform: translateY(-5px);
+  border-color: rgba(var(--card-accent-rgb), 0.45);
+  box-shadow: 0 26px 54px -24px rgba(var(--card-accent-rgb), 0.5);
+}
+
+/* The featured card carries a resting wash via its own background gradient, so its
+   ::before still starts at 0 and responds to hover exactly like every other card. */
+.svc-card-featured {
+  border-color: rgba(var(--card-accent-rgb), 0.4);
+  background: linear-gradient(160deg, rgba(var(--card-accent-rgb), 0.08), var(--glass) 55%);
+}
+
+.svc-card-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 15px;
+}
+
+.svc-flag {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  flex: none;
+  font: 600 10px Sora, sans-serif;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  color: var(--card-accent);
+  padding: 5px 11px;
+  border-radius: 99px;
+  background: rgba(var(--card-accent-rgb), 0.12);
+  border: 1px solid rgba(var(--card-accent-rgb), 0.3);
+}
+
+.svc-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px; height: 44px;
+  border-radius: 13px;
+  color: var(--card-accent);
+  background: rgba(var(--card-accent-rgb), 0.12);
+  border: 1px solid rgba(var(--card-accent-rgb), 0.28);
+}
+.svc-title {
+  margin: 0 0 9px;
+  font: 600 clamp(1.02rem, 1.5vw, 1.16rem) / 1.32 Outfit, sans-serif;
+  color: var(--tx);
+  text-wrap: balance;
+}
+.svc-promise {
+  margin: 0 0 16px;
+  font: 300 clamp(0.85rem, 1.15vw, 0.93rem) / 1.68 Sora, sans-serif;
+  color: var(--tx2);
+}
+.svc-list {
+  list-style: none;
+  margin: 0 0 18px;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+}
+.svc-list-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 9px;
+  font: 400 clamp(0.8rem, 1.08vw, 0.87rem) / 1.6 Sora, sans-serif;
+  color: var(--tx2);
+}
+.svc-tick {
+  flex: none;
+  margin-top: 3px;
+  color: var(--card-accent);
+}
+.svc-proof {
+  display: flex;
+  align-items: flex-start;
+  gap: 9px;
+  margin: auto 0 0;
+  padding: 13px 15px;
+  border-radius: 13px;
+  background: rgba(var(--card-accent-rgb), 0.09);
+  border: 1px solid rgba(var(--card-accent-rgb), 0.22);
+  font: 500 clamp(0.76rem, 1.02vw, 0.83rem) / 1.6 Sora, sans-serif;
+  color: var(--tx);
+  transition: background 0.32s ease, border-color 0.32s ease;
+}
+.svc-card:hover .svc-proof {
+  background: rgba(var(--card-accent-rgb), 0.15);
+  border-color: rgba(var(--card-accent-rgb), 0.4);
+}
+.svc-proof-icon {
+  flex: none;
+  margin-top: 2px;
+  color: var(--card-accent);
+  transition: transform 0.42s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.svc-card:hover .svc-proof-icon { transform: scale(1.15); }
+
+/* Ticks settle in from the left as the card is hovered — a small cascade that
+   reads as the card "waking up" rather than a single blunt lift. */
+.svc-list-item,
+.eng-point { transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1), color 0.3s ease; }
+.svc-card:hover .svc-list-item,
+.eng-card:hover .eng-point { color: var(--tx); transform: translateX(3px); }
+.svc-card:hover .svc-list-item:nth-child(2) { transition-delay: 40ms; }
+.svc-card:hover .svc-list-item:nth-child(3) { transition-delay: 80ms; }
+.svc-card:hover .svc-list-item:nth-child(4) { transition-delay: 120ms; }
+.svc-card:hover .svc-list-item:nth-child(5) { transition-delay: 160ms; }
+
+/* ─────────────────────────────────────────────────────────────
+   AI ENABLEMENT SPOTLIGHT
+   ───────────────────────────────────────────────────────────── */
+.ai-panel {
+  position: relative;
+  padding: clamp(26px, 4.5vw, 56px);
+  border-radius: 26px;
+  border: 1px solid rgba(167, 139, 250, 0.28);
+  background: linear-gradient(165deg, rgba(167, 139, 250, 0.09), var(--glass) 48%);
+  -webkit-backdrop-filter: blur(var(--blur, 18px));
+  backdrop-filter: blur(var(--blur, 18px));
+  box-shadow: var(--shdw);
+  overflow: hidden;
+}
+.ai-glow {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  opacity: 0.5;
+  pointer-events: none;
+  animation: svcFloat 9s ease-in-out infinite;
+}
+.ai-glow-1 {
+  width: 340px; height: 340px;
+  top: -140px; right: -110px;
+  background: rgba(167, 139, 250, 0.34);
+}
+.ai-glow-2 {
+  width: 300px; height: 300px;
+  bottom: -150px; left: -100px;
+  background: rgba(34, 211, 238, 0.24);
+  animation-delay: 2.2s;
+}
+
+.ai-head { position: relative; z-index: 1; max-width: 780px; }
+.eyebrow-ai { color: #a78bfa; }
+.ai-title { margin-bottom: 18px; }
+.ai-lead {
+  margin: 0 0 14px;
+  font: 300 clamp(0.9rem, 1.28vw, 1.02rem) / 1.78 Sora, sans-serif;
+  color: var(--tx2);
+}
+.ai-lead:last-child { margin-bottom: 0; }
+
+.ai-body {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr);
+  gap: clamp(18px, 2.6vw, 30px);
+  margin-top: clamp(26px, 4vw, 40px);
+}
+
+/* ── Artifact tree ── */
+.ai-tree-wrap {
+  border-radius: 16px;
+  border: 1px solid var(--gbrd2);
+  background: rgba(9, 14, 28, 0.55);
+  overflow: hidden;
+  min-width: 0;
+}
+:host-context(.thm-light) .ai-tree-wrap { background: rgba(15, 23, 42, 0.055); }
+
+.ai-tree-bar {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 11px 14px;
+  border-bottom: 1px solid var(--gbrd);
+  background: rgba(255, 255, 255, 0.045);
+}
+:host-context(.thm-light) .ai-tree-bar { background: rgba(15, 23, 42, 0.04); }
+.ai-dot { width: 9px; height: 9px; border-radius: 50%; flex: none; }
+.ai-dot-r { background: #ff5f57; }
+.ai-dot-y { background: #febc2e; }
+.ai-dot-g { background: #28c840; }
+.ai-tree-label {
+  margin-left: 8px;
+  font: 500 11px ui-monospace, Menlo, monospace;
+  color: var(--tx2);
+  letter-spacing: 0.02em;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ai-tree {
+  list-style: none;
+  margin: 0;
+  padding: 14px 8px 16px;
+  overflow-x: auto;
+}
+.ai-node {
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px 12px;
+  padding: 7px 10px;
+  border-radius: 9px;
+  transition: background 0.2s;
+}
+.ai-node:hover { background: rgba(167, 139, 250, 0.09); }
+.ai-node-nested { padding-left: 26px; }
+.ai-node-nested::before {
+  content: '└';
+  position: absolute;
+  margin-left: -16px;
+  color: var(--tx2);
+  opacity: 0.45;
+  font-family: ui-monospace, Menlo, monospace;
+}
+.ai-node-path {
+  font: 600 clamp(0.72rem, 1.02vw, 0.82rem) ui-monospace, Menlo, monospace;
+  color: #a78bfa;
+  white-space: nowrap;
+}
+.ai-node-dir .ai-node-path { color: var(--ac); }
+.ai-node-purpose {
+  font: 300 clamp(0.7rem, 0.95vw, 0.78rem) / 1.5 Sora, sans-serif;
+  color: var(--tx2);
+  flex: 1 1 240px;
+  min-width: 0;
+}
+
+/* ── MCP + outcomes ── */
+.ai-side { display: flex; flex-direction: column; gap: 18px; min-width: 0; }
+.ai-sub {
+  margin: 0;
+  font: 600 12px Sora, sans-serif;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--tx2);
+}
+.mcp-list { display: flex; flex-direction: column; gap: 10px; }
+.mcp-item {
+  position: relative;
+  padding: 13px 15px 13px 17px;
+  border-radius: 13px;
+  border: 1px solid var(--gbrd);
+  background: var(--glass);
+  transition: border-color 0.25s, transform 0.25s;
+}
+.mcp-item::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 12px; bottom: 12px;
+  width: 3px;
+  border-radius: 0 3px 3px 0;
+  background: var(--card-accent);
+  pointer-events: none;
+}
+.mcp-item:hover { border-color: var(--gbrd2); transform: translateX(3px); }
+.mcp-name {
+  display: block;
+  font: 600 clamp(0.84rem, 1.1vw, 0.92rem) Outfit, sans-serif;
+  color: var(--tx);
+  margin-bottom: 4px;
+}
+.mcp-desc {
+  display: block;
+  font: 300 clamp(0.74rem, 0.98vw, 0.81rem) / 1.6 Sora, sans-serif;
+  color: var(--tx2);
+}
+
+.ai-outcomes {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  margin-top: auto;
+}
+.ai-outcome {
+  padding: 14px 13px;
+  border-radius: 13px;
+  border: 1px solid var(--gbrd);
+  background: var(--glass);
+  text-align: center;
+}
+.ai-outcome-value {
+  display: block;
+  font: 700 clamp(1.05rem, 2vw, 1.4rem) / 1 Outfit, sans-serif;
+  color: #a78bfa;
+  margin-bottom: 5px;
+}
+.ai-outcome-label {
+  display: block;
+  font: 400 clamp(0.66rem, 0.9vw, 0.73rem) / 1.45 Sora, sans-serif;
+  color: var(--tx2);
+  text-wrap: balance;
+}
+
+.ai-foot {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  margin-top: clamp(24px, 3.5vw, 36px);
+  padding-top: clamp(20px, 3vw, 28px);
+  border-top: 1px solid var(--gbrd);
+}
+.ai-foot-note {
+  margin: 0;
+  flex: 1 1 380px;
+  font: 300 clamp(0.82rem, 1.1vw, 0.9rem) / 1.7 Sora, sans-serif;
+  color: var(--tx2);
+}
+
+/* ─────────────────────────────────────────────────────────────
+   INDUSTRIES
+   ───────────────────────────────────────────────────────────── */
+.ind-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr));
+  gap: clamp(14px, 2vw, 20px);
+}
+.ind-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  padding: clamp(20px, 2.8vw, 28px);
+  border-radius: 20px;
+  border: 1px solid var(--gbrd);
+  background: var(--glass);
+  -webkit-backdrop-filter: blur(var(--blur, 18px));
+  backdrop-filter: blur(var(--blur, 18px));
+  box-shadow: var(--shdw);
+}
+.ind-card:hover {
+  transform: translateY(-5px);
+  border-color: rgba(var(--card-accent-rgb), 0.45);
+  box-shadow: 0 26px 54px -24px rgba(var(--card-accent-rgb), 0.5);
+}
+.ind-head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+.ind-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px; height: 40px;
+  flex: none;
+  border-radius: 12px;
+  color: var(--card-accent);
+  background: rgba(var(--card-accent-rgb), 0.12);
+  border: 1px solid rgba(var(--card-accent-rgb), 0.28);
+}
+.ind-sector {
+  margin: 0;
+  font: 600 clamp(0.98rem, 1.4vw, 1.1rem) / 1.3 Outfit, sans-serif;
+  color: var(--tx);
+}
+.ind-pains {
+  list-style: none;
+  margin: 0 0 16px;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.ind-pain {
+  position: relative;
+  padding-left: 18px;
+  font: 400 clamp(0.79rem, 1.05vw, 0.86rem) / 1.6 Sora, sans-serif;
+  color: var(--tx2);
+}
+.ind-pain::before {
+  content: '';
+  position: absolute;
+  left: 3px; top: 0.62em;
+  width: 5px; height: 5px;
+  border-radius: 50%;
+  background: rgba(var(--card-accent-rgb), 0.85);
+  pointer-events: none;
+}
+.ind-builds {
+  margin: auto 0 0;
+  padding: 13px 15px;
+  border-radius: 13px;
+  background: rgba(var(--card-accent-rgb), 0.09);
+  border: 1px solid rgba(var(--card-accent-rgb), 0.2);
+  font: 400 clamp(0.78rem, 1.02vw, 0.85rem) / 1.62 Sora, sans-serif;
+  color: var(--tx);
+}
+.ind-builds-label {
+  display: block;
+  font: 600 9.5px Sora, sans-serif;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--card-accent);
+  margin-bottom: 6px;
+}
+
+/* ─────────────────────────────────────────────────────────────
+   PROCESS
+   ───────────────────────────────────────────────────────────── */
+.proc-list { list-style: none; margin: 0; padding: 0; }
+.proc-row { display: flex; gap: clamp(14px, 2.2vw, 22px); }
+.proc-rail {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: none;
+}
+.proc-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 46px; height: 46px;
+  flex: none;
+  border-radius: 14px;
+  font: 700 0.92rem Outfit, sans-serif;
+  color: var(--btntx);
+  background: linear-gradient(135deg, var(--pr), var(--ac));
+  box-shadow: 0 10px 24px -10px rgba(var(--prr), 0.6);
+}
+.proc-connector {
+  flex: 1;
+  width: 2px;
+  min-height: 26px;
+  margin: 8px 0;
+  border-radius: 2px;
+  background: linear-gradient(180deg, rgba(var(--prr), 0.5), rgba(var(--prr), 0.05));
+}
+.proc-card {
+  flex: 1;
+  min-width: 0;
+  padding: clamp(16px, 2.2vw, 22px) clamp(18px, 2.4vw, 26px);
+  margin-bottom: 16px;
+  border-radius: 18px;
+  border: 1px solid var(--gbrd);
+  background: var(--glass);
+  -webkit-backdrop-filter: blur(var(--blur, 18px));
+  backdrop-filter: blur(var(--blur, 18px));
+}
+.proc-card:hover {
+  border-color: rgba(var(--prr), 0.45);
+  transform: translateX(4px);
+}
+.proc-title {
+  margin: 0 0 7px;
+  font: 600 clamp(0.98rem, 1.4vw, 1.1rem) / 1.3 Outfit, sans-serif;
+  color: var(--tx);
+}
+.proc-desc {
+  margin: 0;
+  font: 300 clamp(0.83rem, 1.1vw, 0.9rem) / 1.7 Sora, sans-serif;
+  color: var(--tx2);
+}
+
+/* ─────────────────────────────────────────────────────────────
+   ENGAGEMENT MODELS
+   ───────────────────────────────────────────────────────────── */
+.eng-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr));
+  gap: clamp(14px, 2vw, 20px);
+  margin-bottom: clamp(18px, 2.6vw, 26px);
+}
+.eng-card {
+  display: flex;
+  flex-direction: column;
+  padding: clamp(22px, 3vw, 30px);
+  border-radius: 20px;
+  border: 1px solid var(--gbrd);
+  background: var(--glass);
+  -webkit-backdrop-filter: blur(var(--blur, 18px));
+  backdrop-filter: blur(var(--blur, 18px));
+  box-shadow: var(--shdw);
+}
+.eng-card:hover {
+  transform: translateY(-5px);
+  border-color: rgba(var(--card-accent-rgb), 0.45);
+  box-shadow: 0 26px 54px -24px rgba(var(--card-accent-rgb), 0.5);
+}
+.eng-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 42px; height: 42px;
+  border-radius: 13px;
+  color: var(--card-accent);
+  background: rgba(var(--card-accent-rgb), 0.12);
+  border: 1px solid rgba(var(--card-accent-rgb), 0.28);
+  margin-bottom: 15px;
+}
+.eng-title {
+  margin: 0 0 6px;
+  font: 600 clamp(1rem, 1.45vw, 1.14rem) / 1.3 Outfit, sans-serif;
+  color: var(--tx);
+}
+.eng-best {
+  margin: 0 0 16px;
+  font: 500 clamp(0.78rem, 1.02vw, 0.85rem) / 1.5 Sora, sans-serif;
+  color: var(--card-accent);
+}
+.eng-points {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+}
+.eng-point {
+  display: flex;
+  align-items: flex-start;
+  gap: 9px;
+  font: 400 clamp(0.8rem, 1.05vw, 0.87rem) / 1.6 Sora, sans-serif;
+  color: var(--tx2);
+}
+
+/* ── "No project is too small" ── */
+.nosmall-panel {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  gap: clamp(14px, 2.2vw, 22px);
+  padding: clamp(20px, 3vw, 30px);
+  border-radius: 20px;
+  border: 1px solid rgba(var(--acr), 0.3);
+  background: linear-gradient(135deg, rgba(var(--acr), 0.10), rgba(var(--prr), 0.06));
+  -webkit-backdrop-filter: blur(var(--blur, 18px));
+  backdrop-filter: blur(var(--blur, 18px));
+  overflow: hidden;
+  transition-property: opacity, translate, transform, border-color, box-shadow;
+  transition-duration: 0.6s, 0.6s, 0.4s, 0.4s, 0.4s;
+  transition-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+}
+/* Cursor-tracked wash, same contract as the cards. */
+.nosmall-panel::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: radial-gradient(420px circle at var(--mx, 20%) var(--my, 50%),
+              rgba(var(--acr), 0.20), transparent 66%);
+  opacity: 0;
+  transition: opacity 0.45s ease;
+  pointer-events: none;
+}
+/* Light sweep that runs once across the panel on entry. */
+.nosmall-panel::after {
+  content: '';
+  position: absolute;
+  top: 0; bottom: 0;
+  left: -60%;
+  width: 45%;
+  background: linear-gradient(105deg, transparent, rgba(255, 255, 255, 0.16), transparent);
+  transform: skewX(-16deg);
+  transition: left 0.85s cubic-bezier(0.22, 1, 0.36, 1);
+  pointer-events: none;
+}
+.nosmall-panel:hover {
+  transform: translateY(-4px);
+  border-color: rgba(var(--acr), 0.62);
+  box-shadow: 0 30px 60px -28px rgba(var(--acr), 0.6);
+}
+.nosmall-panel:hover::before { opacity: 1; }
+.nosmall-panel:hover::after { left: 130%; }
+.nosmall-panel > * { position: relative; z-index: 1; }
+
+@keyframes nosmallBeat {
+  0%, 100% { transform: scale(1); }
+  18%      { transform: scale(1.18); }
+  34%      { transform: scale(1.02); }
+  50%      { transform: scale(1.13); }
+  68%      { transform: scale(1); }
+}
+.nosmall-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 52px; height: 52px;
+  flex: none;
+  border-radius: 16px;
+  color: var(--ac);
+  background: rgba(var(--acr), 0.14);
+  border: 1px solid rgba(var(--acr), 0.32);
+  transition: background 0.35s ease, border-color 0.35s ease, box-shadow 0.35s ease;
+}
+/* The icon is a heart — so it beats. */
+.nosmall-panel:hover .nosmall-icon {
+  background: rgba(var(--acr), 0.26);
+  border-color: rgba(var(--acr), 0.6);
+  box-shadow: 0 14px 28px -12px rgba(var(--acr), 0.8);
+  animation: nosmallBeat 1.15s ease-in-out infinite;
+}
+.nosmall-panel:hover .nosmall-title { color: var(--ac); }
+.nosmall-title { transition: color 0.35s ease; }
+.nosmall-title {
+  margin: 0 0 8px;
+  font: 700 clamp(1.05rem, 1.7vw, 1.3rem) / 1.28 Outfit, sans-serif;
+  color: var(--tx);
+}
+.nosmall-body {
+  margin: 0;
+  font: 300 clamp(0.85rem, 1.15vw, 0.94rem) / 1.72 Sora, sans-serif;
+  color: var(--tx2);
+}
+
+/* ─────────────────────────────────────────────────────────────
+   GUARANTEES
+   ───────────────────────────────────────────────────────────── */
+.gua-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 290px), 1fr));
+  gap: clamp(12px, 1.8vw, 16px);
+}
+.gua-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 13px;
+  padding: clamp(16px, 2.2vw, 22px);
+  border-radius: 16px;
+  border: 1px solid var(--gbrd);
+  background: var(--glass);
+}
+.gua-card:hover { border-color: rgba(52, 211, 153, 0.45); transform: translateY(-3px); }
+.gua-tick {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px; height: 26px;
+  flex: none;
+  border-radius: 50%;
+  color: #34d399;
+  background: rgba(52, 211, 153, 0.14);
+  border: 1px solid rgba(52, 211, 153, 0.3);
+}
+.gua-title {
+  margin: 0 0 5px;
+  font: 600 clamp(0.88rem, 1.2vw, 0.97rem) / 1.32 Outfit, sans-serif;
+  color: var(--tx);
+}
+.gua-body {
+  margin: 0;
+  font: 300 clamp(0.78rem, 1.02vw, 0.85rem) / 1.62 Sora, sans-serif;
+  color: var(--tx2);
+}
+
+/* ─────────────────────────────────────────────────────────────
+   TESTIMONIALS
+   ───────────────────────────────────────────────────────────── */
+.tst-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr));
+  gap: clamp(14px, 2vw, 20px);
+}
+.tst-card {
+  display: flex;
+  flex-direction: column;
+  padding: clamp(20px, 2.8vw, 28px);
+  border-radius: 20px;
+  border: 1px solid var(--gbrd);
+  background: var(--glass);
+  -webkit-backdrop-filter: blur(var(--blur, 18px));
+  backdrop-filter: blur(var(--blur, 18px));
+  box-shadow: var(--shdw);
+}
+.tst-card:hover { transform: translateY(-5px); border-color: rgba(var(--prr), 0.4); }
+.tst-stars { display: inline-flex; gap: 3px; color: #f59e0b; margin-bottom: 14px; }
+.tst-quote {
+  margin: 0 0 18px;
+  font: 300 clamp(0.82rem, 1.1vw, 0.9rem) / 1.75 Sora, sans-serif;
+  color: var(--tx2);
+}
+.tst-author-row { display: flex; align-items: center; gap: 12px; margin-top: auto; }
+.tst-avatar {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 42px; height: 42px;
+  flex: none;
+  border-radius: 50%;
+  font: 700 0.82rem Outfit, sans-serif;
+  color: #fff;
+  letter-spacing: 0.02em;
+}
+.tst-author-info { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.tst-author-name {
+  font: 600 clamp(0.85rem, 1.1vw, 0.92rem) Outfit, sans-serif;
+  color: var(--tx);
+}
+.tst-author-role {
+  font: 400 clamp(0.72rem, 0.95vw, 0.78rem) Sora, sans-serif;
+  color: var(--tx2);
+}
+
+/* ─────────────────────────────────────────────────────────────
+   FAQ
+   ───────────────────────────────────────────────────────────── */
+.faq-list { display: flex; flex-direction: column; gap: 10px; }
+.faq-item {
+  border-radius: 16px;
+  border: 1px solid var(--gbrd);
+  background: var(--glass);
+  overflow: hidden;
+}
+.faq-item:hover { border-color: var(--gbrd2); }
+.faq-item-open {
+  border-color: rgba(var(--prr), 0.42);
+  background: rgba(var(--prr), 0.06);
+}
+.faq-heading { margin: 0; }
+.faq-q {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  width: 100%;
+  padding: clamp(15px, 2vw, 20px) clamp(16px, 2.2vw, 24px);
+  border: none;
+  background: none;
+  text-align: start;
+  cursor: pointer;
+  font: 600 clamp(0.87rem, 1.2vw, 0.98rem) / 1.45 Outfit, sans-serif;
+  color: var(--tx);
+}
+.faq-q-text { min-width: 0; }
+.faq-chevron {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px; height: 28px;
+  flex: none;
+  border-radius: 50%;
+  color: var(--pr);
+  background: rgba(var(--prr), 0.1);
+  border: 1px solid rgba(var(--prr), 0.24);
+  transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.faq-item-open .faq-chevron { transform: rotate(180deg); }
+
+/* Height animation without a magic max-height: a single-row grid interpolates
+   from 0fr to 1fr, so the panel opens to exactly its content height whatever
+   that turns out to be. The inner element owns the overflow clip. */
+.faq-a-wrap {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.4s cubic-bezier(0.22, 1, 0.36, 1),
+              opacity 0.3s ease;
+  opacity: 0;
+}
+.faq-item-open .faq-a-wrap {
+  grid-template-rows: 1fr;
+  opacity: 1;
+}
+.faq-a {
+  overflow: hidden;
+  min-height: 0;
+  padding: 0 clamp(16px, 2.2vw, 24px);
+}
+.faq-a-text {
+  margin: 0;
+  padding-block: 14px clamp(16px, 2.2vw, 22px);
+  border-top: 1px solid var(--gbrd);
+  font: 300 clamp(0.82rem, 1.1vw, 0.9rem) / 1.75 Sora, sans-serif;
+  color: var(--tx2);
+}
+
+/* ─────────────────────────────────────────────────────────────
+   FINAL CTA
+   ───────────────────────────────────────────────────────────── */
+.cta-panel {
+  position: relative;
+  padding: clamp(34px, 6vw, 72px) clamp(22px, 4vw, 56px);
+  border-radius: 28px;
+  border: 1px solid var(--gbrd2);
+  background: var(--glass);
+  -webkit-backdrop-filter: blur(var(--blur, 18px));
+  backdrop-filter: blur(var(--blur, 18px));
+  box-shadow: var(--shdw);
+  text-align: center;
+  overflow: hidden;
+}
+.cta-conic {
+  position: absolute;
+  inset: -60%;
+  background: conic-gradient(from 0deg,
+    transparent 0deg,
+    rgba(var(--prr), 0.14) 70deg,
+    transparent 150deg,
+    rgba(var(--acr), 0.12) 230deg,
+    transparent 320deg);
+  opacity: 0.85;
+  pointer-events: none;
+}
+.cta-blob {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(78px);
+  opacity: 0.42;
+  pointer-events: none;
+  animation: svcFloat 10s ease-in-out infinite;
+}
+.cta-blob-1 { width: 300px; height: 300px; top: -120px; left: -90px; background: rgba(var(--prr), 0.5); }
+.cta-blob-2 { width: 260px; height: 260px; bottom: -110px; right: -80px; background: rgba(var(--acr), 0.42); animation-delay: 2.5s; }
+
+.cta-title {
+  position: relative;
+  z-index: 1;
+  text-align: center;
+  margin-bottom: 14px;
+  text-wrap: balance;
+}
+.cta-sub {
+  position: relative;
+  z-index: 1;
+  max-width: 620px;
+  margin: 0 auto 28px;
+  font: 300 clamp(0.88rem, 1.25vw, 1rem) / 1.75 Sora, sans-serif;
+  color: var(--tx2);
+}
+.cta-buttons {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 14px;
+}
+.cta-meta {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin: 24px 0 0;
+  font: 500 clamp(0.72rem, 0.98vw, 0.8rem) Sora, sans-serif;
+  color: var(--tx2);
+}
+.cta-meta-item { display: inline-flex; align-items: center; gap: 7px; }
+.cta-meta-sep { opacity: 0.5; }
+
+/* ─────────────────────────────────────────────────────────────
+   MICRO-INTERACTION LAYER
+   Small responses on the elements that were previously inert. Each one is
+   transform/opacity only and scoped to a hover or focus state.
+   ───────────────────────────────────────────────────────────── */
+
+/* Arrows lead the eye out of the button in the direction of travel. */
+.btn-primary svg,
+.btn-ghost svg { transition: transform 0.32s cubic-bezier(0.34, 1.5, 0.64, 1); }
+.btn-primary:hover svg { transform: translateX(5px); }
+.btn-ghost:hover svg { transform: scale(1.14); }
+
+/* Trust counters — lift, and the value brightens through its gradient. */
+.trust-item {
+  border-radius: 12px;
+  padding: 6px 4px;
+  transition: transform 0.4s cubic-bezier(0.34, 1.5, 0.64, 1), background 0.3s ease;
+}
+.trust-item:hover {
+  transform: translateY(-4px);
+  background: rgba(var(--prr), 0.08);
+}
+.trust-value { transition: transform 0.4s cubic-bezier(0.34, 1.5, 0.64, 1), filter 0.3s ease; }
+.trust-item:hover .trust-value { transform: scale(1.09); filter: brightness(1.2); }
+.trust-item:hover .trust-label { color: var(--tx); }
+.trust-label { transition: color 0.3s ease; }
+
+/* Process badges — the number pops and its rail lights up. */
+.proc-badge { transition: transform 0.45s cubic-bezier(0.34, 1.55, 0.64, 1), box-shadow 0.35s ease; }
+.proc-row:hover .proc-badge {
+  transform: scale(1.12) rotate(-6deg);
+  box-shadow: 0 16px 32px -10px rgba(var(--prr), 0.85);
+}
+.proc-connector { transition: background 0.4s ease; }
+.proc-row:hover .proc-connector {
+  background: linear-gradient(180deg, rgba(var(--prr), 0.9), rgba(var(--prr), 0.15));
+}
+
+/* Guarantee ticks draw themselves in. */
+@keyframes guaDraw {
+  0%   { stroke-dashoffset: 26; }
+  100% { stroke-dashoffset: 0; }
+}
+.gua-tick { transition: transform 0.42s cubic-bezier(0.34, 1.55, 0.64, 1), background 0.3s ease; }
+.gua-tick svg path { stroke-dasharray: 26; stroke-dashoffset: 0; }
+.gua-card:hover .gua-tick {
+  transform: scale(1.16) rotate(8deg);
+  background: rgba(52, 211, 153, 0.26);
+}
+.gua-card:hover .gua-tick svg path { animation: guaDraw 0.5s cubic-bezier(0.22, 1, 0.36, 1); }
+
+/* Testimonial avatars tilt; stars stagger a shimmer. */
+.tst-avatar { transition: transform 0.45s cubic-bezier(0.34, 1.55, 0.64, 1); }
+.tst-card:hover .tst-avatar { transform: rotate(-8deg) scale(1.1); }
+.tst-stars svg { transition: transform 0.4s cubic-bezier(0.34, 1.55, 0.64, 1); }
+.tst-card:hover .tst-stars svg { transform: translateY(-3px) scale(1.14); }
+.tst-card:hover .tst-stars svg:nth-child(2) { transition-delay: 45ms; }
+.tst-card:hover .tst-stars svg:nth-child(3) { transition-delay: 90ms; }
+.tst-card:hover .tst-stars svg:nth-child(4) { transition-delay: 135ms; }
+.tst-card:hover .tst-stars svg:nth-child(5) { transition-delay: 180ms; }
+
+/* MCP rows — the accent rail grows into a full-height bar. */
+.mcp-item::before { transition: top 0.35s ease, bottom 0.35s ease, width 0.35s ease; }
+.mcp-item:hover::before { top: 0; bottom: 0; width: 4px; }
+.mcp-item:hover .mcp-name { color: var(--card-accent); }
+.mcp-name { transition: color 0.3s ease; }
+
+/* Artifact tree rows slide toward the reader and light their path. */
+.ai-node { transition: background 0.25s ease, transform 0.3s cubic-bezier(0.22, 1, 0.36, 1); }
+.ai-node:hover { transform: translateX(5px); }
+.ai-node-path { transition: color 0.25s ease; }
+.ai-node:hover .ai-node-path { color: var(--ac); }
+.ai-node:hover .ai-node-purpose { color: var(--tx); }
+.ai-node-purpose { transition: color 0.25s ease; }
+
+/* AI outcome tiles. */
+.ai-outcome {
+  transition: transform 0.4s cubic-bezier(0.34, 1.5, 0.64, 1), border-color 0.3s ease, background 0.3s ease;
+}
+.ai-outcome:hover {
+  transform: translateY(-4px);
+  border-color: rgba(167, 139, 250, 0.5);
+  background: rgba(167, 139, 250, 0.08);
+}
+
+/* Industry pain bullets pulse outward from the accent dot. */
+.ind-pain { transition: color 0.3s ease, transform 0.35s cubic-bezier(0.22, 1, 0.36, 1); }
+.ind-card:hover .ind-pain { color: var(--tx); transform: translateX(3px); }
+.ind-card:hover .ind-pain:nth-child(2) { transition-delay: 50ms; }
+.ind-card:hover .ind-pain:nth-child(3) { transition-delay: 100ms; }
+.ind-builds { transition: background 0.32s ease, border-color 0.32s ease; }
+.ind-card:hover .ind-builds {
+  background: rgba(var(--card-accent-rgb), 0.16);
+  border-color: rgba(var(--card-accent-rgb), 0.4);
+}
+
+/* ─────────────────────────────────────────────────────────────
+   ART DIRECTION
+   ───────────────────────────────────────────────────────────── */
+
+/* Eyebrows get a drawn rule, giving each section head a deliberate entry mark
+   rather than every section opening with identical stacked text. */
+.eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.eyebrow::after {
+  content: '';
+  flex: 1;
+  max-width: 68px;
+  height: 1px;
+  background: linear-gradient(90deg, currentColor, transparent);
+  opacity: 0.55;
+  transform-origin: left center;
+  transform: scaleX(0.35);
+  transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.section-head.revealed .eyebrow::after,
+.ai-panel.revealed .eyebrow::after { transform: scaleX(1); }
+
+/* The CTA's conic sweep rotates slowly — the panel reads as lit rather than
+   printed. Transform only, one element, composited. */
+@keyframes ctaSweep { to { transform: rotate(360deg); } }
+.cta-conic { animation: ctaSweep 34s linear infinite; }
+
+/* Film grain. A single fixed layer at very low opacity stops the large flat
+   panels from banding and gives the glass a material quality. */
+.services-container::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  opacity: 0.035;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+.thm-light .services-container::after { opacity: 0.022; }
+
+/* ─────────────────────────────────────────────────────────────
+   RESPONSIVE — 1440px down to 320px
+   The grids above are auto-fit/minmax so they reflow on their own; the rules
+   below handle the cases where reflow alone is not enough (fixed column counts,
+   the AI two-column split, and the process rail).
+   ───────────────────────────────────────────────────────────── */
+
+/* Tablet landscape / small desktop — collapse the AI split to one column */
+@media (max-width: 1024px) {
+  .ai-body { grid-template-columns: minmax(0, 1fr); }
+  .ai-outcomes { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  .ai-foot { justify-content: flex-start; }
+}
+
+/* Tablet portrait */
+@media (max-width: 820px) {
+  .section { padding-left: 20px; padding-right: 20px; }
+  .svc-hero { padding-left: 20px; padding-right: 20px; }
+  .trust-strip { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px 12px; }
+  .ai-outcomes { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .nosmall-panel { flex-direction: column; }
+}
+
+/* Large phone — stack CTAs full width so tap targets are unambiguous */
+@media (max-width: 600px) {
+  .section { padding-left: 16px; padding-right: 16px; }
+  .svc-hero { padding-left: 16px; padding-right: 16px; }
+  .svc-cta-row,
+  .cta-buttons { flex-direction: column; align-items: stretch; }
+  .svc-cta-row .btn-primary,
+  .svc-cta-row .btn-ghost,
+  .cta-buttons .btn-primary,
+  .cta-buttons .btn-ghost { width: 100%; }
+  .ai-foot .btn-primary { width: 100%; }
+
+  /* The artifact tree is the one element that cannot shrink gracefully —
+     let it scroll inside its own container rather than blowing out the page. */
+  .ai-tree { padding-left: 4px; padding-right: 4px; }
+  .ai-node { flex-direction: column; gap: 3px; }
+  .ai-node-purpose { flex: 1 1 auto; }
+
+  .proc-badge { width: 40px; height: 40px; font-size: 0.84rem; }
+  .faq-q { gap: 10px; }
+}
+
+/* Phone */
+@media (max-width: 430px) {
+  .section { padding-left: 14px; padding-right: 14px; }
+  .svc-hero { padding-left: 14px; padding-right: 14px; }
+  .trust-strip { padding: 16px 12px; }
+  .diff-card, .svc-card, .ind-card, .eng-card, .tst-card { border-radius: 17px; }
+  .ai-panel { border-radius: 20px; }
+  .cta-panel { border-radius: 22px; }
+  .ai-node-nested { padding-left: 20px; }
+  .ai-node-nested::before { margin-left: -14px; }
+}
+
+/* Mobile S — 320px. Nothing may overflow horizontally at this width. */
+@media (max-width: 360px) {
+  .trust-strip { grid-template-columns: minmax(0, 1fr); gap: 14px; }
+  .ai-outcomes { grid-template-columns: minmax(0, 1fr); }
+  .proc-row { gap: 12px; }
+  .proc-badge { width: 36px; height: 36px; font-size: 0.78rem; border-radius: 11px; }
+  .gua-card, .nosmall-panel { padding: 15px; }
+  .diff-icon, .svc-icon { width: 40px; height: 40px; }
+  .ai-tree-label { display: none; }
+}
+
+/* ── Reduced motion: kill the float/pulse loops entirely, not just shorten them.
+   The global rule in styles.css caps durations; these are decorative infinite
+   loops that should simply not run. ── */
+@media (prefers-reduced-motion: reduce) {
+  .ai-glow, .cta-blob { animation: none; }
+  .pulse-dot::after { animation: none; opacity: 0; }
+  .reveal { opacity: 1; transform: none; transition: none; transition-delay: 0s; }
+
+  /* Kill the motion in the hover choreography but keep the colour/tint changes,
+     so hover still reads as a state change without anything sliding or rotating. */
+  .diff-card:hover, .svc-card:hover, .ind-card:hover,
+  .eng-card:hover, .tst-card:hover, .gua-card:hover,
+  .proc-card:hover, .mcp-item:hover { transform: none; }
+
+  .diff-card:hover .diff-icon,
+  .svc-card:hover .svc-icon,
+  .ind-card:hover .ind-icon,
+  .eng-card:hover .eng-icon { transform: none; }
+
+  .svc-card:hover .svc-list-item,
+  .eng-card:hover .eng-point,
+  .svc-card:hover .svc-proof-icon { transform: none; transition-delay: 0s; }
+
+  .diff-card::after, .svc-card::after, .ind-card::after,
+  .eng-card::after, .tst-card::after { transform: scaleX(1); }
+
+  /* Snap the accordion instead of interpolating its height. */
+  .faq-a-wrap { transition: none; }
+
+  /* Every per-icon motion signature is decorative — drop the animation entirely
+     and keep only the tint change, which still communicates the hover state. */
+  .svc-card:hover .svc-icon, .diff-card:hover .diff-icon,
+  .ind-card:hover .ind-icon, .eng-card:hover .eng-icon,
+  .nosmall-panel:hover .nosmall-icon,
+  .gua-card:hover .gua-tick svg path { animation: none; }
+
+  .cta-conic { animation: none; }
+
+  .nosmall-panel:hover,
+  .nosmall-panel:hover::after,
+  .trust-item:hover, .trust-item:hover .trust-value,
+  .proc-row:hover .proc-badge,
+  .gua-card:hover .gua-tick,
+  .tst-card:hover .tst-avatar, .tst-card:hover .tst-stars svg,
+  .ai-node:hover, .ai-outcome:hover,
+  .ind-card:hover .ind-pain,
+  .btn-primary:hover svg, .btn-ghost:hover svg { transform: none; }
+
+  .eyebrow::after { transform: scaleX(1); }
+
+  /* Grain is static texture, not motion — it stays. */
+}
+
+/* Touch devices get no cursor wash — there is no cursor. The resting fallback
+   position would otherwise flash on tap. */
+@media (hover: none) {
+  .diff-card::before, .svc-card::before, .ind-card::before,
+  .eng-card::before, .tst-card::before { display: none; }
+}

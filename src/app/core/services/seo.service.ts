@@ -269,6 +269,71 @@ export class SeoService {
       });
    }
 
+   // The services route needs three schema types at once (WebPage, the Service
+   // catalogue, FAQPage) but the one-JSON-LD-block rule still holds — so they are
+   // emitted as a single @graph array rather than three sibling <script> tags.
+   // Every Service references the Person entity as its provider via @id, which is
+   // what keeps the offering catalogue attached to the same Knowledge Graph node
+   // as the rest of the site.
+   setServicesSeo(
+      services: { key: string; title: string; promise: string }[],
+      faqs: { question: string; answer: string }[]
+   ) {
+      const servicesUrl = `${this.baseUrl}/services`;
+
+      this.updateSeo({
+         title: 'Services - Custom Software for Business',
+         description: 'Akhigbe Iruobe builds bank-grade software for schools, retail, fuel stations & companies — web apps, POS, payments, backend APIs and AI-augmented development.',
+         canonical: servicesUrl,
+         structuredData: {
+            '@context': 'https://schema.org',
+            '@graph': [
+               {
+                  '@type': 'WebPage',
+                  '@id': `${servicesUrl}#webpage`,
+                  name: 'Services — Akhigbe Iruobe',
+                  url: servicesUrl,
+                  about: { '@id': this.personId },
+                  dateModified: new Date().toISOString(),
+                  mainEntity: { '@id': `${servicesUrl}#catalogue` }
+               },
+               {
+                  '@type': 'OfferCatalog',
+                  '@id': `${servicesUrl}#catalogue`,
+                  name: 'Software Engineering Services',
+                  url: servicesUrl,
+                  itemListElement: services.map((service, index) => ({
+                     '@type': 'Offer',
+                     position: index + 1,
+                     itemOffered: {
+                        '@type': 'Service',
+                        '@id': `${servicesUrl}#${service.key}`,
+                        name: service.title,
+                        description: service.promise,
+                        serviceType: service.title,
+                        provider: { '@id': this.personId },
+                        areaServed: [
+                           { '@type': 'Country', name: 'Nigeria' },
+                           { '@type': 'Place', name: 'Worldwide (remote)' }
+                        ]
+                     }
+                  }))
+               },
+               {
+                  '@type': 'FAQPage',
+                  '@id': `${servicesUrl}#faq`,
+                  url: servicesUrl,
+                  mainEntity: faqs.map(faq => ({
+                     '@type': 'Question',
+                     name: faq.question,
+                     acceptedAnswer: { '@type': 'Answer', text: faq.answer }
+                  }))
+               }
+            ]
+         }
+      });
+   }
+
    setResumeSeo() {
       this.updateSeo({
          title: 'Resume - Senior Angular Engineer & Technical Lead',

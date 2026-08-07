@@ -16,6 +16,7 @@ export class FooterComponent implements OnInit {
 
   navLinks = [
     { path: '/', label: 'Home', exact: true },
+    { path: '/services', label: 'Services', exact: false },
     { path: '/projects', label: 'Projects', exact: false },
     { path: '/contact', label: 'Contact', exact: false },
     { path: '/resume', label: 'Resume', exact: false }

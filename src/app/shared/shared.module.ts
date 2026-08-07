@@ -12,6 +12,7 @@ import { SpinnerComponent } from './components/spinner/spinner.component';
 import { SafeHtmlPipe } from './pipes/safehtml.pipe';
 import { ToolTipComponent } from './components/tooltips/tooltip.component';
 import { RainbowHoverDirective } from './directives/rainbow-hover.directive';
+import { PointerGlowDirective } from './directives/pointer-glow.directive';
 
 @NgModule({
   declarations: [
@@ -23,7 +24,8 @@ import { RainbowHoverDirective } from './directives/rainbow-hover.directive';
     SpinnerComponent,
     ToolTipComponent,
     SafeHtmlPipe,
-    RainbowHoverDirective
+    RainbowHoverDirective,
+    PointerGlowDirective
   ],
   imports: [CommonModule, RouterModule, ReactiveFormsModule],
   exports: [
@@ -36,6 +38,7 @@ import { RainbowHoverDirective } from './directives/rainbow-hover.directive';
     ToolTipComponent,
     SafeHtmlPipe,
     RainbowHoverDirective,
+    PointerGlowDirective,
     CommonModule,
     RouterModule,
     ReactiveFormsModule

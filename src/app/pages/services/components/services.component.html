@@ -1,0 +1,398 @@
+<div class="services-container">
+  <div class="page-sky" aria-hidden="true">
+    <span class="trail"></span>
+    <span class="trail"></span>
+    <span class="trail"></span>
+  </div>
+
+  <!-- ═══════════════════════ HERO ═══════════════════════ -->
+  <section class="svc-hero">
+    <span class="status-pill">
+      <span class="pulse-dot"></span>
+      Available for new projects
+    </span>
+
+    <h1 class="svc-h1">
+      <span appRainbowHover class="svc-h1-line1">Software built to bank standards.</span>
+      <span class="svc-h1-line2">For the business you actually run.</span>
+    </h1>
+
+    <p class="svc-hero-copy">
+      I'm <strong>Akhigbe Iruobe</strong> — a senior engineer who builds the systems Nigerian banks run on:
+      credit approval chains, real-time fraud detection, and payment platforms moving billions of naira under
+      CBN regulation. I build that same standard of software for schools, retail, fuel stations and growing
+      companies — the web app, the mobile experience, and the backend behind both.
+    </p>
+
+    <div class="svc-cta-row">
+      <a class="btn-primary shine" [href]="calendlyUrl" target="_blank" rel="noopener noreferrer" (click)="trackBooking()">
+        Book a free 30-min call
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"></path></svg>
+      </a>
+      <a class="btn-ghost btn-wa shine" [href]="whatsappUrl" target="_blank" rel="noopener noreferrer" (click)="trackWhatsApp()">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"></path></svg>
+        Message on WhatsApp
+      </a>
+    </div>
+
+    <ul class="trust-strip">
+      @for (s of trustStats; track s.label) {
+        <li class="trust-item">
+          <span class="trust-value">{{ s.value }}</span>
+          <span class="trust-label">{{ s.label }}</span>
+        </li>
+      }
+    </ul>
+  </section>
+
+  <!-- ═══════════════════════ WHY ME ═══════════════════════ -->
+  <section class="section">
+    <div class="section-head reveal">
+      <span class="eyebrow">Why Me</span>
+      <h2 appRainbowHover class="section-h2">What you don't get from a general developer</h2>
+      <p class="section-sub">Three things that come from spending nine years inside regulated banking systems.</p>
+    </div>
+
+    <div class="diff-grid">
+      @for (d of differentiators; track d.title; let i = $index) {
+        <article appPointerGlow class="diff-card reveal" [style.--rvl-i]="i"
+                 [style.--card-accent]="d.accent" [style.--card-accent-rgb]="d.accentRgb">
+          <span class="diff-icon" [ngClass]="iconMotion(d.title, i)" [innerHTML]="sanitizeIcon(d.icon)"></span>
+          <h3 class="diff-title">{{ d.title }}</h3>
+          <p class="diff-body">{{ d.body }}</p>
+        </article>
+      }
+    </div>
+  </section>
+
+  <!-- ═══════════════════════ SERVICES GRID ═══════════════════════ -->
+  <section id="what-i-build" class="section">
+    <div class="section-head reveal">
+      <span class="eyebrow">What I Build</span>
+      <h2 appRainbowHover class="section-h2">Services</h2>
+      <p class="section-sub">Every offering below is backed by work already shipped to production — the proof sits inside the card, not in a footnote.</p>
+    </div>
+
+    <div class="svc-grid">
+      @for (s of services; track s.key; let i = $index) {
+        <article appPointerGlow class="svc-card reveal" [class.svc-card-featured]="s.featured"
+                 [style.--rvl-i]="i"
+                 [style.--card-accent]="s.accent" [style.--card-accent-rgb]="s.accentRgb">
+          <!-- Icon and flag share one row so the featured card's title lands on the
+               same baseline as every other card in the grid. -->
+          <div class="svc-card-head">
+            <span class="svc-icon" [ngClass]="iconMotion(s.key, i)" [innerHTML]="sanitizeIcon(s.icon)"></span>
+            @if (s.featured) {
+              <span class="svc-flag"><span class="pulse-dot pulse-dot-fast"></span>Most in demand</span>
+            }
+          </div>
+          <h3 class="svc-title">{{ s.title }}</h3>
+          <p class="svc-promise">{{ s.promise }}</p>
+          <ul class="svc-list">
+            @for (d of s.deliverables; track d) {
+              <li class="svc-list-item">
+                <svg class="svc-tick" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6L9 17l-5-5"></path></svg>
+                <span>{{ d }}</span>
+              </li>
+            }
+          </ul>
+          <p class="svc-proof">
+            <svg class="svc-proof-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+            <span>{{ s.proof }}</span>
+          </p>
+        </article>
+      }
+    </div>
+  </section>
+
+  <!-- ═══════════════════════ AI ENABLEMENT SPOTLIGHT ═══════════════════════ -->
+  <section id="ai-enablement" class="section">
+    <div class="ai-panel reveal">
+      <div class="ai-glow ai-glow-1" aria-hidden="true"></div>
+      <div class="ai-glow ai-glow-2" aria-hidden="true"></div>
+
+      <div class="ai-head">
+        <span class="eyebrow eyebrow-ai">The Multiplier</span>
+        <!-- No <br> here: appRainbowHover rebuilds the host from textContent, which
+             discards child markup. Let the heading wrap naturally instead. -->
+        <h2 appRainbowHover class="section-h2 ai-title">Your team already uses AI. I make it produce production code.</h2>
+        <p class="ai-lead">
+          Most teams bolt an AI assistant onto an undocumented codebase and get exactly what you'd expect —
+          confident, inconsistent, unreviewable output that a senior engineer then has to unpick. The tool isn't
+          the problem. The missing operating layer is.
+        </p>
+        <p class="ai-lead">
+          I install that layer: a written constitution that routes every question to the right internal standard
+          before the AI answers, a documentation suite that makes those standards real, and custom skills and
+          integrations that let the tooling drive and verify your actual application. This is the same system
+          currently governing two parallel development teams on a CBN-regulated trade finance platform.
+        </p>
+      </div>
+
+      <div class="ai-body">
+        <!-- What gets installed, as the real artifact tree -->
+        <div class="ai-tree-wrap">
+          <div class="ai-tree-bar" aria-hidden="true">
+            <span class="ai-dot ai-dot-r"></span>
+            <span class="ai-dot ai-dot-y"></span>
+            <span class="ai-dot ai-dot-g"></span>
+            <span class="ai-tree-label">what gets installed in your repo</span>
+          </div>
+          <ul class="ai-tree">
+            @for (a of aiArtifacts; track a.path) {
+              <li class="ai-node" [class.ai-node-nested]="a.depth === 1" [class.ai-node-dir]="a.dir">
+                <span class="ai-node-path">{{ a.path }}</span>
+                @if (!a.dir) {
+                  <span class="ai-node-purpose">{{ a.purpose }}</span>
+                }
+              </li>
+            }
+          </ul>
+        </div>
+
+        <div class="ai-side">
+          <h3 class="ai-sub">Tooling wired in</h3>
+          <div class="mcp-list">
+            @for (m of mcpCapabilities; track m.name) {
+              <div class="mcp-item" [style.--card-accent]="m.accent">
+                <span class="mcp-name">{{ m.name }}</span>
+                <span class="mcp-desc">{{ m.description }}</span>
+              </div>
+            }
+          </div>
+
+          <div class="ai-outcomes">
+            @for (o of aiOutcomes; track o.label) {
+              <div class="ai-outcome">
+                <span class="ai-outcome-value">{{ o.value }}</span>
+                <span class="ai-outcome-label">{{ o.label }}</span>
+              </div>
+            }
+          </div>
+        </div>
+      </div>
+
+      <div class="ai-foot">
+        <p class="ai-foot-note">
+          Works whether you have twenty engineers or one. The deliverable is the same: a repository where the
+          standard is written down, enforced on every merge, and impossible for anyone — human or model — to
+          quietly ignore.
+        </p>
+        <a class="btn-primary shine" [href]="calendlyUrl" target="_blank" rel="noopener noreferrer" (click)="trackBooking()">
+          Talk through your setup
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"></path></svg>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════ INDUSTRIES ═══════════════════════ -->
+  <section id="who-i-build-for" class="section">
+    <div class="section-head reveal">
+      <span class="eyebrow">Who I Build For</span>
+      <h2 appRainbowHover class="section-h2">Find your business here</h2>
+      <p class="section-sub">If the problems below sound like your week, we should talk.</p>
+    </div>
+
+    <div class="ind-grid">
+      @for (i of industries; track i.key; let idx = $index) {
+        <article appPointerGlow class="ind-card reveal" [style.--rvl-i]="idx"
+                 [style.--card-accent]="i.accent" [style.--card-accent-rgb]="i.accentRgb">
+          <div class="ind-head">
+            <span class="ind-icon" [ngClass]="iconMotion(i.key, idx)" [innerHTML]="sanitizeIcon(i.icon)"></span>
+            <h3 class="ind-sector">{{ i.sector }}</h3>
+          </div>
+          <ul class="ind-pains">
+            @for (p of i.pains; track p) {
+              <li class="ind-pain">{{ p }}</li>
+            }
+          </ul>
+          <p class="ind-builds"><span class="ind-builds-label">What I'd build</span>{{ i.builds }}</p>
+        </article>
+      }
+    </div>
+  </section>
+
+  <!-- ═══════════════════════ PROCESS ═══════════════════════ -->
+  <section class="section section-narrow">
+    <div class="section-head reveal">
+      <span class="eyebrow">How We Work</span>
+      <h2 appRainbowHover class="section-h2">From first call to live system</h2>
+      <p class="section-sub">No black boxes. You see progress every two weeks, start to finish.</p>
+    </div>
+
+    <ol class="proc-list">
+      @for (p of process; track p.step; let last = $last) {
+        <li class="proc-row reveal" [style.--rvl-i]="$index">
+          <div class="proc-rail">
+            <span class="proc-badge">{{ p.step }}</span>
+            @if (!last) { <span class="proc-connector" aria-hidden="true"></span> }
+          </div>
+          <div class="proc-card">
+            <h3 class="proc-title">{{ p.title }}</h3>
+            <p class="proc-desc">{{ p.description }}</p>
+          </div>
+        </li>
+      }
+    </ol>
+  </section>
+
+  <!-- ═══════════════════════ ENGAGEMENT MODELS ═══════════════════════ -->
+  <section class="section">
+    <div class="section-head reveal">
+      <span class="eyebrow">Working Together</span>
+      <h2 appRainbowHover class="section-h2">Three ways to engage</h2>
+      <p class="section-sub">Pick the shape that fits. Cost is scoped to your project on the call — there's no price list, because there's no standard project.</p>
+    </div>
+
+    <div class="eng-grid">
+      @for (e of engagementModels; track e.title; let i = $index) {
+        <article appPointerGlow class="eng-card reveal" [style.--rvl-i]="i"
+                 [style.--card-accent]="e.accent" [style.--card-accent-rgb]="e.accentRgb">
+          <span class="eng-icon" [ngClass]="iconMotion(e.title, i)" [innerHTML]="sanitizeIcon(e.icon)"></span>
+          <h3 class="eng-title">{{ e.title }}</h3>
+          <p class="eng-best">{{ e.bestFor }}</p>
+          <ul class="eng-points">
+            @for (pt of e.points; track pt) {
+              <li class="eng-point">
+                <svg class="svc-tick" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6L9 17l-5-5"></path></svg>
+                <span>{{ pt }}</span>
+              </li>
+            }
+          </ul>
+        </article>
+      }
+    </div>
+
+    <div appPointerGlow class="nosmall-panel reveal">
+      <div class="nosmall-icon" aria-hidden="true">
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 0 0-7.8 7.8l1.1 1L12 21.2l7.7-7.8 1.1-1a5.5 5.5 0 0 0 0-7.8z"></path></svg>
+      </div>
+      <div class="nosmall-text">
+        <h3 class="nosmall-title">No project is too small</h3>
+        <p class="nosmall-body">
+          Small business or enterprise, the standard doesn't change. Larger builds I lead directly. Smaller ones are
+          delivered by engineers I've personally trained and code-review — against the same written standards I authored
+          for a CBN-regulated bank. Every budget gets a real conversation, so tell me what you have and let's see what
+          it buys.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════ GUARANTEES ═══════════════════════ -->
+  <section class="section">
+    <div class="section-head reveal">
+      <span class="eyebrow">No Small Print</span>
+      <h2 appRainbowHover class="section-h2">What you always get</h2>
+      <p class="section-sub">Included on every engagement, whatever the size. These aren't upsells.</p>
+    </div>
+
+    <div class="gua-grid">
+      @for (g of guarantees; track g.title; let i = $index) {
+        <div class="gua-card reveal" [style.--rvl-i]="i">
+          <span class="gua-tick" aria-hidden="true">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"></path></svg>
+          </span>
+          <div class="gua-text">
+            <h3 class="gua-title">{{ g.title }}</h3>
+            <p class="gua-body">{{ g.body }}</p>
+          </div>
+        </div>
+      }
+    </div>
+  </section>
+
+  <!-- ═══════════════════════ TESTIMONIALS ═══════════════════════ -->
+  <section class="section">
+    <div class="section-head reveal">
+      <span class="eyebrow">Social Proof</span>
+      <h2 appRainbowHover class="section-h2">People who've shipped with me</h2>
+      <p class="section-sub">Verbatim LinkedIn recommendations from engineers, managers and founders.</p>
+    </div>
+
+    <div class="tst-grid">
+      @for (t of testimonials; track t.author; let i = $index) {
+        <article appPointerGlow class="tst-card reveal" [style.--rvl-i]="i">
+          <span class="tst-stars" aria-label="5 out of 5">
+            @for (s of [1,2,3,4,5]; track s) {
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path></svg>
+            }
+          </span>
+          <p class="tst-quote">"{{ t.quote }}"</p>
+          <div class="tst-author-row">
+            <span class="tst-avatar" [style.background]="getTestimonialGradient(i)" aria-hidden="true">{{ t.initials }}</span>
+            <span class="tst-author-info">
+              <span class="tst-author-name">{{ t.author }}</span>
+              <span class="tst-author-role">{{ t.role }} · {{ t.company }}</span>
+            </span>
+          </div>
+        </article>
+      }
+    </div>
+  </section>
+
+  <!-- ═══════════════════════ FAQ ═══════════════════════ -->
+  <section class="section section-narrow">
+    <div class="section-head reveal">
+      <span class="eyebrow">Questions</span>
+      <h2 appRainbowHover class="section-h2">Before you ask</h2>
+      <p class="section-sub">The things people want to know before picking up the phone.</p>
+    </div>
+
+    <div class="faq-list">
+      @for (f of faqs; track f.question; let i = $index) {
+        <div class="faq-item reveal" [style.--rvl-i]="i" [class.faq-item-open]="openFaq() === i">
+          <h3 class="faq-heading">
+            <button type="button" class="faq-q" [attr.aria-expanded]="openFaq() === i"
+                    [attr.aria-controls]="'faq-panel-' + i" [id]="'faq-btn-' + i" (click)="toggleFaq(i)">
+              <span class="faq-q-text">{{ f.question }}</span>
+              <span class="faq-chevron" aria-hidden="true">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"></path></svg>
+              </span>
+            </button>
+          </h3>
+          <!-- Always rendered so the panel can animate its height (grid 0fr → 1fr).
+               `inert` takes the collapsed copy out of the tab order and the
+               accessibility tree, which @if used to handle by removing it. -->
+          <div class="faq-a-wrap" role="region" [id]="'faq-panel-' + i"
+               [attr.aria-labelledby]="'faq-btn-' + i" [attr.inert]="openFaq() === i ? null : ''">
+            <div class="faq-a">
+              <p class="faq-a-text">{{ f.answer }}</p>
+            </div>
+          </div>
+        </div>
+      }
+    </div>
+  </section>
+
+  <!-- ═══════════════════════ FINAL CTA ═══════════════════════ -->
+  <section class="section">
+    <div class="cta-panel reveal">
+      <div class="cta-conic" aria-hidden="true"></div>
+      <div class="cta-blob cta-blob-1" aria-hidden="true"></div>
+      <div class="cta-blob cta-blob-2" aria-hidden="true"></div>
+
+      <h2 appRainbowHover class="section-h2 cta-title">Tell me what your business is struggling with.</h2>
+      <p class="cta-sub">
+        Thirty minutes, no charge, no obligation. If software isn't the right answer for your problem, I'll tell you
+        that too — and you'll have lost nothing but half an hour.
+      </p>
+      <div class="cta-buttons">
+        <a class="btn-primary shine" [href]="calendlyUrl" target="_blank" rel="noopener noreferrer" (click)="trackBooking()">
+          Book a free 30-min call
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"></path></svg>
+        </a>
+        <a class="btn-ghost btn-wa shine" [href]="whatsappUrl" target="_blank" rel="noopener noreferrer" (click)="trackWhatsApp()">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"></path></svg>
+          Message on WhatsApp
+        </a>
+      </div>
+      <p class="cta-meta">
+        <span class="cta-meta-item"><span class="pulse-dot"></span>Replies within 24 hours</span>
+        <span class="cta-meta-sep" aria-hidden="true">·</span>
+        <span class="cta-meta-item">Lagos, Nigeria — working worldwide</span>
+      </p>
+    </div>
+  </section>
+</div>

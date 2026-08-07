@@ -12,7 +12,6 @@ interface HdrTier {
   isMobile: boolean;
   showNav: boolean;
   showResume: boolean;
-  showYouTube: boolean;
   badgeInline: boolean;
   badgeBelow: boolean;
   showClock: boolean;
@@ -46,18 +45,11 @@ interface HdrTier {
       @if (tier().showNav) {
         <div class="nav-links">
           <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="onLinkClick()">Home</a>
+          <a routerLink="/services" routerLinkActive="active" (click)="onLinkClick()">Services</a>
           <a routerLink="/projects" routerLinkActive="active" (click)="onLinkClick()">Projects</a>
           <a routerLink="/contact" routerLinkActive="active" (click)="onLinkClick()">Contact</a>
           @if (tier().showResume) {
             <a routerLink="/resume" routerLinkActive="active" (click)="onLinkClick()">Resume</a>
-          }
-          @if (tier().showYouTube) {
-            <a href="https://www.youtube.com/@AyomideIruobe" target="_blank" rel="noopener noreferrer" class="yt-link">
-              <span class="yt-icon-ring">
-                <svg class="yt-icon" width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M23.5 6.2c-.3-1.1-1.1-1.9-2.2-2.2C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.3.5c-1.1.3-1.9 1.1-2.2 2.2C0 8 0 12 0 12s0 4 .5 5.8c.3 1.1 1.1 1.9 2.2 2.2 1.8.5 9.3.5 9.3.5s7.5 0 9.3-.5c1.1-.3 1.9-1.1 2.2-2.2.5-1.8.5-5.8.5-5.8s0-4-.5-5.8zM9.5 15.5v-7l6.2 3.5-6.2 3.5z"></path></svg>
-              </span>
-              YouTube
-            </a>
           }
         </div>
         <div class="nav-end">
@@ -113,23 +105,28 @@ interface HdrTier {
             <span class="mm-label mm-label-active">Home</span>
             <svg class="mm-arrow" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--pr)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"></path></svg>
           </a>
-          <a routerLink="/projects" (click)="closeMenu()" class="mm-i mm-link">
+          <a routerLink="/services" (click)="closeMenu()" class="mm-i mm-link">
             <span class="mm-num">02</span>
+            <span class="mm-label">Services</span>
+            <svg class="mm-arrow" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--pr)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"></path></svg>
+          </a>
+          <a routerLink="/projects" (click)="closeMenu()" class="mm-i mm-link">
+            <span class="mm-num">03</span>
             <span class="mm-label">Projects</span>
             <svg class="mm-arrow" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--pr)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"></path></svg>
           </a>
           <a routerLink="/contact" (click)="closeMenu()" class="mm-i mm-link">
-            <span class="mm-num">03</span>
+            <span class="mm-num">04</span>
             <span class="mm-label">Contact</span>
             <svg class="mm-arrow" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--pr)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"></path></svg>
           </a>
           <a routerLink="/resume" (click)="closeMenu()" class="mm-i mm-link">
-            <span class="mm-num">04</span>
+            <span class="mm-num">05</span>
             <span class="mm-label">Resume</span>
             <svg class="mm-arrow" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--pr)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"></path></svg>
           </a>
           <a href="https://www.youtube.com/@AyomideIruobe" target="_blank" rel="noopener noreferrer" class="mm-i mm-link mm-link-yt">
-            <span class="mm-num">05</span>
+            <span class="mm-num">06</span>
             <span class="mm-label mm-label-yt">
               YouTube
               <svg class="mm-yt-icon" width="22" height="22" viewBox="0 0 24 24" fill="#f43f5e"><path d="M23.5 6.2c-.3-1.1-1.1-1.9-2.2-2.2C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.3.5c-1.1.3-1.9 1.1-2.2 2.2C0 8 0 12 0 12s0 4 .5 5.8c.3 1.1 1.1 1.9 2.2 2.2 1.8.5 9.3.5 9.3.5s7.5 0 9.3-.5c1.1-.3 1.9-1.1 2.2-2.2.5-1.8.5-5.8.5-5.8s0-4-.5-5.8zM9.5 15.5v-7l6.2 3.5-6.2 3.5z"></path></svg>
@@ -195,12 +192,17 @@ export class HeaderComponent implements OnInit, AfterViewInit {
 
   // Progressive tier system — identical to the prototype's computeHdr apart from
   // the burger threshold (NAV_MIN). Nothing disappears all at once.
+  //
+  // Services was added as the 2nd inline link and YouTube was dropped from the
+  // desktop bar (it remains in the mobile menu, the footer and the home CTA).
+  // Removing the YouTube link freed enough horizontal room that Resume now
+  // survives down to 940px instead of 1000px — the nav is less crowded below
+  // 1160px than it was before Services existed.
   private static computeHdr(w: number): HdrTier {
     return {
       isMobile: w < HeaderComponent.NAV_MIN,
       showNav: w >= HeaderComponent.NAV_MIN,
-      showResume: w >= 1000,
-      showYouTube: w >= 1160,
+      showResume: w >= 940,
       badgeInline: w >= 1440,
       badgeBelow: w >= 560 && w < 1440,
       showClock: w >= 420,
