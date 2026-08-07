@@ -26,7 +26,7 @@ interface ProjectMetric {
           <h3 class="project-title">{{ title() }}</h3>
           <div class="project-links">
             @if (demoUrl()) {
-            <a [href]="demoUrl()!" target="_blank" class="link-button demo">
+            <a [href]="demoUrl()!" target="_blank" rel="noopener noreferrer" class="link-button demo">
               <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor">
                 <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
                 <polyline points="15 3 21 3 21 9"></polyline>

@@ -6,6 +6,12 @@ import { AfterViewInit, Directive, ElementRef, HostListener, Renderer2, inject }
  * hover each letter staggers into one of 7 colors with a slight lift/rotate.
  * Stagger is 16ms/letter (the reference JS value — the design doc's prose
  * says "~28ms" but the code, the documented source of truth, uses 16ms).
+ *
+ * ⚠️ TEXT-ONLY HOST. This reads `host.textContent` and rebuilds the element from
+ * that flat string, so ANY child markup inside the host is silently destroyed —
+ * a `<br>` collapses (joining the words either side with no space), and nested
+ * `<span>`/`<strong>` lose their styling. Put the directive on a text-only
+ * element; if you need a line break, use separate sibling elements instead.
  */
 @Directive({
   selector: '[appRainbowHover]',

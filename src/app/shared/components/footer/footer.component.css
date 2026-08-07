@@ -90,13 +90,14 @@
   color: var(--tx);
 }
 
-.quick-links { display: flex; flex-direction: column; gap: 16px; }
+.quick-links { display: flex; flex-direction: column; gap: 10px; }
 @media (min-width: 768px) {
-  .quick-links { gap: 20px; }
+  .quick-links { gap: 14px; }
 }
 .quick-link {
   display: inline-flex;
   align-items: center;
+  min-height: 24px;
   gap: 8px;
   font: 400 13.5px Sora, sans-serif;
   text-decoration: none;
@@ -106,13 +107,14 @@
 .quick-link:hover, .quick-link.active { color: var(--pr); transform: translateX(5px); }
 .quick-link-chevron { color: var(--pr); font: 600 14px Sora, sans-serif; }
 
-.connect-links { display: flex; flex-direction: column; gap: 16px; }
+.connect-links { display: flex; flex-direction: column; gap: 10px; }
 @media (min-width: 768px) {
-  .connect-links { gap: 20px; }
+  .connect-links { gap: 14px; }
 }
 .connect-link {
   display: inline-flex;
   align-items: center;
+  min-height: 24px;
   gap: 10px;
   font: 400 13.5px Sora, sans-serif;
   text-decoration: none;

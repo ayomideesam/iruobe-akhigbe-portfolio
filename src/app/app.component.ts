@@ -39,9 +39,14 @@ interface CanvasStar {
         <div #spotlight class="spotlight"></div>
       </div>
 
+      <!-- First focusable element in the document — WCAG 2.4.1 bypass block. -->
+      <a class="skip-link" href="#main-content">Skip to main content</a>
+
       <app-header></app-header>
 
-      <main>
+      <!-- tabindex="-1" makes <main> a valid programmatic focus target for both
+           the skip link and the post-navigation focus reset. -->
+      <main id="main-content" tabindex="-1">
         <router-outlet></router-outlet>
       </main>
 
@@ -116,6 +121,36 @@ interface CanvasStar {
       position: relative;
       z-index: 1;
       width: 100%;
+    }
+    /* <main> is only focusable programmatically; never show a ring on it. */
+    main:focus { outline: none; }
+
+    /* Skip link — off-screen until focused, then pinned above the header. */
+    .skip-link {
+      position: fixed;
+      top: 10px;
+      left: 50%;
+      z-index: 2000;
+      display: inline-flex;
+      align-items: center;
+      padding: 12px 22px;
+      border-radius: 12px;
+      font: 600 14px Sora, sans-serif;
+      text-decoration: none;
+      color: var(--btntx);
+      background: linear-gradient(135deg, var(--pr), var(--ac));
+      box-shadow: 0 14px 34px -10px rgba(var(--prr), 0.7);
+      transform: translate(-50%, -220%);
+      transition: transform 0.25s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    /* :focus, not just :focus-visible — a skip link is only ever reached by
+       keyboard, and the focus-visible heuristic can decline to match depending on
+       how focus arrived. Missing it means the link takes focus while staying
+       invisible, which is worse than having no skip link at all. */
+    .skip-link:focus {
+      transform: translate(-50%, 0);
+      outline: 2px solid var(--ac);
+      outline-offset: 3px;
     }
 
     /* ── WhatsApp float ── */

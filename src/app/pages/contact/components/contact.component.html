@@ -61,7 +61,7 @@
         <section class="contact-methods">
             <div class="methods-grid">
                 @for (method of contactMethods; track method.title) {
-                <a [href]="method.link" target="_blank"
+                <a [href]="method.link" target="_blank" rel="noopener noreferrer"
                     class="method-card" [ngClass]="method.colorClass"
                     [@methodHover]="method.isHovered ? 'hovered' : 'rest'" (mouseenter)="method.isHovered = true"
                     (mouseleave)="method.isHovered = false">

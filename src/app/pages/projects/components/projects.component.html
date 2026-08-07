@@ -132,7 +132,7 @@
                             <span class="fp-shot-dot"></span>
                             <span class="fp-shot-tag">Preview 01</span>
                         </div>
-                        <img [src]="project.images[0]" [attr.alt]="(project?.title || 'Project') + ' preview 1'"
+                        <img [src]="project.images[0]" width="1280" height="752" [attr.alt]="(project?.title || 'Project') + ' preview 1'"
                             (mouseenter)="onImageHover($event.target)" (mouseleave)="onImageLeave($event.target)">
                     </div>
 
@@ -429,7 +429,7 @@
                             <span class="fp-shot-dot"></span>
                             <span class="fp-shot-tag">Preview 02</span>
                         </div>
-                        <img [src]="project.images[1]" [alt]="project.title + ' preview 2'"
+                        <img [src]="project.images[1]" width="1280" height="752" [alt]="project.title + ' preview 2'"
                             (mouseenter)="onImageHover($event.target)" (mouseleave)="onImageLeave($event.target)">
                     </div>
                 </aside>
@@ -512,7 +512,7 @@
                             (click)="expandAssessment(ap.id, $event)"
                             (keydown.enter)="expandAssessment(ap.id, $event)">
                             @if (ap.images?.length) {
-                            <img [src]="ap.images![getImageIndex(ap.id)]"
+                            <img [src]="ap.images![getImageIndex(ap.id)]" width="1280" height="800"
                                 [alt]="ap.title + ' screenshot ' + (getImageIndex(ap.id) + 1)"
                                 [title]="ap.title"
                                 (mouseenter)="onImageHover($event.target)"
@@ -657,7 +657,7 @@
 
         <div class="assessment-expand-shot">
             @if (ea.images?.length) {
-            <img [src]="ea.images![getImageIndex(ea.id)]"
+            <img [src]="ea.images![getImageIndex(ea.id)]" width="1280" height="720"
                 [alt]="ea.title + ' screenshot ' + (getImageIndex(ea.id) + 1)"
                 [title]="ea.title" loading="eager">
             } @else {
