@@ -285,7 +285,7 @@ export class ProjectsComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   scrollToTop() {
-    if (history.state.scrollToProject) {
+    if (history.state?.scrollToProject) {
       const fragment = this.router.url.split('#')[1];
       if (fragment) {
         setTimeout(() => {

@@ -97,7 +97,7 @@ export class ResumeComponent implements OnInit, AfterViewInit {
   }
 
   scrollToTop() {
-    if (history.state.scrollToProject) {
+    if (history.state?.scrollToProject) {
       const fragment = this.router.url.split('#')[1];
       if (fragment) {
         setTimeout(() => {

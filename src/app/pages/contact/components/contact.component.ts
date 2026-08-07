@@ -183,7 +183,7 @@ export class ContactComponent implements OnInit {
 
   ngOnInit(): void {
     this.seoService.setContactSeo();
-    if (history.state.scrollToSchedule) {
+    if (history.state?.scrollToSchedule) {
       this.scrollToMessage('.contact-schedule');
     } else {
       window.scrollTo({ top: 0, behavior: 'smooth' });
