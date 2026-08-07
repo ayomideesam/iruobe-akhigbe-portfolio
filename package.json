@@ -42,7 +42,7 @@
   "overrides": {
     "uuid": ">=11.1.1",
     "ws": ">=8.21.0",
-    "tar": ">=7.5.16",
+    "tar": ">=7.5.22",
     "tmp": ">=0.2.6",
     "qs": ">=6.15.2",
     "picomatch": ">=2.3.2",
@@ -53,9 +53,37 @@
     "@opentelemetry/resources": ">=2.8.0",
     "@opentelemetry/sdk-trace-base": ">=2.8.0",
     "@opentelemetry/sdk-trace-node": ">=2.8.0",
-    "express": {
-      "path-to-regexp": "0.1.13"
+    "@babel/core": "^7.29.6",
+    "dompurify": "^3.4.13",
+    "fast-uri": "^3.1.5",
+    "ip-address": "^10.4.0",
+    "js-yaml": "^4.3.1",
+    "socket.io-parser": "^4.2.7",
+    "hono": "^4.13.1",
+    "undici": ">=6.28.0 <7",
+    "webpack-dev-server": {
+      ".": "^5.2.6",
+      "body-parser": "^1.20.6"
     },
-    "@babel/core": "^7.29.6"
+    "brace-expansion": "^1.1.18",
+    "@npmcli/package-json": {
+      "brace-expansion": "^5.0.9"
+    },
+    "@tufjs/models": {
+      "brace-expansion": "^5.0.9"
+    },
+    "cacache": {
+      "brace-expansion": "^5.0.9"
+    },
+    "ignore-walk": {
+      "brace-expansion": "^5.0.9"
+    },
+    "karma": {
+      "body-parser": "^1.20.6"
+    },
+    "@angular/cli": {
+      "@modelcontextprotocol/sdk": "^1.30.0",
+      "@hono/node-server": "^2.0.5"
+    }
   }
 }

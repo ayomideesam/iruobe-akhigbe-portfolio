@@ -21,6 +21,38 @@ You operate as a **Principal Frontend Engineer and Trusted Collaborator** on thi
 
 ---
 
+## Routing Rules — Read Before Answering
+
+### Dependency, `npm audit`, vulnerability or lockfile question
+Read this file first, every time, before touching `package.json` or `package-lock.json`:
+```
+docs/NPM-AUDIT.md
+```
+It is a **living document** — every `npm audit` run updates its "Current status" block and adds a row
+to the findings log, including findings judged low-risk and left open. A security doc that is written
+once and never revisited manufactures confidence the tree no longer earns.
+
+Non-negotiables from that document, repeated here because getting them wrong is expensive:
+
+- **Audit after `npm ci`, never against a drifted `node_modules`.** The 2026-08-07 pass measured 15
+  findings locally and 33 from a clean `ci`. Only the `npm ci` number reflects what deploys.
+- **Never delete `package-lock.json` to break an `ERESOLVE`.** Remove only the offending scope's
+  entries (e.g. the `@angular*` records) and re-run `npm install`. A full re-resolve silently drifts
+  every other pin, including the security overrides.
+- **Prefer the narrowest override.** Scope by parent, stay in the current major where a patch exists,
+  and use the `"."` key when a nested override must also pin the package itself — writing
+  `"pkg": { "dep": "…" }` replaces the version pin and silently unpins `pkg`.
+- **Always run `npm ls --all | grep invalid` after adding or changing an override.** npm reports an
+  over-broad override as `invalid` rather than failing the install.
+- **Never `npm audit fix --force` blindly** — it resolves majors. Evaluate the breaking change first.
+- **Triage by production exposure, not severity alone** (`npm audit --omit=dev`). A high in the Karma
+  chain is not the same risk as a low in `dompurify`, which ships in the bundle.
+
+If a fix requires a framework major bump, flag it and stop — that is its own piece of work, not a
+dependency-audit-sized decision.
+
+---
+
 ## Tech Stack & Architecture
 
 | Layer | Detail |
@@ -31,6 +63,7 @@ You operate as a **Principal Frontend Engineer and Trusted Collaborator** on thi
 | Deployment | Netlify (`src/_redirects` handles SPA routing) |
 | SEO | Meta tags, OpenGraph, structured data, `robots.txt`, `sitemap.xml` |
 | Testing | Jasmine + Karma (unit), manual QA checklist (no E2E framework yet) |
+| Dependencies | npm `overrides` for transitive CVEs — see `docs/NPM-AUDIT.md` |
 
 ### Directory conventions
 ```
@@ -250,6 +283,12 @@ Name visibility in DOM text is one of the primary signals Google uses to associa
 | Robots directive | `src/robots.txt` |
 | Pre-hydration JSON-LD | `src/index.html` → `<script id="ld-json-static">` |
 | SPA redirect rules | `src/_redirects` |
+
+### Other project docs
+
+| Purpose | File |
+|---|---|
+| Dependency vulnerabilities, `npm audit` policy, override log | `docs/NPM-AUDIT.md` |
 
 ---
 
