@@ -1,7 +1,6 @@
 // components/company-scroller/company-scroller.component.ts
 import { ChangeDetectorRef, Component, DestroyRef, OnInit, inject } from '@angular/core';
 import { trigger, state, style, animate, transition } from '@angular/animations';
-import { IconService } from 'src/app/core/services/icon.service';
 
 interface Company {
   name: string;
@@ -20,7 +19,13 @@ interface Company {
             <div class="logo-wrapper">
               <div class="company-logo" [attr.aria-label]="company.name">
               <div class="logo-content">
-                <div class="svg-container" [innerHTML]="company.logo | safeHtml"></div>
+                <!-- No loading="lazy": this is a horizontally-translating marquee, so
+                     logos 7-10 sit outside the viewport on the X axis and lazy loading
+                     leaves visible gaps until the animation drags them into view.
+                     fetchpriority="low" keeps them from competing with critical assets. -->
+                <div class="svg-container">
+                  <img [src]="company.logo" [alt]="company.name + ' logo'" width="48" height="48" fetchpriority="low" decoding="async">
+                </div>
                 <span class="company-name">{{company.name}}</span>
               </div>
               </div>
@@ -32,7 +37,9 @@ interface Company {
             <div class="logo-wrapper">
               <div class="company-logo" [attr.aria-label]="company.name">
               <div class="logo-content">
-                <div class="svg-container" [innerHTML]="company.logo | safeHtml"></div>
+                <div class="svg-container">
+                  <img [src]="company.logo" [alt]="company.name + ' logo'" width="48" height="48" fetchpriority="low" decoding="async">
+                </div>
                 <span class="company-name">{{company.name}}</span>
               </div>
               </div>
@@ -63,51 +70,24 @@ interface Company {
     standalone: false
 })
 export class CompanyScrollerComponent implements OnInit {
-  private iconService = inject(IconService);
   private cdr = inject(ChangeDetectorRef);
   private destroyRef = inject(DestroyRef);
 
+  // Logos are static assets, not inline SVG strings. They previously lived in
+  // IconService as ~21,000 lines of template literals that webpack shipped and the
+  // browser parsed as JavaScript on every visit. As files they are cached, fetched
+  // in parallel, lazy-loaded below the fold, and gzipped by the CDN.
   companies: Company[] = [
-    {
-      name: 'HiedBerg LTD',
-      logo: this.iconService.getHiedbergIcon()
-    },
-    {
-      name: 'Globus Bank Ltd',
-      logo: this.iconService.getGlobusIcon()
-    },
-    {
-      name: 'Zenith Bank Ltd',
-      logo: this.iconService.getZenithIcon()
-    },
-    {
-      name: 'Conclase Int',
-      logo: this.iconService.getConclaseIcon()
-    },
-    {
-      name: 'NIBSS',
-      logo: this.iconService.getNibssIcon()
-    },
-    {
-      name: 'Guaranty Trust Bank Ltd',
-      logo: this.iconService.getGTIcon()
-    },
-    {
-      name: 'Jumbo Sports',
-      logo: this.iconService.getJumboIcon()
-    },
-    {
-      name: 'Samsky Pay',
-      logo: this.iconService.getSamskyIcon()
-    },
-    {
-      name: 'Upperlink Ltd',
-      logo: this.iconService.getUpperlinkIcon()
-    },
-    {
-      name: 'Golden Scepter Ltd',
-      logo: this.iconService.getGSIcon()
-    }
+    { name: 'HiedBerg LTD', logo: 'assets/logos/hiedberg.svg' },
+    { name: 'Globus Bank Ltd', logo: 'assets/logos/globus.svg' },
+    { name: 'Zenith Bank Ltd', logo: 'assets/logos/zenith.svg' },
+    { name: 'Conclase Int', logo: 'assets/logos/conclase.svg' },
+    { name: 'NIBSS', logo: 'assets/logos/nibss.svg' },
+    { name: 'Guaranty Trust Bank Ltd', logo: 'assets/logos/gtbank.svg' },
+    { name: 'Jumbo Sports', logo: 'assets/logos/jumbo.svg' },
+    { name: 'Samsky Pay', logo: 'assets/logos/samsky.svg' },
+    { name: 'Upperlink Ltd', logo: 'assets/logos/upperlink.svg' },
+    { name: 'Golden Scepter Ltd', logo: 'assets/logos/golden-scepter.svg' }
   ];
   animationState = 'initial';
   private animationInterval: any;

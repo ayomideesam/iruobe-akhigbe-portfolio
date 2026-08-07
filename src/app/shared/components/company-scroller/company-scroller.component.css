@@ -127,9 +127,13 @@
     justify-content: center;
 }
 
-::ng-deep .svg-container  svg {
+/* Logos are <img> now, not injected SVG markup. object-fit keeps the varied
+   source aspect ratios inside the fixed 48px box without distortion; the old
+   `fill: none` is baked into each .svg file so rendering is unchanged. */
+.svg-container img {
+    width: 100%;
     height: 100%;
-    fill: none;
+    object-fit: contain;
 }
 
 .company-name {
