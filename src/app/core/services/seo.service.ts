@@ -91,6 +91,8 @@ export class SeoService {
             'Fintech Engineering',
             'Banking Software',
             'CBN Compliance',
+            'Trade Finance (Import & Export)',
+            'Credit Approval Workflows',
             'Enterprise Application Development',
             'Frontend Architecture'
          ],

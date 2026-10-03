@@ -12,7 +12,7 @@ import { SeoService } from 'src/app/core/services/seo.service';
 import { TestimonialsService } from 'src/app/core/services/testimonials.service';
 
 type CategoryName = 'Frontend Development' | 'Development Tools' | 'Testing & Quality';
-type ProjectKey = 'costaff' | 'trade' | 'fms' | 'cap' | 'tiger' | 'xpath';
+type ProjectKey = 'nxp' | 'costaff' | 'trade' | 'fms' | 'cap' | 'tiger' | 'xpath';
 
 interface OrbitChip {
   name: string;
@@ -59,7 +59,7 @@ interface Experience {
 
 interface Module {
   name: string;
-  status: 'finalising' | 'upcoming';
+  status: 'shipping' | 'paused';
   statusLabel: string;
   description: string;
   tech: string[];
@@ -100,8 +100,14 @@ export class HomeComponent implements OnInit, AfterViewInit {
   ];
   readonly centerTech = { name: 'Angular', icon: this.iconService.getAngularIcon() };
 
-  // ─── Featured Projects: 6-project pool, 3 visible + 3 benched ───
+  // ─── Featured Projects: 7-project pool, 3 visible + 4 benched ───
   private readonly projectPool: Record<ProjectKey, ProjectDef> = {
+    nxp: {
+      key: 'nxp', title: 'Globus Trade Export — NXP', url: 'nxp.globusbank.com',
+      imgs: ['/assets/img/nxp-overview.png', '/assets/img/nxp-applications.png', '/assets/img/nxp-ness.png', '/assets/img/nxp-repatriation.png', '/assets/img/nxp-cancelation.png'],
+      badges: [{ name: 'Angular 21', bc: '#DD003166' }, { name: 'TypeScript', bc: '#3178C666' }, { name: 'NgRx Signals', bc: '#BA2BD266' }],
+      desc: 'CAB-approved in under three months — from-scratch export trade finance platform covering NXP, the NESS levy, repatriation and closure, every step a maker-checker flow moving real money.'
+    },
     costaff: {
       key: 'costaff', title: 'COSTAFF AI Digital Worker', url: 'costaff.ai/dashboard',
       imgs: ['/assets/img/costaff-home.jpeg', '/assets/img/costaff-calendar.avif'],
@@ -109,10 +115,10 @@ export class HomeComponent implements OnInit, AfterViewInit {
       desc: '85% reduction in calendar management time — AI productivity suite integrating Gmail, Google Calendar & OpenAI for enterprise clients across the Middle East.'
     },
     trade: {
-      key: 'trade', title: 'Globus Trade Application', url: 'trade.globusbank.com',
+      key: 'trade', title: 'Globus Trade — Import', url: 'trade.globusbank.com',
       imgs: ['/assets/img/trade-dashboard.png', '/assets/img/trade-settings.png'],
-      badges: [{ name: 'Angular 17', bc: '#DD003166' }, { name: 'TypeScript', bc: '#3178C666' }, { name: 'RxJS', bc: '#B7178C66' }],
-      desc: '100% adoption by trade ops team within 6 months — CBN-mandated trade finance platform replacing a fully paper-based process at Globus Bank.'
+      badges: [{ name: 'Angular 19', bc: '#DD003166' }, { name: 'TypeScript', bc: '#3178C666' }, { name: 'RxJS', bc: '#B7178C66' }],
+      desc: '100% adoption by trade ops team within 6 months — CBN-mandated import trade finance platform (Form M, LC, BC) replacing a fully paper-based process at Globus Bank.'
     },
     fms: {
       key: 'fms', title: 'Fraud Management System', url: 'fms.globusbank.com',
@@ -122,7 +128,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
     },
     cap: {
       key: 'cap', title: 'Credit Approval Process (CAP)', url: 'cap.globusbank.com',
-      imgs: ['/assets/img/cap-overview.jpeg', '/assets/img/cap-login.jpeg'],
+      imgs: ['/assets/img/cap-dashboard.png', '/assets/img/cap-facility-requests.png', '/assets/img/cap-disbursements.png', '/assets/img/cap-login.jpeg'],
       badges: [{ name: 'Angular 20', bc: '#DD003166' }, { name: 'TypeScript', bc: '#3178C666' }, { name: 'RxJS', bc: '#B7178C66' }],
       desc: 'CBN-compliant credit lifecycle platform — four facility modules, a 10+ role approval chain, and MCC/BCC committee voting with veto power, built from 190+ standalone Angular 20 components.'
     },
@@ -140,9 +146,9 @@ export class HomeComponent implements OnInit, AfterViewInit {
     }
   };
 
-  readonly visKeys = signal<ProjectKey[]>(['costaff', 'trade', 'fms']);
-  readonly benchKeys = signal<ProjectKey[]>(['cap', 'tiger', 'xpath']);
-  readonly imgIdx = signal<Record<ProjectKey, number>>({ costaff: 0, trade: 0, fms: 0, cap: 0, tiger: 0, xpath: 0 });
+  readonly visKeys = signal<ProjectKey[]>(['nxp', 'cap', 'fms']);
+  readonly benchKeys = signal<ProjectKey[]>(['trade', 'costaff', 'tiger', 'xpath']);
+  readonly imgIdx = signal<Record<ProjectKey, number>>({ nxp: 0, costaff: 0, trade: 0, fms: 0, cap: 0, tiger: 0, xpath: 0 });
   readonly expandedKey = signal<ProjectKey | null>(null);
   // Expand overlay is desktop-only — prototype's own isMobile gate (<820px), kept
   // independent of the header's burger threshold (which is a separate, user-directed
@@ -236,24 +242,36 @@ export class HomeComponent implements OnInit, AfterViewInit {
   }
 
   // ─── Currently Building ───
+  // Both Globus platforms passed business CAB; dates are written out rather than
+  // "next week" so the copy doesn't go stale after the October 2026 rollout.
   currentlyBuilding = {
-    project: 'Credit Approval Process (CAP)',
+    eyebrow: 'Shipping in October',
+    pill: 'CAB APPROVED',
+    project: 'Trade Export & CAP — Production Rollout',
     company: 'Globus Bank',
-    description: 'Digitising end-to-end credit lifecycle management for Nigeria\'s most CBN-compliant banking workflow: four facility modules, a 10+ role sequential approval chain, and a two-stage committee governance engine.',
+    description: 'Both platforms passed business CAB and roll out to production in October 2026. Trade Export digitises the CBN export chain end to end, and CAP\'s Retail module carries credit from origination through MCC/BCC governance to disbursement. CAP\'s Corporate module is paused at 10% after the team was redeployed to Trade Export in July.',
     modules: [
       {
-        name: 'Retail Module',
-        status: 'finalising' as const,
-        statusLabel: 'In Final UAT',
-        description: 'Completing the end-to-end retail credit lifecycle — multi-step form engine, automated PEP/BVN screening at origination, MCC committee voting engine, and full disbursement workflow heading into general release.',
-        tech: ['Multi-step Form Engine', 'PEP/BVN Screening', 'Committee Voting'],
-        progress: 93
+        name: 'Trade Export (NXP)',
+        status: 'shipping' as const,
+        statusLabel: 'CAB Approved · Rolling Out',
+        description: 'Built from scratch from 11 July 2026 on Angular 21 — NXP applications, the NESS levy payment, repatriation with a ±10% tolerance band, and cancellation & closure, every step a maker-checker flow.',
+        tech: ['Angular 21 Signals', 'Maker-Checker Flows', '776 Vitest Tests'],
+        progress: 100
       },
       {
-        name: 'Corporate Module',
-        status: 'upcoming' as const,
-        statusLabel: 'Starting Next',
-        description: 'Next phase covers SME and large corporate facilities — mandatory Environmental & Social governance review, director-related account flagging, live CRC credit scoring, and BCC board escalation for ₦100M+ facilities.',
+        name: 'CAP — Retail Module',
+        status: 'shipping' as const,
+        statusLabel: 'CAB Approved · Rolling Out',
+        description: 'The end-to-end retail credit lifecycle — multi-step origination with automated PEP/BVN screening, the 10+ role approval chain, MCC committee voting, and full disbursement & deferral workflows.',
+        tech: ['Multi-step Form Engine', 'Committee Voting', 'Disbursement Engine'],
+        progress: 100
+      },
+      {
+        name: 'CAP — Corporate Module',
+        status: 'paused' as const,
+        statusLabel: 'Paused at 10%',
+        description: 'SME and large corporate facilities — mandatory Environmental & Social review, director-related account flagging, live CRC credit scoring, and BCC escalation for ₦100M+ facilities. Paused in July 2026 when the team moved to Trade Export.',
         tech: ['E&S Review', 'CRC Credit Scoring', 'Director Flagging'],
         progress: 10
       }
@@ -301,7 +319,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
     {
       role: 'Senior Frontend Engineer', company: 'Globus Bank Plc', period: 'Jan 2024 - Present',
       location: 'Victoria Island, Nigeria', col: '#8b5cf6', type: 'Full-time', current: true,
-      technologies: ['Angular 20', 'TypeScript', 'RxJS', 'NGXS']
+      technologies: ['Angular 21', 'TypeScript', 'RxJS', 'NGXS']
     },
     {
       role: 'Senior Angular Engineer & Tech Lead', company: 'HiedBerg LTD', period: 'Jun 2024 - Sept 2024',
@@ -505,12 +523,6 @@ export class HomeComponent implements OnInit, AfterViewInit {
     this.destroyRef.onDestroy(() => this.revealObserver?.disconnect());
   }
 
-  // WebP format helper for responsive image delivery. Converts .png/.jpg to
-  // .webp for modern browsers, while the <picture> fallback uses the original.
-  getWebpPath(originalPath: string): string {
-    return originalPath.replace(/\.(png|jpg|jpeg)$/i, '.webp');
-  }
-
   // ─── Helpers reused across templates ───
   // Verbatim from the prototype's catsData paths (code / terminal / shield-check),
   // not IconService — these three are prototype-specific glyphs, not brand icons.
@@ -588,7 +600,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
   // Maps this component's project pool keys to the numeric ids ProjectDataService
   // and ProjectsComponent's [id]="'project-' + project.id" anchors actually use.
   private static readonly PROJECT_DATA_ID: Record<ProjectKey, number> = {
-    costaff: 1, trade: 2, fms: 3, tiger: 4, xpath: 5, cap: 6
+    costaff: 1, trade: 2, fms: 3, tiger: 4, xpath: 5, cap: 6, nxp: 7
   };
 
   viewProject(key: ProjectKey): void {

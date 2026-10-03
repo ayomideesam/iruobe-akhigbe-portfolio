@@ -136,6 +136,8 @@ html {
     --btntx: #0b1120;
     --coffee: #f59e0b;
     --coffee-rgb: 245, 158, 11;
+    --ok: #34d399;
+    --ok-rgb: 52, 211, 153;
 }
 
 .thm-light {
@@ -154,6 +156,9 @@ html {
     --btntx: #ffffff;
     --coffee: #b45309;
     --coffee-rgb: 180, 83, 9;
+    /* #34d399 on light glass is ~1.9:1; emerald-700 clears 4.5:1 for status text */
+    --ok: #047857;
+    --ok-rgb: 4, 120, 87;
 }
 
 /* Global styles */

@@ -11,19 +11,48 @@ were already installed, so a clean result has a shelf life measured in weeks.
 
 | | |
 |---|---|
-| **Last run** | 2026-08-07 |
-| **Result** | ✅ **0 vulnerabilities** |
-| **Packages audited** | 1,122 |
+| **Last run** | 2026-10-03 |
+| **Result** | ⚠️ **47 vulnerabilities** (1 low, 15 moderate, 28 high, 3 critical) — **10 in the production tree** (1 low, 8 moderate, 1 high). All published since 2026-08-07 against packages already installed; none introduced by this run's change. **Open** — see 2026-10-03 below. |
+| **Packages audited** | 1,151 |
 | **npm version** | 10.9.7 |
 | **Node version** | v22.22.2 |
 | **Angular** | 20.3.27 (CLI + build-angular 20.3.33) |
 
 ```
-$ npm audit
-found 0 vulnerabilities
+$ npm ci && npm audit
+47 vulnerabilities (1 low, 15 moderate, 28 high, 3 critical)
+$ npm audit --omit=dev
+10 vulnerabilities (1 low, 8 moderate, 1 high)
+$ npm ls --all | grep -c invalid
+0
 ```
 
-Reproducible from a clean tree: `rm -rf node_modules && npm ci` → 0 vulnerabilities, 0 `invalid`.
+---
+
+## 2026-10-03 — 0 → 47, with no new vulnerable code
+
+`sharp@^0.35.5` was added as a **devDependency** for the media pipeline (`scripts/optimize-media.mjs`,
+`docs/MEDIA.md`). It runs only on a developer machine to compress images; nothing from it ships.
+
+The audit after `npm ci` reported 47. To separate "what this change added" from "what was published
+since the last run", the **committed** `package.json` + `package-lock.json` (HEAD, before `sharp`) were
+audited on their own with `npm audit --package-lock-only`: also **47**, identical. The `--json` report
+lists no vulnerable path through `sharp`. So `sharp` adds **0**; all 47 are advisories published since
+2026-08-07 against the existing tree.
+
+**Production exposure (`--omit=dev`) — the ones that matter first:**
+
+| Package | Severity | Range | Fix |
+|---|---|---|---|
+| `@angular/router` | high | ≤ 20.3.31 | in-major patch available |
+| `@angular/animations`, `common`, `compiler`, `core`, `forms`, `platform-browser`, `platform-browser-dynamic` | moderate | ≤ 20.3.27 | in-major patch available |
+| `fflate` (via `jspdf`) | moderate | 0.8.0 – 0.8.2 | patch available |
+| `dompurify` (via `jspdf`) | low | 3.4.13 – 3.4.15 | patch available |
+
+The remaining 37 are build and dev tooling (`undici`, `webpack-dev-middleware`, `express`/`qs` under
+`webpack-dev-server`, and others). Every production finding has an in-major fix, so none needs a
+framework major. **Left open deliberately:** closing them is its own pass (Angular moves as a set and
+needed lockfile surgery last time, see Finding 2 below), not something to fold into a media change.
 
 ---
 
@@ -189,6 +218,7 @@ clean · 63/63 tests · all five routes render with one JSON-LD block each.
 | `jspdf`, `html2canvas` | ^4.2.1 / ^1.4.1 | resume PDF export — pulls `dompurify` + `canvg` into the bundle |
 | `karma`, `karma-*`, `jasmine-core`, `@types/jasmine` | per `package.json` | test runner |
 | `@babel/core` | ^7.29.6 | dev, pinned via override |
+| `sharp` | ^0.35.5 | dev — media pipeline only (`npm run optimize:media`); prebuilt libvips binaries, nothing ships |
 
 ---
 
@@ -228,6 +258,11 @@ clean · 63/63 tests · all five routes render with one JSON-LD block each.
 | 2026-08-07 | `body-parser` | low | No — Karma / dev server | ✅ Resolved | Per-consumer pins; `express@5` keeps 2.x. |
 | 2026-08-07 | `@hono/node-server` ← `@modelcontextprotocol/sdk` ← `@angular/cli` | moderate | No — CLI MCP feature, never invoked | ✅ Resolved | Scoped override instead of the CLI-21 major npm suggested. |
 | 2026-08-07 | `path-to-regexp` (`invalid`, not a CVE) | — | No | ✅ Resolved | Pre-existing over-broad `express` override removed; was redundant. |
+| 2026-10-03 | `@angular/router` | high | **Yes** — framework | ⏳ Open | In-major patch (> 20.3.31). Scheduled as its own dependency pass. |
+| 2026-10-03 | `@angular/*` (7 packages) | moderate | **Yes** — framework | ⏳ Open | In-major patch (> 20.3.27). Move with the router as one set. |
+| 2026-10-03 | `fflate`, `dompurify` (via `jspdf`) | moderate / low | **Yes** — resume PDF chunk | ⏳ Open | Patch releases available. |
+| 2026-10-03 | 37 build/dev-tooling advisories (`undici`, `webpack-dev-middleware`, `express`/`qs`, …) | mixed, incl. 3 critical | No — build & dev server | ⏳ Open | Triage in the same pass; check each for an in-major fix before any `--force`. |
+| 2026-10-03 | `sharp` (added) | — | No — dev-only media tool | ✅ Clean | Added for `optimize:media`; contributes 0 findings (verified against the HEAD lockfile). |
 
 ---
 

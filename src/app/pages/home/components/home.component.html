@@ -91,8 +91,9 @@
         </div>
         <div class="project-shot" tabindex="0" role="button" [attr.aria-label]="'Expand ' + p.title + ' screenshot'" [title]="'Expand ' + p.title + ' screenshot'" (click)="expandProject(p.key)" (keydown.enter)="expandProject(p.key)">
           <picture>
-            <source [srcset]="getWebpPath(p.img)" type="image/webp">
-            <img [src]="p.img" width="1280" height="720" [alt]="p.title + ' screenshot'" [title]="p.title" loading="lazy">
+            <source type="image/avif" [attr.srcset]="p.img | media:'avif'" sizes="(min-width: 1025px) 400px, (min-width: 769px) 46vw, 92vw">
+            <source type="image/webp" [attr.srcset]="p.img | media:'webp'" sizes="(min-width: 1025px) 400px, (min-width: 769px) 46vw, 92vw">
+            <img [src]="p.img | media:'src'" width="1280" height="720" [alt]="p.title + ' screenshot'" [title]="p.title" loading="lazy" decoding="async">
           </picture>
         </div>
         <div class="carousel-bar">
@@ -131,19 +132,19 @@
   <div class="cb-panel">
     <div class="cb-head">
       <div class="cb-eyebrow-row">
-        <span class="eyebrow">Currently Building</span>
-        <span class="live-pill"><span class="pulse-dot pulse-dot-fast"></span>LIVE</span>
+        <span class="eyebrow">{{ currentlyBuilding.eyebrow }}</span>
+        <span class="live-pill"><span class="pulse-dot pulse-dot-fast"></span>{{ currentlyBuilding.pill }}</span>
       </div>
       <h2 appRainbowHover class="section-h2 cb-title">{{ currentlyBuilding.project }}</h2>
       <p class="cb-desc"><strong>{{ currentlyBuilding.company }}</strong> — {{ currentlyBuilding.description }}</p>
     </div>
     <div class="cb-modules">
       @for (m of currentlyBuilding.modules; track m.name) {
-        <div class="cb-module" [class.cb-module-active]="m.status === 'finalising'">
+        <div class="cb-module" [class.cb-module-active]="m.status === 'shipping'" [class.cb-module-paused]="m.status === 'paused'">
           <div class="cb-module-head">
             <h3 class="cb-module-name">{{ m.name }}</h3>
-            <span class="cb-status" [class.cb-status-active]="m.status === 'finalising'">
-              <span class="pulse-dot" [class.pulse-dot-fast]="m.status === 'finalising'"></span>{{ m.statusLabel }}
+            <span class="cb-status" [class.cb-status-active]="m.status === 'shipping'" [class.cb-status-paused]="m.status === 'paused'">
+              <span class="pulse-dot" [class.pulse-dot-fast]="m.status === 'shipping'"></span>{{ m.statusLabel }}
             </span>
           </div>
           <div class="cb-progress-row">
@@ -232,6 +233,11 @@
       </div>
     }
   </div>
+</section>
+
+<!-- ============ BEYOND THE CODE — FRENCH ============ -->
+<section id="french" class="section section-narrow">
+  <app-learning-journey variant="card"></app-learning-journey>
 </section>
 
 <!-- ============ TESTIMONIALS ============ -->
@@ -332,8 +338,9 @@
       </div>
       <div class="expand-shot">
         <picture>
-          <source [srcset]="getWebpPath(ep.img)" type="image/webp">
-          <img [src]="ep.img" width="1280" height="720" [alt]="ep.title + ' screenshot'" [title]="ep.title" loading="eager">
+          <source type="image/avif" [attr.srcset]="ep.img | media:'avif'" sizes="(min-width: 1200px) 1100px, 92vw">
+          <source type="image/webp" [attr.srcset]="ep.img | media:'webp'" sizes="(min-width: 1200px) 1100px, 92vw">
+          <img [src]="ep.img | media:'src'" width="1280" height="720" [alt]="ep.title + ' screenshot'" [title]="ep.title" loading="eager" decoding="async">
         </picture>
       </div>
       <div class="carousel-bar carousel-bar-lg">

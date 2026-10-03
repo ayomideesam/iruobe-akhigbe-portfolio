@@ -7,6 +7,7 @@ import { LoadingService } from 'src/app/core/services/loading.service';
 import { PdfService } from 'src/app/core/services/pdf.service';
 import { AtsPdfService } from 'src/app/core/services/ats-pdf.service';
 import { ResumeDataService } from 'src/app/core/services/resume-data.service';
+import { LearningDataService } from 'src/app/core/services/learning-data.service';
 import { SeoService } from 'src/app/core/services/seo.service';
 import { ThemeService } from 'src/app/core/services/theme.service';
 
@@ -56,6 +57,8 @@ export class ResumeComponent implements OnInit, AfterViewInit {
   private pdfService = inject(PdfService);
   private atsPdfService = inject(AtsPdfService);
   private analytics = inject(AnalyticsService);
+  /** French is shown as 'learning since …' from the same source as the home and projects cards. */
+  readonly frenchSince = inject(LearningDataService).getFrenchJourney().startedLabel;
 
   get isDarkTheme(): boolean { return this.themeService.isDarkTheme(); }
   isGeneratingPDF = false;
@@ -365,7 +368,7 @@ export class ResumeComponent implements OnInit, AfterViewInit {
         },
         certifications: this.courses,
         hobbies: ['Coding', 'Software Testing', 'Board Games', 'Swimming', 'Reading', 'Console Games'],
-        languages: ['English', 'Yoruba', 'Hausa'],
+        languages: ['English', 'Yoruba', `French (learning since ${this.frenchSince})`, 'Hausa'],
         references: this.references
       };
 

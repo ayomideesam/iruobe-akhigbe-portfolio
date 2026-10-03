@@ -48,9 +48,89 @@ export class ProjectDataService {
    getProjects(): Project[] {
       return [
          {
+            id: 7,
+            title: 'Globus Trade Export — NXP Platform',
+            description: 'Akhigbe Iruobe led the frontend of Globus Bank\'s new export trade finance platform — a from-scratch Angular 21 build on the bank\'s own globuswebcomponents design system that digitises the CBN export chain end to end: NXP applications, the NESS levy, repatriation of export proceeds, and cancellation & closure, with every step a maker-checker flow that moves real money. Work began on 11 July 2026; the platform passed business CAB and rolls out to production in October 2026.',
+            techStack: [
+               { name: 'Angular 21', color: '#DD0031' },
+               { name: 'TypeScript', color: '#3178C6' },
+               { name: 'NgRx Signals', color: '#BA2BD2' },
+               { name: 'Vitest', color: '#6E9F18' },
+               { name: 'HTML5 | CSS3', color: '#339933' }
+            ],
+            achievements: [
+               'Owned the Export domain end to end — 13 routed pages, 3 data services & 40+ backend endpoints covering NXP applications, the NESS levy, repatriation, cancellation & closure — from first commit on 11 July 2026 to business CAB approval in under three months',
+               'Engineered the NESS levy payment, which debits a customer account, so the dangerous paths are structurally impossible: submit is gated on a resolved NXP lookup, an unpaid levy & the SHIPMENT stage; the debit account is derived from the application rather than picked; a response only counts as success when the API\'s own result flag says so; & retrying a failed debit is Authorizer-only',
+               'Built repatriation of export proceeds in three variants (full, partial, advanced) with a ±10% tolerance stepper that sets the repatriable ceiling, a live position card, document uploads, & unapply as its own maker-checker pair — the UI always re-reads the server\'s position instead of adjusting figures locally',
+               'Modelled every step as a maker-checker chain (Initiator → Authorizer, Viewer read-only): Approve / Return / Decline through one shared decision modal, approval logs read back from the API, & role- and stage-aware row menus that only offer the actions the workflow allows',
+               'Architected a signals-first Angular 21 codebase — standalone components with zero NgModules, an NgRx Signal Store for session & roles, httpResource for reads, OnPush everywhere, server-driven paging, search & filters, & Excel/PDF exports in three scopes — 87 components across 38 routes',
+               'Ran security & quality as a standing practice: npm audit at 0 vulnerabilities across dev & production trees, a full application security audit with an OWASP Top 10 self-review, strict CSP & HSTS headers, session-scoped tokens attached only to the API origin, & 776 passing Vitest tests after migrating the suite off Karma',
+               'Led a five-branch delivery model (two engineers plus three contributors) through a written merge protocol with file-by-file reviews, a 40+ entry footgun log, & 42 documented patches to the bank\'s design-system package — the build refuses to start against an unpatched tree'
+            ],
+            images: [
+               '/assets/img/nxp-overview.png',
+               '/assets/img/nxp-applications.png',
+               '/assets/img/nxp-ness.png',
+               '/assets/img/nxp-repatriation.png',
+               '/assets/img/nxp-cancelation.png'
+            ],
+            isHovered: false,
+            stats: [
+               { value: '4', label: 'Export Workflows' },
+               { value: '40+', label: 'API Endpoints' },
+               { value: '770+', label: 'Unit Tests' },
+               { value: '0', label: 'npm Vulnerabilities' }
+            ],
+            pipelineLabel: 'Export Proceeds Chain',
+            pipeline: [
+               { name: 'NXP Application', meta: 'Exporter applies · ADB & PIA review' },
+               { name: 'NESS Levy', meta: 'Statutory fee · account debit + receipt' },
+               { name: 'Shipment', meta: 'Goods ship · levy-paid gate' },
+               { name: 'Repatriation', meta: 'Proceeds return · full, partial or advanced · ±10% tolerance' },
+               { name: 'Closure', meta: 'Application closed out · approve / reject' }
+            ]
+         },
+         {
+            id: 2,
+            title: 'Globus Trade Application — Import (GTA)',
+            description: 'Akhigbe Iruobe architected and delivered Globus Bank\'s CBN-mandated import trade finance platform — digitising Form M documentation, Letters of Credit (LC), Bills for Collection (BC), and end-to-end import workflow management across all bank trade operations personas.',
+            techStack: [
+               { name: 'Angular 19', color: '#DD0031' },
+               { name: 'TypeScript', color: '#3178C6' },
+               { name: 'RxJS', color: '#B7178C' },
+               { name: 'HTML5 | CSS3', color: '#339933' }
+            ],
+            achievements: [
+               'Achieved 100% adoption by the full trade operations team within 6 months — the first digital replacement of a fully paper-based CBN-regulated trade finance process at Globus Bank',
+               'Reduced trade document processing time by 60% through multi-step workflow automation, inline regulatory compliance validation gates, and automated SWIFT message generation',
+               'Designed role-based access control spanning all trade personas (Account Officer, Trade Ops, Trade Manager, Authorizer, Admin) with Angular route guards and a server-driven permission matrix',
+               'Integrated RESTful trade finance APIs handling LC issuance, Bills for Collection processing, live FX rate fetching, and regulatory reporting — with full error-state and retry handling',
+               'Successfully completed UAT and deployed to production ahead of CBN-mandated regulatory deadline — zero post-launch critical defects'
+            ],
+            images: [
+               '/assets/img/trade-dashboard.png',
+               '/assets/img/trade-settings.png'
+            ],
+            isHovered: false,
+            stats: [
+               { value: '5', label: 'Trade Personas' },
+               { value: '3', label: 'Products (LC / BC / TF)' },
+               { value: '100%', label: 'Adoption at Launch' },
+               { value: '60%', label: 'Faster Processing' }
+            ],
+            pipelineLabel: 'Trade Finance Flow',
+            pipeline: [
+               { name: 'Form Initiation', meta: 'Account Officer · facility type selection' },
+               { name: 'Document Upload', meta: 'Trade docs · regulatory compliance checks' },
+               { name: 'Compliance Gates', meta: 'Inline CBN validation · ECOWAS review' },
+               { name: 'SWIFT Generation', meta: 'Automated SWIFT message creation · FX rate fetch' },
+               { name: 'Authorisation', meta: 'Trade Ops → Trade Manager → Authorizer sign-off' }
+            ]
+         },
+         {
             id: 6,
             title: 'Credit Approval Process (CAP)',
-            description: 'Akhigbe Iruobe built Globus Bank\'s Credit Approval Process Automation Solution — a CBN-compliant platform digitising end-to-end credit lifecycle management across 4 facility modules (Retail, Corporate, Staff Loan, Product) through a 2 stage governance structure: Stage 1 routes applications through a 10+ role sequential chain culminating in MCC online committee voting with configurable MD/CEO veto power; Stage 2 escalates facilities above ₦100M to the Board Credit Committee (BCC) for majority vote, after which the platform enables disbursement or deferral workflows.',
+            description: 'Akhigbe Iruobe built Globus Bank\'s Credit Approval Process Automation Solution — a CBN-compliant platform designed to digitise the full credit lifecycle across 4 facility modules (Retail, Corporate, Staff Loan, Product) through a 2 stage governance structure: Stage 1 routes applications through a 10+ role sequential chain culminating in MCC online committee voting with configurable MD/CEO veto power; Stage 2 escalates facilities above ₦100M to the Board Credit Committee (BCC) for majority vote, after which the platform enables disbursement or deferral workflows. The Retail module passed business CAB and rolls out to production in October 2026; the Corporate module is paused at ~10% build after the team was redeployed to Trade Export in July 2026.',
             techStack: [
                { name: 'Angular 20', color: '#DD0031' },
                { name: 'TypeScript', color: '#3178C6' },
@@ -58,22 +138,25 @@ export class ProjectDataService {
                { name: 'HTML5 | CSS3', color: '#339933' }
             ],
             achievements: [
-               'Implemented 4 parallel facility module tracks on a shared signal-based architecture — Retail (individual customers), Corporate (SMEs & large corporates with mandatory E&S governance review), Staff Loan (streamlined RM → BM → MD path), & Product Program (government MDA/parastatal employee lending) — each with track-specific multi-step forms, document compliance gates, & governance review paths',
+               'Designed 4 facility module tracks on a shared signal-based architecture — Retail (individual customers), Corporate (SMEs & large corporates with mandatory E&S governance review), Staff Loan (streamlined RM → BM → MD path), & Product Program (government MDA/parastatal employee lending) — each with track-specific multi-step forms, document compliance gates, & governance review paths. Retail ships first with origination, disbursement & deferral complete; Corporate is ~10% built, and Staff Loan & Product Program are on the roadmap',
                'Encoded the full 2 stage approval hierarchy as application routing & UI state: Stage 1 Business Approval Flow (RM → BM → BFGH → ZH → GH), Governance Review Flow (CRM Officer → CRM Approver → E&S → Head Risk Mgt → ED → ED Risk → MD/CEO), & MCC Committee deliberation (online/offline mode, individual vote capture per member, Yes/No vote count compilation, MD/CEO configurable veto power); Stage 2 BCC escalation for ₦100M+ facilities with board majority-vote resolution & automated re-vote trigger on tied result',
+               'Owned the Disbursement workflow end to end: multiple drawdowns per facility until fully disbursed with every amount validated against the undrawn balance, a four-view By Facility / By Request queue, COO & CPO approval with live loan-booking status, currency-aware screens with SOFR base-rate resolution for foreign-currency facilities, VAT-rate & fee calculations, vendor bank account name verification, NIN capture & moratorium handling — plus the matching Deferral create & update flows',
                'Automated pre-submission BG checks at origination stage: real-time PEP & blacklisted BVN screening via local list & third-party API, CRC/Credit Registry API returning live credit score & report, director-related customer account flagging, & collateral management notification trigger — all system-initiated before the request enters approval chain',
-               'Designed a section-scoped real-time comment system operating across all three workflow stages (Facility, Disbursement, Deferral): CommentContextService tracks active section name, RequestEntityType, parent tab, inner section, disbursement ID, & disbursement index via RxJS BehaviorSubject; CommentManagementService exposes a single loadAndTransformCommentsBySection() Observable consumed by every child component — eliminating comment-loading boilerplate across 190+ components',
-               'Built 190+ fully standalone Angular 20 comps & 26 shared reusable comps with signal-based contracts (input(), output(), linkedSignal(), resource()) & zero NgModules; led Angular 19 → 20 migration resolving Vite 6/7 API incompatibility that caused complete dev-server failure'
+               'Designed a section-scoped real-time comment system operating across all three workflow stages (Facility, Disbursement, Deferral): CommentContextService tracks active section name, RequestEntityType, parent tab, inner section, disbursement ID, & disbursement index via RxJS BehaviorSubject; CommentManagementService exposes a single loadAndTransformCommentsBySection() Observable consumed by every child component — eliminating comment-loading boilerplate across 230+ components',
+               'Built 230+ fully standalone Angular 20 comps & 26 shared reusable comps with signal-based contracts (input(), output(), linkedSignal(), resource()) & zero NgModules; led Angular 19 → 20 migration resolving Vite 6/7 API incompatibility that caused complete dev-server failure, & cleared all 40 npm audit findings (2 high) ahead of CAB'
             ],
             images: [
-               '/assets/img/cap-overview.jpeg',
+               '/assets/img/cap-dashboard.png',
+               '/assets/img/cap-facility-requests.png',
+               '/assets/img/cap-disbursements.png',
                '/assets/img/cap-login.jpeg'
             ],
             isHovered: false,
             stats: [
-               { value: '4', label: 'Facility Modules' },
+               { value: '4', label: 'Modules Designed' },
                { value: '10+', label: 'Approval Roles' },
                { value: '2', label: 'Governance Stages' },
-               { value: '190+', label: 'Components' }
+               { value: '230+', label: 'Components' }
             ],
             pipelineLabel: 'Approval Journey',
             pipeline: [
@@ -123,43 +206,6 @@ export class ProjectDataService {
                { name: 'Invoice Engine', meta: 'Auto-generation · client billing · PDF export' },
                { name: 'Document Processing', meta: 'OCR extraction · data validation · filing' },
                { name: 'AI Assistant', meta: 'OpenAI-powered queries across all workspace data' }
-            ]
-         },
-         {
-            id: 2,
-            title: 'Globus Trade Application (GTA)',
-            description: 'Akhigbe Iruobe architected and delivered Globus Bank\'s CBN-mandated trade finance platform — digitising Letter of Credit (LC), Bills for Collection (BC), and end-to-end trade workflow management across all bank trade operations personas.',
-            techStack: [
-               { name: 'Angular 17', color: '#DD0031' },
-               { name: 'TypeScript', color: '#3178C6' },
-               { name: 'RxJS', color: '#B7178C' },
-               { name: 'HTML5 | CSS3', color: '#339933' }
-            ],
-            achievements: [
-               'Achieved 100% adoption by the full trade operations team within 6 months — the first digital replacement of a fully paper-based CBN-regulated trade finance process at Globus Bank',
-               'Reduced trade document processing time by 60% through multi-step workflow automation, inline regulatory compliance validation gates, and automated SWIFT message generation',
-               'Designed role-based access control spanning all trade personas (Account Officer, Trade Ops, Trade Manager, Authorizer, Admin) with Angular route guards and a server-driven permission matrix',
-               'Integrated RESTful trade finance APIs handling LC issuance, Bills for Collection processing, live FX rate fetching, and regulatory reporting — with full error-state and retry handling',
-               'Successfully completed UAT and deployed to production ahead of CBN-mandated regulatory deadline — zero post-launch critical defects'
-            ],
-            images: [
-               '/assets/img/trade-dashboard.png',
-               '/assets/img/trade-settings.png'
-            ],
-            isHovered: false,
-            stats: [
-               { value: '5', label: 'Trade Personas' },
-               { value: '3', label: 'Products (LC / BC / TF)' },
-               { value: '100%', label: 'Adoption at Launch' },
-               { value: '60%', label: 'Faster Processing' }
-            ],
-            pipelineLabel: 'Trade Finance Flow',
-            pipeline: [
-               { name: 'Form Initiation', meta: 'Account Officer · facility type selection' },
-               { name: 'Document Upload', meta: 'Trade docs · regulatory compliance checks' },
-               { name: 'Compliance Gates', meta: 'Inline CBN validation · ECOWAS review' },
-               { name: 'SWIFT Generation', meta: 'Automated SWIFT message creation · FX rate fetch' },
-               { name: 'Authorisation', meta: 'Trade Ops → Trade Manager → Authorizer sign-off' }
             ]
          },
          {

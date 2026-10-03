@@ -1,0 +1,36 @@
+# Netlify response headers — copied to the build root by angular.json, like _redirects.
+#
+# Rules are kept non-overlapping on purpose: when two rules match one path Netlify merges them,
+# and two Cache-Control values would be joined into one contradictory header.
+# index.html keeps Netlify's default (max-age=0, must-revalidate) so a deploy is picked up at once.
+
+/*
+  X-Content-Type-Options: nosniff
+  X-Frame-Options: DENY
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: camera=(), microphone=(), geolocation=()
+
+# Angular bundles are content-hashed (outputHashing: all): a change ships under a new name.
+/*.js
+  Cache-Control: public, max-age=31536000, immutable
+/*.css
+  Cache-Control: public, max-age=31536000, immutable
+
+# scripts/optimize-media.mjs output — content-hashed file names, safe to cache for a year.
+/assets/media/*
+  Cache-Control: public, max-age=31536000, immutable
+
+# Masters and other un-hashed assets: a replaced file keeps its name, so cache for a day and
+# revalidate in the background for a week rather than pinning a stale copy.
+/assets/img/*
+  Cache-Control: public, max-age=86400, stale-while-revalidate=604800
+/assets/video/*
+  Cache-Control: public, max-age=86400, stale-while-revalidate=604800
+/assets/logos/*
+  Cache-Control: public, max-age=86400, stale-while-revalidate=604800
+/assets/icons/*
+  Cache-Control: public, max-age=86400, stale-while-revalidate=604800
+/assets/fonts/*
+  Cache-Control: public, max-age=2592000, stale-while-revalidate=604800
+/assets/styles/*
+  Cache-Control: public, max-age=86400, stale-while-revalidate=604800

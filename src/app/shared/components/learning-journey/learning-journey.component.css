@@ -1,0 +1,248 @@
+/* Learning journey card — built on the Home v2 tokens in styles.css (--tx, --glass, --pr…), which
+   are defined for both .thm-dark and .thm-light, so it sits correctly on any page and theme. */
+:host {
+    display: block;
+    --lj-flame: #fb923c;
+    --lj-blue: #3b82f6;
+    --lj-red: #ef4444;
+}
+
+:host-context(.thm-light) {
+    --lj-flame: #c2410c;
+    --lj-blue: #1d4ed8;
+    --lj-red: #b91c1c;
+}
+
+.lj {
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    gap: clamp(20px, 3vw, 30px);
+    padding: clamp(24px, 4vw, 44px);
+    border-radius: 26px;
+    background: var(--glass);
+    -webkit-backdrop-filter: blur(var(--blur, 18px)) saturate(150%);
+    backdrop-filter: blur(var(--blur, 18px)) saturate(150%);
+    border: 1px solid var(--gbrd);
+    box-shadow: var(--shdw);
+    color: var(--tx);
+    text-align: left;
+}
+
+/* Tricolour accent along the top edge */
+.lj-flag {
+    position: absolute;
+    inset: 0 0 auto 0;
+    display: flex;
+    height: 4px;
+    pointer-events: none;
+}
+
+.lj-flag span { flex: 1; }
+.lj-flag span:nth-child(1) { background: #0055a4; }
+.lj-flag span:nth-child(2) { background: #f8fafc; }
+.lj-flag span:nth-child(3) { background: #ef4135; }
+:host-context(.thm-light) .lj-flag span:nth-child(2) { background: #dfe3ea; }
+
+.lj-head { display: flex; flex-direction: column; gap: 10px; max-width: 760px; }
+
+.lj-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    font: 600 12px Sora, sans-serif;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--pr);
+}
+
+.lj-flame { color: var(--lj-flame); flex: none; }
+
+.lj-title {
+    margin: 0;
+    font: 700 clamp(1.45rem, 2.6vw, 2.15rem) / 1.15 Outfit, sans-serif;
+    letter-spacing: -0.01em;
+    text-align: left; /* global h2 is centred */
+    color: var(--tx);
+}
+
+.lj-why {
+    margin: 0;
+    font: 300 clamp(0.92rem, 1.2vw, 1.02rem) / 1.75 Sora, sans-serif;
+    color: var(--tx2);
+}
+
+/* ── Stats ── 3 × 2 for the card's six figures (never a 5 + 1 orphan), one row of three in the panel */
+.lj-stats {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 12px;
+}
+
+.lj-stat {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    padding: 16px 16px 14px;
+    border-radius: 16px;
+    background: var(--glass2);
+    border: 1px solid var(--gbrd);
+}
+
+.lj-stat-value {
+    font: 700 clamp(1.35rem, 2.2vw, 1.7rem) / 1.1 Outfit, sans-serif;
+    color: var(--tx);
+    font-variant-numeric: tabular-nums;
+}
+
+.lj-stat:first-child .lj-stat-value { color: var(--lj-flame); }
+
+.lj-stat-label {
+    font: 600 11px Sora, sans-serif;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--tx2);
+}
+
+.lj-stat-detail { font: 400 11.5px Sora, sans-serif; color: var(--tx2); opacity: 0.85; }
+
+/* ── Sub-heads ── */
+.lj-subhead {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 6px 14px;
+    margin-bottom: 12px;
+    font: 600 12px Sora, sans-serif;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--tx2);
+}
+
+.lj-subhead-count { color: var(--pr); }
+
+/* ── Monthly badge strip ── */
+.lj-month-row {
+    display: grid;
+    grid-template-columns: repeat(8, minmax(0, 1fr));
+    gap: 8px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.lj-month { display: flex; flex-direction: column; align-items: center; gap: 7px; }
+
+.lj-month-dot {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: clamp(28px, 4vw, 38px);
+    aspect-ratio: 1;
+    border-radius: 50%;
+    border: 1.5px dashed var(--gbrd2);
+    color: #fff;
+}
+
+.lj-month[data-state="earned"] .lj-month-dot {
+    border: 0;
+    background: linear-gradient(135deg, var(--lj-blue), var(--lj-red));
+    box-shadow: 0 6px 16px -8px var(--lj-blue);
+}
+
+.lj-month[data-state="current"] .lj-month-dot { border: 2px solid var(--lj-flame); }
+
+/* the in-progress month breathes — transform/opacity only */
+.lj-month[data-state="current"] .lj-month-dot::after {
+    content: '';
+    position: absolute;
+    inset: -5px;
+    border-radius: 50%;
+    border: 2px solid var(--lj-flame);
+    opacity: 0;
+    animation: ljPulse 2.4s ease-out infinite;
+    pointer-events: none;
+}
+
+.lj-month-label { font: 500 11.5px Sora, sans-serif; color: var(--tx2); }
+.lj-month[data-state="earned"] .lj-month-label,
+.lj-month[data-state="current"] .lj-month-label { color: var(--tx); font-weight: 600; }
+
+@keyframes ljPulse {
+    0%   { transform: scale(0.85); opacity: 0.7; }
+    100% { transform: scale(1.35); opacity: 0; }
+}
+
+/* ── Panel variant ── */
+
+.lj-panel-body {
+    display: grid;
+    grid-template-columns: 1.2fr 1fr;
+    gap: clamp(18px, 3vw, 32px);
+}
+
+.lj-achievements {
+    display: grid;
+    gap: 8px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.lj-achievement {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: baseline;
+    gap: 2px 12px;
+    padding: 10px 14px;
+    border-radius: 12px;
+    background: var(--glass2);
+    border: 1px solid var(--gbrd);
+}
+
+.lj-achievement-name { font: 600 14px Outfit, sans-serif; color: var(--tx); }
+.lj-achievement-progress { font: 600 12px Sora, sans-serif; color: var(--pr); font-variant-numeric: tabular-nums; }
+.lj-achievement-note { grid-column: 1 / -1; font: 400 12px Sora, sans-serif; color: var(--tx2); }
+
+.lj-words {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.lj-words li {
+    padding: 7px 14px;
+    border-radius: 12px;
+    font: 500 15px Sora, sans-serif;
+    color: var(--tx);
+    background: var(--glass2);
+    border: 1px solid var(--gbrd2);
+}
+
+.lj-foot {
+    padding-top: 14px;
+    border-top: 1px solid var(--gbrd);
+    font: 400 12px Sora, sans-serif;
+    color: var(--tx2);
+}
+
+@media (max-width: 768px) {
+    .lj-panel-body { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 480px) {
+    .lj { border-radius: 20px; }
+    .lj-stats { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+    .lj-stats-compact { grid-template-columns: 1fr; }
+    .lj-stat { padding: 13px 13px 12px; }
+    .lj-month-row { grid-template-columns: repeat(4, minmax(0, 1fr)); row-gap: 14px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .lj-month[data-state="current"] .lj-month-dot::after { animation: none; opacity: 0.4; transform: scale(1.15); }
+}

@@ -24,7 +24,7 @@ interface Company {
                      leaves visible gaps until the animation drags them into view.
                      fetchpriority="low" keeps them from competing with critical assets. -->
                 <div class="svg-container">
-                  <img [src]="company.logo" [alt]="company.name + ' logo'" width="48" height="48" fetchpriority="low" decoding="async">
+                  <img [src]="company.logo | media:'logo'" [alt]="company.name + ' logo'" width="48" height="48" fetchpriority="low" decoding="async">
                 </div>
                 <span class="company-name">{{company.name}}</span>
               </div>
@@ -38,7 +38,7 @@ interface Company {
               <div class="company-logo" [attr.aria-label]="company.name">
               <div class="logo-content">
                 <div class="svg-container">
-                  <img [src]="company.logo" [alt]="company.name + ' logo'" width="48" height="48" fetchpriority="low" decoding="async">
+                  <img [src]="company.logo | media:'logo'" [alt]="company.name + ' logo'" width="48" height="48" fetchpriority="low" decoding="async">
                 </div>
                 <span class="company-name">{{company.name}}</span>
               </div>

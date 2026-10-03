@@ -1,0 +1,76 @@
+<article class="lj" [class.lj-panel]="variant === 'panel'" [attr.aria-labelledby]="'lj-title-' + variant">
+    <span class="lj-flag" aria-hidden="true"><span></span><span></span><span></span></span>
+
+    <header class="lj-head">
+        <span class="lj-eyebrow">
+            <svg class="lj-flame" width="14" height="14" viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M12 2c1 3.2-.6 5-2.2 6.8C8.3 10.4 7 12 7 14.5A5 5 0 0 0 12 20a5 5 0 0 0 5-5.4c-.1-2.1-1.2-3.6-2.3-4.9.1 1.5-.4 2.6-1.4 3.2.3-3.6-.4-7.3-1.3-10.9Z" fill="currentColor"/>
+            </svg>
+            {{ variant === 'card' ? 'Beyond the code' : 'Learning in public' }} · {{ journey.language }}
+        </span>
+        <h2 class="lj-title" [id]="'lj-title-' + variant">{{ journey.headline }}</h2>
+        <p class="lj-why">{{ journey.why }}</p>
+    </header>
+
+    <div class="lj-stats" [class.lj-stats-compact]="variant === 'panel'">
+        @for (s of (variant === 'card' ? journey.stats : panelStats); track s.label) {
+        <div class="lj-stat">
+            <span class="lj-stat-value">{{ s.value }}</span>
+            <span class="lj-stat-label">{{ s.label }}</span>
+            @if (s.detail) {
+            <span class="lj-stat-detail">{{ s.detail }}</span>
+            }
+        </div>
+        }
+    </div>
+
+    @if (variant === 'card') {
+    <div class="lj-months">
+        <div class="lj-subhead">
+            <span>Monthly badges, {{ journey.startedLabel }} onward</span>
+            <span class="lj-subhead-count">{{ earnedMonths }} earned</span>
+        </div>
+        <ol class="lj-month-row">
+            @for (m of journey.months; track m.label) {
+            <li class="lj-month" [attr.data-state]="m.state"
+                [attr.aria-label]="m.label + ': ' + (m.state === 'earned' ? 'badge earned' : m.state === 'missed' ? 'no badge' : 'in progress')">
+                <span class="lj-month-dot" aria-hidden="true">
+                    @if (m.state === 'earned') {
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                    }
+                </span>
+                <span class="lj-month-label">{{ m.label }}</span>
+            </li>
+            }
+        </ol>
+    </div>
+    } @else {
+    <div class="lj-panel-body">
+        <div>
+            <div class="lj-subhead"><span>Achievements in progress</span></div>
+            <ul class="lj-achievements">
+                @for (a of journey.achievements; track a.name) {
+                <li class="lj-achievement">
+                    <span class="lj-achievement-name">{{ a.name }}</span>
+                    <span class="lj-achievement-progress">{{ a.progress }}</span>
+                    <span class="lj-achievement-note">{{ a.note }}</span>
+                </li>
+                }
+            </ul>
+        </div>
+        <div>
+            <div class="lj-subhead"><span>Words in rotation</span></div>
+            <ul class="lj-words" lang="fr">
+                @for (w of journey.words; track w) {
+                <li>{{ w }}</li>
+                }
+            </ul>
+        </div>
+    </div>
+    }
+
+    <footer class="lj-foot">
+        Daily practice on {{ journey.platform }} since {{ journey.startedLabel }} · figures as of
+        <time [attr.datetime]="journey.asOfIso">{{ journey.asOfLabel }}</time>
+    </footer>
+</article>

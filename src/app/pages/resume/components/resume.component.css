@@ -419,6 +419,12 @@ h3 {
     gap: 4px;
 }
 
+.language-note {
+    display: block;
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+}
+
 .proficiency-dot {
     width: 8px;
     height: 8px;

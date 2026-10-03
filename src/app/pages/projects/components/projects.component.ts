@@ -1,9 +1,10 @@
-import { Component, HostListener, OnInit, AfterViewInit, OnDestroy, NgZone, inject } from '@angular/core';
+import { Component, HostListener, OnInit, AfterViewInit, OnDestroy, NgZone, inject, ViewChild, ElementRef, ChangeDetectorRef } from '@angular/core';
 import { trigger, state, style, animate, transition } from '@angular/animations';
 import { Router } from '@angular/router';
 import { SeoService } from 'src/app/core/services/seo.service';
 import { ProjectDataService } from 'src/app/core/services/project-data.service';
 import { AnalyticsService } from 'src/app/core/services/analytics.service';
+import { detectVideoCapabilities, pickVideoSource, VideoCapabilities } from 'src/app/core/media/media';
 
 interface Project {
   id: number;
@@ -34,6 +35,15 @@ interface AssessmentProject {
   accentColorRgb: string;
   isHovered?: boolean;
   images?: string[];
+}
+
+/** What the preview lightbox is currently showing. */
+interface ShotLightbox {
+  title: string;
+  images: string[];
+  index: number;
+  accent: string;
+  accentRgb: string;
 }
 
 /** Presentation identity for a flagship scene — accent, eyebrow, ambient film. */
@@ -82,9 +92,11 @@ export class ProjectsComponent implements OnInit, AfterViewInit, OnDestroy {
   private projectData = inject(ProjectDataService);
   private analytics = inject(AnalyticsService);
   private zone = inject(NgZone);
+  private cdr = inject(ChangeDetectorRef);
   private cardListeners: Array<{ el: HTMLElement; enter: EventListener; move: EventListener; leave: EventListener; cancel: () => void }> = [];
   private filmObserver: IntersectionObserver | null = null;
   private revealObserver: IntersectionObserver | null = null;
+  private videoCaps: VideoCapabilities | null = null;
 
   scrollState = 'normal';
   readonly githubUrl = 'https://github.com/ayomideesam';
@@ -92,7 +104,7 @@ export class ProjectsComponent implements OnInit, AfterViewInit, OnDestroy {
   aboutText = {
     para1: 'I build the software that banks use to run their most critical operations — credit approval workflows, real-time fraud detection, and trade finance platforms that regulators audit.',
     para2: 'Every project here was delivered inside a CBN-regulated environment: strict security requirements, multi-role access control, audit trail compliance, and zero tolerance for UI bugs on live financial data.',
-    para3: 'My constraint is always the same: build it fast enough for a deadline, and robust enough for 100,000+ daily users. That tension is what I\'ve been solving across 9 years and six enterprise applications.',
+    para3: 'My constraint is always the same: build it fast enough for a deadline, and robust enough for 100,000+ daily users. That tension is what I\'ve been solving across 9 years and seven enterprise applications.',
     para4: 'If you\'re hiring a frontend engineer who delivers under compliance pressure and leads a team while doing it — these are the receipts.'
   };
 
@@ -101,9 +113,10 @@ export class ProjectsComponent implements OnInit, AfterViewInit, OnDestroy {
 
   /** Scene identity per project id — Seedance 2.0 ambient loops live in assets/video. */
   private readonly sceneMeta: Record<number, SceneMeta> = {
+    7: { accent: '#fb923c', accentRgb: '251, 146, 60',  eyebrow: 'Globus Bank · Export Trade Finance',     video: 'assets/video/fp-nxp.mp4',     poster: 'assets/video/fp-nxp.jpg' },
     6: { accent: '#818cf8', accentRgb: '129, 140, 248', eyebrow: 'Globus Bank · Credit Governance',        video: 'assets/video/fp-cap.mp4',     poster: 'assets/video/fp-cap.jpg' },
     1: { accent: '#a78bfa', accentRgb: '167, 139, 250', eyebrow: 'Enterprise AI · Productivity Suite',     video: 'assets/video/fp-costaff.mp4', poster: 'assets/video/fp-costaff.jpg' },
-    2: { accent: '#22d3ee', accentRgb: '34, 211, 238',  eyebrow: 'Globus Bank · Trade Finance',            video: 'assets/video/fp-gta.mp4',     poster: 'assets/video/fp-gta.jpg' },
+    2: { accent: '#22d3ee', accentRgb: '34, 211, 238',  eyebrow: 'Globus Bank · Import Trade Finance',     video: 'assets/video/fp-gta.mp4',     poster: 'assets/video/fp-gta.jpg' },
     3: { accent: '#fb7185', accentRgb: '251, 113, 133', eyebrow: 'Globus Bank · Real-Time Risk',           video: 'assets/video/fp-fraud.mp4',   poster: 'assets/video/fp-fraud.jpg' },
     4: { accent: '#fbbf24', accentRgb: '251, 191, 36',  eyebrow: 'Zenith Bank · Payments Infrastructure',  video: 'assets/video/fp-tiger.mp4',   poster: 'assets/video/fp-tiger.jpg' },
     5: { accent: '#2dd4bf', accentRgb: '45, 212, 191',  eyebrow: 'Zenith Bank · Merchant Collections',     video: 'assets/video/fp-xpath.mp4',   poster: 'assets/video/fp-xpath.jpg' },
@@ -168,9 +181,11 @@ export class ProjectsComponent implements OnInit, AfterViewInit, OnDestroy {
         const video = entry.target as HTMLVideoElement;
         if (entry.isIntersecting) {
           if (!video.src) {
-            const src = video.dataset['video'];
-            if (!src) return;
-            video.src = src;
+            const master = video.dataset['video'];
+            if (!master) return;
+            // AV1 where it decodes, 480p on phones and slow links — see pickVideoSource().
+            this.videoCaps ??= detectVideoCapabilities(video);
+            video.src = pickVideoSource(master, this.videoCaps);
           }
           video.muted = true;
           video.play().catch(() => { /* autoplay refused — poster stays */ });
@@ -274,7 +289,7 @@ export class ProjectsComponent implements OnInit, AfterViewInit, OnDestroy {
     this.filmObserver = null;
     this.revealObserver?.disconnect();
     this.revealObserver = null;
-    if (this.expandedAssessmentId !== null) this.unlockBodyScroll();
+    if (this.expandedAssessmentId !== null || this.lightbox) this.unlockBodyScroll();
   }
 
   ngOnInit() {
@@ -357,6 +372,80 @@ export class ProjectsComponent implements OnInit, AfterViewInit, OnDestroy {
 
   viewProject(id: string) {
     this.analytics.trackProjectView(id);
+  }
+
+  // ─── Preview lightbox ───
+  // Every flagship preview opens here, on phones and tablets as well as desktop:
+  // the frames are cropped to fit the scene, so this is where a visitor reads
+  // the full screenshot.
+
+  /** `sizes` for the scene previews: ~600px column on desktop, two-up on tablets, full width on phones. */
+  readonly shotSizes = '(min-width: 1025px) 600px, (min-width: 601px) 46vw, 92vw';
+
+  @ViewChild('shotDialog') private shotDialog?: ElementRef<HTMLDialogElement>;
+  lightbox: ShotLightbox | null = null;
+  private shotTrigger: HTMLElement | null = null;
+  private swipeStart: { x: number; y: number } | null = null;
+  private suppressShotClick = false;
+
+  openShot(project: Project, index: number, event: Event): void {
+    const dialog = this.shotDialog?.nativeElement;
+    if (!dialog || !project.images?.length) return;
+    const meta = this.getSceneMeta(project.id);
+    this.shotTrigger = event.currentTarget as HTMLElement;
+    this.lightbox = { title: project.title, images: project.images, index, accent: meta.accent, accentRgb: meta.accentRgb };
+    this.cdr.detectChanges();
+    this.lockBodyScroll();
+    dialog.showModal();
+  }
+
+  closeShot(): void {
+    this.shotDialog?.nativeElement.close();
+  }
+
+  stepShot(direction: number): void {
+    if (!this.lightbox) return;
+    const total = this.lightbox.images.length;
+    this.lightbox = { ...this.lightbox, index: (this.lightbox.index + direction + total) % total };
+  }
+
+  /** Fires for the close button, Esc and backdrop taps alike, so cleanup lives here. */
+  onShotDialogClose(): void {
+    this.lightbox = null;
+    this.unlockBodyScroll();
+    this.shotTrigger?.focus({ preventScroll: true });
+    this.shotTrigger = null;
+  }
+
+  /** The dialog fills the viewport, so a click that lands on it (not its content) is a backdrop tap. */
+  onShotDialogClick(event: MouseEvent): void {
+    if (this.suppressShotClick) {
+      this.suppressShotClick = false;
+      return;
+    }
+    if (event.target === this.shotDialog?.nativeElement) this.closeShot();
+  }
+
+  onShotKeydown(event: KeyboardEvent): void {
+    if (event.key === 'ArrowRight') this.stepShot(1);
+    else if (event.key === 'ArrowLeft') this.stepShot(-1);
+  }
+
+  onShotPointerDown(event: PointerEvent): void {
+    this.swipeStart = { x: event.clientX, y: event.clientY };
+  }
+
+  /** A horizontal swipe of 50px+ flips between previews and swallows the click that follows it. */
+  onShotPointerUp(event: PointerEvent): void {
+    if (!this.swipeStart) return;
+    const dx = event.clientX - this.swipeStart.x;
+    const dy = event.clientY - this.swipeStart.y;
+    this.swipeStart = null;
+    if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy) * 1.5) {
+      this.suppressShotClick = true;
+      setTimeout(() => (this.suppressShotClick = false));
+      this.stepShot(dx < 0 ? 1 : -1);
+    }
   }
 
   // ─── Assessment expand overlay ───

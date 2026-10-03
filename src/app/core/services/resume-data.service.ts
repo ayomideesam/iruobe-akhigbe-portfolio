@@ -111,7 +111,7 @@ export class ResumeDataService {
 
    getKeyTechnicalAchievements(): string[] {
       return [
-         "🏗️ **Architectural Leadership**: Partnered in technical and product design reviews to shape Zenith Bank's frontend solution (X-PATH, Tax Clearance, Domestic Transfer), and also actively participated in the design and review process of 5 mission-critical banking applications at Globus Bank (Trade Finance, Pay-with-Transfer On POS, Anti-Fraud Management, NRBVN (Non Resident Bank Verification Number), Credit Approval Portal), enabling independent team deployment and reducing inter-team dependencies by 70%.",
+         "🏗️ **Architectural Leadership**: Partnered in technical and product design reviews to shape Zenith Bank's frontend solution (X-PATH, Tax Clearance, Domestic Transfer), and also actively participated in the design and review process of 6 mission-critical banking applications at Globus Bank (Trade Finance Import, Trade Export (NXP), Pay-with-Transfer On POS, Anti-Fraud Management, NRBVN (Non Resident Bank Verification Number), Credit Approval Portal), enabling independent team deployment and reducing inter-team dependencies by 70%.",
 
          "👥 **Team Leadership & Mentoring**: Led and mentored 6+ frontend engineers across multiple projects, establishing code review processes that improved code quality by 35% and team velocity by 45%, resulting in 3 team promotions",
 
@@ -128,17 +128,20 @@ export class ResumeDataService {
             role: "Senior Frontend Engineer - Grade (A.B.O)",
             period: "Jan 2026 — Present",
             location: "Victoria Island",
-            description: "Promoted to Associate Designate grade, leading the architectural evolution of the Credit Approval Process (CAP) platform — Globus Bank's CBN-compliant credit lifecycle automation system covering four facility modules, a two-stage committee governance engine, and full disbursement and deferral workflows across 10+ approval roles.",
+            description: "Promoted to Associate Designate grade, leading the architectural evolution of the Credit Approval Process (CAP) platform — Globus Bank's CBN-compliant credit lifecycle automation system covering four facility modules, a two-stage committee governance engine, and full disbursement and deferral workflows across 10+ approval roles — and, from July 2026, the frontend of the new Globus Trade Export (NXP) platform. Both platforms passed business CAB and roll out to production in October 2026.",
 
             technicalLeadership: [
-               "Collaborated and Lead Designs, architecture and delivery of CAP across its full lifecycle: 190+ standalone Angular 20 components, 26 reusable shared components, 48 services, and 20 lazy-loaded routes — supporting four facility module tracks (Retail, Corporate, Staff Loan, Product Program) and three workflow stages (Facility Approval, Disbursement, Deferral)",
+               "Collaborated and Lead Designs, architecture and delivery of CAP across its full lifecycle: 190+ standalone Angular 20 components, 26 reusable shared components, 48 services, and 20 lazy-loaded routes — designed for four facility module tracks (Retail, Corporate, Staff Loan, Product Program) and three workflow stages (Facility Approval, Disbursement, Deferral), with the Retail module shipping first",
+               "Led frontend delivery of the Globus Trade Export (NXP) platform from its first week (11 July 2026) to business CAB approval: a from-scratch Angular 21 build on the bank's own globuswebcomponents design system, run as a five-branch delivery model (two engineers, three contributors) under a written merge protocol with file-by-file reviews",
                "Drive Angular v19 → v20 migration across the entire codebase, adopting fully signal-based component contracts (input(), output(), viewChild(), linkedSignal(), resource()) and eliminating NgModules — including resolving a critical Vite 6/7 API incompatibility that caused complete dev-server failure blocking the team",
                "Own engineering standards across a two-team parallel development model (AIBranch + EIBranch): authored and maintain ANGULAR-20-STANDARDS.md and the EIBranch Merge Protocol, governing code quality, component contracts, signal graph discipline, and conflict resolution rules for all contributors",
                "Mentor development team on modern Angular patterns — standalone components, @if/@for control flow, inject() dependency injection, and reactive signal architecture — conducting code reviews and establishing quality gates that govern every merge into the working branch"
             ],
 
             achievements: [
-               "Own end-to-end delivery of the Credit Approval Process platform — digitising Globus Bank's complete credit lifecycle from account officer origination through multi-tier business approval, two-stage committee governance (MCC and BCC), and post-approval disbursement and deferral workflows for all retail, corporate, staff, and product program facilities",
+               "Own end-to-end delivery of the Credit Approval Process platform — digitising Globus Bank's complete credit lifecycle from account officer origination through multi-tier business approval, two-stage committee governance (MCC and BCC), and post-approval disbursement and deferral workflows — starting with the Retail module, which passed business CAB for an October 2026 production rollout (the Corporate module is paused at ~10% build since the team moved to Trade Export in July 2026)",
+               "Delivered the Export domain of the Globus Trade Export (NXP) platform end to end — 13 routed pages, 3 data services and 40+ endpoints across NXP applications, the NESS levy payment (a customer-account debit gated on a resolved lookup, an unpaid levy and the SHIPMENT stage), repatriation of export proceeds with a ±10% tolerance band, and cancellation & closure — from first commit to CAB approval in under three months",
+               "Owned CAP's Disbursement workflow end to end: multiple drawdowns per facility validated against the undrawn balance, a four-view By Facility / By Request queue, COO and CPO approval with live loan-booking status, currency-aware screens with SOFR base-rate resolution, VAT-rate and fee calculations, vendor account name verification, and the matching Deferral flows",
                "Implemented two-stage approval committee engine: Stage 1 MCC workflow with configurable online/offline deliberation mode, per-member vote capture, real-time Yes/No vote count compilation, and MD/CEO veto power toggled by admin; Stage 2 BCC workflow for ₦100M+ facilities with board-level majority vote, tied-vote re-trigger, and system-automated disbursement module unlock on approval",
                "Integrated automated background checks at origination: PEP and blacklisted BVN screening via third-party API, CRC/Credit Registry API for live credit score and report retrieval, director-related account flagging, and collateral management notification — all triggered by the system before the request enters the approval chain, replacing manual compliance steps",
                "Delivered a full admin control plane enabling Admin Officers to edit process flows, define approval paths, set facility limits per approver, manage custom form tabs by facility type, configure escalation paths and user notifications, and override insufficient-fund blocks with justification — with all admin actions requiring dual-authorisation approval from the Admin Authorizer role",
@@ -150,6 +153,7 @@ export class ResumeDataService {
                "Encoded the full 10+ role sequential approval chain into Angular routing and UI state: Business Approval Flow (RM → BM → BFGH → ZH → GH), Governance Review Flow (CRM Officer → CRM Approver → E&S → Head Risk Mgt → ED → ED Risk → MD/CEO), and Committee Stage (MCC Secretariat → MCC Members → MD veto → BCC Chairman → BCC Directors) — with lazy-loaded isolated layout shells and role-normalizing auth guard per persona",
                "Designed a two-service section-scoped comment system used across all three workflow stages: CommentContextService (BehaviorSubject tracking section name, RequestEntityType enum — Facility/Disbursement/Deferral — parent tab index, inner section, disbursement ID and index) paired with CommentManagementService (loadAndTransformCommentsBySection() — a single RxJS Observable composition method handling API response normalisation, code 00/01 branching, GbCommentFormat transformation, name extraction from email, and date formatting) consumed by every child section with zero boilerplate duplication",
                "Built full admin control plane for five operator personas (Admin Officer, Admin Authorizer, Profile Manager/Internal Control, Application Manager, Internal Audit Officer) — covering process flow editing, user lifecycle management from Active Directory, approval path configuration, facility type and custom tab management, veto power toggling, and report generation filtered by date, branch, unit, facility type, and status",
+               "Built the Trade Export codebase signals-first on Angular 21 — standalone components with zero NgModules, an NgRx Signal Store for session and roles, httpResource reads and OnPush throughout — migrated its tests from Karma to Vitest (776 passing), held npm audit at 0 across dev and production trees, and maintained 42 documented patches to the bank's design-system package",
                "Applied npm override strategy to pin security-sensitive transitive dependencies (esbuild, ws, postcss, serialize-javascript) with documented InfoSec risk assessment for audit compliance; maintained zero production vulnerabilities across the Angular 20 codebase"
             ]
          },
@@ -161,7 +165,7 @@ export class ResumeDataService {
             description: "Led enterprise application development while establishing engineering excellence and mentoring development teams across mission-critical banking systems serving 100,000+ daily users.",
 
             technicalLeadership: [
-               "Architected three mission-critical enterprise banking applications (Fraud Management, Trade Finance, Credit Approval Portal)",
+               "Architected three mission-critical enterprise banking applications (Fraud Management, Trade Finance — Import, Credit Approval Portal)",
                "Led Angular v16→v19 migrations achieving zero production vulnerabilities & 40% performance improvements",
                "Established technical standards & best practices across frontend development teams",
                "Mentored junior & mid-level developers through code reviews and pair programming"
@@ -170,7 +174,7 @@ export class ResumeDataService {
             achievements: [
                "Delivered real-time Fraud Management System processing all bank transactions, achieving 100% coverage within first week of deployment",
                "Led Angular v16→v19 migration implementing hybrid security architecture, eliminating 11 vulnerabilities to zero",
-               "Delivered Globus Trade Application achieving 100% adoption by trade operations team, reducing processing time by 60%",
+               "Delivered the Globus Trade Application (Import) achieving 100% adoption by trade operations team, reducing processing time by 60%",
                "Architected Credit Approval Portal managing end-to-end credit facility lifecycle with multi-step approval workflows"
             ],
 

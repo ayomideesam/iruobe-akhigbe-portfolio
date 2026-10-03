@@ -569,11 +569,11 @@ h2 {
   gap: 7px;
   font: 700 10px Sora, sans-serif;
   letter-spacing: 0.14em;
-  color: #34d399;
+  color: var(--ok);
   padding: 4px 12px;
   border-radius: 99px;
-  border: 1px solid rgba(52, 211, 153, 0.4);
-  background: rgba(52, 211, 153, 0.10);
+  border: 1px solid rgba(var(--ok-rgb), 0.4);
+  background: rgba(var(--ok-rgb), 0.10);
 }
 .cb-title { margin: 8px 0 10px; font-size: clamp(1.6rem, 3.2vw, 2.4rem); line-height: 1.1; }
 .cb-desc { margin: 0; font: 300 clamp(0.92rem, 1.3vw, 1.04rem) / 1.7 Sora, sans-serif; color: var(--tx2); max-width: 760px; }
@@ -590,7 +590,8 @@ h2 {
   border: 1px solid var(--gbrd);
   box-shadow: 0 1px 0 rgba(255, 255, 255, 0.08) inset;
 }
-.cb-module-active { border-color: rgba(52, 211, 153, 0.35); }
+.cb-module-active { border-color: rgba(var(--ok-rgb), 0.35); }
+.cb-module-paused { border-color: rgba(var(--coffee-rgb), 0.3); }
 .cb-module-head { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px; }
 .cb-module-name { margin: 0; font: 700 1.15rem Outfit, sans-serif; color: var(--tx); }
 .cb-status {
@@ -606,7 +607,13 @@ h2 {
   border: 1px solid var(--gbrd2);
   background: var(--glass);
 }
-.cb-status-active { color: #34d399; border-color: rgba(52, 211, 153, 0.4); background: rgba(52, 211, 153, 0.10); }
+.cb-status-active { color: var(--ok); border-color: rgba(var(--ok-rgb), 0.4); background: rgba(var(--ok-rgb), 0.10); }
+.cb-status-paused { color: var(--coffee); border-color: rgba(var(--coffee-rgb), 0.4); background: rgba(var(--coffee-rgb), 0.10); }
+/* A paused module is not live: solid amber dot, no pulse ring */
+.cb-status-paused .pulse-dot { background: var(--coffee); }
+.cb-status-paused .pulse-dot::after { display: none; }
+.cb-module-paused .cb-progress-fill { background: linear-gradient(90deg, rgba(var(--coffee-rgb), 0.55), var(--coffee)); }
+.cb-module-paused .cb-progress-sheen { display: none; }
 
 .cb-progress-row { display: flex; align-items: center; gap: 12px; }
 .cb-progress-track { flex: 1; height: 7px; border-radius: 99px; background: var(--glass); border: 1px solid var(--gbrd); overflow: hidden; }

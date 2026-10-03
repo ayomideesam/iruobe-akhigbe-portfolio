@@ -49,7 +49,7 @@
             <!-- Seedance 2.0 ambient film layer -->
             <div class="fp-film" aria-hidden="true">
                 <video [attr.data-video]="getSceneMeta(project.id).video"
-                    [poster]="getSceneMeta(project.id).poster"
+                    [attr.poster]="getSceneMeta(project.id).video | media:'poster':getSceneMeta(project.id).poster"
                     muted playsinline loop preload="none" tabindex="-1"></video>
                 <span class="fp-scrim"></span>
                 <span class="fp-grain"></span>
@@ -125,18 +125,50 @@
                 </div>
 
                 <aside class="fp-visuals">
-                    <div class="fp-shot fp-shot-a">
-                        <div class="fp-shot-bar" aria-hidden="true">
-                            <span class="fp-shot-dot"></span>
-                            <span class="fp-shot-dot"></span>
-                            <span class="fp-shot-dot"></span>
-                            <span class="fp-shot-tag">Preview 01</span>
-                        </div>
-                        <img [src]="project.images[0]" width="1280" height="752" [attr.alt]="(project?.title || 'Project') + ' preview 1'"
-                            (mouseenter)="onImageHover($event.target)" (mouseleave)="onImageLeave($event.target)">
-                    </div>
+                    <ng-container *ngTemplateOutlet="shotFrame; context: { $implicit: project, i: 0 }"></ng-container>
 
                     <div class="fp-duo">
+                        @if (project.id === 7) {
+                        <div class="fp-telemetry">
+                            <div class="fp-telemetry-head"><span class="fp-live-dot"></span>Export Chain</div>
+                            <div class="animation-container">
+                                <div class="nxp-chain">
+                                    <div class="nxp-track">
+                                        @for (stage of ['NXP', 'NESS', 'Ship', 'Repat', 'Close']; track stage) {
+                                        <div class="nxp-stage">
+                                            <span class="nxp-node"></span>
+                                            <span class="nxp-stage-label">{{stage}}</span>
+                                        </div>
+                                        }
+                                        <span class="nxp-track-line"></span>
+                                        <div class="nxp-runner"><span class="nxp-crate"></span></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="fp-telemetry">
+                            <div class="fp-telemetry-head"><span class="fp-live-dot"></span>Repatriation Band</div>
+                            <div class="animation-container">
+                                <div class="nxp-band">
+                                    <div class="nxp-band-meta">
+                                        <span>Proceeds vs FOB</span>
+                                        <span class="nxp-band-tag">&plusmn;10%</span>
+                                    </div>
+                                    <div class="nxp-gauge">
+                                        <span class="nxp-gauge-zone"></span>
+                                        <span class="nxp-gauge-fill"></span>
+                                        <span class="nxp-gauge-target"></span>
+                                    </div>
+                                    <span class="nxp-band-ok">Within tolerance</span>
+                                    <div class="nxp-inflows">
+                                        @for (kind of ['Full', 'Partial', 'Advanced']; track kind) {
+                                        <span class="nxp-inflow">{{kind}}</span>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        }
                         @if (project.id === 6) {
                         <div class="fp-telemetry">
                             <div class="fp-telemetry-head"><span class="fp-live-dot"></span>Approval Chain</div>
@@ -422,16 +454,7 @@
                         }
                     </div>
 
-                    <div class="fp-shot fp-shot-b">
-                        <div class="fp-shot-bar" aria-hidden="true">
-                            <span class="fp-shot-dot"></span>
-                            <span class="fp-shot-dot"></span>
-                            <span class="fp-shot-dot"></span>
-                            <span class="fp-shot-tag">Preview 02</span>
-                        </div>
-                        <img [src]="project.images[1]" width="1280" height="752" [alt]="project.title + ' preview 2'"
-                            (mouseenter)="onImageHover($event.target)" (mouseleave)="onImageLeave($event.target)">
-                    </div>
+                    <ng-container *ngTemplateOutlet="shotFrame; context: { $implicit: project, i: 1 }"></ng-container>
                 </aside>
             </div>
 
@@ -455,6 +478,66 @@
         </article>
         }
     </section>
+
+    <!-- One preview frame. The whole frame is a button that opens the lightbox,
+         on touch as well as desktop; the expand glyph is the visible affordance
+         where there is no hover. -->
+    <ng-template #shotFrame let-project let-i="i">
+        <div class="fp-shot" [class.fp-shot-a]="i === 0" [class.fp-shot-b]="i === 1">
+            <div class="fp-shot-bar" aria-hidden="true">
+                <span class="fp-shot-dot"></span>
+                <span class="fp-shot-dot"></span>
+                <span class="fp-shot-dot"></span>
+                <span class="fp-shot-tag">Preview 0{{ i + 1 }}</span>
+                @if (i === 1 && project.images.length > 2) {
+                <span class="fp-shot-more">+{{ project.images.length - 2 }} screens</span>
+                }
+                <span class="fp-shot-expand">
+                    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>
+                </span>
+            </div>
+            <picture>
+                <source type="image/avif" [attr.srcset]="project.images[i] | media:'avif'" [attr.sizes]="shotSizes">
+                <source type="image/webp" [attr.srcset]="project.images[i] | media:'webp'" [attr.sizes]="shotSizes">
+                <img [src]="project.images[i] | media:'src'" width="1280" height="752" loading="lazy" decoding="async"
+                    [alt]="project.title + ' preview ' + (i + 1)">
+            </picture>
+            <button type="button" class="fp-shot-open" (click)="openShot(project, i, $event)"
+                [attr.aria-label]="'Enlarge ' + project.title + ', preview ' + (i + 1) + ' of ' + project.images.length + (i === 1 && project.images.length > 2 ? ' — browse all ' + project.images.length + ' screens' : '')"></button>
+        </div>
+    </ng-template>
+
+    <!-- Preview lightbox. Native <dialog>: showModal() traps focus, makes the page
+         behind inert and closes on Esc; a tap on the dimmed area closes it too. -->
+    <dialog #shotDialog class="shot-lightbox" (close)="onShotDialogClose()" (click)="onShotDialogClick($event)"
+        (keydown)="onShotKeydown($event)" (pointerdown)="onShotPointerDown($event)" (pointerup)="onShotPointerUp($event)"
+        [attr.aria-label]="lightbox ? lightbox.title + ', preview ' + (lightbox.index + 1) + ' of ' + lightbox.images.length : null">
+        @if (lightbox; as lb) {
+        <figure class="shot-lightbox-figure" [style.--fp-acc]="lb.accent" [style.--fp-acc-rgb]="lb.accentRgb">
+            <picture>
+                <source type="image/avif" [attr.srcset]="lb.images[lb.index] | media:'avif'" sizes="(min-width: 1440px) 1340px, 94vw">
+                <source type="image/webp" [attr.srcset]="lb.images[lb.index] | media:'webp'" sizes="(min-width: 1440px) 1340px, 94vw">
+                <img [src]="lb.images[lb.index] | media:'src'" width="1280" height="720" decoding="async"
+                    [alt]="lb.title + ' preview ' + (lb.index + 1)">
+            </picture>
+            <figcaption class="shot-lightbox-caption">
+                <span class="shot-lightbox-title">{{ lb.title }}</span>
+                <span class="shot-lightbox-count">Preview {{ lb.index + 1 }} of {{ lb.images.length }}</span>
+            </figcaption>
+        </figure>
+        <button type="button" class="shot-lightbox-close" (click)="closeShot()" aria-label="Close preview">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+        @if (lb.images.length > 1) {
+        <button type="button" class="shot-lightbox-nav shot-lightbox-prev" (click)="stepShot(-1)" aria-label="Previous preview">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+        </button>
+        <button type="button" class="shot-lightbox-nav shot-lightbox-next" (click)="stepShot(1)" aria-label="Next preview">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+        </button>
+        }
+        }
+    </dialog>
 
     <!-- ═══════════════════════════════════════════════════════════ -->
     <!-- TECHNICAL ASSESSMENTS                                       -->
@@ -512,11 +595,15 @@
                             (click)="expandAssessment(ap.id, $event)"
                             (keydown.enter)="expandAssessment(ap.id, $event)">
                             @if (ap.images?.length) {
-                            <img [src]="ap.images![getImageIndex(ap.id)]" width="1280" height="800"
-                                [alt]="ap.title + ' screenshot ' + (getImageIndex(ap.id) + 1)"
-                                [title]="ap.title"
-                                (mouseenter)="onImageHover($event.target)"
-                                (mouseleave)="onImageLeave($event.target)">
+                            <picture>
+                                <source type="image/avif" [attr.srcset]="ap.images![getImageIndex(ap.id)] | media:'avif'" sizes="(min-width: 1025px) 420px, (min-width: 769px) 46vw, 92vw">
+                                <source type="image/webp" [attr.srcset]="ap.images![getImageIndex(ap.id)] | media:'webp'" sizes="(min-width: 1025px) 420px, (min-width: 769px) 46vw, 92vw">
+                                <img [src]="ap.images![getImageIndex(ap.id)] | media:'src'" width="1280" height="800" loading="lazy" decoding="async"
+                                    [alt]="ap.title + ' screenshot ' + (getImageIndex(ap.id) + 1)"
+                                    [title]="ap.title"
+                                    (mouseenter)="onImageHover($event.target)"
+                                    (mouseleave)="onImageLeave($event.target)">
+                            </picture>
                             } @else {
                             <span class="assessment-shot-empty">Screenshot</span>
                             }
@@ -657,9 +744,13 @@
 
         <div class="assessment-expand-shot">
             @if (ea.images?.length) {
-            <img [src]="ea.images![getImageIndex(ea.id)]" width="1280" height="720"
-                [alt]="ea.title + ' screenshot ' + (getImageIndex(ea.id) + 1)"
-                [title]="ea.title" loading="eager">
+            <picture>
+                <source type="image/avif" [attr.srcset]="ea.images![getImageIndex(ea.id)] | media:'avif'" sizes="(min-width: 1200px) 1100px, 92vw">
+                <source type="image/webp" [attr.srcset]="ea.images![getImageIndex(ea.id)] | media:'webp'" sizes="(min-width: 1200px) 1100px, 92vw">
+                <img [src]="ea.images![getImageIndex(ea.id)] | media:'src'" width="1280" height="720" decoding="async"
+                    [alt]="ea.title + ' screenshot ' + (getImageIndex(ea.id) + 1)"
+                    [title]="ea.title" loading="eager">
+            </picture>
             } @else {
             <span class="assessment-shot-empty">Screenshot</span>
             }
@@ -736,5 +827,12 @@
     </article>
 </div>
 }
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════════ -->
+    <!-- LEARNING IN PUBLIC — FRENCH                                 -->
+    <!-- ═══════════════════════════════════════════════════════════ -->
+    <section class="learning-section">
+        <app-learning-journey variant="panel"></app-learning-journey>
     </section>
 </div>

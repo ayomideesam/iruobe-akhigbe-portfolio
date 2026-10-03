@@ -289,6 +289,7 @@ Name visibility in DOM text is one of the primary signals Google uses to associa
 | Purpose | File |
 |---|---|
 | Dependency vulnerabilities, `npm audit` policy, override log | `docs/NPM-AUDIT.md` |
+| Image/video compression pipeline — run `npm run optimize:media` after adding or replacing any media | `docs/MEDIA.md` |
 
 ---
 

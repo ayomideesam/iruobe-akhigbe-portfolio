@@ -168,7 +168,7 @@
                                 </div>
                             </div>
                             <div class="language-item">
-                                <span class="language-name">French</span>
+                                <span class="language-name">French <span class="language-note">learning since {{ frenchSince }}</span></span>
                                 <div class="language-proficiency">
                                     @for (dot of [1,2,3,4,5]; track dot) {
                                     <div class="proficiency-dot" [class.filled]="dot <= 2.5"></div>
