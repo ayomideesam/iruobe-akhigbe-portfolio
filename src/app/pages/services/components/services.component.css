@@ -235,10 +235,19 @@
   80%  { transform: rotate(7deg) translateY(-3px); }
   100% { transform: rotate(4deg) translateY(-3px); }
 }
+/* The card flips a full turn and lands face up, lifted. It used to stop at 180°,
+   which with backface-visibility: hidden left only the hidden back face showing —
+   the Payments icon vanished for as long as the card was hovered. */
 @keyframes moFlip {
-  0%   { transform: perspective(340px) rotateY(0); }
-  100% { transform: perspective(340px) rotateY(180deg); }
+  0%   { transform: perspective(340px) translateY(0) rotateY(0); }
+  70%  { transform: perspective(340px) translateY(-6px) rotateY(380deg); }
+  100% { transform: perspective(340px) translateY(-4px) rotateY(360deg); }
 }
+/* …and stays visible while edge-on and mid-turn, instead of blinking out */
+.diff-icon.mo-flip,
+.svc-icon.mo-flip,
+.ind-icon.mo-flip,
+.eng-icon.mo-flip { backface-visibility: visible; }
 @keyframes moToss {
   0%   { transform: translateY(0) rotate(0); }
   40%  { transform: translateY(-14px) rotate(-16deg); }

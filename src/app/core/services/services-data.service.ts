@@ -121,7 +121,7 @@ export class ServicesDataService {
                'MCP integrations wired in: Figma, Playwright, Higgsfield and custom servers for your internal APIs',
                'Team onboarding so every engineer gets identical output quality from the same tooling'
             ],
-            proof: 'The exact system currently governing two parallel development teams on a CBN-regulated trade finance platform.',
+            proof: 'The exact system that governed two parallel development teams on a CBN-regulated trade finance platform, through to business CAB approval.',
             icon: `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.9 4.6L18.5 9.5l-4.6 1.9L12 16l-1.9-4.6L5.5 9.5l4.6-1.9L12 3z"></path><path d="M18 15l.9 2.1L21 18l-2.1.9L18 21l-.9-2.1L15 18l2.1-.9L18 15z"></path><path d="M5.5 14.5l.6 1.4 1.4.6-1.4.6-.6 1.4-.6-1.4L3.5 16.5l1.4-.6.6-1.4z"></path></svg>`,
             accent: '#a78bfa', accentRgb: '167, 139, 250',
             featured: true
