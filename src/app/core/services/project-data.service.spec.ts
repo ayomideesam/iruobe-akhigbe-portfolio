@@ -59,6 +59,13 @@ describe('ProjectDataService', () => {
          }
       });
 
+      it('should not reintroduce figures that could not be backed (2026-10-05 clean-up)', () => {
+         const text = JSON.stringify(service.getProjects());
+         for (const banned of ['Angular Universal', '99.9%', '10,000+', '8 Middle Eastern', '90%+', 'by 60%', 'by 65%', 'average of 50%', 'NestJS', 'zero post-launch', '11 vulnerability']) {
+            expect(text, banned).not.toContain(banned);
+         }
+      });
+
       it('should quote the Zenith sprint figures from the PMO slides (19% → 69%), never 85%', () => {
          const text = JSON.stringify(service.getProjects());
          expect(text).not.toMatch(/19% to 85|19→85/);

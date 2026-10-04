@@ -206,7 +206,7 @@ export class ServicesDataService {
                'Authentication, rate limiting, refresh-token handling and centralised error handling',
                'AWS deployment with CI/CD pipelines so releases stop being an event'
             ],
-            proof: 'A NestJS platform serving 100,000+ concurrent users at 99.9% uptime with zero auth-related incidents.',
+            proof: '40+ endpoints integrated contract-first with two senior backend engineers on Trade Export — the API discipline behind every platform here.',
             icon: `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="5.5" rx="8" ry="3"></ellipse><path d="M4 5.5v13c0 1.7 3.6 3 8 3s8-1.3 8-3v-13"></path><path d="M4 12c0 1.7 3.6 3 8 3s8-1.3 8-3"></path></svg>`,
             accent: '#f472b6', accentRgb: '244, 114, 182'
          },
@@ -234,7 +234,7 @@ export class ServicesDataService {
                'Security vulnerability elimination and dependency remediation',
                'Performance rescue — bundle analysis, lazy loading and load-time reduction'
             ],
-            proof: 'Led Angular v16→v19 and v19→v22 migrations taking 11 known vulnerabilities to zero, with 40% performance gains.',
+            proof: 'Led Angular upgrades on three production codebases — Trade Import v16 → v19, CAP v19 → v20 and this portfolio v20 → v22 — each ending with zero production vulnerabilities.',
             icon: `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a4 4 0 0 1 5 5L9 22l-5-5z"></path><path d="M16 8l-9 9"></path><path d="M4.5 9.5L2 7l3-3 2.5 2.5"></path></svg>`,
             accent: '#fb923c', accentRgb: '251, 146, 60'
          },

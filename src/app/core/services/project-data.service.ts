@@ -202,8 +202,8 @@ export class ProjectDataService {
             achievements: [
                'Achieved 100% transaction coverage within the first week of production deployment — all inbound and outbound bank transactions monitored against 14 weighted rules covering customer-behaviour signals (SIM swap, PIN & device changes, account age) and transaction attributes (velocity, amount, time, location, failed attempts, high-risk IPs, watch-listed BVNs)',
                'Reduced fraudulent transaction incidents by 45% in the first 90 days post-deployment through automatic PND/lien restrictions on flagged accounts and a structured maker-checker case review',
-               'Designed the analytics dashboard — inflow vs outflow trends, channel analysis, monthly totals by status, per-transaction risk scores with the rules that fired, and a triage queue — enabling fraud ops to action flagged transactions in minutes vs. hours',
-               'Built a hybrid security architecture separating sensitive fraud rule configuration into in-memory storage while managing auth tokens in sessionStorage — eliminating 11 vulnerability findings to zero production vulnerabilities',
+               'Designed the analytics dashboard — inflow vs outflow trends, channel analysis, monthly totals by status, per-transaction risk scores with the rules that fired, and a triage queue for fraud operations',
+               'Built a hybrid security architecture separating sensitive fraud rule configuration into in-memory storage while managing auth tokens in sessionStorage, with zero vulnerabilities in the production build',
                'Built the maker-checker review: the initiator calls the customer back and grades each answer Pass or Fail, then waives the transaction or confirms fraud; the authorizer approves or returns in bulk, lifting or sustaining the restriction; and every rule-matrix change goes through the same initiate, authorize or recall review with a before-and-after diff'
             ],
             codebase: ['30 components', '24 services', 'NGXS', 'AG Charts'],
@@ -264,10 +264,10 @@ export class ProjectDataService {
             ],
             achievements: [
                'Achieved 100% adoption by the full trade operations team within 6 months — the first digital replacement of a fully paper-based CBN-regulated trade finance process at Globus Bank',
-               'Reduced trade document processing time by 60% through multi-step workflow automation and inline compliance gates — an FX-validity check before any document is added, and a 13-document LC-requirements checklist (originals and copies) for every shipment',
+               'Replaced paper-based document handling with multi-step workflow automation and inline compliance gates — an FX-validity check before any document is added, and a 13-document LC-requirements checklist (originals and copies) for every shipment',
                'Designed role-based access control for the maker-checker model — Initiator, Approver/Authorizer and Viewer — gating every action (adding documents, amendments, release requests, charge setup, concessions) on the signed-in role',
                'Integrated the Form M, document, amendment-fee, concession and file-storage APIs — 5 MB-capped uploads of shipping documents, ECDs and PAARs, Excel report export, and full error-state and retry handling',
-               'Successfully completed UAT and deployed to production ahead of CBN-mandated regulatory deadline — zero post-launch critical defects'
+               'Took the platform through UAT and into production as its sole frontend engineer — 161 of the repository\'s 162 commits — and later upgraded it from Angular 16 to 19 one major at a time'
             ],
             codebase: ['Angular 19', '35 components', '33 services', 'NGXS'],
             engineering: [
@@ -304,7 +304,7 @@ export class ProjectDataService {
                { value: '4', label: 'Document Types' },
                { value: '13', label: 'LC Checklist Docs' },
                { value: '100%', label: 'Adoption at Launch' },
-               { value: '60%', label: 'Faster Processing' }
+               { value: '16→19', label: 'Angular Upgrade' }
             ],
             pipelineLabel: 'Form M Journey',
             pipeline: [
@@ -318,22 +318,22 @@ export class ProjectDataService {
          {
             id: 1,
             title: 'COSTAFF AI Digital Worker Platform',
-            description: 'Akhigbe Iruobe architected a full-stack AI productivity suite for enterprise clients, integrating Gmail, Google Calendar, and OpenAI APIs into a unified Angular 16 platform that automates email, scheduling, invoicing, and document workflows.',
+            description: 'Akhigbe Iruobe led the Angular frontend of COSTAFF, an AI productivity suite for enterprise clients across the Middle East — integrating Gmail, Google Calendar and OpenAI into one Angular 16 platform that automates email, scheduling, invoicing and document workflows, with a team of 6 frontend developers.',
             techStack: [
                { name: 'Angular 16', color: '#DD0031' },
                { name: 'TypeScript', color: '#3178C6' },
                { name: 'NGXS', color: '#BA2BD2' },
                { name: 'RxJS', color: '#B7178C' },
-               { name: 'NestJS', color: '#E0234E' },
+               { name: 'OpenAI', color: '#10A37F' },
                { name: 'HTML5 | CSS3', color: '#339933' }
             ],
             achievements: [
-               'Reduced calendar management time by 85% via AI-powered event creation, Google Calendar API integration, & timezone-aware scheduling across 8 Middle Eastern markets',
-               'Delivered Gmail-integrated email module with ML-powered categorisation & AI reply generation, processing high-volume inboxes with sub-second load times through RxJS stream optimisation',
-               'Automated invoice generation pipeline handling 10,000+ invoices monthly at 99.9% accuracy — replacing a fully manual finance workflow',
-               'Reduced client operational costs by an average of 50% by automating task assignment, booking management, document handling, and inventory tracking across a single unified platform',
-               'Achieved 99.9% uptime through NestJS rate-limiting (100 req/sec), JWT refresh interceptor, & centralised error handling — with zero auth-related production incidents',
-               'Cut application load time by 65% via lazy-loaded feature modules across 8 domains, OnPush change detection, & production bundle optimisation enforcing a 2 MB size budget'
+               'Cut calendar-management time by 85% for client teams with AI-powered event creation, Google Calendar integration and time-zone-aware scheduling',
+               'Delivered the Gmail-integrated email module: email categories, thread summaries and AI-drafted replies, kept responsive on large inboxes through RxJS stream composition',
+               'Built invoice generation into the financials module, replacing a fully manual billing workflow',
+               'Brought tasks, bookings, documents, invoicing and analytics into one platform per client team',
+               'Hardened the client with a JWT refresh interceptor and centralised error handling',
+               'Lazy-loaded feature modules across 8 product areas, OnPush change detection, and a 2 MB production bundle budget enforced by the build'
             ],
             codebase: ['Angular 16', '59 components', '8 lazy product areas', 'NGXS'],
             engineering: [
@@ -366,17 +366,17 @@ export class ProjectDataService {
             ],
             isHovered: false,
             stats: [
-               { value: '85%', label: 'Time Saved on Workflows' },
-               { value: '10K+', label: 'Invoices / Month' },
-               { value: '8', label: 'Markets Supported' },
-               { value: '99.9%', label: 'Accuracy Rate' }
+               { value: '85%', label: 'Calendar Time Saved' },
+               { value: '8', label: 'Product Areas' },
+               { value: '3', label: 'AI Integrations' },
+               { value: '6', label: 'Frontend Devs Led' }
             ],
             pipelineLabel: 'Platform Workflow',
             pipeline: [
                { name: 'Gmail Module', meta: 'Email ingestion · AI classification · auto-reply drafting' },
                { name: 'Calendar Sync', meta: 'Google Calendar integration · timezone-aware scheduling' },
-               { name: 'Invoice Engine', meta: 'Auto-generation · client billing · PDF export' },
-               { name: 'Document Processing', meta: 'OCR extraction · data validation · filing' },
+               { name: 'Invoice Engine', meta: 'Invoice generation · client billing' },
+               { name: 'Documents', meta: 'Upload · organise · share across the team' },
                { name: 'AI Assistant', meta: 'OpenAI-powered queries across all workspace data' }
             ]
          },
@@ -392,11 +392,11 @@ export class ProjectDataService {
                { name: 'HTML5 | CSS3', color: '#339933' }
             ],
             achievements: [
-               'Processed hundreds of billions in transactions within the first week of ProjectTiger deployment — zero downtime during live cutover from the legacy transfer system serving 350 branches',
-               'Reduced transaction processing time by 70% through streamlined multi-role transfer workflows, real-time beneficiary validation, and automated debit confirmation with instant receipt generation',
-               'Built reusable component library covering all three transfer types (NIP, NEFT, NAPS) with shared validation services, configurable limit-check logic, and beneficiary management — reducing parallel feature development time by 60%',
-               'Achieved 90%+ positive user feedback score from teller and operations staff in the post-launch satisfaction survey',
-               'Architected role-gated transfer flows (Teller, Supervisor, Authorizer) with Angular route guards and configurable per-role transaction limit policies enforced at both UI and API intercept layers'
+               'Processed ₦100B+ in its first week live, with zero downtime during the cutover from the legacy transfer system across 350 branches',
+               'Built the teller payment flow: sender balance and overdraft checks, name enquiry with the beneficiary\'s KYC level, teller limits, and a HOP approval queue that escalates to the zonal head when a transfer exceeds the limit',
+               'Shared building blocks across the original three rails (NIP, NEFT, NAPS) — validation services, configurable limit checks and beneficiary management — reused by every transfer type',
+               'Role-gated flows for Teller, HOP and Zonal Head with Angular route guards and per-role transaction limits',
+               'Later extended the platform across every rail, inward and outward — NIP, NEFT, NAPS and PAPSS — with NAPS direct credits, clearing sessions and a Transaction 360 global search (see Under the hood)'
             ],
             codebase: ['135 components', '41 services', '36 routed modules', 'NIP · NEFT · NAPS · PAPSS'],
             engineering: [
@@ -432,9 +432,9 @@ export class ProjectDataService {
             isHovered: false,
             stats: [
                { value: '₦100B+', label: 'Processed Week 1' },
-               { value: '70%', label: 'Faster Processing' },
-               { value: '99.9%', label: 'Uptime' },
-               { value: '90%+', label: 'User Satisfaction' }
+               { value: '4', label: 'Payment Rails' },
+               { value: '350', label: 'Branches' },
+               { value: 'Zero', label: 'Downtime at Cutover' }
             ],
             pipelineLabel: 'Transfer Flow',
             pipeline: [
@@ -452,16 +452,15 @@ export class ProjectDataService {
             techStack: [
                { name: 'Angular', color: '#DD0031' },
                { name: 'TypeScript', color: '#3178C6' },
-               { name: 'Angular Universal', color: '#B7178C' },
+               { name: 'SignalR', color: '#512BD4' },
                { name: 'Jenkins CI/CD', color: '#D33833' },
                { name: 'HTML5 | CSS3', color: '#339933' }
             ],
             achievements: [
-               'Reduced merchant onboarding time by 70% through a dynamic integration platform with self-service ERP configuration and automated connectivity — eliminating manual setup that previously took days',
-               'Connected with client Enterprise Resource Planning (ERP) systems at 350 branches — payment events automatically updated client records at point-of-sale with zero manual reconciliation required',
+               'Reduced merchant onboarding time by 70% through a dynamic integration platform with self-service ERP configuration and automated connectivity, replacing manual merchant setup',
+               'Connected with client Enterprise Resource Planning (ERP) systems at 350 branches — payment events update the merchant\'s records at the point of collection, without manual re-keying',
                'Akhigbe Iruobe was named Sprint Champion — the Zenith PMO\'s highest achiever — in back-to-back sprints in March 2023; in Sprint 4 the team\'s velocity rose from 8 to 28 story points and its completion rate from 19% to 69%',
-               'Architected three independently deployable Angular micro-frontend applications (Admin portal, Teller interface, Data-Store reporting) with separate build pipelines and isolated routing domains via Jenkins CI/CD',
-               'Implemented Angular Universal SSR improving initial page load by 40% and SEO performance by 60% — critical for the publicly-accessible merchant-facing portal'
+               'Three independently deployable Angular apps (Admin portal, Teller interface, Data-Store reporting) with separate build pipelines in Jenkins CI/CD and live transaction status over SignalR'
             ],
             codebase: ['Angular 14', '55 components', 'NGXS', 'SignalR'],
             engineering: [
@@ -496,17 +495,17 @@ export class ProjectDataService {
             isHovered: false,
             stats: [
                { value: '19→69%', label: 'Sprint Completion' },
-               { value: '180+', label: 'Merchants Onboarded' },
-               { value: '15+', label: 'API Integrations' },
+               { value: '350', label: 'Branches' },
+               { value: '3', label: 'Apps' },
                { value: '70%', label: 'Faster Onboarding' }
             ],
             pipelineLabel: 'Collection Workflow',
             pipeline: [
                { name: 'Merchant Onboarding', meta: 'Self-service ERP config · automated connectivity' },
                { name: 'Collection Setup', meta: 'Branch assignment · product mapping · fee config' },
-               { name: 'Transaction Routing', meta: 'Multi-bank switching · split-payment logic' },
+               { name: 'Payment Capture', meta: 'Cash · cheque · transfer · POS · amount match' },
                { name: 'Reconciliation', meta: 'Auto-match payment events to ERP records' },
-               { name: 'ERP Export', meta: 'Real-time data sync · zero manual reconciliation' }
+               { name: 'ERP Sync', meta: 'Payment events posted to the merchant\'s records' }
             ]
          },
          // Add more projects...
