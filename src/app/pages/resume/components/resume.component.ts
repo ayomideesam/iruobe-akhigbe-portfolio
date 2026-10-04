@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterViewInit, ElementRef, HostListener, inject, DestroyRef } from '@angular/core';
+import { Component, OnInit, AfterViewInit, ElementRef, HostListener, inject, DestroyRef, ChangeDetectionStrategy } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
 import { filter } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -44,6 +44,7 @@ interface Reference {
     selector: 'app-resume',
     templateUrl: './resume.component.html',
     styleUrls: ['./resume.component.css'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 

@@ -1,5 +1,5 @@
 // components/project-card/project-card.component.ts
-import { Component, HostListener, input, signal } from '@angular/core';
+import { Component, HostListener, input, signal, ChangeDetectionStrategy } from '@angular/core';
 import { trigger, state, style, animate, transition } from '@angular/animations';
 
 interface TechStack {
@@ -109,6 +109,7 @@ interface ProjectMetric {
             ])
         ])
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class ProjectCardComponent {

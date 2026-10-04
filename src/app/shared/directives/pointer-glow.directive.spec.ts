@@ -1,9 +1,10 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { PointerGlowDirective } from './pointer-glow.directive';
 
 @Component({
   template: `<div appPointerGlow class="card" style="width:200px;height:100px"></div>`,
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false
 })
 class HostComponent { }

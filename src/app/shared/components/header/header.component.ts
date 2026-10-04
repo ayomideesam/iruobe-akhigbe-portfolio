@@ -1,6 +1,7 @@
 import {
   AfterViewInit, Component, DestroyRef, ElementRef, HostListener,
-  OnInit, computed, inject, signal
+  OnInit, computed, inject, signal,
+  ChangeDetectionStrategy
 } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
 import { interval } from 'rxjs';
@@ -166,6 +167,7 @@ interface HdrTier {
     }
   `,
   styleUrls: ['./header.component.css'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false
 })
 export class HeaderComponent implements OnInit, AfterViewInit {

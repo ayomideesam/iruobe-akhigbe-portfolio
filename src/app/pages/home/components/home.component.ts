@@ -1,7 +1,8 @@
 // pages/home/home.component.ts — Home v2 redesign
 import {
   AfterViewInit, Component, DestroyRef, ElementRef, HostListener,
-  OnInit, ViewChild, inject, signal
+  OnInit, ViewChild, inject, signal,
+  ChangeDetectionStrategy
 } from '@angular/core';
 import { Router } from '@angular/router';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
@@ -70,6 +71,7 @@ interface Module {
   selector: 'app-home',
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false
 })
 export class HomeComponent implements OnInit, AfterViewInit {

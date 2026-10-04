@@ -1,5 +1,5 @@
 // contact.component.ts
-import { Component, ElementRef, OnInit, ViewChild, inject, signal } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild, inject, signal, ChangeDetectionStrategy } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { trigger, state, style, animate, transition, query } from '@angular/animations';
 import { IconService } from 'src/app/core/services/icon.service';
@@ -112,6 +112,7 @@ interface ContactMethod {
     host: {
         '(mousemove)': 'onMouseMove($event)'
     },
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 

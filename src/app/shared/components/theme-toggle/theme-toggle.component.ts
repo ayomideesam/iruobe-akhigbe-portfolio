@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
 import { ThemeService } from 'src/app/core/services/theme.service';
 import { trigger, state, style, animate, transition } from '@angular/animations';
 
@@ -37,6 +37,7 @@ import { trigger, state, style, animate, transition } from '@angular/animations'
       transition('light <=> dark', [animate('1s cubic-bezier(0.4, 0, 0.2, 1)')])
     ])
   ],
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false
 })
 export class ThemeToggleComponent {

@@ -1,5 +1,5 @@
 // components/company-scroller/company-scroller.component.ts
-import { ChangeDetectorRef, Component, DestroyRef, OnInit, inject } from '@angular/core';
+import { ChangeDetectorRef, Component, DestroyRef, OnInit, inject, ChangeDetectionStrategy } from '@angular/core';
 import { trigger, state, style, animate, transition } from '@angular/animations';
 
 interface Company {
@@ -67,6 +67,7 @@ interface Company {
             ])
         ])
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class CompanyScrollerComponent implements OnInit {

@@ -1,4 +1,4 @@
-import { Component, HostListener, OnInit, AfterViewInit, OnDestroy, NgZone, inject, ViewChild, ElementRef, ChangeDetectorRef } from '@angular/core';
+import { Component, HostListener, OnInit, AfterViewInit, OnDestroy, NgZone, inject, ViewChild, ElementRef, ChangeDetectorRef, ChangeDetectionStrategy } from '@angular/core';
 import { trigger, state, style, animate, transition } from '@angular/animations';
 import { Router } from '@angular/router';
 import { SeoService } from 'src/app/core/services/seo.service';
@@ -83,6 +83,7 @@ interface SceneMeta {
     host: {
         '(mousemove)': 'onMouseMove($event)'
     },
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 

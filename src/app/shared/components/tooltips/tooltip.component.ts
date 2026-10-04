@@ -1,4 +1,4 @@
-import { Component, input, inject } from '@angular/core';
+import { Component, input, inject, ChangeDetectionStrategy } from '@angular/core';
 import { ThemeService } from 'src/app/core/services/theme.service';
 
 @Component({
@@ -9,6 +9,7 @@ import { ThemeService } from 'src/app/core/services/theme.service';
     </div>
   `,
   styleUrls: ['../../../styles/tooltip.css'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false
 })
 export class ToolTipComponent {

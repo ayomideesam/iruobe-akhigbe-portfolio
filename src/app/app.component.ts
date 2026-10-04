@@ -1,5 +1,5 @@
 // app.component.ts — Home v2: ambient canvas background + theme host
-import { AfterViewInit, Component, DestroyRef, ElementRef, NgZone, ViewChild, inject } from '@angular/core';
+import { AfterViewInit, Component, DestroyRef, ElementRef, NgZone, ViewChild, inject, ChangeDetectionStrategy } from '@angular/core';
 import { ThemeService } from './core/services/theme.service';
 import { LoadingService } from './core/services/loading.service';
 
@@ -179,6 +179,7 @@ interface CanvasStar {
       .whatsapp-float { bottom: 16px; right: 16px; width: 48px; height: 48px; }
     }
   `],
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false
 })
 export class AppComponent implements AfterViewInit {
