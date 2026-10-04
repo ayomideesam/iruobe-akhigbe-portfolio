@@ -239,12 +239,21 @@ export class HomeComponent implements OnInit, AfterViewInit {
     this.runSwap(index, mode);
   }
 
-  /** Opens a docked project in the slot that has gone longest unchanged
-   *  (ties go right, so the lead project is the last to be replaced). */
-  restoreProject(key: ProjectKey): void {
+  /** The slot a docked project opens into: the one that has gone longest
+   *  unchanged (ties go right, so the lead project is the last replaced). */
+  private stalestSlot(): number {
     let slot = 0;
     this.slotStamps.forEach((stamp, i) => { if (stamp <= this.slotStamps[slot]) slot = i; });
-    this.runSwap(slot, 'minimise', key);
+    return slot;
+  }
+
+  /** The window a dock click will replace — named in the dock tooltips. */
+  get restoreTarget(): ProjectDef {
+    return this.projectPool[this.visKeys()[this.stalestSlot()]];
+  }
+
+  restoreProject(key: ProjectKey): void {
+    this.runSwap(this.stalestSlot(), 'minimise', key);
   }
 
   private runSwap(index: number, mode: SwapMode, incoming?: ProjectKey): void {

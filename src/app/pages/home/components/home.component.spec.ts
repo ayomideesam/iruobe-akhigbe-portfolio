@@ -54,6 +54,7 @@ describe('HomeComponent', () => {
     });
 
     it('opens a docked project in the stalest slot, rightmost first, and docks the window it replaces in place', () => {
+      expect(component.restoreTarget.key).toBe('fms'); // what the dock tooltip promises
       component.restoreProject('xpath');
       vi.runAllTimers();
       expect(visible()).toEqual(['nxp', 'cap', 'xpath']);
@@ -62,6 +63,7 @@ describe('HomeComponent', () => {
       component.restoreProject('tiger');
       vi.runAllTimers();
       expect(visible()).toEqual(['nxp', 'tiger', 'xpath']);
+      expect(component.restoreTarget.key).toBe('nxp');
 
       component.restoreProject('costaff');
       vi.runAllTimers();
