@@ -10,12 +10,22 @@ interface ProjectPipelineStep {
    meta: string;
 }
 
+/** A group of engineering detail for the "Under the hood" panel. */
+interface EngineeringNote {
+   area: string;
+   points: string[];
+}
+
 interface Project {
    id: number;
    title: string;
    description: string;
    techStack: { name: string; color: string; }[];
    achievements: string[];
+   /** Codebase facts counted from the repository (components, services, tests). */
+   codebase?: string[];
+   /** The depth the CV no longer carries: architecture, engineering, delivery. */
+   engineering?: EngineeringNote[];
    isHovered?: boolean;
    images?: any;
    stats?: ProjectStat[];
@@ -67,6 +77,30 @@ export class ProjectDataService {
                'Ran security & quality as a standing practice: npm audit at 0 vulnerabilities across dev & production trees, a full application security audit with an OWASP Top 10 self-review, strict CSP & HSTS headers, session-scoped tokens attached only to the API origin, & 776 passing Vitest tests after migrating the suite off Karma',
                'Ran the frontend\'s delivery discipline with the second frontend engineer: a written merge protocol with file-by-file reviews for every integration, a 40+ entry footgun log, & 42 documented patches to the bank\'s design-system package — the build refuses to start against an unpatched tree'
             ],
+            codebase: ['Angular 21', '87 components', '776 Vitest tests', '4,100+ lines of written standards'],
+            engineering: [
+               {
+                  area: 'Architecture',
+                  points: [
+                     'Feature folders per export domain (NXP, NESS, repatriation, cancellation and closure) on a core / shared / layout split, with a written rule for when state stays as plain signals and when it earns an NgRx Signal Store.',
+                     'One modal system — a ModalShellComponent and its variants — so every decision, upload and confirmation dialog shares focus handling, layout and keyboard behaviour.'
+                  ]
+               },
+               {
+                  area: 'Quality & security',
+                  points: [
+                     'Tests run in jsdom through @angular/build with v8 coverage; a verify skill boots a fake authenticated session and mocks the backend with Playwright route interception, so any screen can be driven and screenshotted without a live API.',
+                     'Dependency hygiene is policy, not a one-off: a living NPM-AUDIT.md, narrow in-major overrides, and npm audit held at 0 across dev and production trees.'
+                  ]
+               },
+               {
+                  area: 'AI-augmented delivery',
+                  points: [
+                     'CLAUDE.md routes Claude Code (Opus 5.5 and Fable 5.1) to the standard that governs each question before it writes a line: ANGULAR-STANDARDS.md (1,914 lines), ARCHITECTURE.md, SECURITY.md, BRANCH-MERGE-PROTOCOL.md (604 lines) and NPM-AUDIT.md.',
+                     'Every non-obvious Angular or design-system trap goes into a Known Footguns log the day it bites (40+ entries), so neither the team nor the agent relearns it.'
+                  ]
+               }
+            ],
             images: [
                '/assets/img/nxp-overview.png',
                '/assets/img/nxp-applications.png',
@@ -107,6 +141,29 @@ export class ProjectDataService {
                'Built the origination background-check screens: AML screening against the PEP, Sanction & AMC lists with per-field fuzzy-match scores (name, date of birth, BVN, email, country), credit-bureau reports from FirstCentral, CreditRegistry & CBN CRMS (Performing → Lost, reports older than 3 months dropped), director- & group-related flags, & the single-obligor-limit impact on proposed exposure — all before the request enters the approval chain',
                'Designed a section-scoped comment system operating across all three workflow stages (Facility, Disbursement, Deferral): CommentContextService tracks active section name, RequestEntityType, parent tab, inner section, disbursement ID, & disbursement index via RxJS BehaviorSubject; CommentManagementService exposes a single loadAndTransformCommentsBySection() Observable consumed by every child component — eliminating comment-loading boilerplate across 230+ components',
                'Built, with the second frontend engineer, 230+ fully standalone Angular 20 comps & 26 shared reusable comps with signal-based contracts (input(), output(), linkedSignal(), resource()) & zero NgModules; led Angular 19 → 20 migration resolving Vite 6/7 API incompatibility that caused complete dev-server failure, & cleared all 40 npm audit findings (2 high) ahead of CAB'
+            ],
+            codebase: ['Angular 20', '239 components', '50 services', '275 spec files'],
+            engineering: [
+               {
+                  area: 'Architecture',
+                  points: [
+                     'Each desk gets its own lazy-loaded layout shell behind a role-normalising auth guard, so 15 personas share one codebase without seeing each other\'s screens.',
+                     'Comment loading is a single RxJS composition: CommentManagementService normalises the API envelope, branches on response codes 00 and 01, maps to the design system\'s comment format and derives display names from emails — for every section of all three workflow stages.'
+                  ]
+               },
+               {
+                  area: 'Migration & tooling',
+                  points: [
+                     'Angular 19 → 20 onto fully signal-based contracts; fixed the Vite 7 API break that had stopped the team\'s dev server, cleared 83 compiler warnings, and wrote a Python script that added the -webkit-backdrop-filter prefix across 202 CSS and HTML files.',
+                     'Security-sensitive transitive dependencies (esbuild, ws, postcss, serialize-javascript) pinned with narrow npm overrides, each backed by a written InfoSec risk assessment.'
+                  ]
+               },
+               {
+                  area: 'Delivery',
+                  points: [
+                     'A two-branch workflow (AIBranch and EIBranch) with written Angular standards and a merge protocol that every integration follows; every merge into the working branch reviewed.'
+                  ]
+               }
             ],
             images: [
                '/assets/img/cap-dashboard.png',
@@ -149,6 +206,28 @@ export class ProjectDataService {
                'Built a hybrid security architecture separating sensitive fraud rule configuration into in-memory storage while managing auth tokens in sessionStorage — eliminating 11 vulnerability findings to zero production vulnerabilities',
                'Built the maker-checker review: the initiator calls the customer back and grades each answer Pass or Fail, then waives the transaction or confirms fraud; the authorizer approves or returns in bulk, lifting or sustaining the restriction; and every rule-matrix change goes through the same initiate, authorize or recall review with a before-and-after diff'
             ],
+            codebase: ['30 components', '24 services', 'NGXS', 'AG Charts'],
+            engineering: [
+               {
+                  area: 'Ownership',
+                  points: [
+                     'Sole frontend engineer from the first commit to production: every one of the repository\'s 112 commits.'
+                  ]
+               },
+               {
+                  area: 'Architecture',
+                  points: [
+                     'NGXS store with the storage plugin for session state; sensitive rule configuration is kept in memory and only auth tokens live in sessionStorage.',
+                     'Changes to the rule matrix go through the same maker-checker approval as flagged transactions, so no single officer can quietly weaken detection.'
+                  ]
+               },
+               {
+                  area: 'Analytics',
+                  points: [
+                     'AG Charts dashboards for inflow vs outflow trends, channel analysis and monthly totals by status, and per-transaction risk scores that list exactly which weighted rules fired.'
+                  ]
+               }
+            ],
             images: [
                '/assets/img/fraud-live-dashboard.png',
                '/assets/img/fraud-flagged-transactions.png',
@@ -189,6 +268,29 @@ export class ProjectDataService {
                'Designed role-based access control for the maker-checker model — Initiator, Approver/Authorizer and Viewer — gating every action (adding documents, amendments, release requests, charge setup, concessions) on the signed-in role',
                'Integrated the Form M, document, amendment-fee, concession and file-storage APIs — 5 MB-capped uploads of shipping documents, ECDs and PAARs, Excel report export, and full error-state and retry handling',
                'Successfully completed UAT and deployed to production ahead of CBN-mandated regulatory deadline — zero post-launch critical defects'
+            ],
+            codebase: ['Angular 19', '35 components', '33 services', 'NGXS'],
+            engineering: [
+               {
+                  area: 'Ownership',
+                  points: [
+                     'Sole frontend engineer: 161 of the repository\'s 162 commits.'
+                  ]
+               },
+               {
+                  area: 'Engineering',
+                  points: [
+                     'Centralised every upload in a DocumentUploadService with Observable progress streams, removing about 450 lines of duplicated upload code from the import workflow.',
+                     'ECD documents are tracked and filtered by bill-of-lading reference and cleared automatically after a successful submission, so each partial shipment only ever shows its own declarations.'
+                  ]
+               },
+               {
+                  area: 'Upgrades & security',
+                  points: [
+                     'Upgraded Angular 16 → 17 → 18 → 19 one major at a time, with every step documented and a production security report showing zero vulnerabilities in the production bundle.',
+                     'Session hardening: sensitive data kept in memory, only auth tokens in sessionStorage.'
+                  ]
+               }
             ],
             images: [
                '/assets/img/gta-home.png',
@@ -233,6 +335,28 @@ export class ProjectDataService {
                'Achieved 99.9% uptime through NestJS rate-limiting (100 req/sec), JWT refresh interceptor, & centralised error handling — with zero auth-related production incidents',
                'Cut application load time by 65% via lazy-loaded feature modules across 8 domains, OnPush change detection, & production bundle optimisation enforcing a 2 MB size budget'
             ],
+            codebase: ['Angular 16', '59 components', '8 lazy product areas', 'NGXS'],
+            engineering: [
+               {
+                  area: 'Product surface',
+                  points: [
+                     'Eight lazy-loaded product areas — home, email, calendar, tasks, bookings, documents, financials and analytics — plus onboarding, account recovery and transactional email templates (welcome, verification, profile completion, re-engagement).'
+                  ]
+               },
+               {
+                  area: 'AI features',
+                  points: [
+                     'The email assistant summarises a thread and drafts a suggested reply in a chosen tone; replies render as rich text through ngx-markdown and ngx-quill.',
+                     'The scheduling agent works through wait → upsert → insert actions against Google Calendar: it protects focus time and moves flexible meetings before booking a new one.'
+                  ]
+               },
+               {
+                  area: 'Team',
+                  points: [
+                     'Coordinated 6 frontend developers on shared coding standards and a component library used across every product area.'
+                  ]
+               }
+            ],
             images: [
                '/assets/img/costaff-calendar.avif',
                '/assets/img/costaff-inbox.png',
@@ -274,6 +398,30 @@ export class ProjectDataService {
                'Achieved 90%+ positive user feedback score from teller and operations staff in the post-launch satisfaction survey',
                'Architected role-gated transfer flows (Teller, Supervisor, Authorizer) with Angular route guards and configurable per-role transaction limit policies enforced at both UI and API intercept layers'
             ],
+            codebase: ['135 components', '41 services', '36 routed modules', 'NIP · NEFT · NAPS · PAPSS'],
+            engineering: [
+               {
+                  area: 'Teller flow',
+                  points: [
+                     'Sender balance and overdraft checks, name enquiry with the beneficiary\'s KYC level, teller limits, and a HOP approval queue that escalates to the zonal head ("Awaiting ZH Approval") when a transfer exceeds the limit.'
+                  ]
+               },
+               {
+                  area: 'Every rail, inward and outward',
+                  points: [
+                     'NIP: fraud checks, settlement, returns with bulk upload, reconciliation, receipt generation and data restore.',
+                     'NEFT: credit and debit batches, processed and unprocessed queues, bulk uploads and dividend warrants, with clearing sessions, their history and reversal.',
+                     'NAPS: direct credits with pend, unpend and amount blocks, paid and unpaid reports, and reconciliation.',
+                     'PAPSS cross-border (Africa) inward and outward with dashboards, reconciliation and reporting — and a Transaction 360 global search across every rail.'
+                  ]
+               },
+               {
+                  area: 'Engineering',
+                  points: [
+                     'NGXS state, light and dark themes, and Azure Pipelines CI.'
+                  ]
+               }
+            ],
             images: [
                '/assets/img/tiger-teller.png',
                '/assets/img/tiger-queue.png',
@@ -314,6 +462,29 @@ export class ProjectDataService {
                'Akhigbe Iruobe was named Sprint Champion — the Zenith PMO\'s highest achiever — in back-to-back sprints in March 2023; in Sprint 4 the team\'s velocity rose from 8 to 28 story points and its completion rate from 19% to 69%',
                'Architected three independently deployable Angular micro-frontend applications (Admin portal, Teller interface, Data-Store reporting) with separate build pipelines and isolated routing domains via Jenkins CI/CD',
                'Implemented Angular Universal SSR improving initial page load by 40% and SEO performance by 60% — critical for the publicly-accessible merchant-facing portal'
+            ],
+            codebase: ['Angular 14', '55 components', 'NGXS', 'SignalR'],
+            engineering: [
+               {
+                  area: 'Teller collections',
+                  points: [
+                     'Merchant-defined custom fields render as a dynamic form with dropdowns that cascade from the merchant\'s own API, memo pop-ups before payment, payment methods (cash, cheque, transfer, POS), an amount-match check, a preview step and a PDF receipt.',
+                     'Cash and cheque withdrawals, PTA/BTA travel-allowance payments and inbound IMTO transfers, each with its own HOP approval path.'
+                  ]
+               },
+               {
+                  area: 'Live operations',
+                  points: [
+                     'Request status streams over SignalR (pending → payment → processing → completed), with reprocessing for failures and reversals that need HOP approval.',
+                     'Reports for transactions, payments, receipts and further processing, and a branch dashboard.'
+                  ]
+               },
+               {
+                  area: 'Delivery',
+                  points: [
+                     'Named Sprint Champion by Zenith\'s PMO in back-to-back sprints (March 2023) as the Data-Store app joined the Admin and Teller apps.'
+                  ]
+               }
             ],
             images: [
                '/assets/img/xpath-payments.png',

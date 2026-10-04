@@ -646,6 +646,136 @@ h2 {
     flex-shrink: 0;
 }
 
+/* ── Under the hood: the engineering depth, folded until asked for ── */
+.fp-deep {
+    border-radius: 14px;
+    border: 1px solid rgba(var(--fp-acc-rgb), 0.22);
+    background: rgba(var(--fp-acc-rgb), 0.04);
+}
+
+.fp-deep-toggle {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+    padding: 12px 14px;
+    background: none;
+    border: none;
+    border-radius: 14px;
+    cursor: pointer;
+    font-family: inherit;
+    text-align: left;
+    color: inherit;
+}
+
+.fp-deep-toggle:focus-visible { outline: 2px solid var(--fp-acc-text); outline-offset: 2px; }
+
+.fp-deep-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: none;
+    width: 34px;
+    height: 34px;
+    border-radius: 10px;
+    color: var(--fp-acc-text);
+    background: rgba(var(--fp-acc-rgb), 0.12);
+    border: 1px solid rgba(var(--fp-acc-rgb), 0.3);
+    transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.fp-deep-toggle:hover .fp-deep-icon { transform: rotate(-8deg) scale(1.06); }
+
+.fp-deep-label { display: flex; flex-direction: column; gap: 1px; flex: 1; min-width: 0; }
+.fp-deep-label strong { font-size: 0.9rem; font-weight: 700; color: var(--fp-ink); }
+.fp-deep-label span { font-size: 0.75rem; color: var(--fp-ink-3); }
+
+.fp-deep-chevron {
+    flex: none;
+    color: var(--fp-acc-text);
+    transition: transform 0.3s ease;
+}
+
+.fp-deep.is-open .fp-deep-chevron { transform: rotate(180deg); }
+
+/* Same max-height pattern as the achievements list, for one consistent feel. */
+.fp-deep-panel {
+    max-height: 0;
+    overflow: hidden;
+    opacity: 0;
+    padding: 0 14px;
+    transition: max-height 0.5s ease, opacity 0.3s ease, padding 0.3s ease;
+}
+
+.fp-deep.is-open .fp-deep-panel {
+    max-height: 2400px;
+    opacity: 1;
+    padding: 2px 14px 14px;
+}
+
+.fp-deep-codebase {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px;
+    padding: 10px 0 12px;
+    border-bottom: 1px solid var(--fp-hair);
+}
+
+.fp-deep-k {
+    margin-right: 4px;
+    font-size: 0.66rem;
+    font-weight: 800;
+    letter-spacing: 1.4px;
+    text-transform: uppercase;
+    color: var(--fp-ink-3);
+}
+
+.fp-deep-chip {
+    padding: 3px 9px;
+    font: 600 0.72rem ui-monospace, Menlo, monospace;
+    color: var(--fp-acc-text);
+    border-radius: 7px;
+    background: rgba(var(--fp-acc-rgb), 0.1);
+    border: 1px solid rgba(var(--fp-acc-rgb), 0.25);
+}
+
+.fp-deep-group { padding-top: 12px; }
+
+.fp-deep-group h4 {
+    margin: 0 0 6px;
+    font-size: 0.68rem;
+    font-weight: 800;
+    letter-spacing: 1.4px;
+    text-transform: uppercase;
+    color: var(--fp-acc-text);
+}
+
+.fp-deep-group ul { list-style: none; margin: 0; padding: 0; }
+
+.fp-deep-group li {
+    position: relative;
+    padding: 0.4rem 0 0.4rem 1.1rem;
+    font-size: 0.86rem;
+    line-height: 1.6;
+    color: var(--fp-ink-2);
+}
+
+.fp-deep-group li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0.95rem;
+    width: 6px;
+    height: 2px;
+    border-radius: 2px;
+    background: var(--fp-acc-text);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .fp-deep-panel, .fp-deep-chevron, .fp-deep-icon { transition: none; }
+}
+
 /* ── Links ── */
 .fp-links {
     display: flex;

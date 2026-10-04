@@ -114,6 +114,42 @@
                         }
                     </div>
 
+                    @if (project.engineering?.length) {
+                    <div class="fp-deep" [class.is-open]="isDeepOpen(project.id)">
+                        <button type="button" class="fp-deep-toggle" (click)="toggleDeep(project.id, $event)"
+                            [attr.aria-expanded]="isDeepOpen(project.id)" [attr.aria-controls]="'deep-' + project.id">
+                            <span class="fp-deep-icon" aria-hidden="true">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg>
+                            </span>
+                            <span class="fp-deep-label">
+                                <strong>Under the hood</strong>
+                                <span>Architecture, engineering &amp; delivery detail</span>
+                            </span>
+                            <svg class="fp-deep-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                        </button>
+                        <div class="fp-deep-panel" [id]="'deep-' + project.id" [attr.aria-hidden]="!isDeepOpen(project.id)" [attr.inert]="isDeepOpen(project.id) ? null : ''">
+                            @if (project.codebase?.length) {
+                            <div class="fp-deep-codebase">
+                                <span class="fp-deep-k">Codebase</span>
+                                @for (fact of project.codebase!; track fact) {
+                                <span class="fp-deep-chip">{{ fact }}</span>
+                                }
+                            </div>
+                            }
+                            @for (group of project.engineering!; track group.area) {
+                            <div class="fp-deep-group">
+                                <h4>{{ group.area }}</h4>
+                                <ul>
+                                    @for (point of group.points; track $index) {
+                                    <li>{{ point }}</li>
+                                    }
+                                </ul>
+                            </div>
+                            }
+                        </div>
+                    </div>
+                    }
+
                     <div class="fp-links">
                         <a [href]="githubUrl" target="_blank" rel="noopener noreferrer" class="fp-github">
                             <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="currentColor">

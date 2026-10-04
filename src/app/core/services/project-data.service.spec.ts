@@ -48,6 +48,23 @@ describe('ProjectDataService', () => {
       });
 
       // Akhigbe's own ordering: most recent first (set 2026-10-04).
+      it('should give every project an "Under the hood" panel: codebase facts and grouped engineering detail', () => {
+         for (const p of service.getProjects()) {
+            expect(p.codebase?.length, p.title).toBeGreaterThan(0);
+            expect(p.engineering?.length, p.title).toBeGreaterThan(0);
+            for (const group of p.engineering!) {
+               expect(group.area.trim(), p.title).not.toBe('');
+               expect(group.points.length, `${p.title} / ${group.area}`).toBeGreaterThan(0);
+            }
+         }
+      });
+
+      it('should quote the Zenith sprint figures from the PMO slides (19% → 69%), never 85%', () => {
+         const text = JSON.stringify(service.getProjects());
+         expect(text).not.toMatch(/19% to 85|19→85/);
+         expect(text).toMatch(/19% to 69%/);
+      });
+
       it('should list the flagships in the order Akhigbe set, most recent first', () => {
          expect(service.getProjects().map(p => p.id)).toEqual([7, 6, 3, 2, 1, 4, 5]);
       });

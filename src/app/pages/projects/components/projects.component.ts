@@ -17,6 +17,8 @@ interface Project {
   stats?: { value: string; label: string; }[];
   pipeline?: { name: string; meta: string; }[];
   pipelineLabel?: string;
+  codebase?: string[];
+  engineering?: { area: string; points: string[]; }[];
 }
 
 interface AssessmentProject {
@@ -464,6 +466,19 @@ export class ProjectsComponent implements OnInit, AfterViewInit, OnDestroy {
 
   isExpanded(id: number): boolean {
     return this.achievementsExpanded[id] ?? false;
+  }
+
+  // "Under the hood" panels: closed by default so a CEO reads impact first;
+  // the detail stays in the DOM (crawlable) and is inert while closed.
+  deepOpen: Record<number, boolean> = {};
+
+  toggleDeep(id: number, event: Event): void {
+    event.stopPropagation();
+    this.deepOpen[id] = !this.deepOpen[id];
+  }
+
+  isDeepOpen(id: number): boolean {
+    return this.deepOpen[id] ?? false;
   }
 
   getFrameUrl(url: string): string {
