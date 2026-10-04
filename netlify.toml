@@ -1,0 +1,15 @@
+# Netlify build settings, kept in the repo so they change in the same commit as the build that
+# needs them. File-based settings override the Netlify UI.
+#
+# Response headers and SPA redirects stay in src/_headers and src/_redirects, which the build
+# copies to the publish root.
+
+[build]
+  command = "npm run build"
+  # @angular/build:application writes the site to <outputPath>/browser. Netlify's Angular
+  # runtime plugin fails the deploy unless the publish directory is exactly that folder.
+  publish = "dist/iruobe-portfolio/browser"
+
+[build.environment]
+  # Angular CLI 22 requires Node >= 22.22.3. Keep in step with .nvmrc.
+  NODE_VERSION = "22.23.3"
