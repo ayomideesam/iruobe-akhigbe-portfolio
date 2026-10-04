@@ -115,7 +115,7 @@ export class ResumeDataService {
          "🏦 **Two platforms through CAB**: Led the frontend of Credit Approval (CAP) and Trade Export (NXP) at Globus Bank in a seven-person team; both roll out to production in October 2026.",
          "⚡ **Empty repo to UAT in 83 days**: Trade Export, 10 July to 1 October 2026 — signals-first Angular 21, 776 Vitest tests and npm audit at 0, built with an AI-augmented workflow held to written standards.",
          "🛡️ **Fraud at full coverage**: As sole frontend engineer on the Fraud Management System — 100% of bank transactions monitored in week one; fraudulent incidents down 45% within 90 days.",
-         "💸 **Payments at national scale**: ProjectTiger at Zenith Bank (NIP, NEFT, NAPS) processed ₦100B+ in its first week live, with zero downtime.",
+         "💸 **Payments at national scale**: Domestic Transfer project at Zenith Bank (NIP, NEFT, NAPS) processed ₦100B+ in its first week live, with zero downtime.",
          "🏆 **Back-to-back Sprint Champion**: Named highest achiever by Zenith's PMO in Sprints 3 and 4 (March 2023); in Sprint 4 the team's velocity rose from 8 to 28 points and completion from 19% to 69%.",
          "🚀 **Promoted at two banks**: Senior Frontend Engineer → Frontend Team Lead at Zenith (April 2023), and a grade promotion at Globus (January 2026)."
       ];

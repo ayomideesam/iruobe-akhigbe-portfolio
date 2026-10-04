@@ -234,7 +234,7 @@ export class ServicesDataService {
                'Security vulnerability elimination and dependency remediation',
                'Performance rescue — bundle analysis, lazy loading and load-time reduction'
             ],
-            proof: 'Led Angular v16→v19 and v19→v20 migrations taking 11 known vulnerabilities to zero, with 40% performance gains.',
+            proof: 'Led Angular v16→v19 and v19→v22 migrations taking 11 known vulnerabilities to zero, with 40% performance gains.',
             icon: `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a4 4 0 0 1 5 5L9 22l-5-5z"></path><path d="M16 8l-9 9"></path><path d="M4.5 9.5L2 7l3-3 2.5 2.5"></path></svg>`,
             accent: '#fb923c', accentRgb: '251, 146, 60'
          },

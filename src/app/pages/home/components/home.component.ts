@@ -492,7 +492,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
       scope: 'Set the frontend architecture and standards for a seven-person delivery team; two platforms through business CAB in 2026.',
       work: [
         { label: 'Trade Export (NXP)', projectId: 7 }, { label: 'Credit Approval (CAP)', projectId: 6 },
-        { label: 'Fraud Management', projectId: 3 }, { label: 'Trade Import', projectId: 2 }
+        { label: 'Fraud Management', projectId: 3 }, { label: 'Trade Import (Form M)', projectId: 2 }
       ],
       technologies: ['Angular 19–21', 'NgRx Signal Store', 'Vitest', 'Claude Code']
     },
@@ -514,15 +514,15 @@ export class HomeComponent implements OnInit, AfterViewInit {
         proof: 'Zenith PMO slides on LinkedIn: Sprint Champion in Sprints 3 and 4, team velocity 8 → 28 points'
       },
       scope: "Led 6 frontend engineers across the bank's payments and collections platforms.",
-      work: [{ label: 'ProjectTiger', projectId: 4 }, { label: 'X-Path', projectId: 5 }, { label: 'Tax Clearance' }],
-      technologies: ['Angular', 'TypeScript', 'NGXS', 'Jenkins']
+      work: [{ label: 'Domestic Transfer', projectId: 4 },  { label: 'Tax Clearance' }, { label: 'X-Path', projectId: 5 }],
+      technologies: ['Angular 12-14', 'TypeScript', 'NGXS', 'Jenkins']
     },
     {
       key: 'samsky', role: 'Senior Frontend Engineer', company: 'Samsky Pay UK', period: 'Feb 2022 - Dec 2022',
       location: 'London, UK', col: '#06b6d4', type: 'Full-time',
       scope: 'Built a UK multi-currency payments app: live exchange rates, a wallet and the admin panel.',
       work: [{ label: 'Samsky Pay' }],
-      technologies: ['Angular', 'Payments', 'AWS']
+      technologies: ['Angular 12', 'TypeScript', 'Payments', 'AWS', 'Jenkins']
     },
     {
       key: 'upperlink', role: 'Frontend Engineer', company: 'Upperlink LTD', period: 'Jun 2018 - Feb 2022',
@@ -530,7 +530,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
       promotion: 'Mid-level → Senior',
       scope: 'Built and tested bank and government payment channels; mentored 4 juniors to mid-level.',
       work: [{ label: 'NIBSS GSI' }, { label: 'EbillsPay' }],
-      technologies: ['Angular', 'JavaScript', 'Selenium']
+      technologies: ['Angular 8-12', 'TypeScript', 'JavaScript', 'Selenium', 'Cypress']
     }
   ];
 
@@ -540,8 +540,8 @@ export class HomeComponent implements OnInit, AfterViewInit {
     { key: 'upperlink', year: '2018', level: 'Engineer', note: 'Payment channels & QA', scope: 0.3 },
     { key: 'samsky', year: '2022', level: 'Senior', note: 'Owned a UK payments app', scope: 0.47 },
     { key: 'zenith', year: '2023', level: 'Team lead', note: '2× Sprint Champion, then led 6 engineers', scope: 0.64 },
-    { key: 'hiedberg', year: '2024', level: 'Tech lead', note: 'UK AI platform, remote', scope: 0.8 },
-    { key: 'globus', year: '2026', level: 'Promoted', note: 'Standards for 2 CAB-approved platforms', scope: 1 }
+    { key: 'hiedberg', year: '2024', level: 'Tech lead', note: 'UK AI platform, remote', scope: 0.81 },
+    { key: 'globus', year: '2026', level: 'Promoted', note: 'Standards for 2 CAB-approved platforms', scope: 0.94 }
   ];
 
   /** Role highlighted from the arc (hover or focus). */
