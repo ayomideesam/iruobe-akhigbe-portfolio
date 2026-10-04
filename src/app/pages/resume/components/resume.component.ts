@@ -176,7 +176,7 @@ export class ResumeComponent implements OnInit, AfterViewInit {
     skillBars.forEach((bar: any) => observer.observe(bar));
   }
 
-  @HostListener('window:scroll', ['$event'])
+  @HostListener('window:scroll')
   onScroll() {
     const skillBars = this.elementRef.nativeElement.querySelectorAll('.skill-progress');
     skillBars.forEach((bar: any) => {
