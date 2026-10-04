@@ -1,4 +1,4 @@
-# Angular 20 Development Standards — Iruobe Portfolio
+# Angular 22 Development Standards — Iruobe Portfolio
 **Portfolio Project: iruobe-portfolio**  
 **Last Updated:** 2026-06-30  
 **Angular Version:** 20.x | **TypeScript:** 5.8+ | **zone.js:** 0.15.x
@@ -176,7 +176,7 @@ Below-fold sections are wrapped in `@defer (on viewport)` to defer rendering unt
 | `resume.component.html` | `.skills-section` | 250px |
 | `resume.component.html` | `.employment-section` | 800px |
 
-**Note:** `@defer` in this codebase defers rendering laziness only — the app uses the webpack-based browser builder, so `@defer` does not produce separate code-split chunks for template-only content. The rendering benefit is still real (deferred change detection scope and Angular animation registration).
+**Note:** `@defer` in this codebase defers rendering only. The app builds with the esbuild application builder (since 2026-10-04), which can split `@defer` dependencies into their own chunks — but only *standalone* components, directives and pipes. Every component here is NgModule-declared (`standalone: false`), so nothing inside a `@defer` block is split out. The rendering benefit is still real (deferred change detection scope and Angular animation registration).
 
 ---
 
@@ -323,4 +323,5 @@ docs/                    → V20-UPGRADE-TRACKER.md, ANGULAR-19-STANDARDS.md
 
 | Date | Version | Notes |
 |---|---|---|
+| 2026-10-04 | Angular 22.x | Upgraded 20 → 22: esbuild application builder, Vitest, TypeScript 6. Corrected the `@defer` note — splitting needs standalone dependencies, not just the new builder. |
 | 2026-06-30 | Angular 20.x | Full rewrite for portfolio — removed CAP / NgRx / standalone / gb-* content; added NgModule architecture note, `@defer` section, `input()` signal API, `takeUntilDestroyed` pattern, portfolio-specific conventions |

@@ -11,21 +11,74 @@ were already installed, so a clean result has a shelf life measured in weeks.
 
 | | |
 |---|---|
-| **Last run** | 2026-10-04 |
-| **Result** | ⚠️ **Production tree 0.** Full tree **21 high**, all from **two root advisories that have no patched release anywhere** (`braces`, `http-cache-semantics`); the other 19 are their dependents. Both dev-only and judged unreachable here. **Open, scheduled** — they close with the Angular 22 + `@angular/build` + Vitest upgrade, see 2026-10-04 below. |
-| **Packages audited** | 1,157 |
-| **npm version** | 10.9.7 |
-| **Node version** | v22.22.2 |
-| **Angular** | 20.3.33 (CLI + build-angular 20.3.37) |
+| **Last run** | 2026-10-04 (after the Angular 22 upgrade) |
+| **Result** | ✅ **0 vulnerabilities**, full tree and production tree. |
+| **Packages audited** | 504 (was 1,157 on Angular 20) |
+| **npm version** | 10.9.9 |
+| **Node version** | v22.23.3 (pinned in `.nvmrc` and `netlify.toml`; Angular CLI 22 needs ≥ 22.22.3) |
+| **Angular** | 22.2.1 (`@angular/build` application builder, Vitest 5 + jsdom) · TypeScript 6.0.3 |
 
 ```
 $ npm ci && npm audit
-21 high severity vulnerabilities      # 2 root advisories, no upstream fix
+found 0 vulnerabilities
 $ npm audit --omit=dev
 found 0 vulnerabilities
 $ npm ls --all | grep -c invalid
 0
+$ npm run audit:overrides   # every override vs every consumer's declared range — Policy 5
+All overrides have a target and satisfy every consumer.
 ```
+
+---
+
+## 2026-10-04 (later) — 21 → 0: Angular 22, esbuild, Vitest
+
+The two advisories with no upstream fix (section below) are closed by removing the packages that
+carried them, not by patching or hiding them. Done as separate commits, one step each, every step
+built and tested before the next:
+
+1. **Angular 20 → 21** (`ng update`). Angular 21 type-checks `@HostListener` arguments: the resume
+   scroll listener passed `$event` to a handler that takes none.
+2. **Angular 21 → 22, TypeScript 6.** `@angular/cli@22` no longer depends on `pacote`, so
+   `npm-registry-fetch` → `make-fetch-happen` → **`http-cache-semantics` leaves the tree**. CLI 22
+   requires **Node ≥ 22.22.3**; local and Netlify are pinned to 22.23.3. TypeScript 6 deprecates
+   `baseUrl` (replaced by an explicit `"src/*"` path mapping) and `downlevelIteration` (a no-op on
+   ES2022, removed).
+3. **webpack → `@angular/build:application`.** Removes `@angular-devkit/build-angular`, webpack,
+   `webpack-dev-server`, `fast-glob` and `micromatch` — one of the two routes `braces` took in.
+   Output moves to `dist/iruobe-portfolio/browser`; the new `netlify.toml` publishes that folder,
+   because Netlify's Angular runtime plugin fails an application-builder deploy otherwise.
+4. **Karma → Vitest** (`@angular/build:unit-test`, jsdom). Karma depended on `braces` directly, so
+   **`braces` leaves the tree**. Jasmine specifics were converted by hand rather than through the
+   `refactor-jasmine-vitest` schematic, which re-indented all 13 spec files and turned two
+   environment-dependent tests into unconditional `it.skip`.
+
+**Override clean-up — 36 entries to 5.** Most overrides pinned packages that no longer exist. Three
+were worse than dead: they **forced a version outside what the new consumer declares**, and
+`npm ls` reported each as plain `overridden`, not `invalid`:
+
+| Override | Forced | Consumer wanted |
+|---|---|---|
+| `undici: ">=6.28.1 <7"` | 6.29.0 | `jsdom` → `^8.10.2` |
+| `@babel/core: "^7.29.6"` (+ a direct devDependency) | 7.29.7 | `@angular/build` → `8.0.5`, `@angular/compiler-cli` → `8.0.1` |
+| `picomatch: ">=2.3.2"` | 4.0.4 (stale lock record) | `@angular/build`, `vite`, `vitest` → `4.0.7` |
+
+The suite passed with all three in place. Nothing failed loudly, which is exactly why it needs a
+check (Policy 5). Kept, each because a consumer's own range still admits a vulnerable version:
+`dompurify` and `fflate` (`jspdf`, production), `fast-uri` (`ajv`), `browserslist`
+(`@angular/build` wants `^4.26.0`), `esbuild` (`vite` accepts `^0.27.0`).
+
+Also: Karma survived its own uninstall as a locked **optional peer** of `@angular/build`, and kept
+`braces` in the tree. npm keeps a locked optional peer but never adds one to a fresh tree. Pruning the
+lockfile's optional-peer records and re-running `npm install` cleared it.
+
+### Verified after the change
+
+Strict `npm ci` · `npm audit` **0** · `--omit=dev` **0** · `npm ls --all` exit 0, 0 `invalid` ·
+every override satisfies every consumer · `tsc` clean (app + spec) · production build clean with no
+warnings, 154 KB initial transfer · **86/86** Vitest tests (the 85 plus a touch-device case the old
+environment-dependent spec could not run) · all 5 routes at 390 and 1440, light and dark: one JSON-LD
+block, correct canonical, no horizontal scroll, no console errors · both resume PDFs generate.
 
 ---
 
@@ -70,7 +123,7 @@ raised range. Removing just those records (`node_modules/fast-uri`, `hono`, `ip-
 So: **after raising an override, always check `npm ls --all | grep invalid` and strict `npm ci`**,
 not just the audit count.
 
-### Open — no upstream fix exists
+### Open — no upstream fix exists *(resolved later the same day — see 2026-10-04 (later) above)*
 
 | Advisory | Package | Path | Why it is not reachable here |
 |---|---|---|---|
@@ -285,17 +338,16 @@ clean · 63/63 tests · all five routes render with one JSON-LD block each.
 
 | Package | Version | Notes |
 |---|---|---|
-| `@angular/*` (animations, common, compiler, core, forms, platform-browser*, router) | ^20.3.33 | runtime |
-| `@angular/cli`, `@angular-devkit/build-angular` | ^20.3.37 | dev |
-| `@angular/compiler-cli` | ^20.3.33 | dev |
+| `@angular/*` (animations, common, compiler, core, forms, platform-browser*, router) | ^22.2.1 | runtime |
+| `@angular/cli`, `@angular/build`, `@angular/compiler-cli` | ^22.2.1 | dev — esbuild application builder, Vite dev server |
 | `rxjs` | ~7.8.0 | |
-| `zone.js` | ~0.15.1 | |
-| `typescript` | ~5.8.3 | |
+| `zone.js` | ~0.15.1 | zone change detection kept explicitly (`provideZoneChangeDetection`) |
+| `typescript` | ~6.0.3 | |
 | `tslib` | ^2.3.0 | |
 | `@emailjs/browser` | ^4.4.1 | contact form |
-| `jspdf`, `html2canvas` | ^4.2.1 / ^1.4.1 | resume PDF export — pulls `dompurify` + `canvg` into the bundle |
-| `karma`, `karma-*`, `jasmine-core`, `@types/jasmine` | per `package.json` | test runner |
-| `@babel/core` | ^7.29.6 | dev, pinned via override |
+| `jspdf`, `html2canvas` | ^4.2.1 / ^1.4.1 | resume PDF export — pulls `dompurify`, `fflate` + `canvg` into the bundle |
+| `vitest`, `jsdom`, `@vitest/coverage-v8` | ^5.0.0 / ^30.1.1 / ^5.0.3 | dev — test runner via `@angular/build:unit-test`; shims in `src/test-setup.ts` |
+| `semver` | ^7.8.5 | dev — used by `scripts/check-overrides.mjs` only |
 | `sharp` | ^0.35.5 | dev — media pipeline only (`npm run optimize:media`); prebuilt libvips binaries, nothing ships |
 
 ---
@@ -307,13 +359,18 @@ clean · 63/63 tests · all five routes render with one JSON-LD block each.
 2. **Run `npm audit` before every push to `development`**, and on a regular cadence besides —
    advisories are published against packages already installed, not just newly added ones.
 3. **Triage by production exposure, not severity alone.** Run `npm audit --omit=dev` to separate
-   them. A high in the Karma chain is not the same risk as a low in `dompurify`, which actually ships
-   in the bundle. Fix both, but know which is which.
+   them. A high in a dev-only build tool is not the same risk as a low in `dompurify`, which actually
+   ships in the bundle. Fix both, but know which is which.
 4. **Prefer the narrowest override.** Scope by parent rather than pinning globally, stay within the
    current major where a patch exists, and use `"."` when a nested override also needs to pin the
    package itself.
-5. **Always run `npm ls --all | grep invalid` after adding or changing an override.** An over-broad
-   override does not fail the install; it just hands a package a dependency its code never expected.
+5. **After adding or changing an override, run `npm ls --all | grep invalid` *and*
+   `npm run audit:overrides`.** The second is needed because npm reports a version forced by an
+   override as `overridden`, not `invalid`: on 2026-10-04 three overrides were handing packages a
+   version outside their own declared range, and both `npm ls` and the full test suite stayed green.
+   The script also flags overrides whose target has left the tree. Re-run it after any framework
+   upgrade, which is when consumers change underneath existing pins. An over-broad override does not
+   fail the install; it just hands a package a dependency its code never expected.
 6. **Never `npm audit fix --force` blindly.** It resolves majors. Evaluate the breaking change first —
    on this pass every finding was closable without one.
 7. **Never delete `package-lock.json` to break an `ERESOLVE`.** Remove only the offending scope's
@@ -340,8 +397,9 @@ clean · 63/63 tests · all five routes render with one JSON-LD block each.
 | 2026-10-03 | `@angular/*` (7 packages) | moderate | **Yes** — framework | ✅ Resolved 2026-10-04 | Moved with the router as one set, 20.3.33. |
 | 2026-10-03 | `fflate`, `dompurify` (via `jspdf`) | moderate / low | **Yes** — resume PDF chunk | ✅ Resolved 2026-10-04 | Overrides `^0.8.3` / `^3.4.16`. |
 | 2026-10-03 | 37 build/dev-tooling advisories (`undici`, `webpack-dev-middleware`, `express`/`qs`, …) | mixed, incl. 3 critical | No — build & dev server | ✅ Resolved 2026-10-04, except the two rows below | In-major overrides; all 3 criticals were `piscina` and its dependents. |
-| 2026-10-04 | `braces` (+ 11 dependents counted by npm) | high | No — Karma and webpack config globs only | ⏳ Open — no upstream fix | GHSA-vfj7-8cjw-p6xm, every release affected. Leaves with the `@angular/build` + Vitest move. |
-| 2026-10-04 | `http-cache-semantics` (+ 8 dependents) | high | No — CLI private cache, `shared: false` | ⏳ Open — no upstream fix | GHSA-ch52-4w7c-c8xp, every release affected. Leaves at Angular 22 (CLI drops `pacote`). |
+| 2026-10-04 | `braces` (+ 11 dependents counted by npm) | high | No — Karma and webpack config globs only | ✅ Resolved 2026-10-04 | GHSA-vfj7-8cjw-p6xm, no upstream fix. Removed from the tree: webpack → `@angular/build`, Karma → Vitest. |
+| 2026-10-04 | `http-cache-semantics` (+ 8 dependents) | high | No — CLI private cache, `shared: false` | ✅ Resolved 2026-10-04 | GHSA-ch52-4w7c-c8xp, no upstream fix. Removed from the tree: Angular CLI 22 drops `pacote`. |
+| 2026-10-04 | `undici`, `@babel/core`, `picomatch` overrides (not CVEs) | — | No — dev tooling | ✅ Resolved | Forced versions outside their consumers' ranges after the Angular 22 upgrade; `npm ls` showed `overridden`, not `invalid`. Removed; `scripts/check-overrides.mjs` added (Policy 5). |
 | 2026-10-03 | `sharp` (added) | — | No — dev-only media tool | ✅ Clean | Added for `optimize:media`; contributes 0 findings (verified against the HEAD lockfile). |
 
 ---

@@ -3,7 +3,7 @@
 ## Project Identity
 
 **Owner:** Akhigbe Iruobe — Senior Frontend Engineer, 9+ years  
-**Framework:** Angular 20 (NgModule-based — no standalone migration underway)  
+**Framework:** Angular 22 (NgModule-based — no standalone migration underway) · TypeScript 6 · Node ≥ 22.22.3 (pinned in `.nvmrc`)  
 **Purpose:** Personal portfolio showcasing enterprise Angular work; a living representation of Akhigbe's engineering standard, not a throwaway static site.
 
 ---
@@ -42,11 +42,13 @@ Non-negotiables from that document, repeated here because getting them wrong is 
 - **Prefer the narrowest override.** Scope by parent, stay in the current major where a patch exists,
   and use the `"."` key when a nested override must also pin the package itself — writing
   `"pkg": { "dep": "…" }` replaces the version pin and silently unpins `pkg`.
-- **Always run `npm ls --all | grep invalid` after adding or changing an override.** npm reports an
-  over-broad override as `invalid` rather than failing the install.
+- **After adding or changing an override, run `npm ls --all | grep invalid` and
+  `npm run audit:overrides`.** npm reports some over-broad overrides as `invalid`, but a version
+  forced outside its consumer's range shows as plain `overridden`, and only the script catches that.
+  Re-run it after every framework upgrade.
 - **Never `npm audit fix --force` blindly** — it resolves majors. Evaluate the breaking change first.
-- **Triage by production exposure, not severity alone** (`npm audit --omit=dev`). A high in the Karma
-  chain is not the same risk as a low in `dompurify`, which ships in the bundle.
+- **Triage by production exposure, not severity alone** (`npm audit --omit=dev`). A high in a dev-only
+  build tool is not the same risk as a low in `dompurify`, which ships in the bundle.
 
 If a fix requires a framework major bump, flag it and stop — that is its own piece of work, not a
 dependency-audit-sized decision.
@@ -57,12 +59,13 @@ dependency-audit-sized decision.
 
 | Layer | Detail |
 |---|---|
-| Framework | Angular 20, TypeScript, NgModules |
+| Framework | Angular 22, TypeScript 6, NgModules, zone.js change detection |
+| Build | `@angular/build:application` (esbuild) → `dist/iruobe-portfolio/browser`; Vite dev server |
 | Animations | Angular Animations API + CSS `@keyframes` (GPU-composited only) |
 | Routing | Angular Router, lazy-loaded feature modules |
-| Deployment | Netlify (`src/_redirects` handles SPA routing) |
+| Deployment | Netlify — `netlify.toml` sets the command, publish dir and Node version; `src/_redirects` / `src/_headers` handle SPA routing and caching |
 | SEO | Meta tags, OpenGraph, structured data, `robots.txt`, `sitemap.xml` |
-| Testing | Jasmine + Karma (unit), manual QA checklist (no E2E framework yet) |
+| Testing | Vitest + jsdom via `@angular/build:unit-test` (`ng test`, `ng test --coverage`); browser-API shims in `src/test-setup.ts`; manual QA checklist (no E2E framework yet) |
 | Dependencies | npm `overrides` for transitive CVEs — see `docs/NPM-AUDIT.md` |
 
 ### Directory conventions
@@ -441,7 +444,7 @@ This is not optional hygiene — it is the only way to prevent the same bug from
 | INP (Interaction to Next Paint) | < 200ms | Replaced FID in 2024; Angular change detection is the risk here |
 | CLS (Cumulative Layout Shift) | < 0.1 | Animations and lazy-loaded images are the CLS risk |
 | Lighthouse Performance | ≥ 90 | Portfolio-quality signal for recruiters |
-| Total JS (gzipped) | < 250KB | Angular 20 with lazy routing should clear this comfortably |
+| Total JS (gzipped) | < 250KB | Angular 22 with lazy routing should clear this comfortably |
 | Total CSS (gzipped) | < 50KB | Component-scoped styles — no framework CSS debt |
 
 ---
@@ -459,7 +462,7 @@ The LCP element on the home route is almost always the hero image or the largest
 
 ### INP / Change Detection Rules
 
-Angular 20 NgModule + default change detection is the primary INP risk. Every component that animates, scrolls, or reacts to user input is a candidate.
+Angular 22 NgModule + zone-based change detection is the primary INP risk (the v22 migration pinned every component without an explicit strategy to `ChangeDetectionStrategy.Eager`, the old default). Every component that animates, scrolls, or reacts to user input is a candidate.
 
 - Use `ChangeDetectionStrategy.OnPush` on ALL components that receive data via `@Input()` only
 - Never subscribe to observables in template expressions (`{{ obs$ | async }}` is fine, `{{ getDataFromService() }}` is not)
@@ -487,7 +490,7 @@ Fixes:
 
 - Lazy-load every page module (`loadChildren` in the router) — this is already the architecture
 - Never import an entire icon library — use individual icon imports only
-- Run `ng build --stats-json` after adding any new dependency, then check with `webpack-bundle-analyzer`
+- Run `ng build --stats-json` after adding any new dependency, then load `dist/iruobe-portfolio/browser-stats.json` into esbuild's bundle analyzer (esbuild.github.io/analyze)
 - If any single lazy chunk exceeds 100KB gzipped, investigate before merging
 
 ---
