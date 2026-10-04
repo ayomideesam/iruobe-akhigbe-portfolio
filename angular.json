@@ -13,9 +13,7 @@
         "build": {
           "builder": "@angular/build:application",
           "options": {
-            "outputPath": {
-              "base": "dist/iruobe-portfolio"
-            },
+            "outputPath": "dist/iruobe-portfolio",
             "index": "src/index.html",
             "polyfills": [
               "zone.js"

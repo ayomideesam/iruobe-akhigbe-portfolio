@@ -8,6 +8,9 @@
   command = "npm run build"
   # @angular/build:application writes the site to <outputPath>/browser. Netlify's Angular
   # runtime plugin fails the deploy unless the publish directory is exactly that folder.
+  # Keep angular.json's build "outputPath" a plain string: the plugin (4.x) path.join()s it,
+  # and the object form ({ "base": … }) crashed every deploy on 2026-10-04 with
+  # ERR_INVALID_ARG_TYPE before the build even started.
   publish = "dist/iruobe-portfolio/browser"
 
 [build.environment]

@@ -11,7 +11,7 @@ were already installed, so a clean result has a shelf life measured in weeks.
 
 | | |
 |---|---|
-| **Last run** | 2026-10-04 (after the Angular 22 upgrade) |
+| **Last run** | 2026-10-04 (after the Angular 22 upgrade; re-run clean before the deploy-config fix) |
 | **Result** | ✅ **0 vulnerabilities**, full tree and production tree. |
 | **Packages audited** | 504 (was 1,157 on Angular 20) |
 | **npm version** | 10.9.9 |
