@@ -140,22 +140,6 @@ export const MEDIA_MANIFEST: MediaManifest = {
       "fallback": "/assets/media/img/costaff-week-1280.7f2f4dd8a8.jpg",
       "source": "9f0139770b|v1|avif q60 e6 444|webp q80 e6 smart|jpeg mozjpeg q80"
     },
-    "assets/img/domestic-dashboard.png": {
-      "width": 2180,
-      "height": 1246,
-      "avif": "/assets/media/img/domestic-dashboard-640.f26e12d690.avif 640w, /assets/media/img/domestic-dashboard-1280.4038f084cf.avif 1280w, /assets/media/img/domestic-dashboard-1920.68249b63ed.avif 1920w",
-      "webp": "/assets/media/img/domestic-dashboard-640.66e684c7aa.webp 640w, /assets/media/img/domestic-dashboard-1280.7e33176dac.webp 1280w, /assets/media/img/domestic-dashboard-1920.0e70c890a2.webp 1920w",
-      "fallback": "/assets/media/img/domestic-dashboard-1280.b09fb0ae04.jpg",
-      "source": "693583e6d1|v1|avif q60 e6 444|webp q80 e6 smart|jpeg mozjpeg q80"
-    },
-    "assets/img/domestic-login.png": {
-      "width": 1306,
-      "height": 770,
-      "avif": "/assets/media/img/domestic-login-640.7efa30a883.avif 640w, /assets/media/img/domestic-login-1280.1557b1286b.avif 1280w, /assets/media/img/domestic-login-1306.cfef8fb568.avif 1306w",
-      "webp": "/assets/media/img/domestic-login-640.1c9bf2f3f0.webp 640w, /assets/media/img/domestic-login-1280.5d28cf370f.webp 1280w, /assets/media/img/domestic-login-1306.5cbb759e21.webp 1306w",
-      "fallback": "/assets/media/img/domestic-login-1280.e43205d627.jpg",
-      "source": "48fc3145b6|v1|avif q60 e6 444|webp q80 e6 smart|jpeg mozjpeg q80"
-    },
     "assets/img/duolingo/award-cheerleader.png": {
       "width": 265,
       "height": 297,
@@ -388,6 +372,46 @@ export const MEDIA_MANIFEST: MediaManifest = {
       "fallback": "/assets/media/img/fraud-rule-engines-1280.80aafe2d72.jpg",
       "source": "f4b6ad053b|v1|avif q60 e6 444|webp q80 e6 smart|jpeg mozjpeg q80"
     },
+    "assets/img/gta-details.png": {
+      "width": 2956,
+      "height": 1662,
+      "avif": "/assets/media/img/gta-details-640.329d82e84c.avif 640w, /assets/media/img/gta-details-1280.53e30b6bbf.avif 1280w, /assets/media/img/gta-details-1920.fbaf392eed.avif 1920w",
+      "webp": "/assets/media/img/gta-details-640.09ec27b02d.webp 640w, /assets/media/img/gta-details-1280.a988cb0014.webp 1280w, /assets/media/img/gta-details-1920.33ffeac2d3.webp 1920w",
+      "fallback": "/assets/media/img/gta-details-1280.2c0770c9b4.jpg",
+      "source": "d109e8c51f|v1|avif q60 e6 444|webp q80 e6 smart|jpeg mozjpeg q80"
+    },
+    "assets/img/gta-documents.png": {
+      "width": 2956,
+      "height": 1662,
+      "avif": "/assets/media/img/gta-documents-640.f3e1e1b6c9.avif 640w, /assets/media/img/gta-documents-1280.6803dd3b67.avif 1280w, /assets/media/img/gta-documents-1920.44d694b20d.avif 1920w",
+      "webp": "/assets/media/img/gta-documents-640.e6a8ee3df4.webp 640w, /assets/media/img/gta-documents-1280.89bc3022bb.webp 1280w, /assets/media/img/gta-documents-1920.d96e5aa7f7.webp 1920w",
+      "fallback": "/assets/media/img/gta-documents-1280.6e40a8a25c.jpg",
+      "source": "7e2a8a6561|v1|avif q60 e6 444|webp q80 e6 smart|jpeg mozjpeg q80"
+    },
+    "assets/img/gta-home.png": {
+      "width": 2956,
+      "height": 1662,
+      "avif": "/assets/media/img/gta-home-640.918d9e4b42.avif 640w, /assets/media/img/gta-home-1280.fbee7f26bd.avif 1280w, /assets/media/img/gta-home-1920.8a6a0ca597.avif 1920w",
+      "webp": "/assets/media/img/gta-home-640.1e8593c481.webp 640w, /assets/media/img/gta-home-1280.06feffc8dc.webp 1280w, /assets/media/img/gta-home-1920.7b4bb26111.webp 1920w",
+      "fallback": "/assets/media/img/gta-home-1280.e3c7c8d5f7.jpg",
+      "source": "c71ae0a6e8|v1|avif q60 e6 444|webp q80 e6 smart|jpeg mozjpeg q80"
+    },
+    "assets/img/gta-import.png": {
+      "width": 2956,
+      "height": 1662,
+      "avif": "/assets/media/img/gta-import-640.cac693c20b.avif 640w, /assets/media/img/gta-import-1280.95553060ae.avif 1280w, /assets/media/img/gta-import-1920.3395ca6437.avif 1920w",
+      "webp": "/assets/media/img/gta-import-640.d484cd562f.webp 640w, /assets/media/img/gta-import-1280.5df25d58c1.webp 1280w, /assets/media/img/gta-import-1920.924fe79fa9.webp 1920w",
+      "fallback": "/assets/media/img/gta-import-1280.309a7d2089.jpg",
+      "source": "f5d7589135|v1|avif q60 e6 444|webp q80 e6 smart|jpeg mozjpeg q80"
+    },
+    "assets/img/gta-settings.png": {
+      "width": 2956,
+      "height": 1662,
+      "avif": "/assets/media/img/gta-settings-640.f96843c80f.avif 640w, /assets/media/img/gta-settings-1280.5bf6985d2e.avif 1280w, /assets/media/img/gta-settings-1920.f64bf97f24.avif 1920w",
+      "webp": "/assets/media/img/gta-settings-640.45f8451357.webp 640w, /assets/media/img/gta-settings-1280.e2b007171e.webp 1280w, /assets/media/img/gta-settings-1920.8ebe1e6a4c.webp 1920w",
+      "fallback": "/assets/media/img/gta-settings-1280.1d5d17a0dc.jpg",
+      "source": "4e23bf9584|v1|avif q60 e6 444|webp q80 e6 smart|jpeg mozjpeg q80"
+    },
     "assets/img/nxp-applications.png": {
       "width": 2956,
       "height": 1662,
@@ -428,37 +452,85 @@ export const MEDIA_MANIFEST: MediaManifest = {
       "fallback": "/assets/media/img/nxp-repatriation-1280.b2af308787.jpg",
       "source": "d64cd01aa4|v1|avif q60 e6 444|webp q80 e6 smart|jpeg mozjpeg q80"
     },
-    "assets/img/trade-dashboard.png": {
+    "assets/img/tiger-naps-direct.png": {
       "width": 2956,
       "height": 1662,
-      "avif": "/assets/media/img/trade-dashboard-640.72e2c91467.avif 640w, /assets/media/img/trade-dashboard-1280.72e3cfc2ef.avif 1280w, /assets/media/img/trade-dashboard-1920.ef7ab8f343.avif 1920w",
-      "webp": "/assets/media/img/trade-dashboard-640.6a1055db67.webp 640w, /assets/media/img/trade-dashboard-1280.febd2ed41e.webp 1280w, /assets/media/img/trade-dashboard-1920.3575430b2a.webp 1920w",
-      "fallback": "/assets/media/img/trade-dashboard-1280.f22fc781b6.jpg",
-      "source": "926b23374c|v1|avif q60 e6 444|webp q80 e6 smart|jpeg mozjpeg q80"
+      "avif": "/assets/media/img/tiger-naps-direct-640.2928f3fdb0.avif 640w, /assets/media/img/tiger-naps-direct-1280.4b5028f00d.avif 1280w, /assets/media/img/tiger-naps-direct-1920.8967eb3160.avif 1920w",
+      "webp": "/assets/media/img/tiger-naps-direct-640.448f42708c.webp 640w, /assets/media/img/tiger-naps-direct-1280.4acb212de6.webp 1280w, /assets/media/img/tiger-naps-direct-1920.e177cd723a.webp 1920w",
+      "fallback": "/assets/media/img/tiger-naps-direct-1280.421145b2df.jpg",
+      "source": "5b56fa5778|v1|avif q60 e6 444|webp q80 e6 smart|jpeg mozjpeg q80"
     },
-    "assets/img/trade-settings.png": {
-      "width": 2960,
-      "height": 1664,
-      "avif": "/assets/media/img/trade-settings-640.8610abb6ed.avif 640w, /assets/media/img/trade-settings-1280.3dc7cc0749.avif 1280w, /assets/media/img/trade-settings-1920.d7f049f628.avif 1920w",
-      "webp": "/assets/media/img/trade-settings-640.7f488dd7bc.webp 640w, /assets/media/img/trade-settings-1280.6ed412a8c7.webp 1280w, /assets/media/img/trade-settings-1920.e221e038e2.webp 1920w",
-      "fallback": "/assets/media/img/trade-settings-1280.e9bcc0371f.jpg",
-      "source": "34ee00cfa0|v1|avif q60 e6 444|webp q80 e6 smart|jpeg mozjpeg q80"
+    "assets/img/tiger-nip-dashboard.png": {
+      "width": 2956,
+      "height": 1662,
+      "avif": "/assets/media/img/tiger-nip-dashboard-640.f1515af539.avif 640w, /assets/media/img/tiger-nip-dashboard-1280.044c20fcf8.avif 1280w, /assets/media/img/tiger-nip-dashboard-1920.38747a17ca.avif 1920w",
+      "webp": "/assets/media/img/tiger-nip-dashboard-640.eb6eae6a66.webp 640w, /assets/media/img/tiger-nip-dashboard-1280.33f45dc422.webp 1280w, /assets/media/img/tiger-nip-dashboard-1920.b5b289fad4.webp 1920w",
+      "fallback": "/assets/media/img/tiger-nip-dashboard-1280.15a78073b5.jpg",
+      "source": "ae1b1fe57c|v1|avif q60 e6 444|webp q80 e6 smart|jpeg mozjpeg q80"
     },
-    "assets/img/xpath-charges.png": {
-      "width": 1268,
-      "height": 626,
-      "avif": "/assets/media/img/xpath-charges-640.d0ad262c58.avif 640w, /assets/media/img/xpath-charges-1268.8685fd909e.avif 1268w",
-      "webp": "/assets/media/img/xpath-charges-640.b78120d94e.webp 640w, /assets/media/img/xpath-charges-1268.0bf7d6ecf0.webp 1268w",
-      "fallback": "/assets/media/img/xpath-charges-1268.ab7afdab56.jpg",
-      "source": "a71ffffc77|v1|avif q60 e6 444|webp q80 e6 smart|jpeg mozjpeg q80"
+    "assets/img/tiger-queue.png": {
+      "width": 2956,
+      "height": 1662,
+      "avif": "/assets/media/img/tiger-queue-640.95402dc679.avif 640w, /assets/media/img/tiger-queue-1280.41a726fb9d.avif 1280w, /assets/media/img/tiger-queue-1920.14271bac55.avif 1920w",
+      "webp": "/assets/media/img/tiger-queue-640.5dfb847b4c.webp 640w, /assets/media/img/tiger-queue-1280.bcfb524d0b.webp 1280w, /assets/media/img/tiger-queue-1920.f68d4a4968.webp 1920w",
+      "fallback": "/assets/media/img/tiger-queue-1280.b3c7a7794e.jpg",
+      "source": "a46110b1ef|v1|avif q60 e6 444|webp q80 e6 smart|jpeg mozjpeg q80"
     },
-    "assets/img/xpath-config.png": {
-      "width": 1184,
-      "height": 946,
-      "avif": "/assets/media/img/xpath-config-640.04d4e16046.avif 640w, /assets/media/img/xpath-config-1184.6a4c1130c2.avif 1184w",
-      "webp": "/assets/media/img/xpath-config-640.9aa17c824d.webp 640w, /assets/media/img/xpath-config-1184.c2dfbb656c.webp 1184w",
-      "fallback": "/assets/media/img/xpath-config-1184.4f12118a19.jpg",
-      "source": "d39a3ed7d7|v1|avif q60 e6 444|webp q80 e6 smart|jpeg mozjpeg q80"
+    "assets/img/tiger-search.png": {
+      "width": 2956,
+      "height": 1662,
+      "avif": "/assets/media/img/tiger-search-640.f523f9df12.avif 640w, /assets/media/img/tiger-search-1280.8e15a2dbc2.avif 1280w, /assets/media/img/tiger-search-1920.c5b1ed2090.avif 1920w",
+      "webp": "/assets/media/img/tiger-search-640.e615ac08a6.webp 640w, /assets/media/img/tiger-search-1280.55e3f986a9.webp 1280w, /assets/media/img/tiger-search-1920.a2cacd475a.webp 1920w",
+      "fallback": "/assets/media/img/tiger-search-1280.31350c47ac.jpg",
+      "source": "3e749d5590|v1|avif q60 e6 444|webp q80 e6 smart|jpeg mozjpeg q80"
+    },
+    "assets/img/tiger-teller.png": {
+      "width": 2956,
+      "height": 1663,
+      "avif": "/assets/media/img/tiger-teller-640.6715d2f838.avif 640w, /assets/media/img/tiger-teller-1280.f2cf735847.avif 1280w, /assets/media/img/tiger-teller-1920.e27e904e23.avif 1920w",
+      "webp": "/assets/media/img/tiger-teller-640.214ddab5b6.webp 640w, /assets/media/img/tiger-teller-1280.fb1ea36799.webp 1280w, /assets/media/img/tiger-teller-1920.6b7ffef446.webp 1920w",
+      "fallback": "/assets/media/img/tiger-teller-1280.3656e88ed3.jpg",
+      "source": "8d6d443d8a|v1|avif q60 e6 444|webp q80 e6 smart|jpeg mozjpeg q80"
+    },
+    "assets/img/xpath-dashboard.png": {
+      "width": 2956,
+      "height": 1662,
+      "avif": "/assets/media/img/xpath-dashboard-640.f79dd4e4fe.avif 640w, /assets/media/img/xpath-dashboard-1280.6717a73c9c.avif 1280w, /assets/media/img/xpath-dashboard-1920.6bd1b64229.avif 1920w",
+      "webp": "/assets/media/img/xpath-dashboard-640.0f6230026e.webp 640w, /assets/media/img/xpath-dashboard-1280.a461112037.webp 1280w, /assets/media/img/xpath-dashboard-1920.0d2b2e82f0.webp 1920w",
+      "fallback": "/assets/media/img/xpath-dashboard-1280.37334b4467.jpg",
+      "source": "fb77f59238|v1|avif q60 e6 444|webp q80 e6 smart|jpeg mozjpeg q80"
+    },
+    "assets/img/xpath-deposits.png": {
+      "width": 2956,
+      "height": 1662,
+      "avif": "/assets/media/img/xpath-deposits-640.abbe6b277f.avif 640w, /assets/media/img/xpath-deposits-1280.0a983e72d5.avif 1280w, /assets/media/img/xpath-deposits-1920.5ecc86c765.avif 1920w",
+      "webp": "/assets/media/img/xpath-deposits-640.e5d596f9d9.webp 640w, /assets/media/img/xpath-deposits-1280.c93228e260.webp 1280w, /assets/media/img/xpath-deposits-1920.2045b2b5d0.webp 1920w",
+      "fallback": "/assets/media/img/xpath-deposits-1280.932bec8251.jpg",
+      "source": "66868d2806|v1|avif q60 e6 444|webp q80 e6 smart|jpeg mozjpeg q80"
+    },
+    "assets/img/xpath-merchants.png": {
+      "width": 2956,
+      "height": 1662,
+      "avif": "/assets/media/img/xpath-merchants-640.4b1b058591.avif 640w, /assets/media/img/xpath-merchants-1280.17499536a4.avif 1280w, /assets/media/img/xpath-merchants-1920.4933867650.avif 1920w",
+      "webp": "/assets/media/img/xpath-merchants-640.0cd9112b42.webp 640w, /assets/media/img/xpath-merchants-1280.e7456d384e.webp 1280w, /assets/media/img/xpath-merchants-1920.ef6c2b2f53.webp 1920w",
+      "fallback": "/assets/media/img/xpath-merchants-1280.a8ba9dec53.jpg",
+      "source": "9c27a4b454|v1|avif q60 e6 444|webp q80 e6 smart|jpeg mozjpeg q80"
+    },
+    "assets/img/xpath-payments-memo.png": {
+      "width": 2956,
+      "height": 1662,
+      "avif": "/assets/media/img/xpath-payments-memo-640.f9204c8186.avif 640w, /assets/media/img/xpath-payments-memo-1280.f8d3315548.avif 1280w, /assets/media/img/xpath-payments-memo-1920.39b8c17040.avif 1920w",
+      "webp": "/assets/media/img/xpath-payments-memo-640.735f462026.webp 640w, /assets/media/img/xpath-payments-memo-1280.6eb09bd003.webp 1280w, /assets/media/img/xpath-payments-memo-1920.d959e224c1.webp 1920w",
+      "fallback": "/assets/media/img/xpath-payments-memo-1280.96a8ee7c1d.jpg",
+      "source": "6bfda7ea7e|v1|avif q60 e6 444|webp q80 e6 smart|jpeg mozjpeg q80"
+    },
+    "assets/img/xpath-payments.png": {
+      "width": 2956,
+      "height": 1662,
+      "avif": "/assets/media/img/xpath-payments-640.5a2881c344.avif 640w, /assets/media/img/xpath-payments-1280.3f965edeb9.avif 1280w, /assets/media/img/xpath-payments-1920.7a64e296ec.avif 1920w",
+      "webp": "/assets/media/img/xpath-payments-640.bf3402fa7e.webp 640w, /assets/media/img/xpath-payments-1280.910af7347b.webp 1280w, /assets/media/img/xpath-payments-1920.161f4d906b.webp 1920w",
+      "fallback": "/assets/media/img/xpath-payments-1280.fea4dbe85d.jpg",
+      "source": "8660bd8a46|v1|avif q60 e6 444|webp q80 e6 smart|jpeg mozjpeg q80"
     }
   },
   "logos": {

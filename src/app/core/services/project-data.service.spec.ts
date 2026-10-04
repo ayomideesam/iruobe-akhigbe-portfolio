@@ -47,12 +47,9 @@ describe('ProjectDataService', () => {
          });
       });
 
-      it('should list Trade Export and Trade Import as separate, adjacent flagships', () => {
-         const ids = service.getProjects().map(p => p.id);
-         const exportIdx = ids.indexOf(7);
-         const importIdx = ids.indexOf(2);
-         expect(exportIdx).toBeGreaterThanOrEqual(0);
-         expect(importIdx).toBe(exportIdx + 1);
+      // Akhigbe's own ordering: most recent first (set 2026-10-04).
+      it('should list the flagships in the order Akhigbe set, most recent first', () => {
+         expect(service.getProjects().map(p => p.id)).toEqual([7, 6, 3, 2, 1, 4, 5]);
       });
    });
 

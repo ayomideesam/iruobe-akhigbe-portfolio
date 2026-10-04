@@ -91,43 +91,6 @@ export class ProjectDataService {
             ]
          },
          {
-            id: 2,
-            title: 'Globus Trade Application — Import (GTA)',
-            description: 'Akhigbe Iruobe architected and delivered Globus Bank\'s CBN-mandated import trade finance platform — digitising Form M documentation, Letters of Credit (LC), Bills for Collection (BC), and end-to-end import workflow management across all bank trade operations personas.',
-            techStack: [
-               { name: 'Angular 19', color: '#DD0031' },
-               { name: 'TypeScript', color: '#3178C6' },
-               { name: 'RxJS', color: '#B7178C' },
-               { name: 'HTML5 | CSS3', color: '#339933' }
-            ],
-            achievements: [
-               'Achieved 100% adoption by the full trade operations team within 6 months — the first digital replacement of a fully paper-based CBN-regulated trade finance process at Globus Bank',
-               'Reduced trade document processing time by 60% through multi-step workflow automation, inline regulatory compliance validation gates, and automated SWIFT message generation',
-               'Designed role-based access control spanning all trade personas (Account Officer, Trade Ops, Trade Manager, Authorizer, Admin) with Angular route guards and a server-driven permission matrix',
-               'Integrated RESTful trade finance APIs handling LC issuance, Bills for Collection processing, live FX rate fetching, and regulatory reporting — with full error-state and retry handling',
-               'Successfully completed UAT and deployed to production ahead of CBN-mandated regulatory deadline — zero post-launch critical defects'
-            ],
-            images: [
-               '/assets/img/trade-dashboard.png',
-               '/assets/img/trade-settings.png'
-            ],
-            isHovered: false,
-            stats: [
-               { value: '5', label: 'Trade Personas' },
-               { value: '3', label: 'Products (LC / BC / TF)' },
-               { value: '100%', label: 'Adoption at Launch' },
-               { value: '60%', label: 'Faster Processing' }
-            ],
-            pipelineLabel: 'Trade Finance Flow',
-            pipeline: [
-               { name: 'Form Initiation', meta: 'Account Officer · facility type selection' },
-               { name: 'Document Upload', meta: 'Trade docs · regulatory compliance checks' },
-               { name: 'Compliance Gates', meta: 'Inline CBN validation · ECOWAS review' },
-               { name: 'SWIFT Generation', meta: 'Automated SWIFT message creation · FX rate fetch' },
-               { name: 'Authorisation', meta: 'Trade Ops → Trade Manager → Authorizer sign-off' }
-            ]
-         },
-         {
             id: 6,
             title: 'Credit Approval Process (CAP)',
             description: 'Akhigbe Iruobe is the senior frontend engineer on Globus Bank\'s Credit Approval Process Automation Solution, built by a seven-person team (two frontend engineers, two senior backend engineers, a project manager, a product owner and a QA tester) — a CBN-compliant platform designed to digitise the full credit lifecycle across 4 facility modules (Retail, Corporate, Staff Loan, Product) through a 2 stage governance structure: Stage 1 routes applications through a 10+ role sequential chain culminating in MCC online committee voting with configurable MD/CEO veto power; Stage 2 escalates facilities above ₦100M to the Board Credit Committee (BCC) for majority vote, after which the platform enables disbursement or deferral workflows. The Retail module passed business CAB and rolls out to production in October 2026; the Corporate module is paused at ~10% build after the team was redeployed to Trade Export in July 2026.',
@@ -166,6 +129,88 @@ export class ProjectDataService {
                { name: 'MCC Committee', meta: 'Online vote capture · MD/CEO veto' },
                { name: 'BCC Escalation', meta: 'Facilities > ₦100M · board majority vote' },
                { name: 'Disbursement / Deferral', meta: 'Post-approval workflows unlocked' }
+            ]
+         },
+         {
+            id: 3,
+            title: 'Fraud Management System',
+            description: 'Akhigbe Iruobe architected Globus Bank\'s real-time Fraud Management System — a 14-engine rule-based detection platform monitoring every bank transaction for behavioral anomalies, velocity breaches, and blacklist matches with zero-delay alerting.',
+            techStack: [
+               { name: 'Angular 16', color: '#DD0031' },
+               { name: 'TypeScript', color: '#3178C6' },
+               { name: 'RxJS', color: '#B7178C' },
+               { name: 'WebSockets', color: '#4CAF50' },
+               { name: 'HTML5 | CSS3', color: '#339933' }
+            ],
+            achievements: [
+               'Achieved 100% transaction coverage within the first week of production deployment — all inbound and outbound bank transactions monitored through 14 configurable rule engines covering velocity limits, behavioral patterns, and blacklist screening',
+               'Reduced fraudulent transaction incidents by 45% in the first 90 days post-deployment through automated real-time alerting and structured case management workflows',
+               'Designed advanced analytics dashboard with real-time fraud pattern visualisations, per-customer risk scoring, and alert triage queue — enabling fraud ops to action flagged transactions in minutes vs. hours',
+               'Built a hybrid security architecture separating sensitive fraud rule configuration into in-memory storage while managing auth tokens in sessionStorage — eliminating 11 vulnerability findings to zero production vulnerabilities',
+               'Integrated with multiple Globus Bank core systems via REST APIs and WebSocket streams for real-time transaction event ingestion and instant risk score updates without page refresh'
+            ],
+            images: [
+               '/assets/img/fraud-live-dashboard.png',
+               '/assets/img/fraud-flagged-transactions.png',
+               '/assets/img/fraud-rule-engines.png',
+               '/assets/img/fraud-details-dark.png',
+               '/assets/img/fraud-dashboard-dark.png'
+            ],
+            isHovered: false,
+            stats: [
+               { value: '14', label: 'Rule Engines' },
+               { value: '100%', label: 'Transaction Coverage' },
+               { value: '45%', label: 'Fraud Reduction' },
+               { value: '₦250M+', label: 'Daily Monitored' }
+            ],
+            pipelineLabel: 'Detection Pipeline',
+            pipeline: [
+               { name: 'Transaction Ingestion', meta: 'REST API + WebSocket · real-time event stream' },
+               { name: 'Rule Engine', meta: '14 configurable engines · velocity, pattern, behavior' },
+               { name: 'Velocity Check', meta: 'Per-account transaction rate & amount thresholds' },
+               { name: 'Blacklist Match', meta: 'BVN blacklist · known fraud patterns · PEP screen' },
+               { name: 'Alert Generation', meta: 'Zero-delay push · fraud ops triage queue' },
+               { name: 'Case Review', meta: 'Structured case management · resolution workflow' }
+            ]
+         },
+         {
+            id: 2,
+            title: 'Globus Trade Application — Import (GTA)',
+            description: 'Akhigbe Iruobe architected and delivered Globus Bank\'s CBN-mandated import trade finance platform — digitising Form M documentation, Letters of Credit (LC), Bills for Collection (BC), and end-to-end import workflow management across all bank trade operations personas.',
+            techStack: [
+               { name: 'Angular 19', color: '#DD0031' },
+               { name: 'TypeScript', color: '#3178C6' },
+               { name: 'RxJS', color: '#B7178C' },
+               { name: 'HTML5 | CSS3', color: '#339933' }
+            ],
+            achievements: [
+               'Achieved 100% adoption by the full trade operations team within 6 months — the first digital replacement of a fully paper-based CBN-regulated trade finance process at Globus Bank',
+               'Reduced trade document processing time by 60% through multi-step workflow automation, inline regulatory compliance validation gates, and automated SWIFT message generation',
+               'Designed role-based access control spanning all trade personas (Account Officer, Trade Ops, Trade Manager, Authorizer, Admin) with Angular route guards and a server-driven permission matrix',
+               'Integrated RESTful trade finance APIs handling LC issuance, Bills for Collection processing, live FX rate fetching, and regulatory reporting — with full error-state and retry handling',
+               'Successfully completed UAT and deployed to production ahead of CBN-mandated regulatory deadline — zero post-launch critical defects'
+            ],
+            images: [
+               '/assets/img/gta-home.png',
+               '/assets/img/gta-documents.png',
+               '/assets/img/gta-import.png',
+               '/assets/img/gta-details.png',
+               '/assets/img/gta-settings.png'
+            ],
+            isHovered: false,
+            stats: [
+               { value: '5', label: 'Trade Personas' },
+               { value: '3', label: 'Products (LC / BC / TF)' },
+               { value: '100%', label: 'Adoption at Launch' },
+               { value: '60%', label: 'Faster Processing' }
+            ],
+            pipelineLabel: 'Trade Finance Flow',
+            pipeline: [
+               { name: 'Form Initiation', meta: 'Account Officer · facility type selection' },
+               { name: 'Document Upload', meta: 'Trade docs · regulatory compliance checks' },
+               { name: 'Compliance Gates', meta: 'Inline CBN validation · ECOWAS review' },
+               { name: 'SWIFT Generation', meta: 'Automated SWIFT message creation · FX rate fetch' },
+               { name: 'Authorisation', meta: 'Trade Ops → Trade Manager → Authorizer sign-off' }
             ]
          },
          {
@@ -212,48 +257,6 @@ export class ProjectDataService {
             ]
          },
          {
-            id: 3,
-            title: 'Fraud Management System',
-            description: 'Akhigbe Iruobe architected Globus Bank\'s real-time Fraud Management System — a 14-engine rule-based detection platform monitoring every bank transaction for behavioral anomalies, velocity breaches, and blacklist matches with zero-delay alerting.',
-            techStack: [
-               { name: 'Angular 16', color: '#DD0031' },
-               { name: 'TypeScript', color: '#3178C6' },
-               { name: 'RxJS', color: '#B7178C' },
-               { name: 'WebSockets', color: '#4CAF50' },
-               { name: 'HTML5 | CSS3', color: '#339933' }
-            ],
-            achievements: [
-               'Achieved 100% transaction coverage within the first week of production deployment — all inbound and outbound bank transactions monitored through 14 configurable rule engines covering velocity limits, behavioral patterns, and blacklist screening',
-               'Reduced fraudulent transaction incidents by 45% in the first 90 days post-deployment through automated real-time alerting and structured case management workflows',
-               'Designed advanced analytics dashboard with real-time fraud pattern visualisations, per-customer risk scoring, and alert triage queue — enabling fraud ops to action flagged transactions in minutes vs. hours',
-               'Built a hybrid security architecture separating sensitive fraud rule configuration into in-memory storage while managing auth tokens in sessionStorage — eliminating 11 vulnerability findings to zero production vulnerabilities',
-               'Integrated with multiple Globus Bank core systems via REST APIs and WebSocket streams for real-time transaction event ingestion and instant risk score updates without page refresh'
-            ],
-            images: [
-               '/assets/img/fraud-live-dashboard.png',
-               '/assets/img/fraud-flagged-transactions.png',
-               '/assets/img/fraud-rule-engines.png',
-               '/assets/img/fraud-details-dark.png',
-               '/assets/img/fraud-dashboard-dark.png'
-            ],
-            isHovered: false,
-            stats: [
-               { value: '14', label: 'Rule Engines' },
-               { value: '100%', label: 'Transaction Coverage' },
-               { value: '45%', label: 'Fraud Reduction' },
-               { value: '₦250M+', label: 'Daily Monitored' }
-            ],
-            pipelineLabel: 'Detection Pipeline',
-            pipeline: [
-               { name: 'Transaction Ingestion', meta: 'REST API + WebSocket · real-time event stream' },
-               { name: 'Rule Engine', meta: '14 configurable engines · velocity, pattern, behavior' },
-               { name: 'Velocity Check', meta: 'Per-account transaction rate & amount thresholds' },
-               { name: 'Blacklist Match', meta: 'BVN blacklist · known fraud patterns · PEP screen' },
-               { name: 'Alert Generation', meta: 'Zero-delay push · fraud ops triage queue' },
-               { name: 'Case Review', meta: 'Structured case management · resolution workflow' }
-            ]
-         },
-         {
             id: 4,
             title: 'ProjectTiger — Domestic Transfer Platform',
             description: 'Akhigbe Iruobe led frontend delivery of Zenith Bank\'s ProjectTiger — a mission-critical payment system handling NIP, NEFT, and NAPS transfers across 350+ branches, replacing a legacy payment infrastructure serving 100,000+ daily banking customers.',
@@ -272,8 +275,11 @@ export class ProjectDataService {
                'Architected role-gated transfer flows (Teller, Supervisor, Authorizer) with Angular route guards and configurable per-role transaction limit policies enforced at both UI and API intercept layers'
             ],
             images: [
-               '/assets/img/domestic-login.png',
-               '/assets/img/domestic-dashboard.png'
+               '/assets/img/tiger-teller.png',
+               '/assets/img/tiger-queue.png',
+               '/assets/img/tiger-naps-direct.png',
+               '/assets/img/tiger-search.png',
+               '/assets/img/tiger-nip-dashboard.png'
             ],
             isHovered: false,
             stats: [
@@ -310,8 +316,11 @@ export class ProjectDataService {
                'Implemented Angular Universal SSR improving initial page load by 40% and SEO performance by 60% — critical for the publicly-accessible merchant-facing portal'
             ],
             images: [
-               '/assets/img/xpath-charges.png',
-               '/assets/img/xpath-config.png'
+               '/assets/img/xpath-payments.png',
+               '/assets/img/xpath-deposits.png',
+               '/assets/img/xpath-payments-memo.png',
+               '/assets/img/xpath-merchants.png',
+               '/assets/img/xpath-dashboard.png'
             ],
             isHovered: false,
             stats: [

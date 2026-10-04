@@ -118,7 +118,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
     },
     trade: {
       key: 'trade', title: 'Globus Trade — Import', url: 'trade.globusbank.com',
-      imgs: ['/assets/img/trade-dashboard.png', '/assets/img/trade-settings.png'],
+      imgs: ['/assets/img/gta-home.png', '/assets/img/gta-documents.png', '/assets/img/gta-import.png', '/assets/img/gta-details.png', '/assets/img/gta-settings.png'],
       badges: [{ name: 'Angular 19', bc: '#DD003166' }, { name: 'TypeScript', bc: '#3178C666' }, { name: 'RxJS', bc: '#B7178C66' }],
       desc: '100% adoption by trade ops team within 6 months — CBN-mandated import trade finance platform (Form M, LC, BC) replacing a fully paper-based process at Globus Bank.'
     },
@@ -136,13 +136,13 @@ export class HomeComponent implements OnInit, AfterViewInit {
     },
     tiger: {
       key: 'tiger', title: 'ProjectTiger — Domestic Transfers', url: 'tiger.zenithbank.com',
-      imgs: ['/assets/img/domestic-dashboard.png', '/assets/img/domestic-login.png'],
+      imgs: ['/assets/img/tiger-teller.png', '/assets/img/tiger-queue.png', '/assets/img/tiger-naps-direct.png', '/assets/img/tiger-search.png', '/assets/img/tiger-nip-dashboard.png'],
       badges: [{ name: 'Angular', bc: '#DD003166' }, { name: 'TypeScript', bc: '#3178C666' }, { name: 'Jenkins CI/CD', bc: '#D3383366' }],
       desc: '₦100B+ processed in week one, zero downtime — NIP/NEFT/NAPS payment platform for Zenith Bank serving 100,000+ daily customers across 350+ branches.'
     },
     xpath: {
       key: 'xpath', title: 'X-Path — Merchant Collections', url: 'xpath.zenithbank.com',
-      imgs: ['/assets/img/xpath-charges.png', '/assets/img/xpath-config.png'],
+      imgs: ['/assets/img/xpath-payments.png', '/assets/img/xpath-deposits.png', '/assets/img/xpath-payments-memo.png', '/assets/img/xpath-merchants.png', '/assets/img/xpath-dashboard.png'],
       badges: [{ name: 'Angular', bc: '#DD003166' }, { name: 'Angular Universal', bc: '#B7178C66' }, { name: 'Jenkins CI/CD', bc: '#D3383366' }],
       desc: 'Merchant onboarding 70% faster — three-app Angular micro-frontend suite (Admin, Teller, Data-Store) with self-service ERP integration and automated reconciliation across 350 branches.'
     }
