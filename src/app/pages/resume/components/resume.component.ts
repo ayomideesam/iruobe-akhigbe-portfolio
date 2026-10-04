@@ -6,7 +6,7 @@ import { AnalyticsService } from 'src/app/core/services/analytics.service';
 import { LoadingService } from 'src/app/core/services/loading.service';
 import { PdfService } from 'src/app/core/services/pdf.service';
 import { AtsPdfService } from 'src/app/core/services/ats-pdf.service';
-import { Course, Job, Profile, Reference, ResumeDataService, SkillTier } from 'src/app/core/services/resume-data.service';
+import { Course, Job, Language, Profile, Reference, ResumeDataService, SkillTier } from 'src/app/core/services/resume-data.service';
 import { LearningDataService } from 'src/app/core/services/learning-data.service';
 import { SeoService } from 'src/app/core/services/seo.service';
 import { ThemeService } from 'src/app/core/services/theme.service';
@@ -40,6 +40,8 @@ export class ResumeComponent implements AfterViewInit {
   profile!: Profile;
   skills: SkillTier[] = [];
   techWatching: string[] = [];
+  languages: Language[] = [];
+  hobbies: string[] = [];
   employmentHistory: Job[] = [];
   courses: Course[] = [];
   references: Reference[] = [];
@@ -59,6 +61,9 @@ export class ResumeComponent implements AfterViewInit {
     this.profile = this.resumeData.getProfile();
     this.skills = this.resumeData.getSkills();
     this.techWatching = this.resumeData.getTechWatching();
+    this.hobbies = this.resumeData.getHobbies();
+    this.languages = this.resumeData.getLanguages()
+      .map(l => l.name === 'French' ? { ...l, note: `learning since ${this.frenchSince}` } : l);
     this.employmentHistory = this.resumeData.getEmploymentHistory();
     this.courses = this.resumeData.getCourses();
     this.references = this.resumeData.getReferences();
@@ -309,7 +314,8 @@ export class ResumeComponent implements AfterViewInit {
         },
         certifications: this.courses,
         techWatching: this.techWatching,
-        languages: ['English', 'Yoruba', `French (learning since ${this.frenchSince})`, 'Hausa'],
+        hobbies: this.hobbies,
+        languages: this.languages,
         references: this.references
       };
 

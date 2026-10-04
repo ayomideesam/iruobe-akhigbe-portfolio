@@ -128,43 +128,31 @@
                         </div>
                     </section>
 
-                    <!-- Languages Section with improved dots -->
+                    <!-- Languages: five dots, halves allowed -->
                     <section class="languages-section">
                         <h3>LANGUAGES</h3>
                         <div class="languages-list">
+                            @for (lang of languages; track lang.name) {
                             <div class="language-item">
-                                <span class="language-name">English</span>
-                                <div class="language-proficiency">
+                                <span class="language-name">{{ lang.name }}@if (lang.note) {<span class="language-note">{{ lang.note }}</span>}</span>
+                                <div class="language-proficiency" role="img" [attr.aria-label]="lang.name + ': ' + lang.level + ' out of 5'">
                                     @for (dot of [1,2,3,4,5]; track dot) {
-                                    <div class="proficiency-dot filled"></div>
+                                    <div class="proficiency-dot" [class.filled]="dot <= lang.level" [class.half]="dot - 0.5 === lang.level"></div>
                                     }
                                 </div>
                             </div>
-                            <div class="language-item">
-                                <span class="language-name">Yoruba</span>
-                                <div class="language-proficiency">
-                                    @for (dot of [1,2,3,4,5]; track dot) {
-                                    <div class="proficiency-dot" [class.filled]="dot <= 3"></div>
-                                    }
-                                </div>
-                            </div>
-                            <div class="language-item">
-                                <span class="language-name">French <span class="language-note">learning since {{ frenchSince }}</span></span>
-                                <div class="language-proficiency">
-                                    @for (dot of [1,2,3,4,5]; track dot) {
-                                    <div class="proficiency-dot" [class.filled]="dot <= 2.5"></div>
-                                    }
-                                </div>
-                            </div>
-                            <div class="language-item">
-                                <span class="language-name">Hausa</span>
-                                <div class="language-proficiency">
-                                    @for (dot of [1,2,3,4,5]; track dot) {
-                                    <div class="proficiency-dot" [class.filled]="dot <= 1"></div>
-                                    }
-                                </div>
-                            </div>
+                            }
                         </div>
+                    </section>
+
+                    <!-- Hobbies -->
+                    <section class="hobbies-chips-section">
+                        <h3>HOBBIES</h3>
+                        <ul class="skill-chips">
+                            @for (hobby of hobbies; track hobby) {
+                            <li class="skill-chip">{{ hobby }}</li>
+                            }
+                        </ul>
                     </section>
                 </div>
 

@@ -59,6 +59,22 @@ describe('ResumeDataService', () => {
     });
   });
 
+  describe('getLanguages() and getHobbies()', () => {
+    it('should rate French 3.5 of 5 and keep every level within 0–5 in half steps', () => {
+      const langs = service.getLanguages();
+      expect(langs.find(l => l.name === 'French')?.level).toBe(3.5);
+      for (const l of langs) {
+        expect(l.level).toBeGreaterThanOrEqual(0);
+        expect(l.level).toBeLessThanOrEqual(5);
+        expect(l.level * 2 % 1).toBe(0);
+      }
+    });
+
+    it('should list hobbies for both PDFs and the page', () => {
+      expect(service.getHobbies().length).toBeGreaterThan(0);
+    });
+  });
+
   describe('getReferences()', () => {
     it("should carry names and companies only, never a referee's contact details", () => {
       for (const ref of service.getReferences()) {

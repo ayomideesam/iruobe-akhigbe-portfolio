@@ -36,6 +36,13 @@ export interface Reference {
    company: string;
 }
 
+export interface Language {
+   name: string;
+   /** Out of 5; halves allowed (French is 3.5). */
+   level: number;
+   note?: string;
+}
+
 export interface Profile {
    paragraphs: string[];
    availability: string;
@@ -50,8 +57,10 @@ export interface Profile {
 // - CAP: Retail module only in production; no committee voting. Fraud: no
 //   real-time streaming. Import: no SWIFT/LC/BC/FX-rate features.
 // - Promotions are shown as separate roles under one company: they matter.
-// - Zenith-period bullets only describe work dated inside Dec 2022 – Feb 2024
-//   in the repos' history.
+// - Zenith stays Dec 2022 – Feb 2024. The Domestic Transfer rails he built
+//   after that (NIP/NEFT/NAPS inward and outward, NAPS direct credits,
+//   clearing sessions, PAPSS, global search) are listed as later work on the
+//   same platform, without dates, at his request (2026-10-04).
 @Injectable({
    providedIn: 'root'
 })
@@ -104,6 +113,19 @@ export class ResumeDataService {
             note: 'Scaffold and ship in any framework at speed, with tests and audits as the gate.'
          }
       ];
+   }
+
+   getLanguages(): Language[] {
+      return [
+         { name: 'English', level: 5 },
+         { name: 'Yoruba', level: 3 },
+         { name: 'French', level: 3.5 },
+         { name: 'Hausa', level: 1 }
+      ];
+   }
+
+   getHobbies(): string[] {
+      return ['Coding', 'Software testing', 'Board games', 'Swimming', 'Reading', 'Console games'];
    }
 
    getTechWatching(): string[] {
@@ -187,9 +209,9 @@ export class ResumeDataService {
             location: "Victoria Island, Lagos",
             description: "Promoted to Frontend Team Lead in April 2023, weeks after back-to-back Sprint Champion awards. Led 6 frontend engineers across the bank's payments and collections platforms.",
             achievements: [
-               "Led the frontend of ProjectTiger, the Domestic Transfer platform: teller payment processing for NIP, NEFT and NAPS with sender balance and limit checks, name enquiry and approval queues — ₦100B+ processed in its first week live, with zero downtime.",
-               "Led X-Path, the merchant-collections suite (Admin, Teller and Data-Store apps) used across 350 branches: collections against merchant-defined custom fields and memo pop-ups, cash and cheque withdrawals, PTA/BTA payments, inbound IMTO transfers, HOP approval and reversals, reprocessing, and receipt and payment reports.",
-               "Self-service merchant configuration made merchant onboarding 70% faster.",
+               "Led the frontend of the Domestic Transfer platform (ProjectTiger): teller payment processing for NIP, NEFT and NAPS with sender balance and limit checks, name enquiry and approval queues — ₦100B+ processed in its first week live, with zero downtime.",
+               "Later extended the Domestic Transfer platform across every rail: NIP inward and outward (fraud checks, settlement, returns, reconciliation, receipts), NEFT inward and outward (credit and debit batches, bulk uploads, dividend warrants), NAPS inward and outward with direct credits (pend, unpend and amount blocks; paid and unpaid reports), clearing sessions with reversal, PAPSS cross-border payments, and a Transaction 360 global search.",
+               "Led X-Path, the merchant-collections suite (Admin, Teller and Data-Store apps) used across 350 branches: collections against merchant-defined custom fields and memo pop-ups, cash and cheque withdrawals, PTA/BTA payments, inbound IMTO transfers, HOP approval and reversals, reprocessing, and receipt and payment reports; self-service merchant configuration made onboarding 70% faster.",
                "Delivered the Zenith Tax Clearance System as its sole frontend engineer."
             ],
             technicalLeadership: [

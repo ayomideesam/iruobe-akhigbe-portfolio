@@ -414,6 +414,12 @@ h3 {
     transition: all 0.3s ease;
 }
 
+.proficiency-dot.half {
+    background: linear-gradient(90deg, var(--dot-fill) 50%, var(--dot-bg) 50%);
+}
+
+.hobbies-chips-section .skill-chips { margin-bottom: 0.5rem; }
+
 .proficiency-dot.filled {
     background-color: var(--dot-fill);
     transform: scale(1.1);

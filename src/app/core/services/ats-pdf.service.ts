@@ -1,7 +1,7 @@
 // core/services/ats-pdf.service.ts
 import { Injectable } from '@angular/core';
 import type { jsPDF } from 'jspdf';
-import type { Reference, SkillTier } from './resume-data.service';
+import type { Language, Reference, SkillTier } from './resume-data.service';
 
 interface ResumeData {
   name: string;
@@ -36,7 +36,8 @@ interface ResumeData {
     period: string;
   }>;
   techWatching: string[];
-  languages: string[];
+  hobbies: string[];
+  languages: Language[];
   references: Reference[];
 }
 
@@ -56,10 +57,15 @@ interface PDFColors {
 export class AtsPdfService {
   private readonly PAGE_WIDTH = 595.28;
   private readonly PAGE_HEIGHT = 841.89;
+  /** Top and bottom page margin, and the right column's outer margin. */
   private readonly MARGIN = 40;
-  private readonly LEFT_COLUMN_WIDTH = 180;
-  private readonly RIGHT_COLUMN_X = this.MARGIN + this.LEFT_COLUMN_WIDTH + 15;
-  private readonly RIGHT_COLUMN_WIDTH = this.PAGE_WIDTH - this.RIGHT_COLUMN_X - this.MARGIN;
+  /** Sidebar geometry: inner padding, content width, and the tinted band that holds both. */
+  private readonly SIDEBAR_PAD = 26;
+  private readonly LEFT_COLUMN_WIDTH = 146;
+  private readonly SIDEBAR_WIDTH = this.SIDEBAR_PAD + this.LEFT_COLUMN_WIDTH + 14;
+  /** The main column starts a gutter clear of the band (it used to start flush against it). */
+  private readonly RIGHT_COLUMN_X = this.SIDEBAR_WIDTH + 18;
+  private readonly RIGHT_COLUMN_WIDTH = this.PAGE_WIDTH - this.RIGHT_COLUMN_X - 34;
 
   private pdf!: jsPDF;
   private currentY = 0;
@@ -151,21 +157,21 @@ export class AtsPdfService {
     } else {
       this.pdf.setFillColor(244, 244, 244);
     }
-    this.pdf.rect(0, 0, this.LEFT_COLUMN_WIDTH + this.MARGIN + 15, this.PAGE_HEIGHT, 'F');
+    this.pdf.rect(0, 0, this.SIDEBAR_WIDTH, this.PAGE_HEIGHT, 'F');
 
     if (isDarkTheme) {
       this.pdf.setFillColor(18, 18, 18);
     } else {
       this.pdf.setFillColor(255, 255, 255);
     }
-    this.pdf.rect(this.LEFT_COLUMN_WIDTH + this.MARGIN + 15, 0, this.PAGE_WIDTH, this.PAGE_HEIGHT, 'F');
+    this.pdf.rect(this.SIDEBAR_WIDTH, 0, this.PAGE_WIDTH, this.PAGE_HEIGHT, 'F');
   }
 
   private drawHeader(data: ResumeData): void {
     const headerHeight = 85;
     const headerY = this.MARGIN;
-    const boxX = this.MARGIN + 15;
-    const boxWidth = this.PAGE_WIDTH - (2 * this.MARGIN) - 30;
+    const boxX = this.SIDEBAR_PAD;
+    const boxWidth = this.PAGE_WIDTH - this.SIDEBAR_PAD - 34;
 
     if (this.colors.background === '#1E1E1E') {
       this.pdf.setDrawColor(255, 255, 255);
@@ -191,10 +197,10 @@ export class AtsPdfService {
   // ─── Left Column ─────────────────────────────────────────────────────────────
 
   /** The sidebar mirrors the resume page's left column, in the same order:
-   *  details, links, skills, tech I'm watching, languages. */
+   *  details, links, skills, tech I'm watching, languages, hobbies. */
   private drawLeftColumn(data: ResumeData): void {
     let leftY = this.currentY;
-    const leftX = this.MARGIN;
+    const leftX = this.SIDEBAR_PAD;
     const w = this.LEFT_COLUMN_WIDTH;
 
     leftY = this.drawSectionTitle('DETAILS', leftX, leftY, w);
@@ -220,7 +226,12 @@ export class AtsPdfService {
 
     if (leftY > this.PAGE_HEIGHT - 90) leftY = this.newLeftPage();
     leftY = this.drawSectionTitle('LANGUAGES', leftX, leftY, w);
-    this.drawLanguages(data.languages, leftX, leftY, w);
+    leftY = this.drawLanguages(data.languages, leftX, leftY, w);
+    leftY += 16;
+
+    if (leftY > this.PAGE_HEIGHT - 120) leftY = this.newLeftPage();
+    leftY = this.drawSectionTitle('HOBBIES', leftX, leftY, w);
+    this.drawTechWatching(data.hobbies, leftX, leftY, w);
   }
 
   // ─── Right Column ─────────────────────────────────────────────────────────────
@@ -352,14 +363,45 @@ export class AtsPdfService {
     return currentY;
   }
 
-  private drawLanguages(languages: string[], x: number, y: number, _width: number): number {
+  /** Name (and note) left, five proficiency dots right; a half level fills half a dot. */
+  private drawLanguages(languages: Language[], x: number, y: number, width: number): number {
     let currentY = y;
-    languages.forEach(language => {
+    const r = 2.6;
+    const step = 7.5;
+    const filled = this.isDark ? '#60A5FA' : '#2563EB';
+    const empty = this.isDark ? '#334155' : '#E2E8F0';
+
+    languages.forEach(lang => {
       this.pdf.setFontSize(9);
       this.pdf.setFont('helvetica', 'normal');
       this.pdf.setTextColor(this.colors.textDark);
-      this.pdf.text(language, x, currentY);
-      currentY += 15;
+      this.pdf.text(lang.name, x, currentY);
+
+      for (let i = 0; i < 5; i++) {
+        const cx = x + width - r - (4 - i) * step;
+        const cy = currentY - 3;
+        const level = lang.level - i;
+        this.pdf.setFillColor(level >= 1 ? filled : empty);
+        this.pdf.circle(cx, cy, r, 'F');
+        if (level > 0 && level < 1) {
+          // Left half only: clip to a rectangle over the left of the dot.
+          this.pdf.saveGraphicsState();
+          this.pdf.rect(cx - r, cy - r, r, r * 2, null);
+          this.pdf.clip();
+          this.pdf.discardPath();
+          this.pdf.setFillColor(filled);
+          this.pdf.circle(cx, cy, r, 'F');
+          this.pdf.restoreGraphicsState();
+        }
+      }
+
+      if (lang.note) {
+        this.pdf.setFontSize(7.5);
+        this.pdf.setTextColor(this.colors.textLight);
+        this.pdf.text(lang.note, x, currentY + 10);
+        currentY += 10;
+      }
+      currentY += 16;
     });
     return currentY;
   }
