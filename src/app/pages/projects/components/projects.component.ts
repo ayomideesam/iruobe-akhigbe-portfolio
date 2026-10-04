@@ -97,6 +97,7 @@ export class ProjectsComponent implements OnInit, AfterViewInit, OnDestroy {
   private cardListeners: Array<{ el: HTMLElement; enter: EventListener; move: EventListener; leave: EventListener; cancel: () => void }> = [];
   private filmObserver: IntersectionObserver | null = null;
   private revealObserver: IntersectionObserver | null = null;
+  private telemetryObserver: IntersectionObserver | null = null;
   private videoCaps: VideoCapabilities | null = null;
 
   scrollState = 'normal';
@@ -132,6 +133,89 @@ export class ProjectsComponent implements OnInit, AfterViewInit, OnDestroy {
     return this.sceneMeta[id] ?? this.fallbackSceneMeta;
   }
 
+  /**
+   * Labels for the live-telemetry vignettes. Statuses, roles, rules and document names come
+   * from each product's own code, so every animation shows something the software really does;
+   * references, names and amounts are fictional.
+   */
+  readonly tm = {
+    // GlobusTradeFrontEnd — partial shipments under one Form M; variance = Form M − documents
+    gtaBoxes: [
+      { part: 'P1', bol: 'BOL-4471' },
+      { part: 'P2', bol: 'BOL-4519' },
+      { part: 'P3', bol: 'BOL-4602' }
+    ],
+    gtaVariance: ['1.20M', '0.78M', '0.41M', '0.06M'],
+    // import.component.ts — the 13 shipping-document slots checked against LC requirements
+    gtaDocs: ['CCVO', 'INV', 'B/E', 'COA', 'MFR', 'PKL', 'PHY', 'CoC', 'DSP', 'PSH', 'B/L', 'OBS', 'OTH'],
+    // CAP-Frontend ROLE_HIERARCHY; `step` is when that desk signs — Head Credit returns the
+    // request to the Credit Analyst once, so it signs on step 10, not 8
+    capRungs: [
+      { name: 'Account Officer', ok: 'Initiated', step: 0, returned: false },
+      { name: 'Branch Manager', ok: 'Approved', step: 1, returned: false },
+      { name: 'BFG Head', ok: 'Approved', step: 2, returned: false },
+      { name: 'Zonal Head', ok: 'Approved', step: 3, returned: false },
+      { name: 'Group Head', ok: 'Approved', step: 4, returned: false },
+      { name: 'Legal Officer', ok: 'Approved', step: 5, returned: false },
+      { name: 'Head of Legal', ok: 'Approved', step: 6, returned: false },
+      { name: 'Credit Analyst', ok: 'Approved', step: 7, returned: false },
+      { name: 'Head Credit', ok: 'Approved', step: 10, returned: true },
+      { name: 'CRO', ok: 'Approved', step: 11, returned: false },
+      { name: 'ED Business', ok: 'Approved', step: 12, returned: false },
+      { name: 'ED Risk', ok: 'Approved', step: 13, returned: false },
+      { name: 'MD', ok: 'Offer letter', step: 14, returned: false },
+      { name: 'MCC', ok: 'Approved', step: 15, returned: false },
+      { name: 'BCC', ok: 'Approved', step: 16, returned: false }
+    ],
+    capTranches: ['T1', 'T2', 'T3'],
+    // CoStaff — Gmail inbox tabs and the scheduler week
+    cosTabs: ['Important', 'Primary', 'Promotions', 'Updates'],
+    cosDays: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'],
+    // Fraud — 10 of the 14 weighted rules (constants.service.ts); `hit` marks the ones that fire
+    fmsRules: [
+      { name: 'SIM Swap', weight: '+45%', hit: 'a' },
+      { name: 'PIN Change', weight: '', hit: '' },
+      { name: 'New Device', weight: '', hit: '' },
+      { name: 'Acct Age', weight: '', hit: '' },
+      { name: 'Velocity', weight: '+35%', hit: 'b' },
+      { name: 'Amount Δ', weight: '', hit: '' },
+      { name: 'Odd Hour', weight: '+12%', hit: 'c' },
+      { name: 'Odd Day', weight: '', hit: '' },
+      { name: 'Risky IP', weight: '', hit: '' },
+      { name: 'Watchlist BVN', weight: '', hit: '' }
+    ],
+    fmsScore: ['0%', '45%', '57%', '92%'],
+    fmsQuestions: ['Date of birth', 'Phone number', 'Last 3 txns'],
+    // DomesticTransfer — the teller path and the two transfers that take it
+    tgrGates: ['Sender', 'Name enq.', 'Limit', 'Post'],
+    tgrCaptions: [
+      'NIP · ₦250,000 · balance ✓',
+      'Name enquiry · KYC 3',
+      'Within teller limit',
+      '00 · Successful',
+      'NEFT · ₦18.5M · OD facility ✓',
+      'Over teller limit → HOP',
+      '09 → Awaiting ZH approval',
+      'Approved · posted'
+    ],
+    // X-Path Teller — a collection for a (fictional) school-fees merchant
+    xptFields: ['Student ID', 'Term', 'Amount ₦'],
+    xptMethods: ['Cash', 'Cheque', 'Transfer', 'POS'],
+    // processStatus path per request: one straight through, one failed + reprocessed, one
+    // completed then reversed with the HOP's approval
+    xptRows: [
+      { ref: 'REQ-21094', states: [
+        { t: 'pending', tone: '' }, { t: 'payment', tone: '' }, { t: 'processing', tone: '' },
+        { t: 'completed', tone: 'ok' }] },
+      { ref: 'REQ-21107', states: [
+        { t: 'pending', tone: '' }, { t: 'payment', tone: '' }, { t: 'processing', tone: '' },
+        { t: 'failed', tone: 'bad' }, { t: 'reprocess', tone: '' }, { t: 'completed', tone: 'ok' }] },
+      { ref: 'REQ-21115', states: [
+        { t: 'pending', tone: '' }, { t: 'payment', tone: '' }, { t: 'processing', tone: '' },
+        { t: 'completed', tone: 'ok' }, { t: 'reversal', tone: '' }, { t: 'HOP approved', tone: 'ok' }] }
+    ]
+  } as const;
+
   @HostListener('window:scroll', [])
   onWindowScroll() {
     const scrollPosition = window.pageYOffset;
@@ -160,7 +244,7 @@ export class ProjectsComponent implements OnInit, AfterViewInit, OnDestroy {
     this.zone.runOutsideAngular(() => {
       this.initSceneFilms();
       this.initSceneReveals();
-      this.initCircleAnimations();
+      this.initTelemetry();
       if (this.tiltEnabled) {
         this.initAssessmentTilt();
       }
@@ -197,6 +281,20 @@ export class ProjectsComponent implements OnInit, AfterViewInit, OnDestroy {
     }, { threshold: 0.15 });
 
     videos.forEach(video => this.filmObserver!.observe(video));
+  }
+
+  /**
+   * Telemetry loops run only while their scene is near the viewport: `.fp-live` flips
+   * animation-play-state for that scene's panels (CSS), so fourteen looping vignettes never
+   * all animate at once. Reduced motion needs no observer — the CSS turns the loops off.
+   */
+  private initTelemetry() {
+    if (!this.tiltEnabled) return;
+    const scenes = document.querySelectorAll('.fp-scene');
+    this.telemetryObserver = new IntersectionObserver(entries => {
+      entries.forEach(entry => entry.target.classList.toggle('fp-live', entry.isIntersecting));
+    }, { rootMargin: '120px 0px' });
+    scenes.forEach(scene => this.telemetryObserver!.observe(scene));
   }
 
   /** Scroll-choreographed scene entrances. */
@@ -290,6 +388,8 @@ export class ProjectsComponent implements OnInit, AfterViewInit, OnDestroy {
     this.filmObserver = null;
     this.revealObserver?.disconnect();
     this.revealObserver = null;
+    this.telemetryObserver?.disconnect();
+    this.telemetryObserver = null;
     if (this.expandedAssessmentId !== null || this.lightbox) this.unlockBodyScroll();
   }
 
@@ -510,24 +610,4 @@ export class ProjectsComponent implements OnInit, AfterViewInit, OnDestroy {
   onAssessmentResize(): void {
     this.canExpandAssessment = window.innerWidth >= ProjectsComponent.EXPAND_MIN_WIDTH;
   }
-
-  private initCircleAnimations() {
-    const circles = document.querySelectorAll('.circle');
-    circles.forEach((circle, index) => {
-      if (circle instanceof HTMLElement) {
-        // Add random starting positions and delays
-        circle.style.animationDelay = `${index * -2}s`;
-
-        // Add subtle pulse animation
-        setInterval(() => {
-          circle.style.transform = 'scale(1.1)';
-          setTimeout(() => {
-            circle.style.transform = 'scale(1)';
-          }, 200);
-        }, 3000 + (index * 1000));
-      }
-    });
-  }
-
-
 }

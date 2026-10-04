@@ -171,229 +171,329 @@
                         }
                         @if (project.id === 6) {
                         <div class="fp-telemetry">
-                            <div class="fp-telemetry-head"><span class="fp-live-dot"></span>Approval Chain</div>
+                            <div class="fp-telemetry-head"><span class="fp-live-dot"></span>Approval Ladder</div>
                             <div class="animation-container">
-                                <div class="cap-approval-flow">
-                                    <div class="flow-stages">
-                                        @for (s of [1,2,3,4,5]; track s) {
-                                        <div class="flow-node">
-                                            <div class="node-dot"></div>
-                                            <div class="node-line"></div>
-                                        </div>
-                                        }
-                                        <div class="flow-node final">
-                                            <div class="node-dot approved"></div>
-                                        </div>
+                                <div class="tm-stage cap-ladder">
+                                    <div class="tm-row">
+                                        <span class="tm-cap">FR-0418 · Retail</span>
+                                        <span class="tm-swap cap-state">
+                                            <span class="tm-pill">Pending</span>
+                                            <span class="tm-pill ok">Approved</span>
+                                        </span>
                                     </div>
-                                    <div class="flow-document">
-                                        <div class="doc-lines">
-                                            @for (s of [1,2,3]; track s) {
-                                            <div class="doc-line"></div>
+                                    <div class="cap-window">
+                                        <span class="cap-desk"></span>
+                                        <ol class="cap-rungs">
+                                            @for (r of tm.capRungs; track r.name) {
+                                            <li class="cap-rung" [style.--s]="r.step">
+                                                <span class="cap-rung-dot"></span>
+                                                <span class="cap-rung-name">{{r.name}}</span>
+                                                <span class="cap-rung-ok">{{r.ok}}</span>
+                                                @if (r.returned) {
+                                                <span class="cap-rung-back">Returned</span>
+                                                }
+                                            </li>
                                             }
-                                        </div>
+                                        </ol>
                                     </div>
-                                    <div class="flow-stamp">
-                                        <div class="stamp-outer"></div>
-                                        <div class="stamp-inner"></div>
-                                        <div class="stamp-text"></div>
+                                    <div class="tm-row">
+                                        <span class="tm-cap tm-wide">Approve · Return · Reject</span>
+                                        <span class="tm-pill ok">SLA 48h</span>
                                     </div>
                                 </div>
                             </div>
                         </div>
                         <div class="fp-telemetry">
-                            <div class="fp-telemetry-head"><span class="fp-live-dot"></span>Committee Vote</div>
+                            <div class="fp-telemetry-head"><span class="fp-live-dot"></span>Drawdown</div>
                             <div class="animation-container">
-                                <div class="cap-committee">
-                                    <div class="committee-members">
-                                        @for (s of [1,2,3,4,5,6]; track s) {
-                                        <div class="member">
-                                            <div class="member-avatar"></div>
-                                            <div class="member-vote"></div>
-                                        </div>
-                                        }
+                                <div class="tm-stage cap-draw">
+                                    <div class="tm-row">
+                                        <span class="tm-cap">PL-0818<span class="tm-wide"> · ₦90M limit</span></span>
+                                        <span class="tm-swap cap-draw-state">
+                                            <span class="tm-pill">Not disbursed</span>
+                                            <span class="tm-pill">Partially disbursed</span>
+                                            <span class="tm-pill ok">Fully disbursed</span>
+                                        </span>
                                     </div>
-                                    <div class="vote-progress">
-                                        <div class="vote-track">
-                                            <div class="vote-fill"></div>
-                                        </div>
-                                        <div class="quorum-line"></div>
+                                    <div class="cap-pools">
+                                        <span class="cap-pool"><span class="tm-cap">Undrawn</span></span>
+                                        <span class="cap-pool"><span class="tm-cap">Disbursed</span></span>
+                                        <span class="cap-lanes">
+                                            @for (t of tm.capTranches; track t) {
+                                            <span class="cap-tranche" [attr.data-t]="$index + 1">{{t}} · ₦30M</span>
+                                            }
+                                        </span>
+                                        <span class="cap-over">T4 · ₦45M ✕</span>
                                     </div>
+                                    <span class="tm-swap cap-draw-note">
+                                        <span class="tm-cap">Each drawdown ≤ undrawn<span class="tm-wide"> balance</span></span>
+                                        <span class="tm-pill bad">Exceeds undrawn</span>
+                                        <span class="tm-pill ok">Booked · CPO → COO</span>
+                                    </span>
                                 </div>
                             </div>
                         </div>
                         }
                         @if (project.id === 1) {
                         <div class="fp-telemetry">
-                            <div class="fp-telemetry-head"><span class="fp-live-dot"></span>Neural Ops</div>
+                            <div class="fp-telemetry-head"><span class="fp-live-dot"></span>Inbox Agent</div>
                             <div class="animation-container">
-                                <div class="ai-network">
-                                    <div class="network-nodes">
-                                        @for (s of [1,2,3,4,5,6]; track s) {
-                                        <div class="node">
-                                            <div class="core"></div>
-                                            <div class="pulse"></div>
+                                <div class="tm-stage cos-inbox">
+                                    <div class="cos-tabs">
+                                        @for (tab of tm.cosTabs; track tab) {
+                                        <span class="cos-tab" [class.on]="tab === 'Primary'">{{tab}}</span>
+                                        }
+                                    </div>
+                                    <div class="cos-flow">
+                                        <div class="cos-mail">
+                                            <span class="cos-avatar"></span>
+                                            <span class="cos-mail-subj">Vendor quote · Q4 rates</span>
+                                            <span class="tm-swap cos-mail-meta">
+                                                <span class="tm-cap">09:41</span>
+                                                <span class="tm-pill ok">Sent ✓</span>
+                                            </span>
                                         </div>
-                                        }
-                                    </div>
-                                    <div class="connections">
-                                        <svg viewBox="0 0 100 100">
-                                            <path class="connection-lines" d="M20,20 L80,80" />
-                                            <path class="connection-lines" d="M20,80 L80,20" />
-                                            <path class="connection-lines" d="M50,10 L50,90" />
-                                            <path class="connection-lines" d="M10,50 L90,50" />
-                                            <path class="connection-lines" d="M20,50 L80,80" />
-                                            <path class="connection-lines" d="M20,50 L80,20" />
-                                        </svg>
-                                    </div>
-                                    <div class="data-particles">
-                                        @for (s of [1,2,3,4,5,6,7,8]; track s) {
-                                        <div class="particle"></div>
-                                        }
-                                    </div>
-                                    <div class="glow-effects">
-                                        @for (s of [1,2,3]; track s) {
-                                        <div class="glow"></div>
-                                        }
+                                        <div class="cos-block">
+                                            <span class="tm-cap tm-acc">✦ Email summary</span>
+                                            <span class="cos-line" style="--w: 92%"></span>
+                                            <span class="cos-line" style="--w: 64%"></span>
+                                        </div>
+                                        <div class="cos-block cos-reply">
+                                            <span class="tm-row">
+                                                <span class="tm-cap tm-acc">Suggested response</span>
+                                                <span class="tm-pill">Formal</span>
+                                            </span>
+                                            <span class="cos-line" style="--w: 96%"></span>
+                                            <span class="cos-line" style="--w: 84%"></span>
+                                            <span class="cos-line" style="--w: 52%"></span>
+                                        </div>
+                                        <span class="cos-send">Send</span>
                                     </div>
                                 </div>
                             </div>
                         </div>
                         <div class="fp-telemetry">
-                            <div class="fp-telemetry-head"><span class="fp-live-dot"></span>Core Pulse</div>
+                            <div class="fp-telemetry-head"><span class="fp-live-dot"></span>Scheduler Agent</div>
                             <div class="animation-container">
-                                <div class="animated-pattern">
-                                    <div class="circle"></div>
-                                    <div class="circle"></div>
-                                    <div class="circle"></div>
-                                    <div class="circle"></div>
-                                    <div class="circle"></div>
+                                <div class="tm-stage cos-cal">
+                                    <div class="tm-row">
+                                        <span class="tm-pill cos-req">Meet · Thu 10:00</span>
+                                        <span class="tm-swap cos-act">
+                                            <span class="tm-pill">wait</span>
+                                            <span class="tm-pill">upsert</span>
+                                            <span class="tm-pill ok">insert</span>
+                                        </span>
+                                    </div>
+                                    <div class="cos-week">
+                                        <div class="cos-days">
+                                            @for (d of tm.cosDays; track d) {
+                                            <span class="tm-cap">{{d}}</span>
+                                            }
+                                        </div>
+                                        <div class="cos-grid">
+                                            <span class="cos-ev cos-focus" style="--c: 1; --r: 0; --h: 2">Focus</span>
+                                            <span class="cos-ev cos-flex" style="--c: 3; --r: 1">Flexible</span>
+                                            <span class="cos-ev cos-ghost" style="--c: 3; --r: 1"></span>
+                                            <span class="cos-ev cos-new" style="--c: 3; --r: 1">Meet<i class="cos-rsvp"></i></span>
+                                            <span class="cos-clash" style="--c: 3; --r: 1"></span>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                         }
                         @if (project.id === 2) {
                         <div class="fp-telemetry">
-                            <div class="fp-telemetry-head"><span class="fp-live-dot"></span>Market Feed</div>
+                            <div class="fp-telemetry-head"><span class="fp-live-dot"></span>Shipment Ledger</div>
                             <div class="animation-container">
-                                <div class="trade-animation">
-                                    <div class="candlestick-wrapper">
-                                        @for (s of [1,2,3,4,5]; track s) {
-                                        <div class="candlestick"></div>
-                                        }
-                                        @for (s of [1,2,3]; track s) {
-                                        <div class="chart-line"></div>
-                                        }
+                                <div class="tm-stage gta-ledger">
+                                    <div class="tm-row">
+                                        <span class="tm-cap">Form M<span class="tm-wide"> · USD CF value</span></span>
+                                        <span class="gta-var">
+                                            <span class="tm-cap">Variance</span>
+                                            <span class="tm-swap gta-var-val">
+                                                @for (v of tm.gtaVariance; track v) {
+                                                <b>{{v}}</b>
+                                                }
+                                            </span>
+                                        </span>
+                                    </div>
+                                    <div class="gta-yard">
+                                        <span class="gta-ceiling"><span class="tm-cap">Form M value</span></span>
+                                        <div class="gta-stack">
+                                            @for (box of tm.gtaBoxes; track box.part) {
+                                            <span class="gta-box" [attr.data-b]="$index + 1">
+                                                <span>{{box.part}}</span>
+                                                <span class="gta-bol">{{box.bol}}</span>
+                                            </span>
+                                            }
+                                        </div>
+                                        <span class="gta-quay"></span>
+                                        <span class="tm-pill ok gta-stamp">Approved</span>
                                     </div>
                                 </div>
                             </div>
                         </div>
                         <div class="fp-telemetry">
-                            <div class="fp-telemetry-head"><span class="fp-live-dot"></span>Trend Monitor</div>
+                            <div class="fp-telemetry-head"><span class="fp-live-dot"></span>LC Checklist</div>
                             <div class="animation-container">
-                                <div class="trade-pattern">
-                                    <div class="market-pulse">
-                                        @for (s of [1,2,3,4,5]; track s) {
-                                        <div class="price-bar"></div>
-                                        }
+                                <div class="tm-stage gta-check">
+                                    <div class="tm-row">
+                                        <span class="tm-swap gta-set">
+                                            <span class="tm-cap tm-acc">Advanced set</span>
+                                            <span class="tm-cap tm-acc">Negotiating set</span>
+                                        </span>
+                                        <span class="tm-cap tm-wide">2 original · 2 copy</span>
                                     </div>
-                                    <div class="trend-lines">
-                                        @for (s of [1,2,3]; track s) {
-                                        <div class="trend-line"></div>
+                                    <ol class="gta-docs">
+                                        @for (d of tm.gtaDocs; track d) {
+                                        <li class="gta-doc" [style.--i]="$index">
+                                            <span class="gta-doc-name">{{d}}</span>
+                                            <span class="gta-doc-pips"><i></i></span>
+                                        </li>
                                         }
-                                    </div>
+                                    </ol>
+                                    <span class="tm-swap gta-verdict">
+                                        <span class="tm-pill">Requirements not met</span>
+                                        <span class="tm-pill ok">Requirements met</span>
+                                        <span class="tm-pill">Released to recipient</span>
+                                    </span>
                                 </div>
                             </div>
                         </div>
                         }
                         @if (project.id === 3) {
                         <div class="fp-telemetry">
-                            <div class="fp-telemetry-head"><span class="fp-live-dot"></span>Threat Scan</div>
+                            <div class="fp-telemetry-head"><span class="fp-live-dot"></span>Rule Matrix</div>
                             <div class="animation-container">
-                                <div class="fraud-detection">
-                                    <div class="detection-grid">
-                                        @for (s of [1,2,3,4,5,6]; track s) {
-                                        <div class="transaction">
-                                            <div class="status-indicator"></div>
-                                            <div class="transaction-line"></div>
-                                        </div>
+                                <div class="tm-stage fms-matrix">
+                                    <div class="tm-row">
+                                        <span class="tm-pill">Mobile · ₦4.85M</span>
+                                        <span class="fms-score">
+                                            <span class="tm-cap">Score</span>
+                                            <span class="tm-swap fms-score-val">
+                                                @for (s of tm.fmsScore; track s) {
+                                                <b>{{s}}</b>
+                                                }
+                                            </span>
+                                        </span>
+                                    </div>
+                                    <div class="fms-rules">
+                                        <span class="fms-beam"></span>
+                                        @for (rule of tm.fmsRules; track rule.name) {
+                                        <span class="fms-rule" [attr.data-hit]="rule.hit || null">
+                                            <span class="fms-rule-name">{{rule.name}}</span>
+                                            @if (rule.weight) {
+                                            <span class="fms-rule-w">{{rule.weight}}</span>
+                                            }
+                                        </span>
                                         }
-                                        <div class="detection-shield">
-                                            <div class="shield-outer"></div>
-                                            <div class="shield-inner"></div>
-                                            <div class="check-mark"></div>
-                                        </div>
+                                    </div>
+                                    <div class="tm-row">
+                                        <span class="tm-cap tm-wide">14 weighted rules</span>
+                                        <span class="tm-swap fms-verdict">
+                                            <span class="tm-pill">Monitoring</span>
+                                            <span class="tm-pill bad">Flagged</span>
+                                            <span class="tm-pill bad">PND placed</span>
+                                        </span>
                                     </div>
                                 </div>
                             </div>
                         </div>
                         <div class="fp-telemetry">
-                            <div class="fp-telemetry-head"><span class="fp-live-dot"></span>Biometric Gate</div>
+                            <div class="fp-telemetry-head"><span class="fp-live-dot"></span>Call-back Review</div>
                             <div class="animation-container">
-                                <div class="fingerprint-scan">
-                                    <svg viewBox="0 0 192 192" class="fingerprint-icon">
-                                        <path class="fingerprint-path"
-                                            d="M140.424 38.019a3.6 3.6 0 0 1-1.777-.462C123.81 29.934 110.983 26.7 95.528 26.7c-15.223 0-29.75 3.619-42.964 10.857-1.854 1.001-4.172.308-5.254-1.54-1.005-1.848-.31-4.235 1.545-5.236C63.228 22.85 78.992 19 95.528 19c16.537 0 30.91 3.619 46.673 11.55 1.932 1.155 2.628 3.465 1.623 5.313-.695 1.386-1.932 2.156-3.4 2.156ZM29.846 78.444a4.036 4.036 0 0 1-2.24-.693c-1.624-1.232-2.165-3.619-.928-5.39 7.65-10.78 17.386-19.25 28.977-25.179 24.419-12.474 55.328-12.551 79.669-.077 11.591 5.929 21.327 14.245 28.977 25.025 1.237 1.694.773 4.158-.927 5.39-1.777 1.232-4.173.847-5.409-.77-6.955-9.856-15.764-17.479-26.196-22.792-22.177-11.319-50.536-11.319-72.636.077-10.51 5.39-19.319 13.09-26.273 22.715-.618 1.155-1.778 1.694-3.014 1.694Z" />
-                                        <path class="fingerprint-path"
-                                            d="M78.142 171.383c-1.005 0-1.932-.385-2.705-1.155-6.722-6.699-10.354-11.011-15.532-20.328-5.332-9.471-8.113-21.021-8.113-33.418 0-22.869 19.627-41.503 43.736-41.503 24.11 0 43.737 18.634 43.737 41.503 0 1.021-.407 2-1.132 2.722a3.87 3.87 0 0 1-5.464 0 3.844 3.844 0 0 1-1.131-2.722c0-18.634-16.15-33.803-36.01-33.803-19.859 0-36.01 15.169-36.01 33.803 0 11.088 2.474 21.329 7.187 29.568 4.946 8.932 8.346 12.705 14.296 18.711a3.943 3.943 0 0 1 0 5.467c-.927.77-1.855 1.155-2.86 1.155Z" />
-                                        <path class="fingerprint-path"
-                                            d="M118.015 173h-1.005c-12.286-3.542-20.323-8.085-28.745-16.324-10.819-10.626-16.769-24.948-16.769-40.194 0-12.474 10.664-22.638 23.8-22.638 13.137 0 23.801 10.164 23.801 22.638 0 8.239 7.341 14.938 16.072 14.938 8.887 0 16.073-6.699 16.073-14.938 0-29.029-25.114-52.591-56.023-52.591-21.945 0-42.191 12.166-51.077 31.031-3.014 6.237-4.56 13.552-4.56 21.56 0 6.006.541 15.477 5.178 27.797.773 2.002-.232 4.235-2.241 4.928-2.01.693-4.25-.308-4.946-2.233-3.863-10.087-5.64-20.174-5.64-30.492 0-9.24 1.777-17.633 5.254-24.948 10.277-21.483 33.073-35.42 58.032-35.42 35.082 0 63.751 27.027 63.751 60.291 0 12.474-10.664 22.638-23.801 22.638-13.136 0-23.8-10.164-23.8-22.638 0-8.239-7.186-14.938-16.073-14.938-8.886 0-16.072 6.699-16.072 14.938 0 13.167 5.1 25.487 14.45 34.727 7.341 7.238 14.373 11.242 25.268 14.168 2.086.616 3.246 2.772 2.705 4.774-.387 1.771-2.009 2.926-3.632 2.926Z" />
-                                    </svg>
-                                    <div class="scan-line"></div>
+                                <div class="tm-stage fms-review">
+                                    <div class="tm-row">
+                                        <span class="tm-swap fms-case">
+                                            <span class="tm-cap"><span class="tm-wide">Call-back · </span><b class="tm-acc">case 1 of 2</b></span>
+                                            <span class="tm-cap"><span class="tm-wide">Call-back · </span><b class="tm-acc">case 2 of 2</b></span>
+                                        </span>
+                                        <span class="tm-swap fms-out">
+                                            <span class="tm-pill ok">PND lifted</span>
+                                            <span class="tm-pill bad">PND sustained</span>
+                                        </span>
+                                    </div>
+                                    <ul class="fms-qs">
+                                        @for (q of tm.fmsQuestions; track q) {
+                                        <li class="fms-q">
+                                            <span class="fms-q-name">{{q}}</span>
+                                            <span class="tm-swap fms-q-res" [attr.data-q]="$index + 1">
+                                                <span class="tm-pill ok">Pass</span>
+                                                <span class="tm-pill bad">Fail</span>
+                                            </span>
+                                        </li>
+                                        }
+                                    </ul>
+                                    <div class="tm-row fms-decide">
+                                        <span class="tm-cap">Initiator</span>
+                                        <span class="tm-swap fms-dec">
+                                            <span class="tm-pill">Waived</span>
+                                            <span class="tm-pill bad">Fraudulent</span>
+                                        </span>
+                                        <span class="fms-arrow"></span>
+                                        <span class="tm-pill fms-auth">Authorizer ✓</span>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                         }
                         @if (project.id === 4) {
                         <div class="fp-telemetry">
-                            <div class="fp-telemetry-head"><span class="fp-live-dot"></span>Transfer Rails</div>
+                            <div class="fp-telemetry-head"><span class="fp-live-dot"></span>Teller Gate</div>
                             <div class="animation-container">
-                                <div class="transfer-animation">
-                                    <div class="money-particles">
-                                        @for (s of [1,2,3,4,5]; track s) {
-                                        <div class="money-icon">&#8358;</div>
+                                <div class="tm-stage tgr-gate">
+                                    <div class="tgr-lanes">
+                                        <div class="tgr-track">
+                                            @for (g of tm.tgrGates; track g) {
+                                            <span class="tgr-node"><i></i><span class="tm-cap">{{g}}</span></span>
+                                            }
+                                            <span class="tgr-line"></span>
+                                        </div>
+                                        <div class="tgr-queue">
+                                            <span class="tgr-box"><span class="tm-cap">HOP</span></span>
+                                            <span class="tgr-box"><span class="tm-cap">Zonal head</span></span>
+                                        </div>
+                                        <div class="tgr-runner tgr-r1"><span class="tgr-token">NIP</span></div>
+                                        <div class="tgr-runner tgr-r2"><span class="tgr-token">NEFT</span></div>
+                                    </div>
+                                    <span class="tm-swap tgr-caption">
+                                        @for (c of tm.tgrCaptions; track c) {
+                                        <span class="tm-cap" [style.--k]="$index">{{c}}</span>
                                         }
-                                    </div>
-                                    <div class="transfer-paths">
-                                        @for (s of [1,2,3]; track s) {
-                                        <div class="path">
-                                            <div class="transfer-dot"></div>
-                                        </div>
-                                        }
-                                    </div>
-                                    <div class="devices">
-                                        <div class="device source">
-                                            <div class="device-screen"></div>
-                                        </div>
-                                        <div class="device target">
-                                            <div class="device-screen"></div>
-                                        </div>
-                                    </div>
+                                    </span>
                                 </div>
                             </div>
                         </div>
                         <div class="fp-telemetry">
-                            <div class="fp-telemetry-head"><span class="fp-live-dot"></span>Settlement</div>
+                            <div class="fp-telemetry-head"><span class="fp-live-dot"></span>Three Rails</div>
                             <div class="animation-container">
-                                <div class="payment-animation">
-                                    <div class="transaction-cards">
-                                        @for (s of [1,2,3]; track s) {
-                                        <div class="bank-card">
-                                            <div class="card-chip"></div>
-                                            <div class="card-details">
-                                                <div class="card-number"></div>
-                                                <div class="card-date"></div>
-                                            </div>
+                                <div class="tm-stage tgr-rails">
+                                    <div class="tgr-rail">
+                                        <span class="tgr-rail-name">NIP</span>
+                                        <div class="tgr-rail-track">
+                                            <i class="tgr-dot"></i><i class="tgr-dot"></i><i class="tgr-dot"></i>
+                                            <span class="tgr-end tgr-ok">00</span>
                                         </div>
-                                        }
                                     </div>
-                                    <div class="progress-indicators">
-                                        <div class="progress-track">
-                                            <div class="progress-bar"></div>
+                                    <div class="tgr-rail">
+                                        <span class="tgr-rail-name">NEFT</span>
+                                        <div class="tgr-rail-track">
+                                            <i class="tgr-item"></i>
+                                            <span class="tgr-bucket"><span class="tgr-bucket-fill"></span><span class="tm-cap">Session</span></span>
+                                            <span class="tgr-end">NACS</span>
                                         </div>
-                                        <div class="status-dots">
-                                            @for (s of [1,2,3,4]; track s) {
-                                            <div class="dot"></div>
-                                            }
+                                    </div>
+                                    <div class="tgr-rail">
+                                        <span class="tgr-rail-name">NAPS</span>
+                                        <div class="tgr-rail-track">
+                                            <span class="tgr-batch">
+                                                <span class="tgr-batch-card">
+                                                    <span class="tm-swap tgr-batch-state">
+                                                        <b>Amount block</b><b>Debit</b><b>Transmitted</b>
+                                                    </span>
+                                                </span>
+                                            </span>
                                         </div>
                                     </div>
                                 </div>
@@ -402,52 +502,63 @@
                         }
                         @if (project.id === 5) {
                         <div class="fp-telemetry">
-                            <div class="fp-telemetry-head"><span class="fp-live-dot"></span>Data Pipeline</div>
+                            <div class="fp-telemetry-head"><span class="fp-live-dot"></span>Collection Desk</div>
                             <div class="animation-container">
-                                <div class="xpath-data-flow">
-                                    <div class="data-records">
-                                        @for (s of [1,2,3,4]; track s) {
-                                        <div class="record">
-                                            <div class="record-id"></div>
-                                            <div class="record-data">
-                                                <div class="data-line"></div>
-                                                <div class="data-line"></div>
-                                            </div>
-                                            <div class="validation-check"></div>
-                                        </div>
-                                        }
+                                <div class="tm-stage xpt-desk">
+                                    <div class="tm-row">
+                                        <span class="tm-cap tm-wide">Merchant</span>
+                                        <span class="tm-pill xpt-merchant">Crestfield Academy</span>
                                     </div>
-                                    <div class="branch-network">
-                                        @for (s of [1,2,3,4,5,6]; track s) {
-                                        <div class="branch-node">
-                                            <div class="connection-line"></div>
+                                    <div class="xpt-body">
+                                        <div class="xpt-form">
+                                            @for (f of tm.xptFields; track f) {
+                                            <span class="xpt-field" [attr.data-f]="$index + 1">
+                                                <span class="tm-cap">{{f}}</span>
+                                                <span class="xpt-input"><i></i></span>
+                                            </span>
+                                            }
+                                            <span class="xpt-methods">
+                                                @for (m of tm.xptMethods; track m) {
+                                                <span class="xpt-method" [class.pick]="m === 'Transfer'">{{m}}</span>
+                                                }
+                                            </span>
                                         </div>
-                                        }
+                                        <div class="xpt-printer">
+                                            <span class="xpt-slot"></span>
+                                            <span class="xpt-printer-label">Receipt</span>
+                                            <span class="xpt-receipt"><b>Receipt</b><i></i><i></i><i></i><b class="xpt-pdf">PDF</b></span>
+                                        </div>
+                                        <span class="xpt-memo" data-m="1">Memo · fees due week 3</span>
+                                        <span class="xpt-memo" data-m="2">Notice · term 1 only</span>
                                     </div>
+                                    <span class="tm-swap xpt-step">
+                                        <span class="tm-cap">Memo pop-ups</span>
+                                        <span class="tm-cap">Custom fields · merchant API</span>
+                                        <span class="tm-pill ok">Amount match ✓</span>
+                                        <span class="tm-pill">Preview → receipt</span>
+                                    </span>
                                 </div>
                             </div>
                         </div>
                         <div class="fp-telemetry">
-                            <div class="fp-telemetry-head"><span class="fp-live-dot"></span>Split Engine</div>
+                            <div class="fp-telemetry-head"><span class="fp-live-dot"></span>Live Status</div>
                             <div class="animation-container">
-                                <div class="xpath-payment">
-                                    <div class="payment-flow">
-                                        <div class="receipt-generator">
-                                            @for (s of [1,2,3]; track s) {
-                                            <div class="receipt">
-                                                <div class="receipt-header"></div>
-                                                <div class="receipt-body"></div>
-                                            </div>
-                                            }
-                                        </div>
-                                        <div class="splitting-visualization">
-                                            <div class="split-container">
-                                                @for (s of [1,2,3]; track s) {
-                                                <div class="split-segment"></div>
-                                                }
-                                            </div>
-                                        </div>
+                                <div class="tm-stage xpt-live">
+                                    <div class="tm-row">
+                                        <span class="tm-cap">SignalR · request status</span>
+                                        <span class="xpt-pulse"></span>
                                     </div>
+                                    @for (row of tm.xptRows; track row.ref) {
+                                    <div class="xpt-req" [attr.data-r]="$index + 1">
+                                        <span class="xpt-ref">{{row.ref}}</span>
+                                        <span class="xpt-steps"><span class="xpt-fill"></span></span>
+                                        <span class="tm-swap xpt-state">
+                                            @for (st of row.states; track st.t) {
+                                            <span class="tm-pill" [class.ok]="st.tone === 'ok'" [class.bad]="st.tone === 'bad'">{{st.t}}</span>
+                                            }
+                                        </span>
+                                    </div>
+                                    }
                                 </div>
                             </div>
                         </div>
