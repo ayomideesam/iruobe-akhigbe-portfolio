@@ -405,9 +405,9 @@ export class HomeComponent implements OnInit {
       quote: 'I highly recommend Akhigbe Iruobe as a Senior Frontend Engineer. Although he doesn\'t manage me directly, he has consistently supported me with code reviews, logic improvements, and technical guidance. He\'s intuitive, reliable, and always delivers high-quality work. What stands out most is his willingness to help — he\'s always open to assisting others and explaining complex concepts clearly. He\'s a strong team player and a valuable asset to any engineering team.',
       author: 'Nonye Ibeanu',
       role: 'Frontend Engineer',
-      company: 'Globus Bank',
+      company: 'Zenith Bank',
       initials: 'NI',
-      relationship: 'Senior colleague at Globus Bank'
+      relationship: 'Senior colleague at Zenith Bank'
     },
     {
       quote: 'I\'ve had the pleasure of working with Akhigbe Iruobe, and he consistently demonstrates professionalism, reliability, and strong attention to detail. He takes ownership of his work and always delivers quality results. I highly recommend him to any team looking for someone dependable and growth-driven.',
