@@ -1,7 +1,7 @@
 // pages/home/home.component.ts — Home v2 redesign
 import {
   AfterViewInit, Component, DestroyRef, ElementRef, HostListener,
-  OnInit, ViewChild, inject, signal,
+  NgZone, OnInit, ViewChild, inject, signal,
   ChangeDetectionStrategy
 } from '@angular/core';
 import { Router } from '@angular/router';
@@ -12,7 +12,6 @@ import { AnalyticsService } from 'src/app/core/services/analytics.service';
 import { SeoService } from 'src/app/core/services/seo.service';
 import { TestimonialsService } from 'src/app/core/services/testimonials.service';
 
-type CategoryName = 'Frontend Development' | 'Development Tools' | 'Testing & Quality';
 type ProjectKey = 'nxp' | 'costaff' | 'trade' | 'fms' | 'cap' | 'tiger' | 'xpath';
 
 interface OrbitChip {
@@ -29,22 +28,44 @@ interface Badge { name: string; bc: string; }
 interface ProjectDef {
   key: ProjectKey;
   title: string;
+  /** Dock label — the name the projects page and recruiters use for it. */
+  short: string;
+  /** Dock dot colour, matching the project's scene accent on /projects. */
+  hue: string;
   url: string;
   imgs: string[];
   badges: Badge[];
   desc: string;
 }
 
-interface Skill {
-  name: string;
-  level: number;
-  experience: string;
-  icon: string;
+type SwapMode = 'close' | 'minimise';
+
+interface OdometerColumn {
+  /** Digits the column rolls through, ending on its own digit. */
+  digits: number[];
+  /** Index of the final digit; the strip rests at translateY(-to em). */
+  to: number;
 }
 
-interface SkillCategory {
-  name: CategoryName;
-  skills: Skill[];
+interface StackCard {
+  key: 'angular' | 'ui' | 'quality' | 'delivery';
+  title: string;
+  stat: string;
+  note: string;
+  chips: string[];
+}
+
+interface StandardsFile {
+  path: string;
+  lines: number;
+  /** Agent-run step that reads this file (0 = not read in the illustrated run). */
+  step: number;
+}
+
+interface AgentStep {
+  verb: string;
+  arg: string;
+  out: string;
 }
 
 interface Experience {
@@ -65,6 +86,7 @@ interface Module {
   description: string;
   tech: string[];
   progress: number;
+  odometer: OdometerColumn[];
 }
 
 @Component({
@@ -83,6 +105,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
   private testimonialsService = inject(TestimonialsService);
   private destroyRef = inject(DestroyRef);
   private seoService = inject(SeoService);
+  private zone = inject(NgZone);
 
   get isDarkTheme(): boolean { return this.themeService.isDarkTheme(); }
 
@@ -105,43 +128,50 @@ export class HomeComponent implements OnInit, AfterViewInit {
   // ─── Featured Projects: 7-project pool, 3 visible + 4 benched ───
   private readonly projectPool: Record<ProjectKey, ProjectDef> = {
     nxp: {
-      key: 'nxp', title: 'Globus Trade Export — NXP', url: 'nxp.globusbank.com',
+      key: 'nxp', title: 'Globus Trade Export — NXP', short: 'Trade Export', hue: '#fb923c',
+      url: 'nxp.globusbank.com',
       imgs: ['/assets/img/nxp-overview.png', '/assets/img/nxp-applications.png', '/assets/img/nxp-ness.png', '/assets/img/nxp-repatriation.png', '/assets/img/nxp-cancelation.png'],
       badges: [{ name: 'Angular 21', bc: '#DD003166' }, { name: 'TypeScript', bc: '#3178C666' }, { name: 'NgRx Signals', bc: '#BA2BD266' }],
       desc: 'Kickoff 10 July, final UAT 1 October, CAB-approved — a from-scratch export trade finance platform (NXP, NESS levy, repatriation, closure). I led the frontend in a seven-person team.'
     },
     costaff: {
-      key: 'costaff', title: 'COSTAFF AI Digital Worker', url: 'costaff.ai/dashboard',
+      key: 'costaff', title: 'COSTAFF AI Digital Worker', short: 'COSTAFF', hue: '#a78bfa',
+      url: 'costaff.ai/dashboard',
       imgs: ['/assets/img/costaff-calendar.avif', '/assets/img/costaff-inbox.png', '/assets/img/costaff-week.png', '/assets/img/costaff-assistant.png', '/assets/img/costaff-home.jpeg'],
       badges: [{ name: 'Angular 16', bc: '#DD003166' }, { name: 'TypeScript', bc: '#3178C666' }, { name: 'NGXS', bc: '#BA2BD266' }],
       desc: '85% reduction in calendar management time — AI productivity suite integrating Gmail, Google Calendar & OpenAI for enterprise clients across the Middle East.'
     },
     trade: {
-      key: 'trade', title: 'Globus Trade — Import', url: 'trade.globusbank.com',
+      key: 'trade', title: 'Globus Trade — Import', short: 'Trade Import', hue: '#22d3ee',
+      url: 'trade.globusbank.com',
       imgs: ['/assets/img/gta-home.png', '/assets/img/gta-documents.png', '/assets/img/gta-import.png', '/assets/img/gta-details.png', '/assets/img/gta-settings.png'],
       badges: [{ name: 'Angular 19', bc: '#DD003166' }, { name: 'TypeScript', bc: '#3178C666' }, { name: 'RxJS', bc: '#B7178C66' }],
       desc: '100% adoption by trade ops team within 6 months — CBN-mandated import trade finance platform (Form M, shipping documents, ECD, PAAR) replacing a fully paper-based process at Globus Bank.'
     },
     fms: {
-      key: 'fms', title: 'Fraud Management System', url: 'fms.globusbank.com',
+      key: 'fms', title: 'Fraud Management System', short: 'Fraud', hue: '#fb7185',
+      url: 'fms.globusbank.com',
       imgs: ['/assets/img/fraud-live-dashboard.png', '/assets/img/fraud-flagged-transactions.png', '/assets/img/fraud-rule-engines.png', '/assets/img/fraud-details-dark.png', '/assets/img/fraud-dashboard-dark.png'],
       badges: [{ name: 'Angular 16', bc: '#DD003166' }, { name: 'TypeScript', bc: '#3178C666' }, { name: 'AG Charts', bc: '#2563EB66' }],
       desc: '100% transaction coverage in week one — 14 weighted fraud rules, PND restrictions and a maker-checker case review. Fraudulent incidents reduced 45% within 90 days of deployment.'
     },
     cap: {
-      key: 'cap', title: 'Credit Approval Process (CAP)', url: 'cap.globusbank.com',
+      key: 'cap', title: 'Credit Approval Process (CAP)', short: 'CAP', hue: '#818cf8',
+      url: 'cap.globusbank.com',
       imgs: ['/assets/img/cap-dashboard.png', '/assets/img/cap-facility-requests.png', '/assets/img/cap-disbursements.png', '/assets/img/cap-login.jpeg'],
       badges: [{ name: 'Angular 20', bc: '#DD003166' }, { name: 'TypeScript', bc: '#3178C666' }, { name: 'RxJS', bc: '#B7178C66' }],
-      desc: 'CBN-compliant credit lifecycle platform — four facility modules and a 15-desk approval chain that ends at the MCC and BCC committees, built by a seven-person team from 230+ standalone Angular 20 components.'
+      desc: 'CBN-compliant credit lifecycle platform — a Retail module now in production and a 15-desk approval chain that ends at the MCC and BCC committees, built by a seven-person team from 230+ standalone Angular 20 components.'
     },
     tiger: {
-      key: 'tiger', title: 'ProjectTiger — Domestic Transfers', url: 'tiger.zenithbank.com',
+      key: 'tiger', title: 'ProjectTiger — Domestic Transfers', short: 'ProjectTiger', hue: '#fbbf24',
+      url: 'tiger.zenithbank.com',
       imgs: ['/assets/img/tiger-teller.png', '/assets/img/tiger-queue.png', '/assets/img/tiger-naps-direct.png', '/assets/img/tiger-search.png', '/assets/img/tiger-nip-dashboard.png'],
       badges: [{ name: 'Angular', bc: '#DD003166' }, { name: 'TypeScript', bc: '#3178C666' }, { name: 'Jenkins CI/CD', bc: '#D3383366' }],
       desc: '₦100B+ processed in week one, zero downtime — NIP/NEFT/NAPS payment platform for Zenith Bank serving 100,000+ daily customers across 350+ branches.'
     },
     xpath: {
-      key: 'xpath', title: 'X-Path — Merchant Collections', url: 'xpath.zenithbank.com',
+      key: 'xpath', title: 'X-Path — Merchant Collections', short: 'X-Path', hue: '#2dd4bf',
+      url: 'xpath.zenithbank.com',
       imgs: ['/assets/img/xpath-payments.png', '/assets/img/xpath-deposits.png', '/assets/img/xpath-payments-memo.png', '/assets/img/xpath-merchants.png', '/assets/img/xpath-dashboard.png'],
       badges: [{ name: 'Angular', bc: '#DD003166' }, { name: 'Angular Universal', bc: '#B7178C66' }, { name: 'Jenkins CI/CD', bc: '#D3383366' }],
       desc: 'Merchant onboarding 70% faster — three-app Angular micro-frontend suite (Admin, Teller, Data-Store) with self-service ERP integration and automated reconciliation across 350 branches.'
@@ -185,25 +215,60 @@ export class HomeComponent implements OnInit, AfterViewInit {
     });
   }
 
-  // While a slot is mid-swap its card plays the cardSwapExit animation; the
-  // actual data swap (and the new card's cardEnter animation) is deferred
-  // until that exit finishes, giving a real crossfade instead of a hard cut.
-  readonly swappingIndex = signal<number | null>(null);
-  private swapTimer: ReturnType<typeof setTimeout> | null = null;
+  readonly projectCount = Object.keys(this.projectPool).length;
 
-  swapProject(index: number): void {
-    if (this.swappingIndex() !== null) return;
-    this.swappingIndex.set(index);
+  /** The benched projects, shown in the dock under the grid. */
+  get dockProjects(): ProjectDef[] {
+    return this.benchKeys().map(key => this.projectPool[key]);
+  }
+
+  // The traffic lights are real controls. Close and minimise both hand the slot
+  // to the next benched project; they differ in where the window visibly goes
+  // (close shrinks it away in place, minimise drops it into the dock), which is
+  // what tells a visitor the dock below the grid holds the rest of the work.
+  // The data swap waits for the exit animation, so the incoming card's
+  // cardEnter never overlaps it.
+  readonly swapping = signal<{ index: number; mode: SwapMode } | null>(null);
+  readonly swapAnnouncement = signal('');
+  private swapTimer: ReturnType<typeof setTimeout> | null = null;
+  private swapCount = 0;
+  /** When each slot last changed; the dock restores into the stalest one. */
+  private readonly slotStamps = [0, 0, 0];
+
+  swapProject(index: number, mode: SwapMode): void {
+    this.runSwap(index, mode);
+  }
+
+  /** Opens a docked project in the slot that has gone longest unchanged
+   *  (ties go right, so the lead project is the last to be replaced). */
+  restoreProject(key: ProjectKey): void {
+    let slot = 0;
+    this.slotStamps.forEach((stamp, i) => { if (stamp <= this.slotStamps[slot]) slot = i; });
+    this.runSwap(slot, 'minimise', key);
+  }
+
+  private runSwap(index: number, mode: SwapMode, incoming?: ProjectKey): void {
+    if (this.swapping() !== null) return;
+    this.swapping.set({ index, mode });
     this.swapTimer = setTimeout(() => {
       const vis = [...this.visKeys()];
       const bench = [...this.benchKeys()];
       const out = vis[index];
-      vis[index] = bench.shift()!;
-      bench.push(out);
+      if (incoming) {
+        bench[bench.indexOf(incoming)] = out;
+        vis[index] = incoming;
+      } else {
+        vis[index] = bench.shift()!;
+        bench.push(out);
+      }
       this.visKeys.set(vis);
       this.benchKeys.set(bench);
-      this.swappingIndex.set(null);
-    }, 260);
+      this.slotStamps[index] = ++this.swapCount;
+      this.swapAnnouncement.set(
+        `${this.projectPool[vis[index]].title} opened. ${this.projectPool[out].title} moved to the dock.`
+      );
+      this.swapping.set(null);
+    }, mode === 'minimise' ? 320 : 240);
   }
 
   expandProject(key: ProjectKey): void {
@@ -265,8 +330,8 @@ export class HomeComponent implements OnInit, AfterViewInit {
         name: 'CAP — Retail Module',
         status: 'shipping' as const,
         statusLabel: 'CAB Approved · Rolling Out',
-        description: 'The end-to-end retail credit lifecycle — multi-step origination with automated PEP/BVN screening, the 10+ role approval chain, MCC committee voting, and full disbursement & deferral workflows.',
-        tech: ['Multi-step Form Engine', 'Committee Voting', 'Disbursement Engine'],
+        description: 'The end-to-end retail credit lifecycle — multi-step origination with AML screening and credit-bureau checks, the 15-desk approval chain through the MCC and BCC committees, and full disbursement & deferral workflows.',
+        tech: ['Multi-step Form Engine', '15-Desk Approval Chain', 'Disbursement Engine'],
         progress: 100
       },
       {
@@ -277,44 +342,115 @@ export class HomeComponent implements OnInit, AfterViewInit {
         tech: ['E&S Review', 'Credit Bureau', 'Director Flagging'],
         progress: 10
       }
-    ] as Module[]
+    ].map(m => ({ ...m, odometer: HomeComponent.odometer(m.progress) })) as Module[]
   };
 
-  // Progress bars animate once, ~700ms after view init, via a transitioned
-  // inline width style (not @keyframes — see ANGULAR-19-STANDARDS.md note on
-  // why width/background must never live inside @keyframes specifically).
-  readonly progressStarted = signal(false);
+  // The percentage is an odometer: one digit strip per column, moved with
+  // transform only. Column i spins i full turns before landing, so the units
+  // blur past while the hundreds digit simply clicks over.
+  private static odometer(value: number): OdometerColumn[] {
+    return String(value).split('').map((digit, i) => {
+      const to = Number(digit) + 10 * i;
+      return { to, digits: Array.from({ length: to + 1 }, (_, k) => k % 10) };
+    });
+  }
 
   // ─── Toolkit ───
-  skillCategories: SkillCategory[] = [
+  // Every figure here is checked against the repos it names (2026-10-04):
+  // Angular majors from each app's package.json, the Trade Export standards
+  // from its CLAUDE.md, docs/ and .claude/skills, the 15 desks from CAP's
+  // ROLE_HIERARCHY. Don't add a number that a repo can't back.
+  readonly aiStack = ['Claude Opus 5.5', 'Fable 5.1', 'Claude Code', 'MCP', 'Agent Skills', 'CLAUDE.md'];
+
+  readonly aiTenets = [
+    'Standards live in markdown, versioned with the code',
+    'Every footgun is written down the day it bites',
+    'Agents propose; tests, audits and a human decide'
+  ];
+
+  readonly standardsFiles: StandardsFile[] = [
+    { path: 'CLAUDE.md', lines: 111, step: 1 },
+    { path: 'SECURITY.md', lines: 255, step: 0 },
+    { path: 'docs/ANGULAR-STANDARDS.md', lines: 1914, step: 2 },
+    { path: 'docs/ARCHITECTURE.md', lines: 201, step: 3 },
+    { path: 'docs/BRANCH-MERGE-PROTOCOL.md', lines: 604, step: 0 },
+    { path: 'docs/DESIGN.md', lines: 253, step: 0 },
+    { path: 'docs/NPM-AUDIT.md', lines: 489, step: 7 },
+    { path: 'docs/SHARED-COMPONENTS.md', lines: 94, step: 0 },
+    { path: '.claude/skills/verify/SKILL.md', lines: 202, step: 5 }
+  ];
+  readonly standardsLines = this.standardsFiles.reduce((sum, f) => sum + f.lines, 0);
+
+  readonly agentSteps: AgentStep[] = [
+    { verb: 'read', arg: 'CLAUDE.md', out: 'routing rules' },
+    { verb: 'read', arg: 'ANGULAR-STANDARDS.md', out: '1,914 lines' },
+    { verb: 'plan', arg: 'state rule → Signal Store', out: 'ARCHITECTURE.md' },
+    { verb: 'build', arg: 'ng build', out: '✓ budgets hold' },
+    { verb: 'verify', arg: 'skill: verify · Playwright', out: '✓ mocked API' },
+    { verb: 'test', arg: 'vitest run', out: '✓ 776 passed' },
+    { verb: 'audit', arg: 'npm audit', out: '✓ 0 found' },
+    { verb: 'hand off', arg: 'human review', out: 'you sign off' }
+  ];
+
+  readonly stackCards: StackCard[] = [
     {
-      name: 'Frontend Development',
-      skills: [
-        { name: 'Angular', level: 95, experience: '9+ yrs', icon: this.iconService.getAngularIcon() },
-        { name: 'TypeScript', level: 90, experience: '7+ yrs', icon: this.iconService.getTSIcon() },
-        { name: 'HTML5', level: 95, experience: '9+ yrs', icon: this.iconService.getHtml5Icon() },
-        { name: 'CSS3', level: 95, experience: '9+ yrs', icon: this.iconService.getCss3Icon() },
-        { name: 'JavaScript', level: 90, experience: '9+ yrs', icon: this.iconService.getJSIcon() }
-      ]
+      key: 'angular', title: 'Angular platform', stat: 'v14 → v22',
+      note: 'Angular majors I have shipped to production, from X-Path to Trade Export',
+      chips: ['Signals', 'NgRx Signal Store', 'NGXS', 'RxJS', 'Standalone & NgModules', 'esbuild + Vite']
     },
     {
-      name: 'Development Tools',
-      skills: [
-        { name: 'VS Code', level: 90, experience: '7+ yrs', icon: this.iconService.getVScodeIcon() },
-        { name: 'Git', level: 90, experience: '7+ yrs', icon: this.iconService.getGitIcon() },
-        { name: 'Jenkins', level: 85, experience: '4+ yrs', icon: this.iconService.getJenkinsIcon() }
-      ]
+      key: 'ui', title: 'Bank-grade UI', stat: '15 desks',
+      note: 'in one CAP approval chain, from Account Officer to the Board Credit Committee',
+      chips: ['Web Components (gb-*)', 'Angular Material', 'Bootstrap 5', 'AG Charts', 'Chart.js', 'SignalR']
     },
     {
-      name: 'Testing & Quality',
-      skills: [
-        { name: 'Postman', level: 95, experience: '7+ yrs', icon: this.iconService.getPostmanIcon() },
-        { name: 'Swagger', level: 95, experience: '6+ yrs', icon: this.iconService.getSwaggerIcon() },
-        { name: 'Jest', level: 85, experience: '4+ yrs', icon: this.iconService.getJestIcon() },
-        { name: 'Selenium', level: 80, experience: '4+ yrs', icon: this.iconService.getSeleniumIcon() }
-      ]
+      key: 'quality', title: 'Quality & security', stat: '776',
+      note: 'Vitest tests on Trade Export, shipped with npm audit at 0',
+      chips: ['Vitest', 'Playwright', 'Jasmine & Karma', 'Postman', 'Swagger', 'OWASP']
+    },
+    {
+      key: 'delivery', title: 'Delivery', stat: '83 days',
+      note: 'Trade Export, from kickoff to final UAT, in a team of seven',
+      chips: ['Branch-merge protocol', 'Azure CI/CD', 'Jenkins', 'Netlify', 'Lighthouse budgets', 'AVIF/WebP pipeline']
     }
   ];
+
+  @ViewChild('agentRun') agentRun?: ElementRef<HTMLElement>;
+
+  // Steps the illustrated agent run forward by writing --step on the pane;
+  // CSS derives each line's and file's state from it, so no change detection
+  // runs. Ticks only while the pane is on screen; reduced motion shows the
+  // finished run and never ticks.
+  private initAgentRun(): void {
+    const pane = this.agentRun?.nativeElement;
+    if (!pane) return;
+    const last = this.agentSteps.length;
+    const setStep = (n: number) => pane.style.setProperty('--step', String(n));
+
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      setStep(last);
+      return;
+    }
+
+    const HOLD_TICKS = 3;
+    let tick = 0;
+    let runs = 0;
+    let timer: ReturnType<typeof setInterval> | null = null;
+    const advance = () => {
+      tick = tick >= last + HOLD_TICKS ? 0 : tick + 1;
+      if (tick === 0) pane.dataset['model'] = ++runs % 2 ? 'fable' : 'opus';
+      setStep(Math.min(tick, last));
+    };
+    const start = () => { if (!timer) timer = setInterval(advance, 1100); };
+    const stop = () => { if (timer) { clearInterval(timer); timer = null; } };
+
+    setStep(0);
+    this.zone.runOutsideAngular(() => {
+      const io = new IntersectionObserver(([entry]) => entry.isIntersecting ? start() : stop(), { threshold: 0.35 });
+      io.observe(pane);
+      this.destroyRef.onDestroy(() => { io.disconnect(); stop(); });
+    });
+  }
 
   // ─── Experience ───
   experiences: Experience[] = [
@@ -492,60 +628,38 @@ export class HomeComponent implements OnInit, AfterViewInit {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
-  private revealObserver: IntersectionObserver | null = null;
-
   ngAfterViewInit(): void {
-    const t = setTimeout(() => this.progressStarted.set(true), 700);
-    this.destroyRef.onDestroy(() => clearTimeout(t));
     this.destroyRef.onDestroy(() => { if (this.swapTimer) clearTimeout(this.swapTimer); });
     this.destroyRef.onDestroy(() => { if (this.expandedKey()) this.unlockBodyScroll(); });
-    this.initProjectReveal();
+    this.initReveals();
+    this.initAgentRun();
     this.initTestimonialPinScroll();
   }
 
-  // Scroll-choreographed entrance for the Featured Projects grid — same
-  // IntersectionObserver + one-shot-reveal pattern as ProjectsComponent's
-  // flagship scenes, kept local since Home only needs it for this one grid.
-  private initProjectReveal(): void {
-    const grid = document.querySelector('.projects-grid');
-    if (!grid) return;
+  // One-shot scroll entrances — same IntersectionObserver pattern as
+  // ProjectsComponent's flagship scenes. .in-view starts the Featured Projects
+  // cards, fills the rollout progress bars and raises the Toolkit cards.
+  private initReveals(): void {
+    const targets = document.querySelectorAll('.projects-grid, .cb-panel, .tk');
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-      grid.classList.add('in-view');
+      targets.forEach(el => el.classList.add('in-view'));
       return;
     }
-    this.revealObserver = new IntersectionObserver(entries => {
+    const io = new IntersectionObserver(entries => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
           entry.target.classList.add('in-view');
-          this.revealObserver!.unobserve(entry.target);
+          io.unobserve(entry.target);
         }
       });
     }, { threshold: 0.12, rootMargin: '0px 0px -5% 0px' });
-    this.revealObserver.observe(grid);
-    this.destroyRef.onDestroy(() => this.revealObserver?.disconnect());
+    targets.forEach(el => io.observe(el));
+    this.destroyRef.onDestroy(() => io.disconnect());
   }
 
   // ─── Helpers reused across templates ───
-  // Verbatim from the prototype's catsData paths (code / terminal / shield-check),
-  // not IconService — these three are prototype-specific glyphs, not brand icons.
-  private static readonly CATEGORY_ICON_SVG: Record<CategoryName, string> = {
-    'Frontend Development': '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg>',
-    'Development Tools': '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 17 10 11 4 5"></polyline><line x1="12" y1="19" x2="20" y2="19"></line></svg>',
-    'Testing & Quality': '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path><path d="M9 12l2 2 4-4"></path></svg>'
-  };
-
-  getCategoryIcon(category: CategoryName): string {
-    return HomeComponent.CATEGORY_ICON_SVG[category] || HomeComponent.CATEGORY_ICON_SVG['Frontend Development'];
-  }
-
   sanitizeIcon(icon: string): SafeHtml {
     return this.sanitizer.bypassSecurityTrustHtml(icon);
-  }
-
-  getTier(level: number): string {
-    if (level >= 90) return 'Expert';
-    if (level >= 85) return 'Advanced';
-    return 'Proficient';
   }
 
   // Computes a human-readable tenure (e.g. "2 yrs 6 mos") from a period like

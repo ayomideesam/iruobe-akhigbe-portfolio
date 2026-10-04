@@ -29,4 +29,52 @@ describe('HomeComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+  describe('window controls and dock', () => {
+    const visible = () => component.visibleProjects.map(p => p.key);
+    const docked = () => component.dockProjects.map(p => p.key);
+
+    beforeEach(() => vi.useFakeTimers());
+    afterEach(() => vi.useRealTimers());
+
+    it('closing a window brings in the next docked project and docks the closed one last', () => {
+      component.swapProject(1, 'close');
+      expect(visible()).toEqual(['nxp', 'cap', 'fms']); // waits for the exit animation
+      vi.runAllTimers();
+      expect(visible()).toEqual(['nxp', 'trade', 'fms']);
+      expect(docked()).toEqual(['costaff', 'tiger', 'xpath', 'cap']);
+      expect(component.swapAnnouncement()).toContain('Globus Trade — Import opened');
+    });
+
+    it('ignores a second control while a window is still leaving', () => {
+      component.swapProject(0, 'minimise');
+      component.swapProject(2, 'close');
+      vi.runAllTimers();
+      expect(visible()).toEqual(['trade', 'cap', 'fms']);
+    });
+
+    it('opens a docked project in the stalest slot, rightmost first, and docks the window it replaces in place', () => {
+      component.restoreProject('xpath');
+      vi.runAllTimers();
+      expect(visible()).toEqual(['nxp', 'cap', 'xpath']);
+      expect(docked()).toEqual(['trade', 'costaff', 'tiger', 'fms']);
+
+      component.restoreProject('tiger');
+      vi.runAllTimers();
+      expect(visible()).toEqual(['nxp', 'tiger', 'xpath']);
+
+      component.restoreProject('costaff');
+      vi.runAllTimers();
+      expect(visible()).toEqual(['costaff', 'tiger', 'xpath']);
+    });
+  });
+
+  describe('rollout odometer', () => {
+    it('lands each column on its digit, with column i spinning i full turns', () => {
+      const [exportModule, , corporate] = component.currentlyBuilding.modules;
+      expect(exportModule.odometer.map(c => c.to)).toEqual([1, 10, 20]);
+      expect(corporate.odometer.map(c => c.to)).toEqual([1, 10]);
+      expect(exportModule.odometer[2].digits.at(-1)).toBe(0);
+    });
+  });
 });
