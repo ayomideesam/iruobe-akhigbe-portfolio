@@ -3799,10 +3799,10 @@ button.frame-dot:focus-visible { outline: 2px solid var(--card-accent, #34d399);
     .assessment-tech .tech-badge, .assessment-spotlight { transition: none; }
 }
 
-/* ── Learning in public (French) — the card styles itself; this only spaces it ── */
+/* ── Learning in public (French) — full scene width, so it lines up with every
+   project above it; the card styles itself and this only spaces it ── */
 .learning-section {
-    max-width: 1100px;
-    margin: clamp(3rem, 6vw, 5rem) auto 0;
+    margin-top: clamp(3rem, 6vw, 5rem);
 }
 
 /* ══════════════════════════════════════════════════════════════════
