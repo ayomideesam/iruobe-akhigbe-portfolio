@@ -10,6 +10,7 @@ import { Course, Job, Language, Profile, Reference, ResumeDataService, SkillTier
 import { LearningDataService } from 'src/app/core/services/learning-data.service';
 import { SeoService } from 'src/app/core/services/seo.service';
 import { ThemeService } from 'src/app/core/services/theme.service';
+import { uiScale } from 'src/app/core/utils/ui-scale';
 
 @Component({
     selector: 'app-resume',
@@ -84,7 +85,7 @@ export class ResumeComponent implements AfterViewInit {
         setTimeout(() => {
           const element = document.getElementById(fragment);
           if (element) {
-            const headerHeight = 100; // Adjust based on your header height
+            const headerHeight = 100 * uiScale(); // Adjust based on your header height
             const elementPosition = element.getBoundingClientRect().top;
             const offsetPosition = elementPosition + window.pageYOffset - headerHeight;
 
@@ -299,7 +300,8 @@ export class ResumeComponent implements AfterViewInit {
         title: 'SENIOR FRONTEND ENGINEER',
         phone: '+2347038772342',
         email: 'iruobeakhigbe@gmail.com',
-        linkedin: 'IRUOBE AKHIGBE',
+        location: 'Lagos, Nigeria · WAT (UTC+1) · open to relocation',
+        linkedin: 'linkedin.com/in/akhigbe-iruobe',
         portfolio: 'iruobeakhigbe.netlify.app',
         github: 'github.com/ayomideesam',
         profile: [...this.profile.paragraphs, this.profile.availability],

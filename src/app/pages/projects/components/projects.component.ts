@@ -5,6 +5,7 @@ import { SeoService } from 'src/app/core/services/seo.service';
 import { ProjectDataService } from 'src/app/core/services/project-data.service';
 import { AnalyticsService } from 'src/app/core/services/analytics.service';
 import { detectVideoCapabilities, pickVideoSource, VideoCapabilities } from 'src/app/core/media/media';
+import { uiScale } from 'src/app/core/utils/ui-scale';
 
 interface Project {
   id: number;
@@ -409,7 +410,7 @@ export class ProjectsComponent implements OnInit, AfterViewInit, OnDestroy {
         setTimeout(() => {
           const element = document.getElementById(fragment);
           if (element) {
-            const headerHeight = 100; // Adjust based on your header height
+            const headerHeight = 100 * uiScale(); // Adjust based on your header height
             const elementPosition = element.getBoundingClientRect().top;
             const offsetPosition = elementPosition + window.pageYOffset - headerHeight;
 

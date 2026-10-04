@@ -93,11 +93,11 @@
     font: 600 9.5px Sora, sans-serif;
     letter-spacing: 0.06em;
     text-transform: uppercase;
-    color: #34d399;
+    color: var(--ok);
     padding: 2px 8px;
     border-radius: 99px;
-    border: 1px solid rgba(52, 211, 153, 0.35);
-    background: rgba(52, 211, 153, 0.10);
+    border: 1px solid rgba(var(--ok-rgb), 0.35);
+    background: rgba(var(--ok-rgb), 0.10);
 }
 .avail-below {
     align-self: flex-start;

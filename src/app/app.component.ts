@@ -65,7 +65,8 @@ interface CanvasStar {
 
     .app-shell {
       position: relative;
-      min-height: 100vh;
+      zoom: var(--z, 1); /* large-display scaling, see styles.css */
+      min-height: calc(100vh / var(--z, 1));
       background: var(--bg);
       color: var(--tx);
       transition: background 0.45s ease, color 0.45s ease;

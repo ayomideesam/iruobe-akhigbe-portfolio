@@ -113,8 +113,8 @@
         </div>
         <div class="project-shot" tabindex="0" role="button" [attr.aria-label]="'Expand ' + p.title + ' screenshot'" [title]="'Expand ' + p.title + ' screenshot'" (click)="expandProject(p.key)" (keydown.enter)="expandProject(p.key)">
           <picture>
-            <source type="image/avif" [attr.srcset]="p.img | media:'avif'" sizes="(min-width: 1025px) 400px, (min-width: 769px) 46vw, 92vw">
-            <source type="image/webp" [attr.srcset]="p.img | media:'webp'" sizes="(min-width: 1025px) 400px, (min-width: 769px) 46vw, 92vw">
+            <source type="image/avif" [attr.srcset]="p.img | media:'avif'" sizes="(min-width: 3500px) 700px, (min-width: 2900px) 580px, (min-width: 2200px) 500px, (min-width: 1025px) 400px, (min-width: 769px) 46vw, 92vw">
+            <source type="image/webp" [attr.srcset]="p.img | media:'webp'" sizes="(min-width: 3500px) 700px, (min-width: 2900px) 580px, (min-width: 2200px) 500px, (min-width: 1025px) 400px, (min-width: 769px) 46vw, 92vw">
             <img [src]="p.img | media:'src'" width="1280" height="720" [alt]="p.title + ' screenshot'" [title]="p.title" loading="lazy" decoding="async">
           </picture>
         </div>
@@ -376,7 +376,7 @@
           <div class="timeline-card-top">
             <div>
               <h3 class="timeline-role">{{ e.role }}</h3>
-              <span class="timeline-company" [style.color]="e.col">{{ e.company }}</span>
+              <span class="timeline-company" [style.--co]="e.col">{{ e.company }}</span>
             </div>
             <div class="timeline-pills">
               @if (e.promotion) {

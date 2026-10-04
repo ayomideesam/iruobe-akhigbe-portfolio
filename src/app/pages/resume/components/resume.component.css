@@ -44,7 +44,7 @@ section {
     background-color: var(--right-bg);
     position: relative;
     padding-top: 4.5rem !important;
-    min-height: 100vh;
+    min-height: calc(100vh / var(--z, 1));
 }
 
 /* Add a new wrapper for the main content */
@@ -79,7 +79,8 @@ section {
     align-items: center;
     gap: 0.75rem;
     padding: 0.75rem 1.5rem;
-    background-color: var(--link-color);
+    /* Fixed blue-600: white text needs 4.5:1, and the dark theme's link blue gives 2.5. */
+    background-color: #2563eb;
     color: white;
     border: none;
     border-radius: 8px;
@@ -268,6 +269,7 @@ h3 {
     color: var(--link-color);
     text-decoration: none;
     font-size: 0.9375rem;
+    padding-block: 2px; /* ≥24px tall: WCAG 2.2 target size */
     transition: all 0.3s ease;
     position: relative;
     display: inline-block;

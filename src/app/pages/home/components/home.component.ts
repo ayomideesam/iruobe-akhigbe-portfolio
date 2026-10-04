@@ -11,6 +11,7 @@ import { IconService } from 'src/app/core/services/icon.service';
 import { AnalyticsService } from 'src/app/core/services/analytics.service';
 import { SeoService } from 'src/app/core/services/seo.service';
 import { TestimonialsService } from 'src/app/core/services/testimonials.service';
+import { uiScale } from 'src/app/core/utils/ui-scale';
 
 type ProjectKey = 'nxp' | 'costaff' | 'trade' | 'fms' | 'cap' | 'tiger' | 'xpath';
 
@@ -621,7 +622,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
       this.pinScrollActive.set(true);
       const runway = Math.min(
         Math.max(track.scrollWidth - track.clientWidth, 300),
-        window.innerHeight * 1.3
+        window.innerHeight / uiScale() * 1.3
       );
       wrap.style.height = `${inner.offsetHeight + runway}px`;
     };
@@ -668,10 +669,13 @@ export class HomeComponent implements OnInit, AfterViewInit {
       scrollRafId = requestAnimationFrame(() => {
         scrollRafId = null;
         if (!this.pinScrollActive()) return;
+        // rect is in visual px, offsetHeight in layout px: put both in visual px
+        // so the glide still ends with the last card on zoomed large displays.
+        const z = uiScale();
         const rect = wrap.getBoundingClientRect();
-        const runway = wrap.offsetHeight - inner.offsetHeight;
+        const runway = (wrap.offsetHeight - inner.offsetHeight) * z;
         if (runway <= 0) return;
-        targetProgress = Math.min(Math.max((HomeComponent.PIN_STICKY_TOP - rect.top) / runway, 0), 1);
+        targetProgress = Math.min(Math.max((HomeComponent.PIN_STICKY_TOP * z - rect.top) / runway, 0), 1);
         if (easeRafId === null) easeRafId = requestAnimationFrame(ease);
       });
     };

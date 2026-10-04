@@ -1,4 +1,5 @@
 import { Directive, ElementRef, NgZone, OnDestroy, inject } from '@angular/core';
+import { uiScale } from 'src/app/core/utils/ui-scale';
 
 /**
  * Cursor-tracked glow for card surfaces.
@@ -30,9 +31,11 @@ export class PointerGlowDirective implements OnDestroy {
   private bound = false;
 
   private readonly onMove = (e: PointerEvent): void => {
+    // Visual px → layout px, so the glow sits under the pointer on zoomed large displays.
     const rect = this.el.nativeElement.getBoundingClientRect();
-    this.px = e.clientX - rect.left;
-    this.py = e.clientY - rect.top;
+    const z = uiScale();
+    this.px = (e.clientX - rect.left) / z;
+    this.py = (e.clientY - rect.top) / z;
     if (this.frame) { return; }
     this.frame = requestAnimationFrame(this.flush);
   };

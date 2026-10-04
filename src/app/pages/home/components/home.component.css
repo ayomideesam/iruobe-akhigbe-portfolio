@@ -133,7 +133,7 @@ h2 {
 .hero {
   position: relative;
   z-index: 1;
-  min-height: 100svh;
+  min-height: calc(100svh / var(--z, 1));
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -324,7 +324,7 @@ h2 {
   box-shadow: var(--chip-glow);
 }
 .orbit-chip-label {
-  font: 500 8.5px Sora, sans-serif;
+  font: 500 10px Sora, sans-serif;
   color: var(--tx2);
   margin-top: 3px;
 }
@@ -354,7 +354,7 @@ h2 {
 }
 ::ng-deep .orbit-center-icon svg { width: 34px; height: 34px; display: block; margin-bottom: 2px; }
 .orbit-center-name { font: 700 13px Outfit, sans-serif; color: var(--tx); }
-.orbit-center-sub { font: 500 9.5px Sora, sans-serif; letter-spacing: 0.08em; text-transform: uppercase; color: var(--tx2); }
+.orbit-center-sub { font: 500 10px Sora, sans-serif; letter-spacing: 0.08em; text-transform: uppercase; color: var(--tx2); }
 
 /* ─── Scroll indicator ─── */
 .scroll-indicator { display: flex; flex-direction: column; align-items: center; gap: 10px; margin-top: clamp(22px, 4vh, 44px); }
@@ -1294,7 +1294,7 @@ h2 {
 }
 .timeline-card-top { display: flex; flex-wrap: wrap; align-items: flex-start; justify-content: space-between; gap: 10px; margin-bottom: 9px; }
 .timeline-role { margin: 0 0 4px; font: 700 clamp(1.05rem, 1.6vw, 1.25rem) Outfit, sans-serif; letter-spacing: -0.01em; color: var(--tx); }
-.timeline-company { font: 600 13.5px Sora, sans-serif; }
+.timeline-company { font: 600 13.5px Sora, sans-serif; color: color-mix(in srgb, var(--co) var(--co-mix-pct), var(--co-mix-to)); }
 .current-pill {
   display: inline-flex;
   align-items: center;
@@ -1302,11 +1302,11 @@ h2 {
   font: 600 10.5px Sora, sans-serif;
   letter-spacing: 0.06em;
   text-transform: uppercase;
-  color: #34d399;
+  color: var(--ok);
   padding: 4px 11px;
   border-radius: 99px;
-  border: 1px solid rgba(52, 211, 153, 0.4);
-  background: rgba(52, 211, 153, 0.10);
+  border: 1px solid rgba(var(--ok-rgb), 0.4);
+  background: rgba(var(--ok-rgb), 0.10);
 }
 .timeline-meta { display: flex; flex-wrap: wrap; gap: 14px; margin-bottom: 12px; font: 400 12px Sora, sans-serif; color: var(--tx2); }
 .timeline-tenure { color: var(--pr); font-weight: 500; }
@@ -1513,8 +1513,8 @@ h2 {
   font: 600 10px Sora, sans-serif;
   letter-spacing: 0.05em;
   text-decoration: none;
-  color: #0a66c2;
-  padding: 4px 10px;
+  color: var(--li-text);
+  padding: 5px 10px; /* ≥24px tall: WCAG 2.2 target size */
   border-radius: 99px;
   border: 1px solid rgba(10, 102, 194, 0.35);
   background: rgba(10, 102, 194, 0.08);
@@ -1614,7 +1614,7 @@ h2 {
   display: flex;
   flex-direction: column;
   width: min(880px, 94vw);
-  max-height: 92vh;
+  max-height: calc(92vh / var(--z, 1));
   overflow-y: auto;
   border-radius: 24px;
   background: var(--glass2);

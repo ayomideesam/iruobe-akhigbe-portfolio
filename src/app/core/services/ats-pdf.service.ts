@@ -8,6 +8,7 @@ interface ResumeData {
   title: string;
   phone: string;
   email: string;
+  location: string;
   linkedin: string;
   portfolio: string;
   github: string;
@@ -103,6 +104,14 @@ export class AtsPdfService {
       textLight: '#64748B',
       border: '#E2E8F0'
     };
+
+    // Document metadata: what an ATS or a recruiter's file browser shows first.
+    this.pdf.setProperties({
+      title: `${resumeData.name} — ${resumeData.title} — Resume`,
+      author: 'Akhigbe Iruobe',
+      subject: 'Resume',
+      keywords: 'Akhigbe Iruobe, Senior Frontend Engineer, Angular, TypeScript, RxJS, React, Next.js, fintech, banking'
+    });
 
     this.drawBackground(isDarkTheme);
     this.drawHeader(resumeData);
@@ -204,14 +213,15 @@ export class AtsPdfService {
     const w = this.LEFT_COLUMN_WIDTH;
 
     leftY = this.drawSectionTitle('DETAILS', leftX, leftY, w);
-    leftY = this.drawDetail('PHONE', data.phone, leftX, leftY, w);
-    leftY = this.drawDetail('EMAIL', data.email, leftX, leftY, w);
+    leftY = this.drawDetail('PHONE', data.phone, leftX, leftY, w, `tel:${data.phone.replace(/\s/g, '')}`);
+    leftY = this.drawDetail('EMAIL', data.email, leftX, leftY, w, `mailto:${data.email}`);
+    leftY = this.drawDetail('LOCATION', data.location, leftX, leftY, w);
     leftY += 16;
 
     leftY = this.drawSectionTitle('LINKS', leftX, leftY, w);
-    leftY = this.drawDetail('LinkedIn', data.linkedin, leftX, leftY, w, true);
-    leftY = this.drawDetail('Portfolio', data.portfolio, leftX, leftY, w, true);
-    leftY = this.drawDetail('GitHub', data.github, leftX, leftY, w, true);
+    leftY = this.drawDetail('LinkedIn', data.linkedin, leftX, leftY, w, `https://${data.linkedin}`);
+    leftY = this.drawDetail('Portfolio', data.portfolio, leftX, leftY, w, `https://${data.portfolio}`);
+    leftY = this.drawDetail('GitHub', data.github, leftX, leftY, w, `https://${data.github}`);
     leftY += 16;
 
     if (leftY > this.PAGE_HEIGHT - 80) leftY = this.newLeftPage();
@@ -294,17 +304,22 @@ export class AtsPdfService {
     return y + 18;
   }
 
-  private drawDetail(label: string, value: string, x: number, y: number, width: number, isLink: boolean = false): number {
+  /** Label, then the value; a `url` makes the value a clickable link in the PDF. */
+  private drawDetail(label: string, value: string, x: number, y: number, width: number, url?: string): number {
     this.pdf.setFontSize(8);
     this.pdf.setFont('helvetica', 'bold');
     this.pdf.setTextColor(this.colors.primary);
     this.pdf.text(label, x, y);
 
     this.pdf.setFont('helvetica', 'normal');
-    this.pdf.setTextColor(isLink ? this.colors.accent : this.colors.textLight);
+    this.pdf.setTextColor(url ? this.colors.accent : this.colors.textLight);
 
-    const lines = this.pdf.splitTextToSize(value, width);
-    this.pdf.text(lines, x, y + 12);
+    const lines: string[] = this.pdf.splitTextToSize(value, width);
+    if (url && lines.length === 1) {
+      this.pdf.textWithLink(value, x, y + 12, { url });
+    } else {
+      this.pdf.text(lines, x, y + 12);
+    }
 
     return y + 12 + (lines.length * 10) + 8;
   }
