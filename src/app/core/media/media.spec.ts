@@ -72,8 +72,8 @@ describe('media', () => {
          new ProjectDataService().getProjects().forEach(p => {
             (p.images as string[]).forEach(img => {
                const entry = imageEntry(img);
-               expect(entry).withContext(`${img} — run npm run optimize:media`).not.toBeNull();
-               expect(entry?.avif).withContext(img).toContain('w,');
+               expect(entry, `${img} — run npm run optimize:media`).not.toBeNull();
+               expect(entry?.avif, img).toContain('w,');
             });
          });
       });

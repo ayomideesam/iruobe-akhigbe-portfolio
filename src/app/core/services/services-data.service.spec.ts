@@ -15,10 +15,10 @@ describe('ServicesDataService', () => {
 
          expect(services.length).toBeGreaterThan(0);
          services.forEach(s => {
-            expect(s.title.trim()).withContext(`title for ${s.key}`).not.toBe('');
-            expect(s.promise.trim()).withContext(`promise for ${s.key}`).not.toBe('');
-            expect(s.proof.trim()).withContext(`proof for ${s.key}`).not.toBe('');
-            expect(s.deliverables.length).withContext(`deliverables for ${s.key}`).toBeGreaterThan(0);
+            expect(s.title.trim(), `title for ${s.key}`).not.toBe('');
+            expect(s.promise.trim(), `promise for ${s.key}`).not.toBe('');
+            expect(s.proof.trim(), `proof for ${s.key}`).not.toBe('');
+            expect(s.deliverables.length, `deliverables for ${s.key}`).toBeGreaterThan(0);
          });
       });
 
@@ -29,7 +29,7 @@ describe('ServicesDataService', () => {
 
       it('should give every offering an accentRgb parseable as an rgba() triplet', () => {
          service.getServices().forEach(s => {
-            expect(s.accentRgb).withContext(`accentRgb for ${s.key}`).toMatch(/^\d{1,3},\s*\d{1,3},\s*\d{1,3}$/);
+            expect(s.accentRgb, `accentRgb for ${s.key}`).toMatch(/^\d{1,3},\s*\d{1,3},\s*\d{1,3}$/);
          });
       });
 
@@ -75,7 +75,7 @@ describe('ServicesDataService', () => {
       it('should give every non-directory artifact a purpose', () => {
          service.getAiArtifacts()
             .filter(a => !a.dir)
-            .forEach(a => expect(a.purpose.trim()).withContext(a.path).not.toBe(''));
+            .forEach(a => expect(a.purpose.trim(), a.path).not.toBe(''));
       });
 
       it('should only use depths the template can indent', () => {

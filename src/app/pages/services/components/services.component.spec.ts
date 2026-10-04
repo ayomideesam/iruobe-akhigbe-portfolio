@@ -66,13 +66,13 @@ describe('ServicesComponent', () => {
 
       const panels = fixture.nativeElement.querySelectorAll('.faq-a-wrap');
       expect(panels.length).toBe(component.faqs.length);
-      expect(panels[0].hasAttribute('inert')).toBeFalse();
-      expect(panels[1].hasAttribute('inert')).toBeTrue();
+      expect(panels[0].hasAttribute('inert')).toBe(false);
+      expect(panels[1].hasAttribute('inert')).toBe(true);
     });
 
     it('should mark all panels inert when nothing is open', () => {
       const panels = fixture.nativeElement.querySelectorAll('.faq-a-wrap');
-      panels.forEach((p: HTMLElement) => expect(p.hasAttribute('inert')).toBeTrue());
+      panels.forEach((p: HTMLElement) => expect(p.hasAttribute('inert')).toBe(true));
     });
 
     it('should wire each panel to its button via aria-controls / aria-labelledby', () => {
@@ -141,7 +141,7 @@ describe('ServicesComponent', () => {
       const links = fixture.nativeElement.querySelectorAll('a[target="_blank"]');
       expect(links.length).toBeGreaterThan(0);
       links.forEach((a: HTMLElement) => {
-        expect(a.getAttribute('rel')).withContext(a.getAttribute('href') || '').toContain('noopener');
+        expect(a.getAttribute('rel'), a.getAttribute('href') || '').toContain('noopener');
       });
     });
   });
@@ -184,7 +184,7 @@ describe('ServicesComponent', () => {
       expect(icons.length).toBe(component.services.length);
       icons.forEach((icon: HTMLElement) => {
         const motion = Array.from(icon.classList).filter(c => c.startsWith('mo-'));
-        expect(motion.length).withContext(icon.className).toBe(1);
+        expect(motion.length, icon.className).toBe(1);
       });
     });
   });

@@ -87,6 +87,25 @@
               "extractLicenses": false,
               "sourceMap": true,
               "namedChunks": true
+            },
+            "testing": {
+              "aot": false,
+              "optimization": false,
+              "extractLicenses": false,
+              "assets": [
+                "src/logo.svg",
+                "src/assets",
+                "src/_redirects",
+                {
+                  "glob": "_redirects",
+                  "input": "src",
+                  "output": "/"
+                }
+              ],
+              "polyfills": [
+                "zone.js",
+                "zone.js/testing"
+              ]
             }
           },
           "defaultConfiguration": "production"
@@ -111,27 +130,14 @@
           }
         },
         "test": {
-          "builder": "@angular/build:karma",
+          "builder": "@angular/build:unit-test",
           "options": {
-            "polyfills": [
-              "zone.js",
-              "zone.js/testing"
-            ],
             "tsConfig": "tsconfig.spec.json",
-            "assets": [
-              "src/logo.svg",
-              "src/assets",
-              "src/_redirects",
-              {
-                "glob": "_redirects",
-                "input": "src",
-                "output": "/"
-              }
-            ],
-            "styles": [
-              "src/styles.css"
-            ],
-            "scripts": []
+            "buildTarget": ":build:testing",
+            "runner": "vitest",
+            "setupFiles": [
+              "src/test-setup.ts"
+            ]
           }
         }
       }

@@ -4,12 +4,12 @@ describe('LearningDataService', () => {
    const journey = new LearningDataService().getFrenchJourney();
 
    it('should date every figure with a valid as-of date', () => {
-      expect(Number.isNaN(Date.parse(journey.asOfIso))).toBeFalse();
+      expect(Number.isNaN(Date.parse(journey.asOfIso))).toBe(false);
       expect(journey.asOfLabel.trim()).not.toBe('');
    });
 
    it('should speak in the first person — the card is Akhigbe talking about himself', () => {
-      expect(journey.intro.startsWith('I ')).toBeTrue();
+      expect(journey.intro.startsWith('I ')).toBe(true);
       expect(journey.intro).not.toContain('Akhigbe Iruobe has');
    });
 
@@ -37,7 +37,7 @@ describe('LearningDataService', () => {
 
    it('should never show a level above its maximum', () => {
       journey.awards.filter(a => a.level !== undefined).forEach(a => {
-         expect(a.level!).withContext(a.name).toBeLessThanOrEqual(a.levels!);
+         expect(a.level!, a.name).toBeLessThanOrEqual(a.levels!);
       });
    });
 });

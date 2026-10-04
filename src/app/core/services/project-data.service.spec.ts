@@ -27,23 +27,23 @@ describe('ProjectDataService', () => {
 
       it('should give every project a title, a description naming Akhigbe Iruobe, and achievements', () => {
          service.getProjects().forEach(p => {
-            expect(p.title.trim()).withContext(`title for ${p.id}`).not.toBe('');
-            expect(p.description).withContext(`description for ${p.id}`).toContain('Akhigbe Iruobe');
-            expect(p.achievements.length).withContext(`achievements for ${p.id}`).toBeGreaterThan(0);
+            expect(p.title.trim(), `title for ${p.id}`).not.toBe('');
+            expect(p.description, `description for ${p.id}`).toContain('Akhigbe Iruobe');
+            expect(p.achievements.length, `achievements for ${p.id}`).toBeGreaterThan(0);
          });
       });
 
       // The scene template reads images[0] and images[1] unconditionally.
       it('should give every project at least two preview images', () => {
          service.getProjects().forEach(p => {
-            expect(p.images?.length ?? 0).withContext(`images for ${p.id}`).toBeGreaterThanOrEqual(2);
+            expect(p.images?.length ?? 0, `images for ${p.id}`).toBeGreaterThanOrEqual(2);
          });
       });
 
       it('should give every project stats and a pipeline for the scene rail', () => {
          service.getProjects().forEach(p => {
-            expect(p.stats?.length ?? 0).withContext(`stats for ${p.id}`).toBeGreaterThan(0);
-            expect(p.pipeline?.length ?? 0).withContext(`pipeline for ${p.id}`).toBeGreaterThan(0);
+            expect(p.stats?.length ?? 0, `stats for ${p.id}`).toBeGreaterThan(0);
+            expect(p.pipeline?.length ?? 0, `pipeline for ${p.id}`).toBeGreaterThan(0);
          });
       });
 
@@ -63,9 +63,9 @@ describe('ProjectDataService', () => {
          const component = TestBed.runInInjectionContext(() => new ProjectsComponent());
          service.getProjects().forEach(p => {
             const meta = component.getSceneMeta(p.id);
-            expect(meta.video).withContext(`video for ${p.id}`).toMatch(/^assets\/video\/fp-[a-z]+\.mp4$/);
-            expect(meta.poster).withContext(`poster for ${p.id}`).toMatch(/^assets\/video\/fp-[a-z]+\.jpg$/);
-            expect(videoEntry(meta.video)).withContext(`${meta.video} — run npm run optimize:media`).not.toBeNull();
+            expect(meta.video, `video for ${p.id}`).toMatch(/^assets\/video\/fp-[a-z]+\.mp4$/);
+            expect(meta.poster, `poster for ${p.id}`).toMatch(/^assets\/video\/fp-[a-z]+\.jpg$/);
+            expect(videoEntry(meta.video), `${meta.video} — run npm run optimize:media`).not.toBeNull();
          });
       });
    });

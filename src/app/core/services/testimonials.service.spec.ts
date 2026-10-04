@@ -15,7 +15,7 @@ describe('TestimonialsService', () => {
 
          expect(testimonials.length).toBeGreaterThan(0);
          testimonials.forEach(t => {
-            expect(t.quote.trim().length).withContext(`quote for ${t.author}`).toBeGreaterThan(40);
+            expect(t.quote.trim().length, `quote for ${t.author}`).toBeGreaterThan(40);
             expect(t.author.trim()).not.toBe('');
             expect(t.role.trim()).not.toBe('');
             expect(t.company.trim()).not.toBe('');
@@ -25,7 +25,7 @@ describe('TestimonialsService', () => {
 
       it('should derive initials that match the author name', () => {
          service.getTestimonials().forEach(t => {
-            expect(t.initials.length).withContext(t.author).toBe(2);
+            expect(t.initials.length, t.author).toBe(2);
             expect(t.initials[0]).toBe(t.author[0]);
          });
       });

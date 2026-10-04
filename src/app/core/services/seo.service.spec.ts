@@ -6,7 +6,7 @@ import { ServicesDataService } from './services-data.service';
 /** Reads back the single JSON-LD block the service is allowed to emit. */
 function readJsonLd(): any {
    const blocks = document.querySelectorAll('script[type="application/ld+json"]');
-   expect(blocks.length).withContext('exactly one JSON-LD block may exist').toBe(1);
+   expect(blocks.length, 'exactly one JSON-LD block may exist').toBe(1);
    return JSON.parse(blocks[0].textContent || '{}');
 }
 
