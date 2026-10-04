@@ -292,34 +292,7 @@ export class ResumeComponent implements AfterViewInit {
     try {
       this.loadingService.show('Generating ATS-Friendly PDF');
 
-      const stripEmoji = (text: string): string =>
-        text.replace(/[\u{1F000}-\u{1FFFF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}\u{1F300}-\u{1F9FF}]/gu, '').replace(/\*\*/g, '').trim();
-
-      const resumeData = {
-        name: 'AKHIGBE IRUOBE',
-        title: 'SENIOR FRONTEND ENGINEER',
-        phone: '+2347038772342',
-        email: 'iruobeakhigbe@gmail.com',
-        location: 'Lagos, Nigeria · WAT (UTC+1) · open to relocation',
-        linkedin: 'linkedin.com/in/akhigbe-iruobe',
-        portfolio: 'iruobeakhigbe.netlify.app',
-        github: 'github.com/ayomideesam',
-        profile: [...this.profile.paragraphs, this.profile.availability],
-        keyAchievements: this.keyTechnicalAchievements.map(stripEmoji),
-        skills: this.skills,
-        employment: this.employmentHistory,
-        education: {
-          degree: 'Bachelors of Science',
-          institution: 'Babcock University, Ogun State, Nigeria - B.Sc Information Resource Management',
-          period: 'Sep 2011 — Jul 2016',
-          grade: 'Grade B or 2:1 [Second Class-Upper Division]'
-        },
-        certifications: this.courses,
-        techWatching: this.techWatching,
-        hobbies: this.hobbies,
-        languages: this.languages,
-        references: this.references
-      };
+      const resumeData = this.resumeData.getAtsResume(this.frenchSince);
 
       this.analytics.trackEvent('Resume', 'Download', 'PDF_ATS_Friendly');
 

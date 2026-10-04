@@ -1,743 +1,408 @@
 // core/services/ats-pdf.service.ts
 import { Injectable } from '@angular/core';
 import type { jsPDF } from 'jspdf';
-import type { Language, Reference, SkillTier } from './resume-data.service';
-
-interface ResumeData {
-  name: string;
-  title: string;
-  phone: string;
-  email: string;
-  location: string;
-  linkedin: string;
-  portfolio: string;
-  github: string;
-  profile: string[];
-  keyAchievements: string[];
-  skills: SkillTier[];
-  employment: Array<{
-    company: string;
-    role: string;
-    period: string;
-    location: string;
-    description?: string;
-    achievements?: string[];
-    technicalAchievements?: string[];
-    technicalLeadership?: string[];
-  }>;
-  education: {
-    degree: string;
-    institution: string;
-    period: string;
-    grade: string;
-  };
-  certifications: Array<{
-    title: string;
-    institution: string;
-    period: string;
-  }>;
-  techWatching: string[];
-  hobbies: string[];
-  languages: Language[];
-  references: Reference[];
-}
+import type { AtsResume, Job } from './resume-data.service';
 
 interface PDFColors {
   primary: string;
   secondary: string;
-  background: string;
   accent: string;
   textDark: string;
   textLight: string;
-  border: string;
+  rule: string;
+  promoted: string;
 }
 
+/** A run of text inside a wrapped line: bold or normal, optionally a link. */
+interface Segment {
+  text: string;
+  bold?: boolean;
+  url?: string;
+}
+
+/**
+ * The ATS resume: one column, top to bottom, in the order every parser
+ * expects — contact header, profile, achievements, skills, experience,
+ * education, certifications, languages, interests, references.
+ *
+ * Single column on purpose. A two-column PDF reads cleanly in content-stream
+ * order (modern ATS), but parsers that rebuild lines by position interleave the
+ * sidebar into the main text; one column cannot be misread either way. The
+ * visual PDF keeps the designed two-column layout.
+ */
 @Injectable({
   providedIn: 'root'
 })
 export class AtsPdfService {
   private readonly PAGE_WIDTH = 595.28;
   private readonly PAGE_HEIGHT = 841.89;
-  /** Top and bottom page margin, and the right column's outer margin. */
-  private readonly MARGIN = 40;
-  /** Sidebar geometry: inner padding, content width, and the tinted band that holds both. */
-  private readonly SIDEBAR_PAD = 26;
-  private readonly LEFT_COLUMN_WIDTH = 146;
-  private readonly SIDEBAR_WIDTH = this.SIDEBAR_PAD + this.LEFT_COLUMN_WIDTH + 14;
-  /** The main column starts a gutter clear of the band (it used to start flush against it). */
-  private readonly RIGHT_COLUMN_X = this.SIDEBAR_WIDTH + 18;
-  private readonly RIGHT_COLUMN_WIDTH = this.PAGE_WIDTH - this.RIGHT_COLUMN_X - 34;
+  private readonly MARGIN_X = 50;
+  private readonly MARGIN_TOP = 46;
+  private readonly MARGIN_BOTTOM = 52;
+  private readonly WIDTH = this.PAGE_WIDTH - this.MARGIN_X * 2;
+  private readonly BODY = 9.5;
+  private readonly LINE = 13;
 
   private pdf!: jsPDF;
-  private currentY = 0;
+  private y = 0;
   private colors!: PDFColors;
   private isDark = false;
-  private leftTotalPages = 0;
-  private rightCurrentPage = 1;
 
-  async generateATSFriendlyPDF(resumeData: ResumeData, isDarkTheme: boolean): Promise<void> {
+  async generateATSFriendlyPDF(data: AtsResume, isDarkTheme: boolean): Promise<void> {
     const { jsPDF } = await import('jspdf');
-
-    this.pdf = new jsPDF({
-      orientation: 'portrait',
-      unit: 'pt',
-      format: 'a4',
-      compress: true
-    });
-
+    this.pdf = new jsPDF({ orientation: 'portrait', unit: 'pt', format: 'a4', compress: true });
     this.isDark = isDarkTheme;
-
     this.colors = isDarkTheme ? {
-      primary: '#F1F5F9',
-      secondary: '#94A3B8',
-      background: '#1E1E1E',
-      accent: '#3B82F6',
-      textDark: '#F1F5F9',
-      textLight: '#94A3B8',
-      border: '#334155'
+      primary: '#F1F5F9', secondary: '#CBD5E1', accent: '#60A5FA',
+      textDark: '#E2E8F0', textLight: '#94A3B8', rule: '#334155', promoted: '#34D399'
     } : {
-      primary: '#0F172A',
-      secondary: '#475569',
-      background: '#F4F4F4',
-      accent: '#2563EB',
-      textDark: '#0F172A',
-      textLight: '#64748B',
-      border: '#E2E8F0'
+      primary: '#0F172A', secondary: '#334155', accent: '#1D4ED8',
+      textDark: '#1E293B', textLight: '#64748B', rule: '#CBD5E1', promoted: '#047857'
     };
 
-    // Document metadata: what an ATS or a recruiter's file browser shows first.
     this.pdf.setProperties({
-      title: `${resumeData.name} — ${resumeData.title} — Resume`,
-      author: 'Akhigbe Iruobe',
-      subject: 'Resume',
+      title: `${data.name} — Resume`,
+      author: data.name,
+      subject: data.title,
       keywords: 'Akhigbe Iruobe, Senior Frontend Engineer, Angular, TypeScript, RxJS, React, Next.js, fintech, banking'
     });
 
-    this.drawBackground(isDarkTheme);
-    this.drawHeader(resumeData);
+    this.paintBackground();
+    this.y = this.MARGIN_TOP;
 
-    // Left column runs first and may add pages — track how many it creates
-    this.drawLeftColumn(resumeData);
-    this.leftTotalPages = this.pdf.getNumberOfPages();
+    this.drawHeader(data);
 
-    // Right column navigates existing pages then adds more if needed
-    this.pdf.setPage(1);
-    this.rightCurrentPage = 1;
-    this.drawRightColumn(resumeData);
+    this.section('PROFILE');
+    data.profile.forEach((para, i) => this.paragraph(para, i === data.profile.length - 1 ? 0 : 6));
 
-    const fileName = isDarkTheme
-      ? 'AkhigbeIruobe-Resume-Dark-ATS.pdf'
-      : 'AkhigbeIruobe-Resume-Light-ATS.pdf';
+    this.section('KEY ACHIEVEMENTS');
+    data.keyAchievements.forEach(item => {
+      const colon = item.indexOf(':');
+      this.bullet(colon > 0
+        ? [{ text: item.slice(0, colon + 1) + ' ', bold: true }, { text: item.slice(colon + 1).trim() }]
+        : [{ text: item }]);
+    });
 
-    this.pdf.save(fileName);
+    this.section('SKILLS');
+    data.skills.forEach(tier => {
+      this.richParagraph([{ text: `${tier.tier}: `, bold: true }, { text: tier.skills.join(', ') + (tier.note ? `. ${tier.note}` : '') }], 4);
+    });
+
+    this.section('PROFESSIONAL EXPERIENCE', this.jobNeeds(data.employment[0], data.employment, 0));
+    data.employment.forEach((job, i) => this.drawJob(job, data.employment, i));
+
+    this.section('EDUCATION');
+    this.twoSided([{ text: data.education.degree, bold: true }], data.education.period);
+    this.paragraph(`${data.education.institution} · ${data.education.grade}`, 0);
+
+    this.section('CERTIFICATIONS');
+    data.certifications.forEach(c => this.twoSided([{ text: c.title + ' ', bold: true }, { text: `· ${c.institution}` }], c.period, 2));
+
+    this.section('LANGUAGES');
+    this.paragraph(data.languages.map(l => `${l.name} ${l.level}/5${l.note ? ` (${l.note})` : ''}`).join(' · '), 0);
+
+    this.section("TECH I'M WATCHING");
+    this.paragraph(data.techWatching.join(' · '), 0);
+
+    this.section('HOBBIES');
+    this.paragraph(data.hobbies.join(' · '), 0);
+
+    this.section('REFERENCES');
+    this.paragraph(data.references.map(r => `${r.name} (${r.company})`).join(' · '), 4);
+    this.paragraph('Contact details available on request.', 0, 'italic');
+
+    this.drawPageNumbers(data.name);
+
+    this.pdf.save(isDarkTheme ? 'AkhigbeIruobe-Resume-Dark-ATS.pdf' : 'AkhigbeIruobe-Resume-Light-ATS.pdf');
   }
 
-  // ─── Page helpers ────────────────────────────────────────────────────────────
+  // ─── Layout primitives ───────────────────────────────────────────────────────
 
-  /** Add a new left-column page and return the reset Y position. */
-  private newLeftPage(): number {
+  private paintBackground(): void {
+    if (!this.isDark) return; // white paper
+    this.pdf.setFillColor(18, 18, 18);
+    this.pdf.rect(0, 0, this.PAGE_WIDTH, this.PAGE_HEIGHT, 'F');
+  }
+
+  /** Starts a new page unless `needed` points still fit on this one. */
+  private ensureRoom(needed: number): void {
+    if (this.y + needed <= this.PAGE_HEIGHT - this.MARGIN_BOTTOM) return;
     this.pdf.addPage();
-    this.drawBackground(this.isDark);
-    return this.MARGIN + 20;
+    this.paintBackground();
+    this.y = this.MARGIN_TOP;
+  }
+
+  private drawHeader(data: AtsResume): void {
+    this.pdf.setFont('helvetica', 'bold');
+    this.pdf.setFontSize(24);
+    this.pdf.setTextColor(this.colors.primary);
+    this.pdf.text(data.name.toUpperCase(), this.MARGIN_X, this.y + 18);
+    this.y += 36;
+
+    this.pdf.setFont('helvetica', 'normal');
+    this.pdf.setFontSize(11);
+    this.pdf.setTextColor(this.colors.accent);
+    this.pdf.text(this.clean(data.title), this.MARGIN_X, this.y);
+    this.y += 16;
+
+    this.richParagraph([{ text: data.location }], 1, 9, this.MARGIN_X, this.WIDTH, this.colors.textLight);
+    const sep: Segment = { text: ' · ' };
+    this.richParagraph([
+      { text: data.phone, url: `tel:${data.phone.replace(/\s/g, '')}` }, sep,
+      { text: data.email, url: `mailto:${data.email}` }, sep,
+      { text: data.linkedin, url: `https://${data.linkedin}` }, sep,
+      { text: data.portfolio, url: `https://${data.portfolio}` }, sep,
+      { text: data.github, url: `https://${data.github}` }
+    ], 0, 9);
+
+    this.y += 2;
+    this.rule(1.2, this.colors.accent);
+  }
+
+  /** A heading never ends a page: it needs room for itself plus `keepWith` points of what follows. */
+  private section(title: string, keepWith = 2 * 13): void {
+    this.ensureRoom(38 + keepWith);
+    this.y += 20;
+    this.pdf.setFont('helvetica', 'bold');
+    this.pdf.setFontSize(10.5);
+    this.pdf.setTextColor(this.colors.accent);
+    this.pdf.text(title, this.MARGIN_X, this.y);
+    this.y += 5;
+    this.rule(0.6, this.colors.rule);
+    this.y += 13;
+  }
+
+  private rule(width: number, color: string): void {
+    this.pdf.setDrawColor(color);
+    this.pdf.setLineWidth(width);
+    this.pdf.line(this.MARGIN_X, this.y, this.MARGIN_X + this.WIDTH, this.y);
+  }
+
+  private paragraph(text: string, after = 6, style: 'normal' | 'italic' = 'normal'): void {
+    this.pdf.setFont('helvetica', style);
+    this.pdf.setFontSize(this.BODY);
+    this.pdf.setTextColor(style === 'italic' ? this.colors.textLight : this.colors.textDark);
+    const lines: string[] = this.pdf.splitTextToSize(this.clean(text), this.WIDTH);
+    lines.forEach((line, i) => {
+      this.ensureRoom(this.LINE);
+      this.pdf.text(line, this.MARGIN_X, this.y);
+      if (i < lines.length - 1) this.y += this.LINE;
+    });
+    this.y += this.LINE + after;
   }
 
   /**
-   * Advance the right column to the next page.
-   * Navigates to an existing page (created by the left column) when available,
-   * otherwise creates a fresh page with backgrounds drawn.
-   * Returns the reset Y position.
+   * Word-wraps runs of mixed weight (and links) inside `width` from `x`,
+   * then advances this.y past the block.
    */
-  private advanceRightPage(): number {
-    this.rightCurrentPage++;
-    if (this.rightCurrentPage <= this.leftTotalPages) {
-      this.pdf.setPage(this.rightCurrentPage);
-    } else {
-      this.pdf.addPage();
-      this.drawBackground(this.isDark);
-    }
-    return this.MARGIN + 20;
-  }
-
-  // ─── Backgrounds & Header ────────────────────────────────────────────────────
-
-  private drawBackground(isDarkTheme: boolean): void {
-    if (isDarkTheme) {
-      this.pdf.setFillColor(30, 30, 30);
-    } else {
-      this.pdf.setFillColor(244, 244, 244);
-    }
-    this.pdf.rect(0, 0, this.SIDEBAR_WIDTH, this.PAGE_HEIGHT, 'F');
-
-    if (isDarkTheme) {
-      this.pdf.setFillColor(18, 18, 18);
-    } else {
-      this.pdf.setFillColor(255, 255, 255);
-    }
-    this.pdf.rect(this.SIDEBAR_WIDTH, 0, this.PAGE_WIDTH, this.PAGE_HEIGHT, 'F');
-  }
-
-  private drawHeader(data: ResumeData): void {
-    const headerHeight = 85;
-    const headerY = this.MARGIN;
-    const boxX = this.SIDEBAR_PAD;
-    const boxWidth = this.PAGE_WIDTH - this.SIDEBAR_PAD - 34;
-
-    if (this.colors.background === '#1E1E1E') {
-      this.pdf.setDrawColor(255, 255, 255);
-    } else {
-      this.pdf.setDrawColor(0, 0, 0);
-    }
-    this.pdf.setLineWidth(2);
-    this.pdf.rect(boxX, headerY, boxWidth, headerHeight);
-
-    this.pdf.setFontSize(26);
-    this.pdf.setFont('helvetica', 'bold');
-    this.pdf.setTextColor(this.colors.primary);
-    this.pdf.text(data.name.toUpperCase(), this.PAGE_WIDTH / 2, headerY + 38, { align: 'center' });
-
-    this.pdf.setFontSize(11);
-    this.pdf.setFont('helvetica', 'normal');
-    this.pdf.setTextColor(this.colors.secondary);
-    this.pdf.text(data.title, this.PAGE_WIDTH / 2, headerY + 58, { align: 'center' });
-
-    this.currentY = headerY + headerHeight + 25;
-  }
-
-  // ─── Left Column ─────────────────────────────────────────────────────────────
-
-  /** The sidebar mirrors the resume page's left column, in the same order:
-   *  details, links, skills, tech I'm watching, languages, hobbies. */
-  private drawLeftColumn(data: ResumeData): void {
-    let leftY = this.currentY;
-    const leftX = this.SIDEBAR_PAD;
-    const w = this.LEFT_COLUMN_WIDTH;
-
-    leftY = this.drawSectionTitle('DETAILS', leftX, leftY, w);
-    leftY = this.drawDetail('PHONE', data.phone, leftX, leftY, w, `tel:${data.phone.replace(/\s/g, '')}`);
-    leftY = this.drawDetail('EMAIL', data.email, leftX, leftY, w, `mailto:${data.email}`);
-    leftY = this.drawDetail('LOCATION', data.location, leftX, leftY, w);
-    leftY += 16;
-
-    leftY = this.drawSectionTitle('LINKS', leftX, leftY, w);
-    leftY = this.drawDetail('LinkedIn', data.linkedin, leftX, leftY, w, `https://${data.linkedin}`);
-    leftY = this.drawDetail('Portfolio', data.portfolio, leftX, leftY, w, `https://${data.portfolio}`);
-    leftY = this.drawDetail('GitHub', data.github, leftX, leftY, w, `https://${data.github}`);
-    leftY += 16;
-
-    if (leftY > this.PAGE_HEIGHT - 80) leftY = this.newLeftPage();
-    leftY = this.drawSectionTitle('SKILLS', leftX, leftY, w);
-    leftY = this.drawSkills(data.skills, leftX, leftY, w);
-    leftY += 8;
-
-    if (leftY > this.PAGE_HEIGHT - 110) leftY = this.newLeftPage();
-    leftY = this.drawSectionTitle("TECH I'M WATCHING", leftX, leftY, w);
-    leftY = this.drawTechWatching(data.techWatching, leftX, leftY, w);
-    leftY += 16;
-
-    if (leftY > this.PAGE_HEIGHT - 90) leftY = this.newLeftPage();
-    leftY = this.drawSectionTitle('LANGUAGES', leftX, leftY, w);
-    leftY = this.drawLanguages(data.languages, leftX, leftY, w);
-    leftY += 16;
-
-    if (leftY > this.PAGE_HEIGHT - 120) leftY = this.newLeftPage();
-    leftY = this.drawSectionTitle('HOBBIES', leftX, leftY, w);
-    this.drawTechWatching(data.hobbies, leftX, leftY, w);
-  }
-
-  // ─── Right Column ─────────────────────────────────────────────────────────────
-
-  private drawRightColumn(data: ResumeData): void {
-    let rightY = this.currentY;
-    const rightX = this.RIGHT_COLUMN_X;
-    const w = this.RIGHT_COLUMN_WIDTH;
-
-    rightY = this.drawSectionTitle('PROFILE', rightX, rightY, w);
-    rightY = this.drawParagraphs(data.profile, rightX, rightY, w);
-    rightY += 10;
-
-    rightY = this.ensureRightRoom(rightY, 70);
-    rightY = this.drawSectionTitle('KEY TECHNICAL ACHIEVEMENTS', rightX, rightY, w);
-    rightY = this.drawBulletList(data.keyAchievements, rightX, rightY, w, true);
-    rightY += 12;
-
-    rightY = this.ensureRightRoom(rightY, 90);
-    rightY = this.drawSectionTitle('EMPLOYMENT HISTORY', rightX, rightY, w);
-    rightY = this.drawEmploymentHistory(data.employment, rightX, rightY, w);
-
-    rightY = this.ensureRightRoom(rightY, 75);
-    rightY = this.drawSectionTitle('EDUCATION', rightX, rightY, w);
-    rightY = this.drawEducation(data.education, rightX, rightY, w);
-    rightY += 14;
-
-    rightY = this.ensureRightRoom(rightY, 80);
-    rightY = this.drawSectionTitle('COURSES / CERTIFICATIONS', rightX, rightY, w);
-    rightY = this.drawCertifications(data.certifications, rightX, rightY, w);
-    rightY += 12;
-
-    rightY = this.ensureRightRoom(rightY, 120);
-    rightY = this.drawSectionTitle('REFERENCES', rightX, rightY, w);
-    this.drawReferences(data.references, rightX, rightY, w);
-  }
-
-  /** Moves the right column to the next page unless `needed` points fit, so a
-   *  section title never sits alone at the foot of a page. */
-  private ensureRightRoom(y: number, needed: number): number {
-    return y + needed > this.PAGE_HEIGHT - this.MARGIN ? this.advanceRightPage() : y;
-  }
-
-  // ─── Shared Section Title & Detail ───────────────────────────────────────────
-
-  private drawSectionTitle(title: string, x: number, y: number, width: number): number {
-    this.pdf.setFontSize(10);
-    this.pdf.setFont('helvetica', 'bold');
-    this.pdf.setTextColor(this.colors.primary);
-    this.pdf.text(title, x, y);
-
-    if (this.colors.background === '#1E1E1E') {
-      this.pdf.setDrawColor(96, 165, 250);
-    } else {
-      this.pdf.setDrawColor(37, 99, 235);
-    }
-    this.pdf.setLineWidth(1.5);
-    this.pdf.line(x, y + 3, x + width, y + 3);
-
-    return y + 18;
-  }
-
-  /** Label, then the value; a `url` makes the value a clickable link in the PDF. */
-  private drawDetail(label: string, value: string, x: number, y: number, width: number, url?: string): number {
-    this.pdf.setFontSize(8);
-    this.pdf.setFont('helvetica', 'bold');
-    this.pdf.setTextColor(this.colors.primary);
-    this.pdf.text(label, x, y);
-
-    this.pdf.setFont('helvetica', 'normal');
-    this.pdf.setTextColor(url ? this.colors.accent : this.colors.textLight);
-
-    const lines: string[] = this.pdf.splitTextToSize(value, width);
-    if (url && lines.length === 1) {
-      this.pdf.textWithLink(value, x, y + 12, { url });
-    } else {
-      this.pdf.text(lines, x, y + 12);
-    }
-
-    return y + 12 + (lines.length * 10) + 8;
-  }
-
-  // ─── Left Column Content ─────────────────────────────────────────────────────
-
-  /** Tier heading, then the tier's skills as one wrapped, comma-separated
-   *  line — plain text an ATS parses cleanly, unlike bars or percentages. */
-  private drawSkills(tiers: SkillTier[], x: number, y: number, width: number): number {
-    let currentY = y;
-
-    tiers.forEach(group => {
-      const body = this.cleanTextForATS(group.skills.join(', '));
-      const lines = this.pdf.splitTextToSize(body, width);
-      const noteLines = group.note ? this.pdf.splitTextToSize(group.note, width) : [];
-      const blockHeight = 12 + lines.length * 10 + noteLines.length * 9 + 12;
-
-      if (currentY + blockHeight > this.PAGE_HEIGHT - this.MARGIN) {
-        currentY = this.newLeftPage();
-      }
-
-      this.pdf.setFontSize(8);
-      this.pdf.setFont('helvetica', 'bold');
-      this.pdf.setTextColor(this.colors.accent);
-      this.pdf.text(group.tier.toUpperCase(), x, currentY);
-      currentY += 12;
-
-      this.pdf.setFont('helvetica', 'normal');
-      this.pdf.setTextColor(this.colors.textDark);
-      this.pdf.text(lines, x, currentY);
-      currentY += lines.length * 10;
-
-      if (noteLines.length) {
-        this.pdf.setFontSize(7.5);
-        this.pdf.setFont('helvetica', 'italic');
-        this.pdf.setTextColor(this.colors.textLight);
-        this.pdf.text(noteLines, x, currentY + 2);
-        currentY += noteLines.length * 9 + 2;
-      }
-
-      currentY += 12;
-    });
-
-    return currentY;
-  }
-
-  private drawTechWatching(items: string[], x: number, y: number, _width: number): number {
-    let currentY = y;
-    items.forEach(item => {
-      this.pdf.setFontSize(9);
-      this.pdf.setFont('helvetica', 'normal');
-      this.pdf.setTextColor(this.colors.textDark);
-      this.pdf.text(`• ${item}`, x, currentY);
-      currentY += 15;
-    });
-    return currentY;
-  }
-
-  /** Name (and note) left, five proficiency dots right; a half level fills half a dot. */
-  private drawLanguages(languages: Language[], x: number, y: number, width: number): number {
-    let currentY = y;
-    const r = 2.6;
-    const step = 7.5;
-    const filled = this.isDark ? '#60A5FA' : '#2563EB';
-    const empty = this.isDark ? '#334155' : '#E2E8F0';
-
-    languages.forEach(lang => {
-      this.pdf.setFontSize(9);
-      this.pdf.setFont('helvetica', 'normal');
-      this.pdf.setTextColor(this.colors.textDark);
-      this.pdf.text(lang.name, x, currentY);
-
-      for (let i = 0; i < 5; i++) {
-        const cx = x + width - r - (4 - i) * step;
-        const cy = currentY - 3;
-        const level = lang.level - i;
-        this.pdf.setFillColor(level >= 1 ? filled : empty);
-        this.pdf.circle(cx, cy, r, 'F');
-        if (level > 0 && level < 1) {
-          // Left half only: clip to a rectangle over the left of the dot.
-          this.pdf.saveGraphicsState();
-          this.pdf.rect(cx - r, cy - r, r, r * 2, null);
-          this.pdf.clip();
-          this.pdf.discardPath();
-          this.pdf.setFillColor(filled);
-          this.pdf.circle(cx, cy, r, 'F');
-          this.pdf.restoreGraphicsState();
+  private richParagraph(segments: Segment[], after = 6, size = this.BODY, x = this.MARGIN_X, width = this.WIDTH, color?: string): void {
+    this.pdf.setFontSize(size);
+    const lineHeight = Math.round(size * 1.37);
+    type Word = { text: string; bold: boolean; url?: string; spaceAfter: boolean };
+    const words: Word[] = [];
+    for (const seg of segments) {
+      const parts = this.clean(seg.text, false).split(/(\s+)/);
+      for (const part of parts) {
+        if (!part) continue;
+        if (/^\s+$/.test(part)) {
+          if (words.length) words[words.length - 1].spaceAfter = true;
+          continue;
         }
+        words.push({ text: part, bold: !!seg.bold, url: seg.url, spaceAfter: false });
       }
+    }
 
-      if (lang.note) {
-        this.pdf.setFontSize(7.5);
-        this.pdf.setTextColor(this.colors.textLight);
-        this.pdf.text(lang.note, x, currentY + 10);
-        currentY += 10;
-      }
-      currentY += 16;
-    });
-    return currentY;
-  }
-
-  // ─── Right Column Content ─────────────────────────────────────────────────────
-
-  private drawParagraphs(paragraphs: string[], x: number, y: number, width: number): number {
-    let currentY = y;
-    paragraphs.forEach(para => {
-      this.pdf.setFontSize(9);
-      this.pdf.setFont('helvetica', 'normal');
-      this.pdf.setTextColor(this.colors.textDark);
-      const lines = this.pdf.splitTextToSize(para, width);
-      this.pdf.text(lines, x, currentY);
-      currentY += lines.length * 12 + 8;
-    });
-    return currentY;
-  }
-
-  private drawBulletList(items: string[], x: number, y: number, width: number, removeBold: boolean = false): number {
-    let currentY = y;
-    const bulletIndent = 8;
-    const textWidth = width - bulletIndent - 5;
-
-    items.forEach(item => {
-      const cleanText = this.cleanTextForATS(item, removeBold);
-
-      this.pdf.setFontSize(9);
-      this.pdf.setFont('helvetica', 'normal');
-
-      const lines = this.pdf.splitTextToSize(cleanText, textWidth);
-      const neededHeight = lines.length * 11 + 4;
-
-      if (currentY + neededHeight > this.PAGE_HEIGHT - this.MARGIN) {
-        currentY = this.advanceRightPage();
-      }
-
-      this.pdf.setTextColor(this.colors.textDark);
-      this.pdf.text('•', x, currentY);
-
-      lines.forEach((line: string, lineIndex: number) => {
-        this.pdf.text(line, x + bulletIndent, currentY + (lineIndex * 11));
-      });
-
-      currentY += neededHeight;
-    });
-
-    return currentY;
-  }
-
-  private drawEmploymentHistory(
-    jobs: Array<{
-      company: string;
-      role: string;
-      period: string;
-      location: string;
-      description?: string;
-      achievements?: string[];
-      technicalAchievements?: string[];
-      technicalLeadership?: string[];
-    }>,
-    x: number,
-    y: number,
-    width: number
-  ): number {
-    let currentY = y;
-
-    jobs.forEach((job, index) => {
-      // Never strand a job's header at the foot of a page: it needs room for
-      // itself, the description and the first highlight.
-      this.pdf.setFontSize(9);
-      const firstBullet = job.achievements?.[0] ? this.pdf.splitTextToSize(this.cleanTextForATS(job.achievements[0]), width - 13).length : 0;
-      const descLinesEstimate = job.description ? this.pdf.splitTextToSize(job.description, width).length : 0;
-      const promotedFrom = index > 0 && jobs[index - 1].company === job.company;
-      const keepTogether = (promotedFrom ? 14 : 0) + 30 + (descLinesEstimate ? descLinesEstimate * 11 + 6 : 0) + 12 + firstBullet * 11 + 4;
-      if (currentY + keepTogether > this.PAGE_HEIGHT - this.MARGIN) {
-        currentY = this.advanceRightPage();
-      }
-      job = { ...job, role: this.cleanTextForATS(job.role), description: job.description && this.cleanTextForATS(job.description) };
-
-      // The earlier role of a promotion pair, as on the resume page.
-      if (promotedFrom) {
-        this.pdf.setFontSize(8);
-        this.pdf.setFont('helvetica', 'bold');
-        this.pdf.setTextColor(this.isDark ? '#34D399' : '#059669');
-        this.pdf.text('Promoted from this role', x, currentY - 2);
-        currentY += 12;
-      }
-
-      // Role left, "period · tenure" right: the role wraps inside whatever
-      // width the measured period leaves, so the two never collide.
-      const tenure = this.calculateTenure(job.period);
-      const periodText = tenure ? `${job.period}  ·  ${tenure}` : job.period;
-      this.pdf.setFontSize(9);
-      this.pdf.setFont('helvetica', 'normal');
-      const periodWidth = this.pdf.getTextWidth(periodText);
-      this.pdf.setTextColor(this.colors.textLight);
-      this.pdf.text(periodText, x + width, currentY, { align: 'right' });
-
-      this.pdf.setFontSize(11);
-      this.pdf.setFont('helvetica', 'bold');
-      this.pdf.setTextColor(this.colors.accent);
-      const roleLines = this.pdf.splitTextToSize(job.role, width - periodWidth - 12);
-      this.pdf.text(roleLines, x, currentY);
-
-      currentY += Math.max(roleLines.length * 13, 13);
-
-      // Company + location on same line
-      this.pdf.setFontSize(10);
-      this.pdf.setFont('helvetica', 'bold');
-      this.pdf.setTextColor(this.colors.primary);
-      this.pdf.text(job.company, x, currentY);
-
-      this.pdf.setFontSize(9);
-      this.pdf.setFont('helvetica', 'normal');
-      this.pdf.setTextColor(this.colors.textLight);
-      this.pdf.text(job.location, x + width, currentY, { align: 'right' });
-
-      currentY += 14;
-
-      // Company tenure badge — only on the first (most recent) role of a multi-role company
-      const companyTenure = this.calculateCompanyTenure(jobs, index);
-      if (companyTenure) {
-        this.pdf.setFontSize(8);
-        this.pdf.setFont('helvetica', 'italic');
-        this.pdf.setTextColor(this.colors.accent);
-        this.pdf.text(`Total at ${job.company}: ${companyTenure}`, x + width, currentY, { align: 'right' });
-        currentY += 12;
-      }
-
-      // Description
-      if (job.description) {
-        this.pdf.setFontSize(9);
-        this.pdf.setFont('helvetica', 'normal');
-        this.pdf.setTextColor(this.colors.textDark);
-        const descLines = this.pdf.splitTextToSize(job.description, width);
-        this.pdf.text(descLines, x, currentY);
-        currentY += descLines.length * 11 + 6;
-      }
-
-      const groups: Array<[string, string[] | undefined]> = [
-        ['Highlights', job.achievements],
-        ['Architecture & engineering', job.technicalAchievements],
-        ['Leadership', job.technicalLeadership]
-      ];
-      groups.forEach(([label, items]) => {
-        if (!items?.length) return;
-        this.pdf.setFontSize(9);
-        const firstLines = this.pdf.splitTextToSize(this.cleanTextForATS(items[0]), width - 13).length;
-        currentY = this.ensureRightRoom(currentY, 13 + firstLines * 11 + 4);
-        this.pdf.setFont('helvetica', 'bold');
-        this.pdf.setTextColor(this.colors.accent);
-        this.pdf.text(label, x, currentY);
-        currentY += 12;
-        currentY = this.drawBulletList(items, x, currentY, width);
-        currentY += 4;
-      });
-
-      currentY += 12;
-    });
-
-    return currentY;
-  }
-
-  private drawEducation(
-    education: { degree: string; institution: string; period: string; grade: string },
-    x: number,
-    y: number,
-    width: number
-  ): number {
-    let currentY = y;
-
-    this.pdf.setFontSize(10);
-    this.pdf.setFont('helvetica', 'bold');
-    this.pdf.setTextColor(this.colors.primary);
-    this.pdf.text(education.degree, x, currentY);
-    this.pdf.setFontSize(9);
+    const widthOf = (w: Word) => {
+      this.pdf.setFont('helvetica', w.bold ? 'bold' : 'normal');
+      return this.textWidth(w.text);
+    };
     this.pdf.setFont('helvetica', 'normal');
-    this.pdf.setTextColor(this.colors.textLight);
-    this.pdf.text(education.period, x + width, currentY, { align: 'right' });
-    currentY += 13;
+    const space = this.textWidth(' ');
 
-    this.pdf.setTextColor(this.colors.accent);
-    const institution = this.pdf.splitTextToSize(education.institution, width);
-    this.pdf.text(institution, x, currentY);
-    currentY += institution.length * 11;
-
-    this.pdf.setTextColor(this.colors.textLight);
-    this.pdf.text(education.grade, x, currentY);
-    return currentY + 12;
-  }
-
-  /** Title left and "institution · date" right, or stacked when both won't fit. */
-  private drawCertifications(
-    certifications: Array<{ title: string; institution: string; period: string }>,
-    x: number,
-    y: number,
-    width: number
-  ): number {
-    let currentY = y;
-
-    certifications.forEach(cert => {
-      const meta = `${cert.institution} · ${cert.period}`;
-      this.pdf.setFontSize(9);
-      this.pdf.setFont('helvetica', 'bold');
-      this.pdf.setTextColor(this.colors.primary);
-      this.pdf.text(cert.title, x, currentY);
-      const titleWidth = this.pdf.getTextWidth(cert.title);
-
-      this.pdf.setFont('helvetica', 'normal');
-      this.pdf.setTextColor(this.colors.textLight);
-      if (titleWidth + this.pdf.getTextWidth(meta) + 12 > width) {
-        currentY += 11;
-        this.pdf.text(meta, x, currentY);
-      } else {
-        this.pdf.text(meta, x + width, currentY, { align: 'right' });
+    this.ensureRoom(lineHeight);
+    let cx = x;
+    words.forEach((w, i) => {
+      const ww = widthOf(w);
+      if (cx > x && cx + ww > x + width) {
+        this.y += lineHeight;
+        this.ensureRoom(lineHeight);
+        cx = x;
       }
-      currentY += 15;
+      this.pdf.setFont('helvetica', w.bold ? 'bold' : 'normal');
+      this.pdf.setTextColor(color ?? (w.url ? this.colors.accent : (w.bold ? this.colors.primary : this.colors.textDark)));
+      if (w.url) this.pdf.textWithLink(w.text, cx, this.y, { url: w.url });
+      else this.pdf.text(w.text, cx, this.y);
+      cx += ww + (w.spaceAfter && i < words.length - 1 ? space : 0);
     });
-
-    return currentY;
+    this.y += lineHeight + after;
   }
 
-  /** Names and companies only, two to a row: referees' contact details are
-   *  shared on request, never printed. */
-  private drawReferences(references: Reference[], x: number, y: number, width: number): number {
-    let currentY = y;
-    const colWidth = (width - 12) / 2;
+  private bullet(segments: Segment[], after = 3): void {
+    this.ensureRoom(this.LINE);
+    this.pdf.setFont('helvetica', 'normal');
+    this.pdf.setFontSize(this.BODY);
+    this.pdf.setTextColor(this.colors.accent);
+    this.pdf.text('•', this.MARGIN_X + 2, this.y);
+    this.richParagraph(segments, after, this.BODY, this.MARGIN_X + 12, this.WIDTH - 12);
+  }
 
-    references.forEach((ref, index) => {
-      const colX = index % 2 === 0 ? x : x + colWidth + 12;
-      if (index > 0 && index % 2 === 0) currentY += 26;
-
-      this.pdf.setFontSize(9);
-      this.pdf.setFont('helvetica', 'bold');
-      this.pdf.setTextColor(this.colors.primary);
-      this.pdf.text(ref.name, colX, currentY);
-
-      this.pdf.setFontSize(8);
-      this.pdf.setFont('helvetica', 'normal');
-      this.pdf.setTextColor(this.colors.accent);
-      this.pdf.text(ref.company, colX, currentY + 11);
-    });
-
-    currentY += 30;
-    this.pdf.setFontSize(8);
-    this.pdf.setFont('helvetica', 'italic');
+  /** Left content and a right-aligned note (dates) on the same first line. */
+  private twoSided(left: Segment[], right: string, after = 3, size = this.BODY): void {
+    this.ensureRoom(this.LINE);
+    this.pdf.setFont('helvetica', 'normal');
+    this.pdf.setFontSize(size);
+    const rightW = this.textWidth(right);
     this.pdf.setTextColor(this.colors.textLight);
-    this.pdf.text('Contact details available on request.', x, currentY);
-    return currentY + 12;
+    this.pdf.text(right, this.MARGIN_X + this.WIDTH, this.y, { align: 'right' });
+    this.richParagraph(left, after, size, this.MARGIN_X, this.WIDTH - rightW - 14);
   }
 
-  // ─── Tenure Calculation ───────────────────────────────────────────────────────
+  /** Points a role needs to keep its header with its description and first bullet. */
+  private jobNeeds(job: Job, jobs: Job[], index: number): number {
+    const promotedFrom = index > 0 && jobs[index - 1].company === job.company;
+    this.pdf.setFont('helvetica', 'normal');
+    this.pdf.setFontSize(this.BODY);
+    const firstLines = this.pdf.splitTextToSize(this.clean(job.achievements?.[0] ?? ''), this.WIDTH - 12).length;
+    const descLines = job.description ? this.pdf.splitTextToSize(this.clean(job.description), this.WIDTH).length : 0;
+    return (promotedFrom ? 12 : 0) + 40 + descLines * this.LINE + 12 + firstLines * this.LINE;
+  }
 
-  private calculateTenure(period: string): string {
+  private drawJob(job: Job, jobs: Job[], index: number): void {
+    const promotedFrom = index > 0 && jobs[index - 1].company === job.company;
+    const period = `${job.period.replace(' — ', ' – ')}  ·  ${this.tenure(job.period)}`;
+    this.ensureRoom(this.jobNeeds(job, jobs, index));
+
+    if (index > 0) this.y += 10;
+    if (promotedFrom) {
+      this.pdf.setFont('helvetica', 'bold');
+      this.pdf.setFontSize(8);
+      this.pdf.setTextColor(this.colors.promoted);
+      this.pdf.text('Promoted from this role', this.MARGIN_X, this.y);
+      this.y += 12;
+    }
+
+    // Role (left) · dates and tenure (right); the role wraps inside what the dates leave.
+    this.pdf.setFont('helvetica', 'normal');
+    this.pdf.setFontSize(9);
+    const periodW = this.textWidth(period);
+    this.pdf.setTextColor(this.colors.textLight);
+    this.pdf.text(period, this.MARGIN_X + this.WIDTH, this.y, { align: 'right' });
+    this.pdf.setFont('helvetica', 'bold');
+    this.pdf.setFontSize(11);
+    this.pdf.setTextColor(this.colors.accent);
+    const roleLines: string[] = this.pdf.splitTextToSize(this.clean(job.role), this.WIDTH - periodW - 14);
+    this.pdf.text(roleLines, this.MARGIN_X, this.y);
+    this.y += roleLines.length * 13 + 1;
+
+    // Company · location (left) · total tenure at the company (right)
+    const companyTotal = this.companyTenure(jobs, index);
+    if (companyTotal) {
+      this.pdf.setFont('helvetica', 'italic');
+      this.pdf.setFontSize(8.5);
+      this.pdf.setTextColor(this.colors.textLight);
+      this.pdf.text(`${companyTotal} at ${job.company}`, this.MARGIN_X + this.WIDTH, this.y, { align: 'right' });
+    }
+    this.pdf.setFont('helvetica', 'bold');
+    this.pdf.setFontSize(10);
+    this.pdf.setTextColor(this.colors.primary);
+    this.pdf.text(job.company, this.MARGIN_X, this.y);
+    const companyW = this.textWidth(job.company);
+    this.pdf.setFont('helvetica', 'normal');
+    this.pdf.setFontSize(9.5);
+    this.pdf.setTextColor(this.colors.textLight);
+    this.pdf.text(`  ·  ${job.location}`, this.MARGIN_X + companyW, this.y);
+    this.y += 15;
+
+    if (job.description) this.paragraph(job.description, 3);
+
+    const groups: Array<[string, string[] | undefined]> = [
+      ['Highlights', job.achievements],
+      ['Architecture & engineering', job.technicalAchievements],
+      ['Leadership', job.technicalLeadership]
+    ];
+    groups.forEach(([label, items]) => {
+      if (!items?.length) return;
+      this.ensureRoom(12 + 2 * this.LINE);
+      this.pdf.setFont('helvetica', 'bold');
+      this.pdf.setFontSize(9);
+      this.pdf.setTextColor(this.colors.secondary);
+      this.pdf.text(label, this.MARGIN_X, this.y);
+      this.y += 12;
+      items.forEach(item => this.bullet([{ text: item }]));
+      this.y += 2;
+    });
+  }
+
+  private drawPageNumbers(name: string): void {
+    const total = this.pdf.getNumberOfPages();
+    for (let p = 1; p <= total; p++) {
+      this.pdf.setPage(p);
+      this.pdf.setFont('helvetica', 'normal');
+      this.pdf.setFontSize(8);
+      this.pdf.setTextColor(this.colors.textLight);
+      this.pdf.text(`${name} — Resume`, this.MARGIN_X, this.PAGE_HEIGHT - 26);
+      this.pdf.text(`Page ${p} of ${total}`, this.MARGIN_X + this.WIDTH, this.PAGE_HEIGHT - 26, { align: 'right' });
+    }
+  }
+
+  /**
+   * Rendered width in points. jsPDF's getTextWidth applies AFM kerning pairs
+   * (Te, AT, VA…) that the PDF never draws, so a word-by-word layout measured
+   * with it sets the next word too close and the space disappears.
+   */
+  private textWidth(text: string): number {
+    const pdf = this.pdf as unknown as { getStringUnitWidth(t: string, o: { doKerning: boolean }): number };
+    return pdf.getStringUnitWidth(text, { doKerning: false }) * this.pdf.getFontSize() / this.pdf.internal.scaleFactor;
+  }
+
+  // ─── Tenure ──────────────────────────────────────────────────────────────────
+
+  private tenure(period: string): string {
     const monthMap: { [key: string]: number } = {
       jan: 0, feb: 1, mar: 2, apr: 3, may: 4, jun: 5,
       jul: 6, aug: 7, sep: 8, sept: 8, oct: 9, nov: 10, dec: 11
     };
-
-    const parseDate = (raw: string): Date | null => {
+    const parse = (raw: string): Date | null => {
       const text = raw.trim();
       if (/present/i.test(text)) return new Date();
       const m = text.match(/([A-Za-z]+)\s+(\d{4})/);
       if (!m) return null;
       const mo = monthMap[m[1].toLowerCase()];
-      if (mo === undefined) return null;
-      return new Date(parseInt(m[2], 10), mo, 1);
+      return mo === undefined ? null : new Date(parseInt(m[2], 10), mo, 1);
     };
-
     const parts = period.split('—');
     if (parts.length < 2) return '';
-    const start = parseDate(parts[0]);
-    const end = parseDate(parts[1]);
+    const start = parse(parts[0]);
+    const end = parse(parts[1]);
     if (!start || !end) return '';
-
-    let total = (end.getFullYear() - start.getFullYear()) * 12 + (end.getMonth() - start.getMonth()) + 1;
-    if (total < 1) total = 1;
-
+    const total = Math.max(1, (end.getFullYear() - start.getFullYear()) * 12 + (end.getMonth() - start.getMonth()) + 1);
     const yrs = Math.floor(total / 12);
     const mos = total % 12;
-    const yLabel = yrs > 0 ? `${yrs} yr${yrs > 1 ? 's' : ''}` : '';
-    const mLabel = mos > 0 ? `${mos} mo${mos > 1 ? 's' : ''}` : '';
-    return [yLabel, mLabel].filter(Boolean).join(' ') || '1 mo';
+    return [yrs ? `${yrs} yr${yrs > 1 ? 's' : ''}` : '', mos ? `${mos} mo${mos > 1 ? 's' : ''}` : ''].filter(Boolean).join(' ') || '1 mo';
   }
 
-  private calculateCompanyTenure(jobs: Array<{ company: string; period: string }>, index: number): string {
+  /** Combined tenure, shown on the most recent role of a multi-role company. */
+  private companyTenure(jobs: Job[], index: number): string {
     const job = jobs[index];
-    const prev = jobs[index - 1];
-    // Only annotate the most-recent (head) role of a company group
-    if (prev && prev.company === job.company) return '';
-
+    if (index > 0 && jobs[index - 1].company === job.company) return '';
     const group = [job];
-    for (let i = index + 1; i < jobs.length; i++) {
-      if (jobs[i].company === job.company) group.push(jobs[i]);
-      else break;
-    }
+    for (let i = index + 1; i < jobs.length && jobs[i].company === job.company; i++) group.push(jobs[i]);
     if (group.length < 2) return '';
-
-    const earliest = group[group.length - 1].period.split('—')[0];
-    const latest = group[0].period.split('—')[1];
-    return this.calculateTenure(`${earliest}—${latest}`);
+    return this.tenure(`${group[group.length - 1].period.split('—')[0]}—${group[0].period.split('—')[1]}`);
   }
 
-  // ─── ATS Text Cleaning ────────────────────────────────────────────────────────
+  // ─── Text cleaning ───────────────────────────────────────────────────────────
 
-  private cleanTextForATS(text: string, removeBold: boolean = false): string {
-    let clean = text;
-
-    clean = clean.replace(/[\u{1F300}-\u{1F9FF}]|[\u{2600}-\u{26FF}]|[\u{2700}-\u{27BF}]|[\u{1F000}-\u{1F02F}]|[\u{1F0A0}-\u{1F0FF}]|[\u{1F100}-\u{1F64F}]|[\u{1F680}-\u{1F6FF}]|[\u{1F910}-\u{1F96B}]|[\u{1F980}-\u{1F9E0}]/gu, '');
-    clean = clean.replace(/[\u{FE00}-\u{FE0F}]|[\u{200D}]/gu, '');
-    clean = clean.replace(/₦\s?/g, 'NGN ');  // the standard PDF fonts have no ₦ glyph
-    clean = clean.replace(/→/g, ' to ');
-    clean = clean.replace(/←/g, ' from ');
-    clean = clean.replace(/↳/g, '');
-    clean = clean.replace(/⬆️/g, '');
-
-    if (removeBold) {
-      clean = clean.replace(/\*\*/g, '');
-    }
-
-    return clean.replace(/\s+/g, ' ').trim();
+  /** Standard PDF fonts speak Windows-1252: map ₦ and arrows, drop emoji. */
+  private clean(text: string, collapse = true): string {
+    let out = text
+      .replace(/[\u{1F000}-\u{1FFFF}\u{2600}-\u{27BF}][\u{FE0F}\u{200D}]?/gu, '')
+      .replace(/₦\s?/g, 'NGN ')
+      .replace(/→/g, ' to ')
+      .replace(/←/g, ' from ')
+      .replace(/↑/g, '')
+      .replace(/\*\*/g, '');
+    if (collapse) out = out.replace(/\s+/g, ' ').trim();
+    return out;
   }
 }

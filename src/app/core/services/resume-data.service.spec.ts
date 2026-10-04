@@ -75,6 +75,29 @@ describe('ResumeDataService', () => {
     });
   });
 
+  describe('getAtsResume()', () => {
+    const ats = service.getAtsResume('March 2026');
+
+    it('should carry the full contact block an ATS looks for', () => {
+      expect(ats.name).toBe('Akhigbe Iruobe');
+      expect(ats.email).toMatch(/@/);
+      expect(ats.phone).toMatch(/^\+\d+/);
+      expect(ats.location).toMatch(/Lagos/);
+      expect(ats.linkedin).toBe('linkedin.com/in/akhigbe-iruobe');
+    });
+
+    it('should strip emoji and markdown from achievements, since PDF fonts cannot draw them', () => {
+      for (const a of ats.keyAchievements) {
+        expect(a).not.toMatch(/\*\*/);
+        expect(a).not.toMatch(/[\u{1F000}-\u{1FFFF}]/u);
+      }
+    });
+
+    it("should note when French learning started", () => {
+      expect(ats.languages.find(l => l.name === 'French')?.note).toBe('learning since March 2026');
+    });
+  });
+
   describe('getReferences()', () => {
     it("should carry names and companies only, never a referee's contact details", () => {
       for (const ref of service.getReferences()) {

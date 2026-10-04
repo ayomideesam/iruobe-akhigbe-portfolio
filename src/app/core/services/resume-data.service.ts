@@ -43,6 +43,35 @@ export interface Language {
    note?: string;
 }
 
+export interface Education {
+   degree: string;
+   institution: string;
+   period: string;
+   grade: string;
+}
+
+/** Everything the ATS PDF prints, assembled in one place for every download button. */
+export interface AtsResume {
+   name: string;
+   title: string;
+   phone: string;
+   email: string;
+   location: string;
+   linkedin: string;
+   portfolio: string;
+   github: string;
+   profile: string[];
+   keyAchievements: string[];
+   skills: SkillTier[];
+   employment: Job[];
+   education: Education;
+   certifications: Course[];
+   techWatching: string[];
+   hobbies: string[];
+   languages: Language[];
+   references: Reference[];
+}
+
 export interface Profile {
    paragraphs: string[];
    availability: string;
@@ -113,6 +142,47 @@ export class ResumeDataService {
             note: 'Scaffold and ship in any framework at speed, with tests and audits as the gate.'
          }
       ];
+   }
+
+   getEducation(): Education {
+      return {
+         degree: 'Bachelor of Science, Information Resource Management',
+         institution: 'Babcock University, Ogun State, Nigeria',
+         period: 'Sep 2011 — Jul 2016',
+         grade: 'Second Class Upper (2:1)'
+      };
+   }
+
+   /**
+    * The ATS resume, ready for AtsPdfService. Used by the resume page and the
+    * home hero's "Download CV", so both hand recruiters the identical file.
+    * @param frenchSince e.g. "March 2026", from LearningDataService.
+    */
+   getAtsResume(frenchSince: string): AtsResume {
+      const profile = this.getProfile();
+      const stripMarkup = (text: string) =>
+         text.replace(/[\u{1F000}-\u{1FFFF}\u{2600}-\u{27BF}]\u{FE0F}?/gu, '').replace(/\*\*/g, '').trim();
+      return {
+         name: 'Akhigbe Iruobe',
+         title: 'Senior Frontend Engineer · Angular Specialist · Fintech & Banking',
+         phone: '+2347038772342',
+         email: 'iruobeakhigbe@gmail.com',
+         location: 'Lagos, Nigeria · WAT (UTC+1) · open to remote and relocation',
+         linkedin: 'linkedin.com/in/akhigbe-iruobe',
+         portfolio: 'iruobeakhigbe.netlify.app',
+         github: 'github.com/ayomideesam',
+         profile: [...profile.paragraphs, profile.availability],
+         keyAchievements: this.getKeyTechnicalAchievements().map(stripMarkup),
+         skills: this.getSkills(),
+         employment: this.getEmploymentHistory(),
+         education: this.getEducation(),
+         certifications: this.getCourses(),
+         techWatching: this.getTechWatching(),
+         hobbies: this.getHobbies(),
+         languages: this.getLanguages()
+            .map(l => l.name === 'French' ? { ...l, note: `learning since ${frenchSince}` } : l),
+         references: this.getReferences()
+      };
    }
 
    getLanguages(): Language[] {
