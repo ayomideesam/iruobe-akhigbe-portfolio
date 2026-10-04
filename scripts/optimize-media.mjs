@@ -118,9 +118,13 @@ async function processImage(key, prev) {
     webp.push(`${emit('img', base, `-${w}`, 'webp', b)} ${w}w`);
     if (w === widths[Math.min(1, widths.length - 1)]) bytes = a.length; // report the ~1280 AVIF
   }
+  // Legacy fallback: JPEG for opaque screenshots; a palette PNG for transparent artwork (badges),
+  // which a white-flattened JPEG would put on a white box in dark mode.
   const fw = Math.min(FALLBACK_WIDTH, meta.width);
-  const jpg = await sharp(input).resize({ width: fw, withoutEnlargement: true }).flatten({ background: '#ffffff' })
-    .jpeg({ quality: 80, mozjpeg: true }).toBuffer();
+  const fallbackExt = meta.hasAlpha ? 'png' : 'jpg';
+  const fallback = meta.hasAlpha
+    ? await sharp(input).resize({ width: fw, withoutEnlargement: true }).png({ palette: true, quality: 85, compressionLevel: 9 }).toBuffer()
+    : await sharp(input).resize({ width: fw, withoutEnlargement: true }).flatten({ background: '#ffffff' }).jpeg({ quality: 80, mozjpeg: true }).toBuffer();
 
   return {
     cached: false,
@@ -130,7 +134,7 @@ async function processImage(key, prev) {
       height: meta.height,
       avif: avif.join(', '),
       webp: webp.join(', '),
-      fallback: emit('img', base, `-${fw}`, 'jpg', jpg),
+      fallback: emit('img', base, `-${fw}`, fallbackExt, fallback),
       source: sourceKey,
     },
   };

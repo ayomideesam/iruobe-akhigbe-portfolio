@@ -2,10 +2,10 @@ import { ChangeDetectionStrategy, Component, Input, inject } from '@angular/core
 import { LanguageJourney, LearningDataService } from 'src/app/core/services/learning-data.service';
 
 /**
- * Akhigbe's French learning journey. One component, two layouts, so the home page and the projects
- * page never drift apart:
- *   'card'  — home "Beyond the code": headline stats and the month-by-month badge strip
- *   'panel' — projects "Learning in public": compact stats, achievements and practised words
+ * Akhigbe's French learning journey, told in his own voice with the real badges from his Duolingo
+ * profile. One component, two layouts, so the pages never drift apart:
+ *   'card'  — home "Beyond the code": streak hero, personal records and the 2026 monthly badges
+ *   'panel' — projects "Learning in public": streak hero, achievements with level progress, words
  */
 @Component({
    selector: 'app-learning-journey',
@@ -18,13 +18,7 @@ export class LearningJourneyComponent {
    @Input() variant: 'card' | 'panel' = 'card';
 
    readonly journey: LanguageJourney = inject(LearningDataService).getFrenchJourney();
-
-   /** The panel keeps to the three figures that read without Duolingo context. */
-   get panelStats() {
-      return this.journey.stats.filter(s => ['Day streak', 'Total XP', 'League'].includes(s.label));
-   }
-
-   get earnedMonths(): number {
-      return this.journey.months.filter(m => m.state === 'earned').length;
-   }
+   readonly earnedMonths = this.journey.months.filter(m => m.state === 'earned').length;
+   /** The streak already leads the card as the hero, so the records row skips it. */
+   readonly records = this.journey.records.filter(r => r.label !== 'Longest streak');
 }

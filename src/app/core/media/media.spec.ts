@@ -80,7 +80,7 @@ describe('media', () => {
 
       it('should point every entry at a hashed file under /assets/media', () => {
          Object.values(MEDIA_MANIFEST.images).forEach(e => {
-            expect(e.fallback).toMatch(/^\/assets\/media\/img\/.+\.[0-9a-f]{10}\.jpg$/);
+            expect(e.fallback).toMatch(/^\/assets\/media\/img\/.+\.[0-9a-f]{10}\.(jpg|png)$/);
          });
       });
    });

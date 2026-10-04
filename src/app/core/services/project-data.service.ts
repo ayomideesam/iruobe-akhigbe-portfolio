@@ -50,7 +50,7 @@ export class ProjectDataService {
          {
             id: 7,
             title: 'Globus Trade Export — NXP Platform',
-            description: 'Akhigbe Iruobe led the frontend of Globus Bank\'s new export trade finance platform — a from-scratch Angular 21 build on the bank\'s own globuswebcomponents design system that digitises the CBN export chain end to end: NXP applications, the NESS levy, repatriation of export proceeds, and cancellation & closure, with every step a maker-checker flow that moves real money. Work began on 11 July 2026; the platform passed business CAB and rolls out to production in October 2026.',
+            description: 'Akhigbe Iruobe led the frontend of Globus Bank\'s new export trade finance platform — a from-scratch Angular 21 build on the bank\'s own globuswebcomponents design system that digitises the CBN export chain: NXP applications, the NESS levy, repatriation of export proceeds, and cancellation & closure, with every step a maker-checker flow that moves real money. A seven-person team — two frontend engineers, two senior backend engineers, a project manager, a product owner and a QA tester — took it from kickoff on 10 July 2026 to final UAT on 1 October; it passed business CAB and rolls out to production in October 2026.',
             techStack: [
                { name: 'Angular 21', color: '#DD0031' },
                { name: 'TypeScript', color: '#3178C6' },
@@ -59,13 +59,13 @@ export class ProjectDataService {
                { name: 'HTML5 | CSS3', color: '#339933' }
             ],
             achievements: [
-               'Owned the Export domain end to end — 13 routed pages, 3 data services & 40+ backend endpoints covering NXP applications, the NESS levy, repatriation, cancellation & closure — from first commit on 11 July 2026 to business CAB approval in under three months',
+               'Led the Export frontend as the senior frontend engineer — 13 routed pages, 3 data services & 40+ backend endpoints covering NXP applications, the NESS levy, repatriation, cancellation & closure — working the API contract with two senior backend engineers (live integration from 18 August) and every flow with QA through two stakeholder walkthroughs in September and final UAT on 1 October',
                'Engineered the NESS levy payment, which debits a customer account, so the dangerous paths are structurally impossible: submit is gated on a resolved NXP lookup, an unpaid levy & the SHIPMENT stage; the debit account is derived from the application rather than picked; a response only counts as success when the API\'s own result flag says so; & retrying a failed debit is Authorizer-only',
                'Built repatriation of export proceeds in three variants (full, partial, advanced) with a ±10% tolerance stepper that sets the repatriable ceiling, a live position card, document uploads, & unapply as its own maker-checker pair — the UI always re-reads the server\'s position instead of adjusting figures locally',
                'Modelled every step as a maker-checker chain (Initiator → Authorizer, Viewer read-only): Approve / Return / Decline through one shared decision modal, approval logs read back from the API, & role- and stage-aware row menus that only offer the actions the workflow allows',
                'Architected a signals-first Angular 21 codebase — standalone components with zero NgModules, an NgRx Signal Store for session & roles, httpResource for reads, OnPush everywhere, server-driven paging, search & filters, & Excel/PDF exports in three scopes — 87 components across 38 routes',
                'Ran security & quality as a standing practice: npm audit at 0 vulnerabilities across dev & production trees, a full application security audit with an OWASP Top 10 self-review, strict CSP & HSTS headers, session-scoped tokens attached only to the API origin, & 776 passing Vitest tests after migrating the suite off Karma',
-               'Led a five-branch delivery model (two engineers plus three contributors) through a written merge protocol with file-by-file reviews, a 40+ entry footgun log, & 42 documented patches to the bank\'s design-system package — the build refuses to start against an unpatched tree'
+               'Ran the frontend\'s delivery discipline with the second frontend engineer: a written merge protocol with file-by-file reviews for every integration, a 40+ entry footgun log, & 42 documented patches to the bank\'s design-system package — the build refuses to start against an unpatched tree'
             ],
             images: [
                '/assets/img/nxp-overview.png',
@@ -130,7 +130,7 @@ export class ProjectDataService {
          {
             id: 6,
             title: 'Credit Approval Process (CAP)',
-            description: 'Akhigbe Iruobe built Globus Bank\'s Credit Approval Process Automation Solution — a CBN-compliant platform designed to digitise the full credit lifecycle across 4 facility modules (Retail, Corporate, Staff Loan, Product) through a 2 stage governance structure: Stage 1 routes applications through a 10+ role sequential chain culminating in MCC online committee voting with configurable MD/CEO veto power; Stage 2 escalates facilities above ₦100M to the Board Credit Committee (BCC) for majority vote, after which the platform enables disbursement or deferral workflows. The Retail module passed business CAB and rolls out to production in October 2026; the Corporate module is paused at ~10% build after the team was redeployed to Trade Export in July 2026.',
+            description: 'Akhigbe Iruobe is the senior frontend engineer on Globus Bank\'s Credit Approval Process Automation Solution, built by a seven-person team (two frontend engineers, two senior backend engineers, a project manager, a product owner and a QA tester) — a CBN-compliant platform designed to digitise the full credit lifecycle across 4 facility modules (Retail, Corporate, Staff Loan, Product) through a 2 stage governance structure: Stage 1 routes applications through a 10+ role sequential chain culminating in MCC online committee voting with configurable MD/CEO veto power; Stage 2 escalates facilities above ₦100M to the Board Credit Committee (BCC) for majority vote, after which the platform enables disbursement or deferral workflows. The Retail module passed business CAB and rolls out to production in October 2026; the Corporate module is paused at ~10% build after the team was redeployed to Trade Export in July 2026.',
             techStack: [
                { name: 'Angular 20', color: '#DD0031' },
                { name: 'TypeScript', color: '#3178C6' },
@@ -140,10 +140,10 @@ export class ProjectDataService {
             achievements: [
                'Designed 4 facility module tracks on a shared signal-based architecture — Retail (individual customers), Corporate (SMEs & large corporates with mandatory E&S governance review), Staff Loan (streamlined RM → BM → MD path), & Product Program (government MDA/parastatal employee lending) — each with track-specific multi-step forms, document compliance gates, & governance review paths. Retail ships first with origination, disbursement & deferral complete; Corporate is ~10% built, and Staff Loan & Product Program are on the roadmap',
                'Encoded the full 2 stage approval hierarchy as application routing & UI state: Stage 1 Business Approval Flow (RM → BM → BFGH → ZH → GH), Governance Review Flow (CRM Officer → CRM Approver → E&S → Head Risk Mgt → ED → ED Risk → MD/CEO), & MCC Committee deliberation (online/offline mode, individual vote capture per member, Yes/No vote count compilation, MD/CEO configurable veto power); Stage 2 BCC escalation for ₦100M+ facilities with board majority-vote resolution & automated re-vote trigger on tied result',
-               'Owned the Disbursement workflow end to end: multiple drawdowns per facility until fully disbursed with every amount validated against the undrawn balance, a four-view By Facility / By Request queue, COO & CPO approval with live loan-booking status, currency-aware screens with SOFR base-rate resolution for foreign-currency facilities, VAT-rate & fee calculations, vendor bank account name verification, NIN capture & moratorium handling — plus the matching Deferral create & update flows',
+               'Led the frontend of the Disbursement workflow: multiple drawdowns per facility until fully disbursed with every amount validated against the undrawn balance, a four-view By Facility / By Request queue, COO & CPO approval with live loan-booking status, currency-aware screens with SOFR base-rate resolution for foreign-currency facilities, VAT-rate & fee calculations, vendor bank account name verification, NIN capture & moratorium handling — plus the matching Deferral create & update flows',
                'Automated pre-submission BG checks at origination stage: real-time PEP & blacklisted BVN screening via local list & third-party API, CRC/Credit Registry API returning live credit score & report, director-related customer account flagging, & collateral management notification trigger — all system-initiated before the request enters approval chain',
                'Designed a section-scoped real-time comment system operating across all three workflow stages (Facility, Disbursement, Deferral): CommentContextService tracks active section name, RequestEntityType, parent tab, inner section, disbursement ID, & disbursement index via RxJS BehaviorSubject; CommentManagementService exposes a single loadAndTransformCommentsBySection() Observable consumed by every child component — eliminating comment-loading boilerplate across 230+ components',
-               'Built 230+ fully standalone Angular 20 comps & 26 shared reusable comps with signal-based contracts (input(), output(), linkedSignal(), resource()) & zero NgModules; led Angular 19 → 20 migration resolving Vite 6/7 API incompatibility that caused complete dev-server failure, & cleared all 40 npm audit findings (2 high) ahead of CAB'
+               'Built, with the second frontend engineer, 230+ fully standalone Angular 20 comps & 26 shared reusable comps with signal-based contracts (input(), output(), linkedSignal(), resource()) & zero NgModules; led Angular 19 → 20 migration resolving Vite 6/7 API incompatibility that caused complete dev-server failure, & cleared all 40 npm audit findings (2 high) ahead of CAB'
             ],
             images: [
                '/assets/img/cap-dashboard.png',
@@ -189,8 +189,11 @@ export class ProjectDataService {
                'Cut application load time by 65% via lazy-loaded feature modules across 8 domains, OnPush change detection, & production bundle optimisation enforcing a 2 MB size budget'
             ],
             images: [
-               '/assets/img/costaff-home.jpeg',
-               '/assets/img/costaff-calendar.avif'
+               '/assets/img/costaff-calendar.avif',
+               '/assets/img/costaff-inbox.png',
+               '/assets/img/costaff-week.png',
+               '/assets/img/costaff-assistant.png',
+               '/assets/img/costaff-home.jpeg'
             ],
             isHovered: false,
             stats: [
@@ -227,8 +230,11 @@ export class ProjectDataService {
                'Integrated with multiple Globus Bank core systems via REST APIs and WebSocket streams for real-time transaction event ingestion and instant risk score updates without page refresh'
             ],
             images: [
-               '/assets/img/fraud-dashboard-dark.png',
-               '/assets/img/fraud-details-dark.png'
+               '/assets/img/fraud-live-dashboard.png',
+               '/assets/img/fraud-flagged-transactions.png',
+               '/assets/img/fraud-rule-engines.png',
+               '/assets/img/fraud-details-dark.png',
+               '/assets/img/fraud-dashboard-dark.png'
             ],
             isHovered: false,
             stats: [

@@ -106,11 +106,11 @@ export class HomeComponent implements OnInit, AfterViewInit {
       key: 'nxp', title: 'Globus Trade Export — NXP', url: 'nxp.globusbank.com',
       imgs: ['/assets/img/nxp-overview.png', '/assets/img/nxp-applications.png', '/assets/img/nxp-ness.png', '/assets/img/nxp-repatriation.png', '/assets/img/nxp-cancelation.png'],
       badges: [{ name: 'Angular 21', bc: '#DD003166' }, { name: 'TypeScript', bc: '#3178C666' }, { name: 'NgRx Signals', bc: '#BA2BD266' }],
-      desc: 'CAB-approved in under three months — from-scratch export trade finance platform covering NXP, the NESS levy, repatriation and closure, every step a maker-checker flow moving real money.'
+      desc: 'Kickoff 10 July, final UAT 1 October, CAB-approved — a from-scratch export trade finance platform (NXP, NESS levy, repatriation, closure). I led the frontend in a seven-person team.'
     },
     costaff: {
       key: 'costaff', title: 'COSTAFF AI Digital Worker', url: 'costaff.ai/dashboard',
-      imgs: ['/assets/img/costaff-home.jpeg', '/assets/img/costaff-calendar.avif'],
+      imgs: ['/assets/img/costaff-calendar.avif', '/assets/img/costaff-inbox.png', '/assets/img/costaff-week.png', '/assets/img/costaff-assistant.png', '/assets/img/costaff-home.jpeg'],
       badges: [{ name: 'Angular 16', bc: '#DD003166' }, { name: 'TypeScript', bc: '#3178C666' }, { name: 'NGXS', bc: '#BA2BD266' }],
       desc: '85% reduction in calendar management time — AI productivity suite integrating Gmail, Google Calendar & OpenAI for enterprise clients across the Middle East.'
     },
@@ -122,7 +122,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
     },
     fms: {
       key: 'fms', title: 'Fraud Management System', url: 'fms.globusbank.com',
-      imgs: ['/assets/img/fraud-dashboard-dark.png', '/assets/img/fraud-details-dark.png'],
+      imgs: ['/assets/img/fraud-live-dashboard.png', '/assets/img/fraud-flagged-transactions.png', '/assets/img/fraud-rule-engines.png', '/assets/img/fraud-details-dark.png', '/assets/img/fraud-dashboard-dark.png'],
       badges: [{ name: 'Angular 16', bc: '#DD003166' }, { name: 'TypeScript', bc: '#3178C666' }, { name: 'WebSockets', bc: '#4CAF5066' }],
       desc: '100% transaction coverage in week one — 14-engine real-time fraud detection system. Fraudulent incidents reduced 45% within 90 days of deployment.'
     },
@@ -130,7 +130,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
       key: 'cap', title: 'Credit Approval Process (CAP)', url: 'cap.globusbank.com',
       imgs: ['/assets/img/cap-dashboard.png', '/assets/img/cap-facility-requests.png', '/assets/img/cap-disbursements.png', '/assets/img/cap-login.jpeg'],
       badges: [{ name: 'Angular 20', bc: '#DD003166' }, { name: 'TypeScript', bc: '#3178C666' }, { name: 'RxJS', bc: '#B7178C66' }],
-      desc: 'CBN-compliant credit lifecycle platform — four facility modules, a 10+ role approval chain, and MCC/BCC committee voting with veto power, built from 190+ standalone Angular 20 components.'
+      desc: 'CBN-compliant credit lifecycle platform — four facility modules, a 10+ role approval chain, and MCC/BCC committee voting with veto power, built by a seven-person team from 230+ standalone Angular 20 components.'
     },
     tiger: {
       key: 'tiger', title: 'ProjectTiger — Domestic Transfers', url: 'tiger.zenithbank.com',
@@ -249,13 +249,13 @@ export class HomeComponent implements OnInit, AfterViewInit {
     pill: 'CAB APPROVED',
     project: 'Trade Export & CAP — Production Rollout',
     company: 'Globus Bank',
-    description: 'Both platforms passed business CAB and roll out to production in October 2026. Trade Export digitises the CBN export chain end to end, and CAP\'s Retail module carries credit from origination through MCC/BCC governance to disbursement. CAP\'s Corporate module is paused at 10% after the team was redeployed to Trade Export in July.',
+    description: 'Both platforms passed business CAB and roll out to production in October 2026, built by a seven-person team in which I am the senior frontend engineer. Trade Export digitises the CBN export chain, and CAP\'s Retail module carries credit from origination through MCC/BCC governance to disbursement. CAP\'s Corporate module is paused at 10% after the team was redeployed to Trade Export in July.',
     modules: [
       {
         name: 'Trade Export (NXP)',
         status: 'shipping' as const,
         statusLabel: 'CAB Approved · Rolling Out',
-        description: 'Built from scratch from 11 July 2026 on Angular 21 — NXP applications, the NESS levy payment, repatriation with a ±10% tolerance band, and cancellation & closure, every step a maker-checker flow.',
+        description: 'From scratch on Angular 21: kickoff on 10 July 2026, live API integration from 18 August, two stakeholder walkthroughs in September and final UAT on 1 October — NXP, the NESS levy, repatriation and closure.',
         tech: ['Angular 21 Signals', 'Maker-Checker Flows', '776 Vitest Tests'],
         progress: 100
       },

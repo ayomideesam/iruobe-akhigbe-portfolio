@@ -136,7 +136,7 @@ export class ServicesDataService {
                'Real-time reporting and exportable records',
                'Responsive from phone to desktop, tested across the full device range'
             ],
-            proof: 'A 190+ component credit approval platform delivered end-to-end for Globus Bank.',
+            proof: 'A 230+ component credit approval platform delivered for Globus Bank by a seven-person team, with me as senior frontend engineer.',
             icon: `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"></rect><path d="M3 9h18"></path><path d="M8 6.5h.01M11 6.5h.01"></path></svg>`,
             accent: '#818cf8', accentRgb: '129, 140, 248'
          },

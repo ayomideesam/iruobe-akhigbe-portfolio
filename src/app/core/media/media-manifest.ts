@@ -100,6 +100,14 @@ export const MEDIA_MANIFEST: MediaManifest = {
       "fallback": "/assets/media/img/cap-login-1280.49563b389a.jpg",
       "source": "0731edb239|v1|avif q60 e6 444|webp q80 e6 smart|jpeg mozjpeg q80"
     },
+    "assets/img/costaff-assistant.png": {
+      "width": 2956,
+      "height": 1662,
+      "avif": "/assets/media/img/costaff-assistant-640.64461f2d08.avif 640w, /assets/media/img/costaff-assistant-1280.d087049530.avif 1280w, /assets/media/img/costaff-assistant-1920.d01940dc63.avif 1920w",
+      "webp": "/assets/media/img/costaff-assistant-640.9ac31d9147.webp 640w, /assets/media/img/costaff-assistant-1280.b2fa014160.webp 1280w, /assets/media/img/costaff-assistant-1920.97cece5abf.webp 1920w",
+      "fallback": "/assets/media/img/costaff-assistant-1280.96bf280eac.jpg",
+      "source": "6bc5f42270|v1|avif q60 e6 444|webp q80 e6 smart|jpeg mozjpeg q80"
+    },
     "assets/img/costaff-calendar.avif": {
       "width": 1884,
       "height": 1176,
@@ -115,6 +123,22 @@ export const MEDIA_MANIFEST: MediaManifest = {
       "webp": "/assets/media/img/costaff-home-640.77c8f1be36.webp 640w, /assets/media/img/costaff-home-1280.0ace1182d0.webp 1280w",
       "fallback": "/assets/media/img/costaff-home-1280.a142712496.jpg",
       "source": "c8d8ce028b|v1|avif q60 e6 444|webp q80 e6 smart|jpeg mozjpeg q80"
+    },
+    "assets/img/costaff-inbox.png": {
+      "width": 2956,
+      "height": 1662,
+      "avif": "/assets/media/img/costaff-inbox-640.515ebcac34.avif 640w, /assets/media/img/costaff-inbox-1280.cd9e17b3e0.avif 1280w, /assets/media/img/costaff-inbox-1920.19825da1c8.avif 1920w",
+      "webp": "/assets/media/img/costaff-inbox-640.1238add0d5.webp 640w, /assets/media/img/costaff-inbox-1280.855ee829a9.webp 1280w, /assets/media/img/costaff-inbox-1920.2c076fef80.webp 1920w",
+      "fallback": "/assets/media/img/costaff-inbox-1280.918e48ce5c.jpg",
+      "source": "b6c3d7d248|v1|avif q60 e6 444|webp q80 e6 smart|jpeg mozjpeg q80"
+    },
+    "assets/img/costaff-week.png": {
+      "width": 2956,
+      "height": 1662,
+      "avif": "/assets/media/img/costaff-week-640.8075f3e8a2.avif 640w, /assets/media/img/costaff-week-1280.45280c21c5.avif 1280w, /assets/media/img/costaff-week-1920.41cad9c032.avif 1920w",
+      "webp": "/assets/media/img/costaff-week-640.bca6c26abb.webp 640w, /assets/media/img/costaff-week-1280.e0b6c0968d.webp 1280w, /assets/media/img/costaff-week-1920.35a858310d.webp 1920w",
+      "fallback": "/assets/media/img/costaff-week-1280.7f2f4dd8a8.jpg",
+      "source": "9f0139770b|v1|avif q60 e6 444|webp q80 e6 smart|jpeg mozjpeg q80"
     },
     "assets/img/domestic-dashboard.png": {
       "width": 2180,
@@ -132,6 +156,198 @@ export const MEDIA_MANIFEST: MediaManifest = {
       "fallback": "/assets/media/img/domestic-login-1280.e43205d627.jpg",
       "source": "48fc3145b6|v1|avif q60 e6 444|webp q80 e6 smart|jpeg mozjpeg q80"
     },
+    "assets/img/duolingo/award-cheerleader.png": {
+      "width": 265,
+      "height": 297,
+      "avif": "/assets/media/img/award-cheerleader-265.014f6ae1c7.avif 265w",
+      "webp": "/assets/media/img/award-cheerleader-265.0726c05a1b.webp 265w",
+      "fallback": "/assets/media/img/award-cheerleader-265.634ccab26b.png",
+      "source": "2ea6e45c05|v1|avif q60 e6 444|webp q80 e6 smart|jpeg mozjpeg q80"
+    },
+    "assets/img/duolingo/award-early-riser.png": {
+      "width": 273,
+      "height": 298,
+      "avif": "/assets/media/img/award-early-riser-273.feb6cf160b.avif 273w",
+      "webp": "/assets/media/img/award-early-riser-273.82b93f213d.webp 273w",
+      "fallback": "/assets/media/img/award-early-riser-273.d01a2f9ba1.png",
+      "source": "f0d54eeae2|v1|avif q60 e6 444|webp q80 e6 smart|jpeg mozjpeg q80"
+    },
+    "assets/img/duolingo/award-flawless-finisher.png": {
+      "width": 254,
+      "height": 297,
+      "avif": "/assets/media/img/award-flawless-finisher-254.8e5e2132df.avif 254w",
+      "webp": "/assets/media/img/award-flawless-finisher-254.fe9428d063.webp 254w",
+      "fallback": "/assets/media/img/award-flawless-finisher-254.184eedcd67.png",
+      "source": "41d94e9698|v1|avif q60 e6 444|webp q80 e6 smart|jpeg mozjpeg q80"
+    },
+    "assets/img/duolingo/award-league-mvp.png": {
+      "width": 267,
+      "height": 272,
+      "avif": "/assets/media/img/award-league-mvp-267.74ba6cbf06.avif 267w",
+      "webp": "/assets/media/img/award-league-mvp-267.51e91c4be0.webp 267w",
+      "fallback": "/assets/media/img/award-league-mvp-267.5455418111.png",
+      "source": "6a32e56637|v1|avif q60 e6 444|webp q80 e6 smart|jpeg mozjpeg q80"
+    },
+    "assets/img/duolingo/award-legend.png": {
+      "width": 274,
+      "height": 297,
+      "avif": "/assets/media/img/award-legend-274.2c36247e32.avif 274w",
+      "webp": "/assets/media/img/award-legend-274.f229f57d24.webp 274w",
+      "fallback": "/assets/media/img/award-legend-274.31d10634bb.png",
+      "source": "0341525f46|v1|avif q60 e6 444|webp q80 e6 smart|jpeg mozjpeg q80"
+    },
+    "assets/img/duolingo/award-mistake-mechanic.png": {
+      "width": 274,
+      "height": 296,
+      "avif": "/assets/media/img/award-mistake-mechanic-274.6000f85495.avif 274w",
+      "webp": "/assets/media/img/award-mistake-mechanic-274.0401a86499.webp 274w",
+      "fallback": "/assets/media/img/award-mistake-mechanic-274.07a10bb70c.png",
+      "source": "15c3d7f27a|v1|avif q60 e6 444|webp q80 e6 smart|jpeg mozjpeg q80"
+    },
+    "assets/img/duolingo/award-perfect-week.png": {
+      "width": 274,
+      "height": 298,
+      "avif": "/assets/media/img/award-perfect-week-274.7bfff9da0d.avif 274w",
+      "webp": "/assets/media/img/award-perfect-week-274.8a31f584cb.webp 274w",
+      "fallback": "/assets/media/img/award-perfect-week-274.ac7aa8e798.png",
+      "source": "b53e459e79|v1|avif q60 e6 444|webp q80 e6 smart|jpeg mozjpeg q80"
+    },
+    "assets/img/duolingo/award-quest-explorer.png": {
+      "width": 274,
+      "height": 297,
+      "avif": "/assets/media/img/award-quest-explorer-274.6ea72c8317.avif 274w",
+      "webp": "/assets/media/img/award-quest-explorer-274.e376dd78be.webp 274w",
+      "fallback": "/assets/media/img/award-quest-explorer-274.c42b59b109.png",
+      "source": "7e1a20ecbe|v1|avif q60 e6 444|webp q80 e6 smart|jpeg mozjpeg q80"
+    },
+    "assets/img/duolingo/award-sleepwalker.png": {
+      "width": 254,
+      "height": 296,
+      "avif": "/assets/media/img/award-sleepwalker-254.e668cf21bd.avif 254w",
+      "webp": "/assets/media/img/award-sleepwalker-254.6644b470bf.webp 254w",
+      "fallback": "/assets/media/img/award-sleepwalker-254.2db464bbbc.png",
+      "source": "3166af1c24|v1|avif q60 e6 444|webp q80 e6 smart|jpeg mozjpeg q80"
+    },
+    "assets/img/duolingo/award-social-butterfly.png": {
+      "width": 239,
+      "height": 251,
+      "avif": "/assets/media/img/award-social-butterfly-239.222bc9ac38.avif 239w",
+      "webp": "/assets/media/img/award-social-butterfly-239.6632dc7681.webp 239w",
+      "fallback": "/assets/media/img/award-social-butterfly-239.fb8ec37029.png",
+      "source": "35446c3f1b|v1|avif q60 e6 444|webp q80 e6 smart|jpeg mozjpeg q80"
+    },
+    "assets/img/duolingo/award-speed-racer.png": {
+      "width": 254,
+      "height": 296,
+      "avif": "/assets/media/img/award-speed-racer-254.7699fff6e8.avif 254w",
+      "webp": "/assets/media/img/award-speed-racer-254.5e9cd6c4bd.webp 254w",
+      "fallback": "/assets/media/img/award-speed-racer-254.7acb9f1334.png",
+      "source": "d4da6f50fc|v1|avif q60 e6 444|webp q80 e6 smart|jpeg mozjpeg q80"
+    },
+    "assets/img/duolingo/award-xp-olympian.png": {
+      "width": 254,
+      "height": 296,
+      "avif": "/assets/media/img/award-xp-olympian-254.5b9d2adecb.avif 254w",
+      "webp": "/assets/media/img/award-xp-olympian-254.8a66e926a5.webp 254w",
+      "fallback": "/assets/media/img/award-xp-olympian-254.1dafd895c8.png",
+      "source": "603fb29793|v1|avif q60 e6 444|webp q80 e6 smart|jpeg mozjpeg q80"
+    },
+    "assets/img/duolingo/month-apr.png": {
+      "width": 220,
+      "height": 228,
+      "avif": "/assets/media/img/month-apr-220.12b6775a3b.avif 220w",
+      "webp": "/assets/media/img/month-apr-220.234ebc2fa4.webp 220w",
+      "fallback": "/assets/media/img/month-apr-220.70de695b10.png",
+      "source": "da95636222|v1|avif q60 e6 444|webp q80 e6 smart|jpeg mozjpeg q80"
+    },
+    "assets/img/duolingo/month-aug.png": {
+      "width": 207,
+      "height": 231,
+      "avif": "/assets/media/img/month-aug-207.bf7c25eb77.avif 207w",
+      "webp": "/assets/media/img/month-aug-207.ea4b190898.webp 207w",
+      "fallback": "/assets/media/img/month-aug-207.cff02706a5.png",
+      "source": "af565119fe|v1|avif q60 e6 444|webp q80 e6 smart|jpeg mozjpeg q80"
+    },
+    "assets/img/duolingo/month-jul.png": {
+      "width": 207,
+      "height": 242,
+      "avif": "/assets/media/img/month-jul-207.a6a69b5f74.avif 207w",
+      "webp": "/assets/media/img/month-jul-207.ccc2d36c82.webp 207w",
+      "fallback": "/assets/media/img/month-jul-207.557b82e30a.png",
+      "source": "56dc9a2eee|v1|avif q60 e6 444|webp q80 e6 smart|jpeg mozjpeg q80"
+    },
+    "assets/img/duolingo/month-jun.png": {
+      "width": 205,
+      "height": 226,
+      "avif": "/assets/media/img/month-jun-205.3881debe7e.avif 205w",
+      "webp": "/assets/media/img/month-jun-205.4c802938b8.webp 205w",
+      "fallback": "/assets/media/img/month-jun-205.b145b53a6b.png",
+      "source": "c4d0946787|v1|avif q60 e6 444|webp q80 e6 smart|jpeg mozjpeg q80"
+    },
+    "assets/img/duolingo/month-mar.png": {
+      "width": 216,
+      "height": 233,
+      "avif": "/assets/media/img/month-mar-216.35adab4724.avif 216w",
+      "webp": "/assets/media/img/month-mar-216.a66b56ec7e.webp 216w",
+      "fallback": "/assets/media/img/month-mar-216.3c3ce107cb.png",
+      "source": "22f6986884|v1|avif q60 e6 444|webp q80 e6 smart|jpeg mozjpeg q80"
+    },
+    "assets/img/duolingo/month-may.png": {
+      "width": 204,
+      "height": 225,
+      "avif": "/assets/media/img/month-may-204.0d4f484ee5.avif 204w",
+      "webp": "/assets/media/img/month-may-204.cfbe0b3661.webp 204w",
+      "fallback": "/assets/media/img/month-may-204.b9ce8a5bc6.png",
+      "source": "de015cc28b|v1|avif q60 e6 444|webp q80 e6 smart|jpeg mozjpeg q80"
+    },
+    "assets/img/duolingo/month-oct.png": {
+      "width": 226,
+      "height": 234,
+      "avif": "/assets/media/img/month-oct-226.d6999ef430.avif 226w",
+      "webp": "/assets/media/img/month-oct-226.fdd0c23c78.webp 226w",
+      "fallback": "/assets/media/img/month-oct-226.863e780c3f.png",
+      "source": "688fce26cb|v1|avif q60 e6 444|webp q80 e6 smart|jpeg mozjpeg q80"
+    },
+    "assets/img/duolingo/month-sep.png": {
+      "width": 234,
+      "height": 246,
+      "avif": "/assets/media/img/month-sep-234.6acd222675.avif 234w",
+      "webp": "/assets/media/img/month-sep-234.7800155059.webp 234w",
+      "fallback": "/assets/media/img/month-sep-234.b9f4c7992c.png",
+      "source": "f63efab756|v1|avif q60 e6 444|webp q80 e6 smart|jpeg mozjpeg q80"
+    },
+    "assets/img/duolingo/record-league.png": {
+      "width": 221,
+      "height": 258,
+      "avif": "/assets/media/img/record-league-221.5899fe3197.avif 221w",
+      "webp": "/assets/media/img/record-league-221.27eb500717.webp 221w",
+      "fallback": "/assets/media/img/record-league-221.91ee036d59.png",
+      "source": "31488c070c|v1|avif q60 e6 444|webp q80 e6 smart|jpeg mozjpeg q80"
+    },
+    "assets/img/duolingo/record-most-xp.png": {
+      "width": 234,
+      "height": 258,
+      "avif": "/assets/media/img/record-most-xp-234.dad9693598.avif 234w",
+      "webp": "/assets/media/img/record-most-xp-234.2ca79c83af.webp 234w",
+      "fallback": "/assets/media/img/record-most-xp-234.4004fb5e05.png",
+      "source": "c803397edc|v1|avif q60 e6 444|webp q80 e6 smart|jpeg mozjpeg q80"
+    },
+    "assets/img/duolingo/record-perfect-lessons.png": {
+      "width": 220,
+      "height": 246,
+      "avif": "/assets/media/img/record-perfect-lessons-220.6ed3771756.avif 220w",
+      "webp": "/assets/media/img/record-perfect-lessons-220.0236c39d0d.webp 220w",
+      "fallback": "/assets/media/img/record-perfect-lessons-220.6a07c3e919.png",
+      "source": "dbb128cdb0|v1|avif q60 e6 444|webp q80 e6 smart|jpeg mozjpeg q80"
+    },
+    "assets/img/duolingo/record-streak.png": {
+      "width": 201,
+      "height": 258,
+      "avif": "/assets/media/img/record-streak-201.c8f836ce4e.avif 201w",
+      "webp": "/assets/media/img/record-streak-201.35e815cae9.webp 201w",
+      "fallback": "/assets/media/img/record-streak-201.9be28f6fa5.png",
+      "source": "2dacbe6665|v1|avif q60 e6 444|webp q80 e6 smart|jpeg mozjpeg q80"
+    },
     "assets/img/fraud-dashboard-dark.png": {
       "width": 1830,
       "height": 900,
@@ -147,6 +363,30 @@ export const MEDIA_MANIFEST: MediaManifest = {
       "webp": "/assets/media/img/fraud-details-dark-640.1b570831fa.webp 640w, /assets/media/img/fraud-details-dark-1118.9112235db6.webp 1118w",
       "fallback": "/assets/media/img/fraud-details-dark-1118.78e08be10a.jpg",
       "source": "bc1df2d12e|v1|avif q60 e6 444|webp q80 e6 smart|jpeg mozjpeg q80"
+    },
+    "assets/img/fraud-flagged-transactions.png": {
+      "width": 2956,
+      "height": 1662,
+      "avif": "/assets/media/img/fraud-flagged-transactions-640.31643f9a3e.avif 640w, /assets/media/img/fraud-flagged-transactions-1280.78071fba0d.avif 1280w, /assets/media/img/fraud-flagged-transactions-1920.8ca5b2ad23.avif 1920w",
+      "webp": "/assets/media/img/fraud-flagged-transactions-640.abae72cbec.webp 640w, /assets/media/img/fraud-flagged-transactions-1280.fff7a3046d.webp 1280w, /assets/media/img/fraud-flagged-transactions-1920.13adea7dbb.webp 1920w",
+      "fallback": "/assets/media/img/fraud-flagged-transactions-1280.92ff139e26.jpg",
+      "source": "8188d231c2|v1|avif q60 e6 444|webp q80 e6 smart|jpeg mozjpeg q80"
+    },
+    "assets/img/fraud-live-dashboard.png": {
+      "width": 2956,
+      "height": 1662,
+      "avif": "/assets/media/img/fraud-live-dashboard-640.4c7f2d4bb4.avif 640w, /assets/media/img/fraud-live-dashboard-1280.ee0e1c9191.avif 1280w, /assets/media/img/fraud-live-dashboard-1920.48f050d9dc.avif 1920w",
+      "webp": "/assets/media/img/fraud-live-dashboard-640.378b90a61e.webp 640w, /assets/media/img/fraud-live-dashboard-1280.f1c2601265.webp 1280w, /assets/media/img/fraud-live-dashboard-1920.3bdecb80f2.webp 1920w",
+      "fallback": "/assets/media/img/fraud-live-dashboard-1280.5cdc65cbbe.jpg",
+      "source": "762ad45d33|v1|avif q60 e6 444|webp q80 e6 smart|jpeg mozjpeg q80"
+    },
+    "assets/img/fraud-rule-engines.png": {
+      "width": 2956,
+      "height": 1662,
+      "avif": "/assets/media/img/fraud-rule-engines-640.029171dc45.avif 640w, /assets/media/img/fraud-rule-engines-1280.e8a566726f.avif 1280w, /assets/media/img/fraud-rule-engines-1920.6156e7fd25.avif 1920w",
+      "webp": "/assets/media/img/fraud-rule-engines-640.ee80650ad3.webp 640w, /assets/media/img/fraud-rule-engines-1280.c759fa1f4c.webp 1280w, /assets/media/img/fraud-rule-engines-1920.b528e48333.webp 1920w",
+      "fallback": "/assets/media/img/fraud-rule-engines-1280.80aafe2d72.jpg",
+      "source": "f4b6ad053b|v1|avif q60 e6 444|webp q80 e6 smart|jpeg mozjpeg q80"
     },
     "assets/img/nxp-applications.png": {
       "width": 2956,

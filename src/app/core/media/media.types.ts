@@ -10,7 +10,7 @@ export interface ManifestImage {
    /** `srcset` strings, e.g. `/assets/media/img/x-640.<hash>.avif 640w, …`. */
    avif: string;
    webp: string;
-   /** 1280 px (or smaller) JPEG for the `<img src>` inside `<picture>`. */
+   /** 1280 px (or smaller) JPEG — PNG for transparent artwork — for the `<img src>` inside `<picture>`. */
    fallback: string;
    /** Master hash + encoder settings; lets the pipeline skip unchanged media. */
    source: string;
