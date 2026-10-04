@@ -68,7 +68,10 @@ interface AgentStep {
   out: string;
 }
 
+type RoleKey = 'globus' | 'hiedberg' | 'zenith' | 'samsky' | 'upperlink';
+
 interface Experience {
+  key: RoleKey;
   role: string;
   company: string;
   period: string;
@@ -77,6 +80,21 @@ interface Experience {
   technologies?: string[];
   type?: string;
   current?: boolean;
+  /** Promotion inside the role, shown as a pill. */
+  promotion?: string;
+  /** What I owned there, in one sentence. */
+  scope: string;
+  /** Named work; a projectId links to that scene on /projects. */
+  work: { label: string; projectId?: number }[];
+}
+
+interface GrowthStep {
+  key: RoleKey;
+  year: string;
+  level: string;
+  note: string;
+  /** Bar height, 0–1: scope, not seniority points. */
+  scope: number;
 }
 
 interface Module {
@@ -462,29 +480,69 @@ export class HomeComponent implements OnInit, AfterViewInit {
   }
 
   // ─── Experience ───
+  // Kept in step with ResumeDataService (titles, dates, team sizes): the home
+  // page and the CV must tell the same story.
   experiences: Experience[] = [
     {
-      role: 'Senior Frontend Engineer', company: 'Globus Bank Plc', period: 'Jan 2024 - Present',
-      location: 'Victoria Island, Nigeria', col: '#8b5cf6', type: 'Full-time', current: true,
-      technologies: ['Angular 21', 'TypeScript', 'RxJS', 'NGXS']
+      key: 'globus', role: 'Senior Frontend Engineer', company: 'Globus Bank Plc', period: 'Feb 2024 - Present',
+      location: 'Victoria Island, Lagos', col: '#8b5cf6', type: 'Full-time', current: true,
+      promotion: 'Promoted · Jan 2026',
+      scope: 'Set the frontend architecture and standards for a seven-person delivery team; two platforms through business CAB in 2026.',
+      work: [
+        { label: 'Trade Export (NXP)', projectId: 7 }, { label: 'Credit Approval (CAP)', projectId: 6 },
+        { label: 'Fraud Management', projectId: 3 }, { label: 'Trade Import', projectId: 2 }
+      ],
+      technologies: ['Angular 19–21', 'NgRx Signal Store', 'Vitest', 'Claude Code']
     },
     {
-      role: 'Senior Angular Engineer & Tech Lead', company: 'HiedBerg LTD', period: 'Jun 2024 - Sept 2024',
-      location: 'United Kingdom (Remote)', col: '#f59e0b', type: 'Contract', technologies: ['Angular', 'Team Leadership', 'Code Review']
+      key: 'hiedberg', role: 'Senior Angular Engineer & Tech Lead', company: 'HiedBerg LTD', period: 'Jun 2024 - Sept 2024',
+      location: 'United Kingdom (Remote)', col: '#f59e0b', type: 'Contract',
+      scope: 'Led a team of 6 Angular developers on an AI product for enterprise clients across the Middle East.',
+      work: [{ label: 'COSTAFF AI Digital Worker', projectId: 1 }],
+      technologies: ['Angular 16', 'NGXS', 'OpenAI', 'Google APIs']
     },
     {
-      role: 'Frontend Team Lead', company: 'Zenith Bank PLC', period: 'Dec 2022 - Feb 2024',
-      location: 'Victoria Island, Nigeria', col: '#ef4444', type: 'Contract', technologies: ['Angular', 'TypeScript', 'Team Leadership']
+      key: 'zenith', role: 'Frontend Team Lead', company: 'Zenith Bank PLC', period: 'Dec 2022 - Feb 2024',
+      location: 'Victoria Island, Lagos', col: '#ef4444', type: 'Contract',
+      promotion: 'Senior → Team Lead · Apr 2023',
+      scope: "Led 6 frontend engineers across the bank's payments and collections platforms.",
+      work: [{ label: 'ProjectTiger', projectId: 4 }, { label: 'X-Path', projectId: 5 }, { label: 'Tax Clearance' }],
+      technologies: ['Angular', 'TypeScript', 'NGXS', 'Jenkins']
     },
     {
-      role: 'Senior Frontend Engineer', company: 'Samsky Pay UK', period: 'Feb 2022 - Dec 2022',
-      location: 'London, UK', col: '#06b6d4', type: 'Full-time', technologies: ['Angular', 'Payments', 'REST APIs']
+      key: 'samsky', role: 'Senior Frontend Engineer', company: 'Samsky Pay UK', period: 'Feb 2022 - Dec 2022',
+      location: 'London, UK', col: '#06b6d4', type: 'Full-time',
+      scope: 'Built a UK multi-currency payments app: live exchange rates, a wallet and the admin panel.',
+      work: [{ label: 'Samsky Pay' }],
+      technologies: ['Angular', 'Payments', 'AWS']
     },
     {
-      role: 'Intermediate Frontend Engineer', company: 'Upperlink LTD', period: 'Jun 2018 - Feb 2022',
-      location: 'Alausa, Nigeria', col: '#10b981', type: 'Full-time', technologies: ['Angular', 'JavaScript', 'CSS3']
+      key: 'upperlink', role: 'Frontend Engineer', company: 'Upperlink LTD', period: 'Jun 2018 - Feb 2022',
+      location: 'Alausa, Lagos', col: '#10b981', type: 'Full-time',
+      promotion: 'Mid-level → Senior',
+      scope: 'Built and tested bank and government payment channels; mentored 4 juniors to mid-level.',
+      work: [{ label: 'NIBSS GSI' }, { label: 'EbillsPay' }],
+      technologies: ['Angular', 'JavaScript', 'Selenium']
     }
   ];
+
+  // The arc above the timeline: one bar per step up, oldest first, so the
+  // growth reads left to right before the detail below.
+  readonly growthArc: GrowthStep[] = [
+    { key: 'upperlink', year: '2018', level: 'Engineer', note: 'Payment channels & QA', scope: 0.3 },
+    { key: 'samsky', year: '2022', level: 'Senior', note: 'Owned a UK payments app', scope: 0.47 },
+    { key: 'zenith', year: '2023', level: 'Team lead', note: 'Led 6 engineers', scope: 0.64 },
+    { key: 'hiedberg', year: '2024', level: 'Tech lead', note: 'UK AI platform, remote', scope: 0.8 },
+    { key: 'globus', year: '2026', level: 'Promoted', note: 'Standards for 2 CAB-approved platforms', scope: 1 }
+  ];
+
+  /** Role highlighted from the arc (hover or focus). */
+  readonly focusRole = signal<RoleKey | null>(null);
+
+  scrollToRole(key: RoleKey): void {
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    document.getElementById('role-' + key)?.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'center' });
+  }
 
   // ─── Testimonials ───
   // Sourced from TestimonialsService so the services route renders the same
@@ -649,7 +707,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
   // ProjectsComponent's flagship scenes. .in-view starts the Featured Projects
   // cards, fills the rollout progress bars and raises the Toolkit cards.
   private initReveals(): void {
-    const targets = document.querySelectorAll('.projects-grid, .cb-panel, .tk');
+    const targets = document.querySelectorAll('.projects-grid, .cb-panel, .tk, .arc, .timeline');
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
       targets.forEach(el => el.classList.add('in-view'));
       return;

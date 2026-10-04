@@ -5,6 +5,7 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { FormsModule } from '@angular/forms';
 import { SharedModule } from 'src/app/shared/shared.module';
 
+import { ResumeDataService } from 'src/app/core/services/resume-data.service';
 import { HomeComponent } from './home.component';
 
 // Was a bare CLI scaffold with no TestBed configuration at all, so it threw on
@@ -68,6 +69,24 @@ describe('HomeComponent', () => {
       component.restoreProject('costaff');
       vi.runAllTimers();
       expect(visible()).toEqual(['costaff', 'tiger', 'xpath']);
+    });
+  });
+
+  describe('professional journey', () => {
+    it('should tell the same story as the CV: every role matches a CV job by company and dates', () => {
+      const firstWord = (company: string) => company.split(' ')[0].toLowerCase();
+      const jobs = new ResumeDataService().getEmploymentHistory();
+      for (const e of component.experiences) {
+        const job = jobs.find(j => firstWord(j.company) === firstWord(e.company));
+        expect(job, e.company).toBeDefined();
+        expect(e.period.replace(' - ', ' — ')).toBe(job!.period);
+      }
+    });
+
+    it('should draw the growth arc oldest first, rising, with one step per role', () => {
+      const scopes = component.growthArc.map(a => a.scope);
+      expect([...scopes].sort((a, b) => a - b)).toEqual(scopes);
+      expect(new Set(component.growthArc.map(a => a.key)).size).toBe(component.experiences.length);
     });
   });
 

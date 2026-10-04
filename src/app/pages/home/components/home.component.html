@@ -342,29 +342,73 @@
   <div class="section-head">
     <span class="eyebrow">Career</span>
     <h2 appRainbowHover class="section-h2">Professional Journey</h2>
-    <p class="section-sub">A track record of delivering innovative solutions across fintech and enterprise applications.</p>
+    <p class="section-sub">From building payment flows in 2018 to setting the frontend standards two bank platforms shipped on in 2026.</p>
   </div>
+
+  <!-- Growth arc: each bar is a step up in scope. Hover or focus a step to
+       light its role below; click to jump to it. -->
+  <ol class="arc" aria-label="Career growth, 2018 to 2026">
+    @for (a of growthArc; track a.key; let i = $index; let last = $last) {
+      <li class="arc-item">
+        <button type="button" class="arc-step" [class.arc-step-now]="last" [style.--h]="a.scope" [style.--i]="i"
+                (mouseenter)="focusRole.set(a.key)" (mouseleave)="focusRole.set(null)"
+                (focus)="focusRole.set(a.key)" (blur)="focusRole.set(null)" (click)="scrollToRole(a.key)"
+                [attr.aria-label]="a.year + ', ' + a.level + ': ' + a.note + '. Show this role.'">
+          <span class="arc-bar" aria-hidden="true"><span class="arc-fill"></span></span>
+          <span class="arc-text">
+            <span class="arc-year">{{ a.year }}</span>
+            <span class="arc-level">{{ a.level }}</span>
+            <span class="arc-note">{{ a.note }}</span>
+          </span>
+        </button>
+      </li>
+    }
+  </ol>
+
   <div class="timeline">
-    @for (e of experiences; track e.company + e.period; let last = $last) {
-      <div class="timeline-row">
+    @for (e of experiences; track e.key; let last = $last) {
+      <div class="timeline-row" [id]="'role-' + e.key">
         <div class="timeline-rail">
           <span class="timeline-badge" [style.background]="e.col" [style.box-shadow]="'0 8px 20px -6px ' + e.col">{{ e.company.charAt(0) }}</span>
           @if (!last) { <span class="timeline-connector"></span> }
         </div>
-        <article class="timeline-card" [class.timeline-card-current]="e.current">
+        <article class="timeline-card" [class.timeline-card-current]="e.current" [class.timeline-card-focus]="focusRole() === e.key">
           <div class="timeline-card-top">
             <div>
               <h3 class="timeline-role">{{ e.role }}</h3>
               <span class="timeline-company" [style.color]="e.col">{{ e.company }}</span>
             </div>
-            @if (e.current) {
-              <span class="current-pill"><span class="pulse-dot"></span>Current</span>
-            }
+            <div class="timeline-pills">
+              @if (e.promotion) {
+                <span class="promo-pill">
+                  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5M6 11l6-6 6 6"></path></svg>
+                  {{ e.promotion }}
+                </span>
+              }
+              @if (e.current) {
+                <span class="current-pill"><span class="pulse-dot"></span>Current</span>
+              }
+            </div>
           </div>
           <div class="timeline-meta">
             <span>{{ e.period }}</span>
             <span class="timeline-tenure">{{ getTenure(e.period) }}</span>
             <span>{{ e.location }}</span>
+            @if (e.type) { <span>{{ e.type }}</span> }
+          </div>
+          <p class="timeline-scope">{{ e.scope }}</p>
+          <div class="timeline-work">
+            <span class="timeline-work-label">Signature work</span>
+            @for (w of e.work; track w.label) {
+              @if (w.projectId) {
+                <button type="button" class="work-chip" (click)="navigateToProject(w.projectId)" [attr.aria-label]="'View ' + w.label + ' on the projects page'">
+                  {{ w.label }}
+                  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"></path></svg>
+                </button>
+              } @else {
+                <span class="work-chip work-chip-plain">{{ w.label }}</span>
+              }
+            }
           </div>
           <div class="pill-row">
             @for (t of e.technologies; track t) {

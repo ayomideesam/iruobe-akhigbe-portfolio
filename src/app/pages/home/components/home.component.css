@@ -1243,7 +1243,20 @@ h2 {
   font: 700 15px Outfit, sans-serif;
   color: #fff;
 }
-.timeline-connector { flex: 1; width: 1px; background: linear-gradient(var(--gbrd2), var(--gbrd)); min-height: 22px; }
+/* The rail draws itself down the timeline when it scrolls into view. */
+.timeline-connector {
+  flex: 1;
+  width: 1px;
+  min-height: 22px;
+  background: linear-gradient(var(--gbrd2), var(--gbrd));
+  transform: scaleY(0);
+  transform-origin: top;
+  transition: transform 0.9s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.timeline.in-view .timeline-connector { transform: scaleY(1); }
+.timeline-row:nth-child(2) .timeline-connector { transition-delay: 0.15s; }
+.timeline-row:nth-child(3) .timeline-connector { transition-delay: 0.3s; }
+.timeline-row:nth-child(4) .timeline-connector { transition-delay: 0.45s; }
 .timeline-card {
   position: relative;
   margin-bottom: 20px;
@@ -1256,7 +1269,9 @@ h2 {
   box-shadow: var(--shdw);
   transition: transform 0.25s, border-color 0.25s;
 }
-.timeline-card:hover { transform: translateX(4px); border-color: rgba(var(--prr), 0.4); }
+.timeline-card:hover,
+.timeline-card-focus { transform: translateX(4px); border-color: rgba(var(--prr), 0.4); }
+.timeline-card-focus { box-shadow: 0 0 0 1px rgba(var(--prr), 0.35), var(--shdw); }
 .timeline-card-current { border-color: rgba(52, 211, 153, 0.45); }
 /* Prototype's pulseBorder animates outline/outline-offset — a fixed px offset
    applied equally on all four sides regardless of the box's aspect ratio.
@@ -1295,6 +1310,110 @@ h2 {
 }
 .timeline-meta { display: flex; flex-wrap: wrap; gap: 14px; margin-bottom: 12px; font: 400 12px Sora, sans-serif; color: var(--tx2); }
 .timeline-tenure { color: var(--pr); font-weight: 500; }
+.timeline-pills { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+.promo-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font: 600 10.5px Sora, sans-serif;
+  letter-spacing: 0.04em;
+  color: var(--pr);
+  padding: 4px 10px;
+  border-radius: 99px;
+  border: 1px solid rgba(var(--prr), 0.38);
+  background: rgba(var(--prr), 0.10);
+}
+.timeline-scope { margin: 0 0 13px; font: 400 13.5px / 1.6 Sora, sans-serif; color: var(--tx); }
+.timeline-work { display: flex; flex-wrap: wrap; align-items: center; gap: 7px; margin-bottom: 13px; }
+.timeline-work-label {
+  margin-right: 3px;
+  font: 600 10px Sora, sans-serif;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--tx2);
+}
+.work-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font: 600 11.5px Sora, sans-serif;
+  color: var(--tx);
+  padding: 5px 11px;
+  border-radius: 9px;
+  border: 1px solid rgba(var(--prr), 0.35);
+  background: rgba(var(--prr), 0.08);
+  cursor: pointer;
+  transition: transform 0.2s ease, border-color 0.2s, background 0.2s;
+}
+.work-chip svg { color: var(--pr); transition: transform 0.2s ease; }
+.work-chip:hover { transform: translateY(-2px); border-color: rgba(var(--prr), 0.6); background: rgba(var(--prr), 0.14); }
+.work-chip:hover svg { transform: translate(2px, -2px); }
+.work-chip:focus-visible { outline: 2px solid var(--pr); outline-offset: 2px; }
+.work-chip-plain { cursor: default; border-color: var(--gbrd2); background: var(--glass); }
+.work-chip-plain:hover { transform: none; border-color: var(--gbrd2); background: var(--glass); }
+
+/* ─── Growth arc: bars rise left to right, one per step up in scope ─── */
+.arc {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: clamp(8px, 1.4vw, 16px);
+  margin: 0 0 clamp(26px, 3.5vw, 40px);
+  padding: 0;
+  list-style: none;
+}
+.arc-item { display: flex; }
+.arc-step {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 10px;
+  min-width: 0;
+  padding: 10px 10px 12px;
+  text-align: left;
+  color: inherit;
+  border-radius: 14px;
+  border: 1px solid transparent;
+  background: none;
+  cursor: pointer;
+  transition: border-color 0.2s, background 0.2s;
+}
+.arc-step:hover,
+.arc-step:focus-visible { border-color: var(--gbrd2); background: var(--glass); }
+.arc-step:focus-visible { outline: 2px solid var(--pr); outline-offset: 2px; }
+.arc-bar {
+  position: relative;
+  display: block;
+  height: clamp(70px, 9vw, 104px);
+  overflow: hidden;
+  border-radius: 10px;
+  background: var(--glass);
+  border: 1px solid var(--gbrd);
+}
+.arc-fill {
+  position: absolute;
+  inset: 0;
+  border-radius: 9px;
+  background: linear-gradient(0deg, rgba(var(--prr), 0.35), rgba(var(--acr), 0.75));
+  transform: scaleY(0);
+  transform-origin: bottom;
+  transition: transform 0.9s cubic-bezier(0.22, 1, 0.36, 1) calc(var(--i) * 0.12s);
+}
+.arc.in-view .arc-fill { transform: scaleY(var(--h)); }
+.arc-step-now .arc-fill { background: linear-gradient(0deg, rgba(var(--prr), 0.55), var(--ac)); box-shadow: 0 -6px 24px -6px rgba(var(--acr), 0.7); }
+.arc-text { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.arc-year { font: 600 11px ui-monospace, Menlo, monospace; color: var(--pr); }
+.arc-level { font: 700 14px Outfit, sans-serif; color: var(--tx); }
+.arc-note { font: 400 11.5px / 1.4 Sora, sans-serif; color: var(--tx2); }
+
+/* Phones: the bars turn sideways so the notes keep a readable width. */
+@media (max-width: 599px) {
+  .arc { grid-template-columns: minmax(0, 1fr); gap: 4px; }
+  .arc-step { flex-direction: row; align-items: center; gap: 12px; padding: 8px 10px; }
+  .arc-bar { order: 2; flex: 0 0 34%; height: 10px; border-radius: 99px; }
+  .arc-fill { border-radius: 99px; background: linear-gradient(90deg, rgba(var(--prr), 0.35), rgba(var(--acr), 0.75)); transform: scaleX(0); transform-origin: left; }
+  .arc.in-view .arc-fill { transform: scaleX(var(--h)); }
+  .arc-text { order: 1; flex: 1; }
+}
 
 /* ─────────────────────────────────────────────────────────────
    TESTIMONIALS
