@@ -1,6 +1,7 @@
 // core/services/ats-pdf.service.ts
 import { Injectable } from '@angular/core';
 import type { jsPDF } from 'jspdf';
+import type { Reference, SkillTier } from './resume-data.service';
 
 interface ResumeData {
   name: string;
@@ -11,7 +12,7 @@ interface ResumeData {
   portfolio: string;
   profile: string[];
   keyAchievements: string[];
-  skills: Array<{ name: string; level: number }>;
+  skills: SkillTier[];
   employment: Array<{
     company: string;
     role: string;
@@ -34,13 +35,9 @@ interface ResumeData {
     period: string;
   }>;
   hobbies: string[];
+  techWatching: string[];
   languages: string[];
-  references: Array<{
-    name: string;
-    company: string;
-    email: string;
-    phone: string;
-  }>;
+  references: Reference[];
 }
 
 interface PDFColors {
@@ -226,13 +223,30 @@ export class AtsPdfService {
     // TECH I'M WATCHING
     if (leftY > this.PAGE_HEIGHT - 80) leftY = this.newLeftPage();
     leftY = this.drawSectionTitle("TECH I'M WATCHING", leftX, leftY, w);
-    leftY = this.drawTechWatching(leftX, leftY, w);
+    leftY = this.drawTechWatching(data.techWatching, leftX, leftY, w);
     leftY += 20;
 
     // LANGUAGES
     if (leftY > this.PAGE_HEIGHT - 60) leftY = this.newLeftPage();
     leftY = this.drawSectionTitle('LANGUAGES', leftX, leftY, w);
-    this.drawLanguages(data.languages, leftX, leftY, w);
+    leftY = this.drawLanguages(data.languages, leftX, leftY, w);
+    leftY += 20;
+
+    // Education, courses and references live in the sidebar: the right column
+    // then ends with employment and the CV holds to two pages.
+    if (leftY > this.PAGE_HEIGHT - 110) leftY = this.newLeftPage();
+    leftY = this.drawSectionTitle('EDUCATION', leftX, leftY, w);
+    leftY = this.drawEducation(data.education, leftX, leftY, w);
+    leftY += 14;
+
+    if (leftY > this.PAGE_HEIGHT - 130) leftY = this.newLeftPage();
+    leftY = this.drawSectionTitle('COURSES', leftX, leftY, w);
+    leftY = this.drawCertifications(data.certifications, leftX, leftY, w);
+    leftY += 14;
+
+    if (leftY > this.PAGE_HEIGHT - 150) leftY = this.newLeftPage();
+    leftY = this.drawSectionTitle('REFERENCES', leftX, leftY, w);
+    this.drawReferences(data.references, leftX, leftY, w);
   }
 
   // ─── Right Column ─────────────────────────────────────────────────────────────
@@ -254,34 +268,7 @@ export class AtsPdfService {
 
     // EMPLOYMENT HISTORY
     rightY = this.drawSectionTitle('EMPLOYMENT HISTORY', rightX, rightY, w);
-    rightY = this.drawEmploymentHistory(data.employment, rightX, rightY, w);
-    rightY += 10;
-
-    // EDUCATION — check if enough room (Education ~55pt + Certs ~115pt = ~170pt min)
-    if (rightY > this.PAGE_HEIGHT - 170) {
-      rightY = this.advanceRightPage();
-    }
-
-    rightY = this.drawSectionTitle('EDUCATION', rightX, rightY, w);
-    rightY = this.drawEducation(data.education, rightX, rightY, w);
-    rightY += 15;
-
-    // CERTIFICATIONS
-    if (rightY > this.PAGE_HEIGHT - 120) {
-      rightY = this.advanceRightPage();
-    }
-
-    rightY = this.drawSectionTitle('COURSES / CERTIFICATIONS', rightX, rightY, w);
-    rightY = this.drawCertifications(data.certifications, rightX, rightY, w);
-    rightY += 15;
-
-    // REFERENCES
-    if (rightY > this.PAGE_HEIGHT - 200) {
-      rightY = this.advanceRightPage();
-    }
-
-    rightY = this.drawSectionTitle('REFERENCES', rightX, rightY, w);
-    this.drawReferences(data.references, rightX, rightY, w);
+    this.drawEmploymentHistory(data.employment, rightX, rightY, w);
   }
 
   // ─── Shared Section Title & Detail ───────────────────────────────────────────
@@ -320,50 +307,41 @@ export class AtsPdfService {
 
   // ─── Left Column Content ─────────────────────────────────────────────────────
 
-  private drawSkills(skills: Array<{ name: string; level: number }>, x: number, y: number, width: number): number {
+  /** Tier heading, then the tier's skills as one wrapped, comma-separated
+   *  line — plain text an ATS parses cleanly, unlike bars or percentages. */
+  private drawSkills(tiers: SkillTier[], x: number, y: number, width: number): number {
     let currentY = y;
 
-    skills.forEach(skill => {
-      const lines = this.pdf.splitTextToSize(skill.name, width - 35);
-      const skillHeight = (lines.length * 10) + 2 + 3 + 12; // text + gap + bar + spacing
+    tiers.forEach(group => {
+      const body = this.cleanTextForATS(group.skills.join(', '));
+      const lines = this.pdf.splitTextToSize(body, width);
+      const noteLines = group.note ? this.pdf.splitTextToSize(group.note, width) : [];
+      const blockHeight = 12 + lines.length * 10 + noteLines.length * 9 + 12;
 
-      if (currentY + skillHeight > this.PAGE_HEIGHT - this.MARGIN) {
+      if (currentY + blockHeight > this.PAGE_HEIGHT - this.MARGIN) {
         currentY = this.newLeftPage();
       }
 
       this.pdf.setFontSize(8);
+      this.pdf.setFont('helvetica', 'bold');
+      this.pdf.setTextColor(this.colors.accent);
+      this.pdf.text(group.tier.toUpperCase(), x, currentY);
+      currentY += 12;
+
       this.pdf.setFont('helvetica', 'normal');
       this.pdf.setTextColor(this.colors.textDark);
       this.pdf.text(lines, x, currentY);
+      currentY += lines.length * 10;
 
-      const skillTextHeight = lines.length * 10;
-
-      this.pdf.setFont('helvetica', 'bold');
-      this.pdf.setFontSize(7);
-      this.pdf.setTextColor(this.colors.textLight);
-      this.pdf.text(`${skill.level}%`, x + width, currentY + (skillTextHeight / 2), { align: 'right' });
-
-      currentY += skillTextHeight + 2;
-
-      const barHeight = 3;
-      const barY = currentY;
-
-      if (this.colors.background === '#1E1E1E') {
-        this.pdf.setFillColor(51, 65, 85);
-      } else {
-        this.pdf.setFillColor(226, 232, 240);
+      if (noteLines.length) {
+        this.pdf.setFontSize(7.5);
+        this.pdf.setFont('helvetica', 'italic');
+        this.pdf.setTextColor(this.colors.textLight);
+        this.pdf.text(noteLines, x, currentY + 2);
+        currentY += noteLines.length * 9 + 2;
       }
-      this.pdf.rect(x, barY, width, barHeight, 'F');
 
-      const progressWidth = (skill.level / 100) * width;
-      if (this.colors.background === '#1E1E1E') {
-        this.pdf.setFillColor(96, 165, 250);
-      } else {
-        this.pdf.setFillColor(37, 99, 235);
-      }
-      this.pdf.rect(x, barY, progressWidth, barHeight, 'F');
-
-      currentY += barHeight + 12;
+      currentY += 12;
     });
 
     return currentY;
@@ -381,8 +359,7 @@ export class AtsPdfService {
     return currentY;
   }
 
-  private drawTechWatching(x: number, y: number, _width: number): number {
-    const items = ['Angular 21 Signals', 'AI-Assisted Dev', 'ml5.js', 'Playwright / Vitest', 'Stocks / Trades'];
+  private drawTechWatching(items: string[], x: number, y: number, _width: number): number {
     let currentY = y;
     items.forEach(item => {
       this.pdf.setFontSize(9);
@@ -470,9 +447,16 @@ export class AtsPdfService {
     let currentY = y;
 
     jobs.forEach((job, index) => {
-      if (currentY > this.PAGE_HEIGHT - 100) {
+      // Never strand a job's header at the foot of a page: it needs room for
+      // itself, the description and the first highlight.
+      this.pdf.setFontSize(9);
+      const firstBullet = job.achievements?.[0] ? this.pdf.splitTextToSize(this.cleanTextForATS(job.achievements[0]), width - 13).length : 0;
+      const descLinesEstimate = job.description ? this.pdf.splitTextToSize(job.description, width).length : 0;
+      const keepTogether = 30 + (descLinesEstimate ? descLinesEstimate * 11 + 6 : 0) + firstBullet * 11 + 4;
+      if (currentY + keepTogether > this.PAGE_HEIGHT - this.MARGIN) {
         currentY = this.advanceRightPage();
       }
+      job = { ...job, role: this.cleanTextForATS(job.role), description: job.description && this.cleanTextForATS(job.description) };
 
       // Role + period on same line
       this.pdf.setFontSize(11);
@@ -523,7 +507,7 @@ export class AtsPdfService {
         this.pdf.setTextColor(this.colors.textDark);
         const descLines = this.pdf.splitTextToSize(job.description, width);
         this.pdf.text(descLines, x, currentY);
-        currentY += descLines.length * 11 + 12;
+        currentY += descLines.length * 11 + 6;
       }
 
       // Technical Leadership
@@ -545,13 +529,8 @@ export class AtsPdfService {
         if (currentY > this.PAGE_HEIGHT - 80) {
           currentY = this.advanceRightPage();
         }
-        this.pdf.setFontSize(9);
-        this.pdf.setFont('helvetica', 'bold');
-        this.pdf.setTextColor(this.colors.accent);
-        this.pdf.text('Key Achievements & Business Impact:', x, currentY);
-        currentY += 13;
         currentY = this.drawBulletList(job.achievements, x, currentY, width);
-        currentY += 8;
+        currentY += 4;
       }
 
       // Technical Architecture & Implementation
@@ -568,7 +547,7 @@ export class AtsPdfService {
         currentY += 8;
       }
 
-      currentY += 18;
+      currentY += 12;
     });
 
     return currentY;
@@ -582,28 +561,26 @@ export class AtsPdfService {
   ): number {
     let currentY = y;
 
-    this.pdf.setFontSize(11);
+    this.pdf.setFontSize(9);
     this.pdf.setFont('helvetica', 'bold');
     this.pdf.setTextColor(this.colors.primary);
     this.pdf.text(education.degree, x, currentY);
+    currentY += 11;
 
-    currentY += 15;
-
-    this.pdf.setFontSize(10);
+    this.pdf.setFontSize(8);
     this.pdf.setFont('helvetica', 'normal');
     this.pdf.setTextColor(this.colors.accent);
-    this.pdf.text(education.institution, x, currentY);
+    const institution = this.pdf.splitTextToSize(education.institution, width);
+    this.pdf.text(institution, x, currentY);
+    currentY += institution.length * 10;
 
-    currentY += 12;
-
-    this.pdf.setFontSize(9);
-    this.pdf.setFont('helvetica', 'normal');
     this.pdf.setTextColor(this.colors.textLight);
-    this.pdf.text(`${education.period} | ${education.grade}`, x, currentY);
-
-    return currentY + 20;
+    const meta = this.pdf.splitTextToSize(`${education.period} · ${education.grade}`, width);
+    this.pdf.text(meta, x, currentY);
+    return currentY + meta.length * 10;
   }
 
+  /** Title, then institution and date in the muted colour, sized for the sidebar. */
   private drawCertifications(
     certifications: Array<{ title: string; institution: string; period: string }>,
     x: number,
@@ -613,65 +590,46 @@ export class AtsPdfService {
     let currentY = y;
 
     certifications.forEach(cert => {
-      this.pdf.setFontSize(10);
+      this.pdf.setFontSize(8.5);
       this.pdf.setFont('helvetica', 'bold');
       this.pdf.setTextColor(this.colors.primary);
-      this.pdf.text(cert.title, x, currentY);
+      const title = this.pdf.splitTextToSize(cert.title, width);
+      this.pdf.text(title, x, currentY);
+      currentY += title.length * 10;
 
-      currentY += 12;
-
-      this.pdf.setFontSize(9);
+      this.pdf.setFontSize(8);
       this.pdf.setFont('helvetica', 'normal');
       this.pdf.setTextColor(this.colors.textLight);
-      this.pdf.text(cert.institution, x, currentY);
-      this.pdf.text(cert.period, x + width - 80, currentY, { align: 'right' });
-
-      currentY += 18;
+      this.pdf.text(`${cert.institution} · ${cert.period}`, x, currentY);
+      currentY += 15;
     });
 
     return currentY;
   }
 
-  private drawReferences(
-    references: Array<{ name: string; company: string; email: string; phone: string }>,
-    x: number,
-    y: number,
-    width: number
-  ): number {
+  /** Names and companies only: referees' contact details are shared on
+   *  request, never printed. */
+  private drawReferences(references: Reference[], x: number, y: number, width: number): number {
     let currentY = y;
-    const cardWidth = (width - 10) / 2;
 
-    references.forEach((ref, index) => {
-      const isLeft = index % 2 === 0;
-      const cardX = isLeft ? x : x + cardWidth + 10;
-
-      if (!isLeft && index > 0) {
-        // right card — same row, no Y increment
-      } else if (index >= 2) {
-        currentY += 65;
-      }
-
-      this.pdf.setDrawColor(this.colors.border);
-      this.pdf.setLineWidth(0.5);
-      this.pdf.rect(cardX, currentY - 10, cardWidth, 60);
-
-      this.pdf.setFontSize(9);
+    references.forEach(ref => {
+      this.pdf.setFontSize(8.5);
       this.pdf.setFont('helvetica', 'bold');
       this.pdf.setTextColor(this.colors.primary);
-      this.pdf.text(ref.name, cardX + 5, currentY);
+      this.pdf.text(ref.name, x, currentY);
 
       this.pdf.setFontSize(8);
       this.pdf.setFont('helvetica', 'normal');
       this.pdf.setTextColor(this.colors.accent);
-      this.pdf.text(ref.company, cardX + 5, currentY + 12);
-
-      this.pdf.setFontSize(7);
-      this.pdf.setTextColor(this.colors.textLight);
-      this.pdf.text(ref.email, cardX + 5, currentY + 28);
-      this.pdf.text(ref.phone, cardX + 5, currentY + 40);
+      this.pdf.text(this.pdf.splitTextToSize(ref.company, width), x, currentY + 10);
+      currentY += 24;
     });
 
-    return currentY + 75;
+    this.pdf.setFontSize(7.5);
+    this.pdf.setFont('helvetica', 'italic');
+    this.pdf.setTextColor(this.colors.textLight);
+    this.pdf.text('Contact details available on request.', x, currentY);
+    return currentY + 10;
   }
 
   // ─── Tenure Calculation ───────────────────────────────────────────────────────
@@ -733,6 +691,7 @@ export class AtsPdfService {
 
     clean = clean.replace(/[\u{1F300}-\u{1F9FF}]|[\u{2600}-\u{26FF}]|[\u{2700}-\u{27BF}]|[\u{1F000}-\u{1F02F}]|[\u{1F0A0}-\u{1F0FF}]|[\u{1F100}-\u{1F64F}]|[\u{1F680}-\u{1F6FF}]|[\u{1F910}-\u{1F96B}]|[\u{1F980}-\u{1F9E0}]/gu, '');
     clean = clean.replace(/[\u{FE00}-\u{FE0F}]|[\u{200D}]/gu, '');
+    clean = clean.replace(/₦\s?/g, 'NGN ');  // the standard PDF fonts have no ₦ glyph
     clean = clean.replace(/→/g, ' to ');
     clean = clean.replace(/←/g, ' from ');
     clean = clean.replace(/↳/g, '');

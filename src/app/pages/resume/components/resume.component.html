@@ -95,22 +95,21 @@
                         </div>
                     </section>
 
-                    <!-- Skills Section with improved progress bars -->
+                    <!-- Skills: tiers a reader can test, not percentages -->
                     <section class="skills-section">
                         <h3>SKILLS</h3>
                         <div class="skills-list">
-                            @for (skill of skills; track skill.name) {
-                            <div class="skill-item">
-                                <div class="skill-header">
-                                    <span class="skill-name">{{skill.name}}</span>
-                                    <span class="skill-level">{{skill.level}}%</span>
-                                </div>
-                                <div class="skill-progress">
-                                    <div class="progress-bar" [style.width.%]="skill.level"
-                                        [style.--progress-width]="skill.level + '%'" [class.animated]="isInView">
-                                        <div class="progress-fill"></div>
-                                    </div>
-                                </div>
+                            @for (group of skills; track group.tier) {
+                            <div class="skill-tier" [class.skill-tier-ai]="group.tier === 'AI-augmented delivery'">
+                                <h4 class="skill-tier-name">{{ group.tier }}</h4>
+                                <ul class="skill-chips">
+                                    @for (skill of group.skills; track skill) {
+                                    <li class="skill-chip">{{ skill }}</li>
+                                    }
+                                </ul>
+                                @if (group.note) {
+                                <p class="skill-tier-note">{{ group.note }}</p>
+                                }
                             </div>
                             }
                         </div>
@@ -120,30 +119,12 @@
                     <section class="hobbies-section">
                         <h3>TECH I'M WATCHING</h3>
                         <div class="hobbies-list">
+                            @for (item of techWatching; track item; let i = $index) {
                             <div class="hobby-item">
-                                <div class="hobby-icon">⚡</div>
-                                <span>Angular 21 Signals</span>
+                                <div class="hobby-icon" aria-hidden="true">{{ ['⚡', '🤖', '🧪', '🧠', '☁️'][i] }}</div>
+                                <span>{{ item }}</span>
                             </div>
-                            <div class="hobby-item">
-                                <div class="hobby-icon">🤖</div>
-                                <span>AI-Assisted Dev</span>
-                            </div>
-                            <div class="hobby-item">
-                                <div class="hobby-icon">🦀</div>
-                                <span>ml5.js</span>
-                            </div>
-                            <div class="hobby-item">
-                                <div class="hobby-icon">🧪</div>
-                                <span>Playwright / Vitest</span>
-                            </div>
-                            <div class="hobby-item">
-                                <div class="hobby-icon">🏗️</div>
-                                <span>Stocks / Trades</span>
-                            </div>
-                            <div class="hobby-item">
-                                <div class="hobby-icon">☁️</div>
-                                <span>Edge Computing</span>
-                            </div>
+                            }
                         </div>
                     </section>
 
@@ -193,34 +174,10 @@
                     <section class="profile-section">
                         <h3>PROFILE</h3>
                         <div class="profile-content">
-                            <p>
-                                Senior Angular Engineer and Frontend Technical Lead with 9+ years of experience
-                                architecting scalable web applications and leading high-performing development teams.
-                                Proven track record of leading 6+ engineers at Zenith Bank and Globus Bank, driving
-                                architectural decisions across cross-functional teams, and delivering enterprise-grade
-                                solutions serving 100,000+ users.
-                            </p>
-                            <p>
-                                Expert in Angular v4 - v19+, TypeScript, and modern frontend architecture patterns including
-                                micro-frontends and server-side rendering. Demonstrated success in establishing CI/CD
-                                pipelines, implementing secure coding practices, and mentoring teams to achieve 40%
-                                faster delivery cycles.
-                            </p>
-                            <p>
-                                Led architectural review meetings with Designers, Engineers, QA, Product officers, and
-                                Business managers, ensuring technical solutions align with business objectives.
-                                Specialized in fraud detection systems, trade finance applications, and AI-powered
-                                productivity platforms.
-                            </p>
-                            <p>
-                                Results-oriented engineer passionate about leveraging cutting-edge technologies to
-                                deliver measurable business value. Equally comfortable owning hands-on delivery as
-                                mentoring peers, with a proven ability to transform technical challenges into strategic
-                                advantages.
-                            </p>
-                            <p class="profile-availability">
-                                Currently based in Lagos, Nigeria — actively seeking Senior Frontend Engineer and Tech Lead roles in Canada, UK, US, and worldwide. <b>Open to remote work and willing to relocate anywhere</b>.
-                            </p>
+                            @for (para of profile.paragraphs; track $index) {
+                            <p>{{ para }}</p>
+                            }
+                            <p class="profile-availability"><b>{{ profile.availability }}</b></p>
                         </div>
                     </section>
 
@@ -289,7 +246,7 @@
                                 <!-- achievements-section  -->
                                 @if (job.achievements?.length) {
                                 <div class="achievements-section">
-                                    <h6>Key Achievements & Business Impact</h6>
+                                    <h6>Highlights</h6>
                                     <ul>
                                         @for (achievement of job.achievements!; track $index) {
                                         <li>{{achievement}}</li>

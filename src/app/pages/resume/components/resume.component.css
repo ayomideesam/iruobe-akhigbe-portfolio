@@ -292,72 +292,53 @@ h3 {
     width: 100%;
 }
 
-/* Skills Section */
+/* Skills Section — tiers with chips */
 .skills-list {
     display: flex;
     flex-direction: column;
-    gap: 1.25rem;
+    gap: 1.1rem;
     margin-bottom: 2.5rem;
 }
 
-.skill-item {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
+.skill-tier-name {
+    margin: 0 0 0.5rem;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--link-color);
 }
 
-.skill-header {
+.skill-chips {
     display: flex;
-    justify-content: space-between;
-    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
 }
 
-.skill-name {
-    font-size: 0.9rem;
+.skill-chip {
+    padding: 0.3rem 0.6rem;
+    font-size: 0.78rem;
+    line-height: 1.35;
     color: var(--text-primary);
-    font-weight: 500;
+    border-radius: 6px;
+    background-color: var(--right-bg);
+    border: 1px solid var(--progress-bg);
 }
 
-.skill-level {
-    font-size: 0.75rem;
-    font-weight: 500;
+.skill-tier-ai {
+    padding: 0.75rem;
+    border-radius: 10px;
+    border: 1px dashed var(--link-color);
+}
+
+.skill-tier-note {
+    margin: 0.55rem 0 0;
+    font-size: 0.78rem;
+    line-height: 1.5;
     color: var(--text-secondary);
-    opacity: 0.9;
-    min-width: 45px;
-    text-align: right;
-}
-
-.skill-progress {
-    height: 8px;
-    background-color: var(--progress-bg);
-    border-radius: 6px;
-    overflow: hidden;
-}
-
-.progress-bar {
-    height: 100%;
-    width: 0;
-    top: 0;
-    background: var(--progress-fill);
-    /* transform-origin: left; */
-    border-radius: 6px;
-    transition: width 1.2s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-/* Add animation for progress bars */
-@keyframes fillProgress {
-    from {
-        width: 0;
-    }
-
-    to {
-        width: var(--progress-width);
-    }
-}
-
-.progress-bar.animated {
-    width: var(--progress-width);
-    animation: fillProgress 1.2s cubic-bezier(0.4, 0, 0.2, 1) forwards;
 }
 
 /* Hobbies Section */

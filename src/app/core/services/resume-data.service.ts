@@ -1,16 +1,18 @@
 import { Injectable } from "@angular/core";
 
-interface Skill {
-   name: string;
-   level: number;
+/**
+ * One rung of the skills ladder. Tiers replace the old 0–100% bars: a
+ * percentage invites "what does 95% of Angular mean?", a tier is a claim an
+ * interviewer can test and the CV can defend.
+ */
+export interface SkillTier {
+   tier: 'Expert' | 'Proficient' | 'Working' | 'AI-augmented delivery';
+   skills: string[];
+   /** One line of evidence or context shown under the tier. */
+   note?: string;
 }
 
-interface KeyAchievement {
-   description: string;
-   icon?: string;
-}
-
-interface Job {
+export interface Job {
    company: string;
    role: string;
    period: string;
@@ -21,103 +23,96 @@ interface Job {
    technicalLeadership?: string[];
 }
 
-interface Course {
+export interface Course {
    title: string;
    institution: string;
    period: string;
 }
 
-interface Reference {
+/** Referees are named, never contacted through the CV: their emails and
+ *  phone numbers are theirs to share, so they are not stored here at all. */
+export interface Reference {
    name: string;
    company: string;
-   email: string;
-   phone: string;
 }
 
+export interface Profile {
+   paragraphs: string[];
+   availability: string;
+}
 
+// Content rules for this file (2026-10-04, agreed with Akhigbe):
+// - Every figure must be one he can defend in an interview: verified in the
+//   repos (776 tests, 83 days, 15 desks, 14 rules) or the same business
+//   outcome the portfolio's project cards already state. No invented % gains.
+// - 2026 work was team work (seven-person team); never "solo" or "end to end".
+// - CAP: Retail module only in production; no committee voting. Fraud: no
+//   real-time streaming. Import: no SWIFT/LC/BC/FX-rate features.
+// - Two pages: 4–6 bullets for the current role, 2–4 for the rest.
 @Injectable({
    providedIn: 'root'
 })
 export class ResumeDataService {
 
-   // getSkills(): Skill[] {
-   //    return [
-   //       { name: "Git version Control, Node Package Modules(npm)", level: 100 },
-   //       { name: "Angular 4 - 16 & TypeScript", level: 95 },
-   //       { name: "Angular State Management with NGXS Store", level: 100 },
-   //       { name: "HTML5 & CSS3", level: 100 },
-   //       { name: "Javascript & jQuery", level: 95 },
-   //       { name: "Tailwind CSS & Bootstrap", level: 95 },
-   //       { name: "JS Reactive Programming, RXJS libraries", level: 100 },
-   //       { name: "Jenkins & Postman & MySQL & JMeter", level: 100 },
-   //       { name: "Angular Unit testing with Jest, TDD, BDD", level: 95 },
-   //       { name: "AWS, Continuous Integration/CD, Azure, Selenium", level: 100 },
-   //       { name: "PHP & Laravel Framework", level: 95 },
-   //       { name: "Browser Dev Tools & Responsive UI Components", level: 95 },
-   //       { name: "Consuming APIs from NodeJs, C#/DotNet, PHP, Java", level: 100 }
-   //    ];
-   // }
-   // Updated getSkills() method in ResumeDataService
-   // This strategic reorganization leads with leadership capabilities - the highest value for senior roles
+   getProfile(): Profile {
+      return {
+         paragraphs: [
+            "Senior frontend engineer with 9+ years building the systems Nigerian banks run on: credit approval, fraud monitoring, trade finance and NIP/NEFT/NAPS payments. Angular specialist (v4 to v22) who leads the frontend inside cross-functional delivery teams — architecture, written standards, code review and mentoring, from kickoff to CAB approval.",
+            "I build with an AI-augmented workflow: Claude Opus 5.5 and Fable 5.1 through Claude Code and MCP, held to written standards (CLAUDE.md constitutions plus architecture, security and audit docs) so speed never costs quality. On Globus Trade Export it helped our seven-person team go from an empty repository to final UAT in 83 days, with 776 Vitest tests and npm audit at 0 — and it lets me ship production features in React, Next.js and Vue at pace."
+         ],
+         availability: "Based in Lagos, Nigeria — open to Senior Frontend Engineer and Tech Lead roles in the UK, US, Canada and worldwide. Remote-ready and willing to relocate."
+      };
+   }
 
-   getSkills(): Skill[] {
+   getSkills(): SkillTier[] {
       return [
-         // CORE ANGULAR & TYPESCRIPT
-         { name: "Angular 17/18/19/20 (Standalone Components, Signals, Control Flow)", level: 95 },
-         { name: "Angular Signals, Computed Signals & Effect API", level: 95 },
-         { name: "TypeScript 5.x Advanced Patterns & ES2024+", level: 95 },
-         { name: "Angular State Management (NgRx, NGXS, Signal Store)", level: 100 },
-         { name: "RxJS Reactive Programming & Observables", level: 100 },
-         { name: "Angular Reactive Forms, Template-driven Forms & Custom Validators", level: 95 },
-         { name: "Angular Router, Route Guards, Resolvers & Lazy Loading", level: 95 },
-         { name: "Angular Defer Loading, @if/@for/@switch Control Flow", level: 95 },
-         { name: "Angular Universal (SSR), Hydration & Progressive Web Apps", level: 90 },
-
-         // CORE TECHNOLOGIES
-         { name: "HTML5, CSS3 & CSS preprocessors (SASS/SCSS) + Responsive Design", level: 100 },
-         { name: "JavaScript ES2024+ & Modern JS APIs", level: 95 },
-         { name: "Tailwind CSS, Bootstrap & UI Component Libraries", level: 95 },
-         { name: "Ng-Zorro, Ng-Bootstrap, PrimeNG & Angular Material", level: 90 },
-         { name: "Translating Figma/Adobe design mockups into functional applications", level: 99 },
-
-         // ARCHITECTURE & PERFORMANCE
-         { name: "Frontend Architecture & System Design", level: 95 },
-         { name: "Complex Data Flow Architecture", level: 95 },
-         { name: "Performance Optimization & Core Web Vitals", level: 95 },
-         { name: "Bundle Analysis, Tree Shaking & Lazy Loading Strategies", level: 95 },
-         { name: "Secure Coding Practices & OWASP Compliance", level: 100 },
-
-         // TESTING & QUALITY
-         { name: "Test-Driven Development (TDD) & BDD", level: 95 },
-         { name: "Angular Unit Testing (Jest, Jasmine, Karma, Vitest)", level: 95 },
-         { name: "End-to-End Testing (Cypress, Playwright, Selenium)", level: 100 },
-
-         // DEVOPS & INTEGRATION
-         { name: "RESTful APIs, GraphQL & Microservices Integration", level: 100 },
-         { name: "Angular HttpClient, Interceptors & HTTP State Management", level: 100 },
-         { name: "Payment Gateway Integration & Financial APIs", level: 100 },
-         { name: "CI/CD Pipeline Design & Management (Jenkins, GitHub Actions)", level: 100 },
-         { name: "JavaScript Build Tooling (Webpack, Vite, esbuild, Gulp)", level: 90 },
-         { name: "AWS Cloud Services & Deployment Strategy", level: 95 },
-         { name: "Azure DevOps Management", level: 90 },
-         { name: "Git version Control, Node Package Modules (npm, pnpm)", level: 100 },
-
-         // LEADERSHIP (last)
-         { name: "Technical Team Leadership & Mentoring (6+ Engineers)", level: 100 },
-         { name: "Code Review Processes & Quality Assurance", level: 100 },
-         { name: "Cross-functional Collaboration & Stakeholder Management", level: 100 }
+         {
+            tier: 'Expert',
+            skills: [
+               'Angular v4–v22 (Signals, standalone, control flow, SSR)',
+               'TypeScript',
+               'RxJS',
+               'NgRx Signal Store · NgRx · NGXS',
+               'Frontend architecture & design systems',
+               'Vitest · Jasmine/Karma · Playwright',
+               'Web security (OWASP) & dependency audits',
+               'Performance & Core Web Vitals',
+               'HTML5 · CSS3/SCSS · accessible, responsive UI',
+               'Code review, mentoring & merge protocols'
+            ]
+         },
+         {
+            tier: 'Proficient',
+            skills: [
+               'React',
+               'Next.js',
+               'Angular Material · Bootstrap · Tailwind',
+               'REST contracts (Postman, Swagger)',
+               'CI/CD: Azure DevOps · Jenkins · Netlify'
+            ]
+         },
+         {
+            tier: 'Working',
+            skills: ['Vue.js', 'Node.js / TypeScript APIs', 'AWS (S3, SNS, SQS)']
+         },
+         {
+            tier: 'AI-augmented delivery',
+            skills: ['Claude Opus 5.5 & Fable 5.1', 'Claude Code · MCP · agent skills', 'CLAUDE.md repo constitutions'],
+            note: 'Scaffold and ship in any framework at speed, with tests and audits as the gate.'
+         }
       ];
+   }
+
+   getTechWatching(): string[] {
+      return ['Zoneless Angular & Signal Forms', 'MCP & agentic tooling', 'Playwright / Vitest', 'ml5.js', 'Edge computing'];
    }
 
    getKeyTechnicalAchievements(): string[] {
       return [
-         "🏗️ **Architectural Leadership**: Partnered in technical and product design reviews to shape Zenith Bank's frontend solution (X-PATH, Tax Clearance, Domestic Transfer), and also actively participated in the design and review process of 6 mission-critical banking applications at Globus Bank (Trade Finance Import, Trade Export (NXP), Pay-with-Transfer On POS, Anti-Fraud Management, NRBVN (Non Resident Bank Verification Number), Credit Approval Portal), enabling independent team deployment and reducing inter-team dependencies by 70%.",
-
-         "👥 **Team Leadership & Mentoring**: Led and mentored 6+ frontend engineers across multiple projects, establishing code review processes that improved code quality by 35% and team velocity by 45%, resulting in 3 team promotions",
-
-         "🚀 **Angular Migration Excellence**: Led Angular v16→v19 migrations implementing hybrid security enhancements (in-memory + sessionStorage), eliminating 11 vulnerabilities per application to zero production vulnerabilities with 40% performance improvements",
-
-         "🎯 **Business Impact**: Architected a fraud detection system monitoring all bank transactions, achieving 100% coverage within first week of deployment and reducing fraudulent activities by 45%"
+         "🏦 **Two platforms through CAB**: Led the frontend of Credit Approval (CAP) and Trade Export (NXP) at Globus Bank; both roll out to production in October 2026.",
+         "⚡ **Empty repo to UAT in 83 days**: Trade Export, 10 July to 1 October 2026 — 776 Vitest tests and npm audit at 0, with an AI-augmented workflow.",
+         "🛡️ **Fraud at full coverage**: 100% of bank transactions monitored in week one; fraudulent incidents down 45% within 90 days.",
+         "💸 **Payments at national scale**: ProjectTiger at Zenith Bank processed ₦100B+ in its first week live, with zero downtime."
       ];
    }
 
@@ -125,143 +120,40 @@ export class ResumeDataService {
       return [
          {
             company: "Globus Bank Plc",
-            role: "Senior Frontend Engineer - Grade (A.B.O)",
-            period: "Jan 2026 — Present",
-            location: "Victoria Island",
-            description: "Promoted to Associate Designate grade. The senior frontend engineer in a seven-person delivery team — a second frontend engineer, two senior backend engineers, a project manager, a product owner and a QA tester — that shipped the Credit Approval Process (CAP) platform and, from July 2026, the new Globus Trade Export (NXP) platform. Both passed business CAB and roll out to production in October 2026.",
-
-            technicalLeadership: [
-               "Led frontend architecture for CAP alongside a second frontend engineer: 230+ standalone Angular 20 components, 26 reusable shared components, 50 services and 20 lazy-loaded routes, designed for four facility module tracks (Retail, Corporate, Staff Loan, Product Program) and three workflow stages (Facility Approval, Disbursement, Deferral), with the Retail module shipping first",
-               "Led the frontend of the Globus Trade Export (NXP) platform from kickoff on 10 July 2026: a from-scratch Angular 21 build on the bank's own globuswebcomponents design system, integrated against the live APIs from 18 August with the two senior backend engineers, taken through two stakeholder walkthroughs in September and final UAT on 1 October with the project manager, product owner and QA tester",
-               "Drove the Angular v19 → v20 migration across the CAP codebase, adopting fully signal-based component contracts (input(), output(), viewChild(), linkedSignal(), resource()) and eliminating NgModules — including resolving a critical Vite 6/7 API incompatibility that had taken down the team's dev server",
-               "Set the frontend engineering standards for the team's two-branch workflow (AIBranch + EIBranch): wrote and maintain ANGULAR-20-STANDARDS.md and the merge protocol that every integration goes through, covering component contracts, signal-graph discipline and conflict-resolution rules",
-               "Reviewed every merge into the working branch and mentored the second frontend engineer on modern Angular patterns — standalone components, @if/@for control flow, inject() dependency injection and reactive signal architecture"
-            ],
-
+            role: "Senior Frontend Engineer",
+            period: "Feb 2024 — Present",
+            location: "Victoria Island, Lagos",
+            description: "The senior frontend engineer in a seven-person delivery team; promoted a grade in January 2026. I set the frontend architecture and standards, review every merge and mentor the second frontend engineer.",
             achievements: [
-               "Shipped the Credit Approval Process platform with the team — digitising Globus Bank's credit lifecycle from account officer origination through a 15-desk approval chain that ends at the MCC and BCC committees, and post-approval disbursement and deferral workflows — starting with the Retail module, which passed business CAB for an October 2026 production rollout (the Corporate module is paused at ~10% build since the team moved to Trade Export in July 2026)",
-               "Took the Trade Export (NXP) platform from an empty repository on 10 July 2026 to final UAT on 1 October and business CAB approval with the team; I led the Export frontend — 13 routed pages, 3 data services and 40+ endpoints across NXP applications, the NESS levy payment (a customer-account debit gated on a resolved lookup, an unpaid levy and the SHIPMENT stage), repatriation of export proceeds with a ±10% tolerance band, and cancellation & closure",
-               "Led the frontend of CAP's Disbursement workflow: multiple drawdowns per facility validated against the undrawn balance, a four-view By Facility / By Request queue, COO and CPO approval with live loan-booking status, currency-aware screens with SOFR base-rate resolution, VAT-rate and fee calculations, vendor account name verification, and the matching Deferral flows",
-               "Built the approval journey with the backend team: role-based queues and landing routes for all 15 desks, Approve / Return-to-any-lower-desk / Reject with comments, the MD's offer-letter decision, a 48-hour SLA flag, and the 17-desk disbursement and 8-desk deferral chains that open after approval",
-               "Integrated the origination background checks with the backend engineers: AML screening against PEP, Sanction and AMC lists with per-field fuzzy-match scores, credit-bureau reports from FirstCentral, CreditRegistry and CBN CRMS, director- and group-related flags, and the single-obligor-limit impact — all before the request enters the approval chain, replacing manual compliance steps",
-               // Withheld until CAP's admin module ships — no admin screens exist in CAP-Frontend yet (2026-10-04).
-               // "Delivered with the team a full admin control plane enabling Admin Officers to edit process flows, define approval paths, set facility limits per approver, manage custom form tabs by facility type, configure escalation paths and user notifications, and override insufficient-fund blocks with justification — with all admin actions requiring dual-authorisation approval from the Admin Authorizer role",
-               "Led the Angular 20 migration and resolved the Vite 7 compatibility breakage that had stopped the dev server; eliminated 83 Problems-tab warnings across the codebase; wrote an automated Python script patching -webkit-backdrop-filter compliance across 202 CSS and HTML files"
-            ],
-
-            technicalAchievements: [
-               "Designed, with the second frontend engineer, four parallel facility module tracks on a unified signal-based form engine — each track with its own multi-step stepper, document compliance gates, section-level validation, and track-specific governance review stages — sharing one set of base components and services with no duplication across tracks",
-               "Encoded the backend's 15-desk sequential approval chain into Angular routing and UI state — Account Officer → Branch Manager → BFG Head → Zonal Head → Group Head → Legal Officer → Head of Legal → Credit Analyst → Head Credit → CRO → ED Business → ED Risk → MD → MCC → BCC — with lazy-loaded isolated layout shells and a role-normalising auth guard per persona",
-               "Designed a two-service section-scoped comment system used across all three workflow stages: CommentContextService (BehaviorSubject tracking section name, RequestEntityType enum — Facility/Disbursement/Deferral — parent tab index, inner section, disbursement ID and index) paired with CommentManagementService (loadAndTransformCommentsBySection() — a single RxJS Observable composition method handling API response normalisation, code 00/01 branching, GbCommentFormat transformation, name extraction from email, and date formatting) consumed by every child section with zero boilerplate duplication",
-               // Withheld with the matching achievement above until CAP's admin module ships.
-               // "Built the admin control plane screens for five operator personas (Admin Officer, Admin Authorizer, Profile Manager/Internal Control, Application Manager, Internal Audit Officer) with the team — covering process flow editing, user lifecycle management from Active Directory, approval path configuration, facility type and custom tab management, veto power toggling, and report generation filtered by date, branch, unit, facility type, and status",
-               "Set up the Trade Export codebase signals-first on Angular 21 — standalone components with zero NgModules, an NgRx Signal Store for session and roles, httpResource reads and OnPush throughout — migrated its tests from Karma to Vitest (776 passing), held npm audit at 0 across dev and production trees, and maintained 42 documented patches to the bank's design-system package",
-               "Applied an npm override strategy to pin security-sensitive transitive dependencies (esbuild, ws, postcss, serialize-javascript) with a documented InfoSec risk assessment for audit compliance; maintained zero production vulnerabilities across the Angular 20 codebase"
-            ]
-         },
-         {
-            company: "Globus Bank Plc",
-            role: "Senior Frontend Engineer - Grade (S.E.A)",
-            period: "Feb 2024 — Dec 2025",
-            location: "Victoria Island",
-            description: "Led enterprise application development while establishing engineering excellence and mentoring development teams across mission-critical banking systems serving 100,000+ daily users.",
-
-            technicalLeadership: [
-               "Architected three mission-critical enterprise banking applications (Fraud Management, Trade Finance — Import, Credit Approval Portal)",
-               "Led Angular v16→v19 migrations achieving zero production vulnerabilities & 40% performance improvements",
-               "Established technical standards & best practices across frontend development teams",
-               "Mentored junior & mid-level developers through code reviews and pair programming"
-            ],
-
-            achievements: [
-               "Delivered the Fraud Management System monitoring all bank transactions, achieving 100% coverage within first week of deployment",
-               "Led Angular v16→v19 migration implementing hybrid security architecture, eliminating 11 vulnerabilities to zero",
-               "Delivered the Globus Trade Application (Import) achieving 100% adoption by trade operations team, reducing processing time by 60%",
-               "Architected Credit Approval Portal managing end-to-end credit facility lifecycle with multi-step approval workflows"
-            ],
-
-            technicalAchievements: [
-               "Designed hybrid security enhancements separating sensitive data into in-memory storage while maintaining auth tokens in sessionStorage",
-               "Architected the fraud detection frontend around 14 weighted rules covering customer behaviour (SIM swap, PIN and device changes) and transaction attributes (velocity, amount, time, high-risk IPs, watch-listed BVNs)",
-               "Built the fraud dashboards and review flow: inflow vs outflow trends, channel analysis, per-transaction risk scores, and the PND/lien call-back review with maker-checker approval",
-               "Created reusable component library reducing development time by 40% across all three applications",
-               "Architected Credit Approval Portal from inception: designed the four-module (Retail, Corporate, Staff Loan, Product Program) multi-track form engine, the 15-desk sequential approval routing, section-scoped comment architecture, and the origination background checks (AML/PEP screening, credit-bureau reports, director flagging)"
+               "Led the Trade Export (NXP) frontend from an empty repository on 10 July 2026 to final UAT on 1 October and business CAB approval: 13 routed pages and 40+ endpoints for NXP applications, the NESS levy, repatriation and closure — signals-first on Angular 21 with NgRx Signal Store, tests moved to Vitest (776 passing), npm audit held at 0.",
+               "Led CAP's frontend architecture with a second engineer: 230+ standalone Angular 20 components, a 15-desk approval chain to the MCC and BCC committees, AML screening and credit-bureau checks (FirstCentral, CreditRegistry, CBN CRMS) at origination, and the disbursement and deferral flows. The Retail module passed CAB for October 2026.",
+               "Delivered the Fraud Management System frontend (14 weighted rules, PND/lien restriction, call-back maker-checker review, AG Charts dashboards) and the Trade Import platform (Form M with an FX-validity gate, shipping documents by bill of lading, ECD/PAAR review), adopted by the whole trade-operations team within six months.",
+               "Wrote the team's standards — Angular standards, branch-merge protocol, npm-audit policy — and the CLAUDE.md files that make AI agents follow them; drove the Angular 19 → 20 migration across CAP."
             ]
          },
          {
             company: "HiedBerg LTD",
-            role: "Senior Angular Engineer & Technical Lead (Contract)",
+            role: "Senior Angular Engineer & Tech Lead (Contract)",
             period: "Jun 2024 — Sept 2024",
             location: "United Kingdom (Remote)",
-            description: "Remote UK contract engagement building COSTAFF, an innovative AI Digital Worker Application, while collaborating with a frontend team to deliver enterprise-grade solutions.",
-
-            technicalLeadership: [
-               "Mentored and coordinated 6 frontend developers, improving team velocity by 45% through technical guidance",
-               "Established coding standards and created modular component library reducing development time by 50%",
-               "Implemented automated testing achieving 90% code coverage & reduced deployment cycles to 2 days"
-            ],
-
+            description: "Remote contract with a UK company building COSTAFF, an AI digital-worker platform for enterprise clients across the Middle East.",
             achievements: [
-               "Architected & launched COSTAFF AI Digital Worker Platform serving enterprise clients across Middle East",
-               "Led development of AI-powered productivity suite achieving 85% reduction in calendar management time",
-               "Deployed automated invoice generation processing 10,000+ invoices monthly with 99.9% accuracy",
-               "Integrated multilingual support covering 8 Middle Eastern languages, expanding market reach by 40%"
-            ],
-
-            technicalAchievements: [
-               "Designed scalable architecture supporting 100,000+ concurrent users with sub-second response times",
-               "Implemented real-time document processing handling 50,000+ documents daily",
-               "Achieved 99.9% system availability through robust error handling & monitoring",
-               "Reduced application load time by 65% through lazy loading & code splitting"
+               "Led the Angular frontend and coordinated 6 frontend developers: Gmail, Google Calendar and OpenAI integrations behind an AI email assistant (summaries, suggested replies) and a scheduling agent.",
+               "The scheduling agent moves flexible meetings around focus time to resolve conflicts, cutting calendar-management time by 85% for client teams.",
+               "Set the team's coding standards and a shared component library on Angular 16 with NGXS."
             ]
          },
          {
             company: "Zenith Bank PLC",
             role: "Frontend Team Lead",
-            period: "Apr 2023 — Feb 2024",
-            location: "Victoria Island, Lagos State",
-            description: "Partnered with and mentored a cross-functional frontend team of 6+ engineers while architecting mission-critical enterprise banking applications and facilitating architectural decision-making.",
-
-            technicalLeadership: [
-               "Guided and mentored a frontend development team of 8 engineers, establishing coding standards that improved code quality by 35%",
-               "Facilitated weekly architectural review meetings with cross-functional teams including designers, developers, QA, & business managers",
-               "Established CI/CD pipelines using Jenkins achieving 99.2% successful build rate and seamless deployments",
-               "Mentored junior developers through pair programming, resulting in 3 team promotions and 40% faster feature delivery"
-            ],
-
+            period: "Dec 2022 — Feb 2024",
+            location: "Victoria Island, Lagos",
+            description: "Joined as a Senior Frontend Engineer and was promoted to Frontend Team Lead in April 2023, leading 6 frontend engineers across the bank's payments and collections platforms.",
             achievements: [
-               "Architected & delivered Domestic Transfer System processing billions in transactions within first week of deployment",
-               "Led ProjectTiger payment system development, reducing transaction processing time by 70% with 90% positive user feedback",
-               "Improved team sprint completion rates from 19% to 85% and velocity from 8 to 28 story points per sprint",
-               "Reduced merchant onboarding time by 70% through dynamic integration platform design"
-            ],
-
-            technicalAchievements: [
-               "Collaborated on the architecture of a couple of scalable frontend solutions (X-path Admin, X-path Teller, X-path Data-Store, Tax Clearance, Domestic Transfer) serving 100,000+ daily banking customers",
-               "Implemented Angular Universal for SSR improving load times by 40% and SEO performance by 60%",
-               "Designed reusable component library reducing development time across projects by 60%+",
-               "Maintained 99.9% application uptime with comprehensive error handling and monitoring"
-            ]
-         },
-         {
-            company: "Zenith Bank PLC",
-            role: "Senior Frontend Engineer",
-            period: "Dec 2022 — Apr 2023",
-            location: "Victoria Island, Lagos State",
-            description: "Developed core banking applications and established technical foundations for enterprise-scale frontend architecture.",
-
-            achievements: [
-               "Partnered and Collaborated in Design sessions and implemented XPATH Core Banking System architecture achieving 90% completion with zero security incidents",
-               "Integrated with 15+ banking APIs while maintaining PCI DSS compliance and real-time transaction monitoring",
-               "Implemented progressive web app (PWA) capabilities increasing mobile user engagement by 45%",
-               "Achieved 90%+ code coverage through comprehensive testing strategies reducing production bugs by 50%"
-            ],
-
-            technicalAchievements: [
-               "Led implementation of lazy loading and performance optimization achieving sub-2-second page load times",
-               "Drove adoption of secure coding practices following OWASP guidelines with zero security vulnerabilities",
-               "Built foundation for micro-frontend architecture enabling independent team deployment",
-               "Established automated testing framework using Jasmine and Karma for unit and integration tests"
+               "Led the frontend of ProjectTiger, the Domestic Transfer platform for NIP, NEFT and NAPS — teller flows, approval queues, NAPS bulk direct credits and NEFT clearing sessions — which processed ₦100B+ in its first week live with zero downtime.",
+               "Led X-Path, a three-app merchant-collections suite (Admin, Teller, Data-Store) used across 350 branches; self-service merchant configuration made onboarding 70% faster.",
+               "Delivered the Zenith Tax Clearance System as its sole frontend engineer.",
+               "Ran weekly architecture reviews with design, QA and business, set the team's coding standards and Jenkins pipelines, and mentored through code review and pairing."
             ]
          },
          {
@@ -269,50 +161,19 @@ export class ResumeDataService {
             role: "Senior Frontend Engineer",
             period: "Feb 2022 — Dec 2022",
             location: "London, United Kingdom",
-            description: "Developed and maintained the Samsky Pay Application for currency conversion and payments in the UK.",
             achievements: [
-               "Built complete Samsky-Pay Payment Application with accurate exchange rates for all currencies",
-               "Developed secure wallet service for deposits/transfers with comprehensive admin panel",
-               "Integrated RemitOne(UK) payment APIs achieving 99.9% uptime"
-            ],
-            technicalAchievements: [
-               "Configured Jenkins CI/CD pipeline with Selenium E2E testing achieving 95% automation coverage",
-               "Integrated AWS services (SNS, SQS, S3) for enhanced functionality"
+               "Built the Samsky Pay web app for multi-currency conversion and payments: live exchange rates, a wallet for deposits and transfers, and the admin panel.",
+               "Integrated the RemitOne payments API and AWS (SNS, SQS, S3), with Jenkins CI and Selenium end-to-end tests."
             ]
          },
          {
             company: "Upperlink Limited",
-            role: "Frontend Engineer",
+            role: "Frontend Engineer (Mid-level → Senior)",
             period: "Jun 2018 — Feb 2022",
-            location: "Alausa, Lagos State",
-            description: "Progressed from Mid-level to Senior Engineer while leading development and QA for mission-critical financial applications.",
+            location: "Alausa, Lagos",
             achievements: [
-               "Onboarded and tested 180+ merchants/billers with 100% compliance, reducing integration time from 2 weeks to 3 days",
-               "Achieved 99.9% uptime for payment processing across multiple channels (Internet Banking, USSD, branches)",
-               "Integrated with 15+ banking APIs maintaining PCI DSS compliance with sub-2-second transaction processing"
-            ],
-            technicalAchievements: [
-               "Led testing for NIBSS GSI and EbillsPay applications, reducing post-deployment issues by 80%",
-               "Developed automated test suites using Selenium achieving 90% coverage with Jenkins CI/CD",
-               "Validated biometric verification system processing 50,000+ daily transactions with 99.99% accuracy"
-            ],
-            technicalLeadership: [
-               "Led cross-functional teams of 8-12 members across development and QA",
-               "Established coding standards improving code quality by 70% with Agile methodologies",
-               "Mentored 4 junior developers who progressed to mid-level roles"
-            ]
-         },
-         {
-            company: "Golden Scepter Limited",
-            role: "ICT & Records Management Intern",
-            period: "May 2015 — May 2016",
-            location: "Alausa, Lagos State",
-            description: "Comprehensive training in document management and web development at Union Bank HQ.",
-            achievements: [
-               "Trained in document management, fraud control, and electronic archiving with high security standards",
-               "Built responsive websites using HTML5, CSS3, JavaScript, and Bootstrap for records management",
-               "Handled records retrievals, audits, filing, and implemented disaster recovery protocols",
-               "Received Commendation Letter for exceptional performance during contract at Union Bank HQ"
+               "Built and tested payment flows for internet-banking, USSD and branch channels, onboarding 180+ merchants and billers and cutting integration time from two weeks to three days.",
+               "Led testing for the NIBSS GSI and EbillsPay integrations with Selenium suites in Jenkins CI, and mentored 4 junior developers to mid-level."
             ]
          }
       ];
@@ -321,19 +182,9 @@ export class ResumeDataService {
    getCourses(): Course[] {
       return [
          {
-            title: "Angular (Basic) Certificate",
-            institution: "HackerRank",
-            period: "Nov 28, 2022"
-         },
-         {
             title: "Secure Coding Certificate",
             institution: "IT Stack",
-            period: "May 20, 2024"
-         },
-         {
-            title: "Certificate of Language Ability",
-            institution: "Emmersion",
-            period: "Jun 2022 — Oct 2022"
+            period: "May 2024"
          },
          {
             title: "Angular, HTML, CSS, Frontend, AGILE Assessment",
@@ -341,46 +192,25 @@ export class ResumeDataService {
             period: "May 2022 — Present"
          },
          {
+            title: "Certificate of Language Ability",
+            institution: "Emmersion",
+            period: "Jun 2022 — Oct 2022"
+         },
+         {
             title: "HTML5, CSS, Pluralsight Certification",
             institution: "Pluralsight",
-            period: "Nov 2019 — Nov 2019"
+            period: "Nov 2019"
          }
       ];
    }
 
-
    getReferences(): Reference[] {
       return [
-         {
-            name: "MR. Folarin Fambegbe",
-            company: "Golden Scepter Ltd",
-            email: "info@goldenscepter.com",
-            phone: "+234 803 307 3434"
-         },
-         {
-            name: "Jibril Abdulkadir",
-            company: "Field Intelligence Inc",
-            email: "jibril.abdulkadir.ja@gmail.com",
-            phone: "+234 706 939 7914"
-         },
-         {
-            name: "Joseph Adeyemi",
-            company: "Zenith Bank Plc (Team Lead)",
-            email: "joseph.adeyemi@zenithbank.com",
-            phone: "+234 805 137 5051"
-         },
-         {
-            name: "Faith Joseph",
-            company: "Olohie Virtual",
-            email: "faithajoke@gmail.com",
-            phone: "+234 810 611 7877"
-         },
-         {
-            name: "Ekenedirichukwu Amaechi",
-            company: "INITS Limited",
-            email: "N/A",
-            phone: "+234 703 525 9954"
-         }
+         { name: "Mr. Folarin Fambegbe", company: "Golden Scepter Ltd" },
+         { name: "Jibril Abdulkadir", company: "Field Intelligence Inc" },
+         { name: "Joseph Adeyemi", company: "Zenith Bank Plc (Team Lead)" },
+         { name: "Faith Joseph", company: "Olohie Virtual" },
+         { name: "Ekenedirichukwu Amaechi", company: "INITS Limited" }
       ];
    }
 }

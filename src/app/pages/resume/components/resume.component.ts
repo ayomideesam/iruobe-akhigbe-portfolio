@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterViewInit, ElementRef, HostListener, inject, DestroyRef, ChangeDetectionStrategy } from '@angular/core';
+import { Component, AfterViewInit, ElementRef, inject, ChangeDetectionStrategy } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
 import { filter } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -6,39 +6,10 @@ import { AnalyticsService } from 'src/app/core/services/analytics.service';
 import { LoadingService } from 'src/app/core/services/loading.service';
 import { PdfService } from 'src/app/core/services/pdf.service';
 import { AtsPdfService } from 'src/app/core/services/ats-pdf.service';
-import { ResumeDataService } from 'src/app/core/services/resume-data.service';
+import { Course, Job, Profile, Reference, ResumeDataService, SkillTier } from 'src/app/core/services/resume-data.service';
 import { LearningDataService } from 'src/app/core/services/learning-data.service';
 import { SeoService } from 'src/app/core/services/seo.service';
 import { ThemeService } from 'src/app/core/services/theme.service';
-
-interface Skill {
-  name: string;
-  level: number;
-}
-
-interface Job {
-  company: string;
-  role: string;
-  period: string;
-  location: string;
-  description?: string;
-  achievements?: string[];
-  technicalAchievements?: string[];
-  technicalLeadership?: string[];
-}
-
-interface Course {
-  title: string;
-  institution: string;
-  period: string;
-}
-
-interface Reference {
-  name: string;
-  company: string;
-  email: string;
-  phone: string;
-}
 
 @Component({
     selector: 'app-resume',
@@ -48,7 +19,7 @@ interface Reference {
     standalone: false
 })
 
-export class ResumeComponent implements OnInit, AfterViewInit {
+export class ResumeComponent implements AfterViewInit {
   private elementRef = inject(ElementRef);
   private router = inject(Router);
   private themeService = inject(ThemeService);
@@ -63,9 +34,12 @@ export class ResumeComponent implements OnInit, AfterViewInit {
 
   get isDarkTheme(): boolean { return this.themeService.isDarkTheme(); }
   isGeneratingPDF = false;
-  isInView = false;
 
-  skills: Skill[] = [];
+  // Single source for the page, the visual PDF (a capture of this page) and
+  // the ATS PDF, so the three can't drift apart again.
+  profile!: Profile;
+  skills: SkillTier[] = [];
+  techWatching: string[] = [];
   employmentHistory: Job[] = [];
   courses: Course[] = [];
   references: Reference[] = [];
@@ -82,15 +56,13 @@ export class ResumeComponent implements OnInit, AfterViewInit {
   }
 
   private initializeResumeData(): void {
+    this.profile = this.resumeData.getProfile();
     this.skills = this.resumeData.getSkills();
+    this.techWatching = this.resumeData.getTechWatching();
     this.employmentHistory = this.resumeData.getEmploymentHistory();
     this.courses = this.resumeData.getCourses();
     this.references = this.resumeData.getReferences();
     this.keyTechnicalAchievements = this.resumeData.getKeyTechnicalAchievements();
-  }
-
-  ngOnInit() {
-    this.initScrollObserver();
   }
 
   ngAfterViewInit() {
@@ -158,36 +130,6 @@ export class ResumeComponent implements OnInit, AfterViewInit {
     }, 100);
   }
 
-  private initScrollObserver() {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            this.isInView = true;
-            observer.unobserve(entry.target);
-          }
-        });
-      },
-      {
-        threshold: 0.1
-      }
-    );
-
-    const skillBars = this.elementRef.nativeElement.querySelectorAll('.skill-progress');
-    skillBars.forEach((bar: any) => observer.observe(bar));
-  }
-
-  @HostListener('window:scroll')
-  onScroll() {
-    const skillBars = this.elementRef.nativeElement.querySelectorAll('.skill-progress');
-    skillBars.forEach((bar: any) => {
-      const rect = bar.getBoundingClientRect();
-      if (rect.top < window.innerHeight && rect.bottom > 0) {
-        bar.classList.add('animated');
-      }
-    });
-  }
-
   formatAchievement(achievement: string): string {
     const colonIndex = achievement.indexOf(':');
 
@@ -195,9 +137,11 @@ export class ResumeComponent implements OnInit, AfterViewInit {
       const title = achievement.substring(0, colonIndex).trim();
       const description = achievement.substring(colonIndex + 1).trim();
 
-      const emojiMatch = title.match(/^([\u{1F300}-\u{1F9FF}][\u{200D}\u{FE0F}]*)\s*/u);
+      // Pictographs (U+1F300+) and the older symbol blocks (⚡ is U+26A1);
+      // the data marks titles **bold**, which is markup, not text.
+      const emojiMatch = title.match(/^((?:[\u{1F300}-\u{1FAFF}]|[\u{2600}-\u{27BF}])[\u{200D}\u{FE0F}]*)\s*/u);
       const emoji = emojiMatch ? emojiMatch[1] : '';
-      const titleText = emoji ? title.replace(emojiMatch![0], '').trim() : title;
+      const titleText = (emoji ? title.replace(emojiMatch![0], '').trim() : title).replace(/\*\*/g, '');
 
       // Add PDF-specific attributes for easier targeting
       return `
@@ -349,15 +293,10 @@ export class ResumeComponent implements OnInit, AfterViewInit {
         name: 'AKHIGBE IRUOBE',
         title: 'SENIOR FRONTEND ENGINEER',
         phone: '+2347038772342',
-        email: 'Iruobeakhigbe@gmail.com',
+        email: 'iruobeakhigbe@gmail.com',
         linkedin: 'IRUOBE AKHIGBE',
         portfolio: 'iruobeakhigbe.netlify.app',
-        profile: [
-          'Senior Angular Engineer and Frontend Technical Lead with 9+ years of experience architecting scalable web applications and leading high-performing development teams. Proven track record of leading 6+ engineers at Zenith Bank and Globus Bank, driving architectural decisions across cross-functional teams, and delivering enterprise-grade solutions serving 100,000+ users.',
-          'Expert in Angular 17+/20, TypeScript, and modern frontend architecture patterns including standalone components, signals, micro-frontends, and server-side rendering. Demonstrated success in establishing CI/CD pipelines, implementing secure coding practices, and mentoring teams to achieve 40% faster delivery cycles.',
-          'Led architectural review meetings with designers, engineers, QA, product officers, and business managers, ensuring technical solutions align with business objectives. Specialized in fraud detection systems, credit approval platforms, trade finance applications, and AI-powered productivity platforms.',
-          'Results-oriented engineer passionate about leveraging cutting-edge technologies to deliver measurable business value. Equally comfortable owning hands-on delivery as mentoring peers, with a proven ability to transform technical challenges into strategic advantages.'
-        ],
+        profile: [...this.profile.paragraphs, this.profile.availability],
         keyAchievements: this.keyTechnicalAchievements.map(stripEmoji),
         skills: this.skills,
         employment: this.employmentHistory,
@@ -369,6 +308,7 @@ export class ResumeComponent implements OnInit, AfterViewInit {
         },
         certifications: this.courses,
         hobbies: ['Coding', 'Software Testing', 'Board Games', 'Swimming', 'Reading', 'Console Games'],
+        techWatching: this.techWatching,
         languages: ['English', 'Yoruba', `French (learning since ${this.frenchSince})`, 'Hausa'],
         references: this.references
       };
