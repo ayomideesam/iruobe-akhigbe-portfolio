@@ -73,13 +73,15 @@ describe('HomeComponent', () => {
   });
 
   describe('professional journey', () => {
-    it('should tell the same story as the CV: every role matches a CV job by company and dates', () => {
+    it('should tell the same story as the CV: each company spans the same dates as its CV roles', () => {
       const firstWord = (company: string) => company.split(' ')[0].toLowerCase();
       const jobs = new ResumeDataService().getEmploymentHistory();
       for (const e of component.experiences) {
-        const job = jobs.find(j => firstWord(j.company) === firstWord(e.company));
-        expect(job, e.company).toBeDefined();
-        expect(e.period.replace(' - ', ' — ')).toBe(job!.period);
+        // The CV lists a promotion as two roles, newest first; the home card spans both.
+        const roles = jobs.filter(j => firstWord(j.company) === firstWord(e.company));
+        expect(roles.length, e.company).toBeGreaterThan(0);
+        const span = `${roles.at(-1)!.period.split(' — ')[0]} — ${roles[0].period.split(' — ')[1]}`;
+        expect(e.period.replace(' - ', ' — ')).toBe(span);
       }
     });
 

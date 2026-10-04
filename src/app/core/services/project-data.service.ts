@@ -311,7 +311,7 @@ export class ProjectDataService {
             achievements: [
                'Reduced merchant onboarding time by 70% through a dynamic integration platform with self-service ERP configuration and automated connectivity — eliminating manual setup that previously took days',
                'Connected with client Enterprise Resource Planning (ERP) systems at 350 branches — payment events automatically updated client records at point-of-sale with zero manual reconciliation required',
-               'Improved sprint completion rate from 19% to 85% and team velocity from 8 to 28 story points per sprint — achieved through process restructuring, CI/CD pipeline improvements, and systematic technical debt elimination',
+               'Akhigbe Iruobe was named Sprint Champion — the Zenith PMO\'s highest achiever — in back-to-back sprints in March 2023; in Sprint 4 the team\'s velocity rose from 8 to 28 story points and its completion rate from 19% to 69%',
                'Architected three independently deployable Angular micro-frontend applications (Admin portal, Teller interface, Data-Store reporting) with separate build pipelines and isolated routing domains via Jenkins CI/CD',
                'Implemented Angular Universal SSR improving initial page load by 40% and SEO performance by 60% — critical for the publicly-accessible merchant-facing portal'
             ],
@@ -324,7 +324,7 @@ export class ProjectDataService {
             ],
             isHovered: false,
             stats: [
-               { value: '19→85%', label: 'Sprint Completion' },
+               { value: '19→69%', label: 'Sprint Completion' },
                { value: '180+', label: 'Merchants Onboarded' },
                { value: '15+', label: 'API Integrations' },
                { value: '70%', label: 'Faster Onboarding' }

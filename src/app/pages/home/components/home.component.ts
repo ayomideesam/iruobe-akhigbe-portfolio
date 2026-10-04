@@ -86,6 +86,8 @@ interface Experience {
   scope: string;
   /** Named work; a projectId links to that scene on /projects. */
   work: { label: string; projectId?: number }[];
+  /** An award, linked to public proof. */
+  recognition?: { label: string; href: string; proof: string };
 }
 
 interface GrowthStep {
@@ -505,6 +507,12 @@ export class HomeComponent implements OnInit, AfterViewInit {
       key: 'zenith', role: 'Frontend Team Lead', company: 'Zenith Bank PLC', period: 'Dec 2022 - Feb 2024',
       location: 'Victoria Island, Lagos', col: '#ef4444', type: 'Contract',
       promotion: 'Senior → Team Lead · Apr 2023',
+      // The Zenith PMO's own Sprint Champion and velocity slides, as posted on LinkedIn.
+      recognition: {
+        label: '2× Sprint Champion · Mar 2023',
+        href: 'https://www.linkedin.com/feed/update/urn:li:activity:7049732568681725952/',
+        proof: 'Zenith PMO slides on LinkedIn: Sprint Champion in Sprints 3 and 4, team velocity 8 → 28 points'
+      },
       scope: "Led 6 frontend engineers across the bank's payments and collections platforms.",
       work: [{ label: 'ProjectTiger', projectId: 4 }, { label: 'X-Path', projectId: 5 }, { label: 'Tax Clearance' }],
       technologies: ['Angular', 'TypeScript', 'NGXS', 'Jenkins']
@@ -531,7 +539,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
   readonly growthArc: GrowthStep[] = [
     { key: 'upperlink', year: '2018', level: 'Engineer', note: 'Payment channels & QA', scope: 0.3 },
     { key: 'samsky', year: '2022', level: 'Senior', note: 'Owned a UK payments app', scope: 0.47 },
-    { key: 'zenith', year: '2023', level: 'Team lead', note: 'Led 6 engineers', scope: 0.64 },
+    { key: 'zenith', year: '2023', level: 'Team lead', note: '2× Sprint Champion, then led 6 engineers', scope: 0.64 },
     { key: 'hiedberg', year: '2024', level: 'Tech lead', note: 'UK AI platform, remote', scope: 0.8 },
     { key: 'globus', year: '2026', level: 'Promoted', note: 'Standards for 2 CAB-approved platforms', scope: 1 }
   ];

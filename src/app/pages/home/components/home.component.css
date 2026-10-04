@@ -1323,6 +1323,24 @@ h2 {
   border: 1px solid rgba(var(--prr), 0.38);
   background: rgba(var(--prr), 0.10);
 }
+.award-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font: 600 10.5px Sora, sans-serif;
+  letter-spacing: 0.04em;
+  text-decoration: none;
+  color: var(--coffee);
+  padding: 4px 10px;
+  border-radius: 99px;
+  border: 1px solid rgba(var(--coffee-rgb), 0.45);
+  background: rgba(var(--coffee-rgb), 0.12);
+  transition: transform 0.2s ease, background 0.2s;
+}
+.award-pill-out { opacity: 0.7; transition: transform 0.2s ease; }
+.award-pill:hover { transform: translateY(-1px); background: rgba(var(--coffee-rgb), 0.2); }
+.award-pill:hover .award-pill-out { transform: translate(2px, -2px); }
+.award-pill:focus-visible { outline: 2px solid var(--coffee); outline-offset: 2px; }
 .timeline-scope { margin: 0 0 13px; font: 400 13.5px / 1.6 Sora, sans-serif; color: var(--tx); }
 .timeline-work { display: flex; flex-wrap: wrap; align-items: center; gap: 7px; margin-bottom: 13px; }
 .timeline-work-label {

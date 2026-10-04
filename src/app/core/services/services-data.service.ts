@@ -248,7 +248,7 @@ export class ServicesDataService {
                'Mentoring your developers up to a standard that outlasts the engagement',
                'Technical hiring support — screening, assessment design and interviews'
             ],
-            proof: 'Mentored 6–8 engineers across Globus Bank, Zenith Bank and a UK contract, with 3 team promotions and +45% velocity.',
+            proof: 'Led 6 frontend engineers at Zenith Bank and 6 developers on a UK contract; twice Sprint Champion on Zenith\'s X-Path programme as team velocity rose from 8 to 28 points.',
             icon: `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M16 20v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M22 20v-2a4 4 0 0 0-3-3.9"></path><path d="M16 3.1a4 4 0 0 1 0 7.8"></path></svg>`,
             accent: '#f43f5e', accentRgb: '244, 63, 94'
          }

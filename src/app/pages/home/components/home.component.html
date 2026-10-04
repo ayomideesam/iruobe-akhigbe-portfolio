@@ -385,6 +385,13 @@
                   {{ e.promotion }}
                 </span>
               }
+              @if (e.recognition; as r) {
+                <a class="award-pill" [href]="r.href" target="_blank" rel="noopener noreferrer" [title]="r.proof" [attr.aria-label]="r.label + ' — ' + r.proof + ' (opens LinkedIn)'">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 21h8M12 17v4M7 4h10v5a5 5 0 0 1-10 0V4zM17 6h3a3 3 0 0 1-3 4M7 6H4a3 3 0 0 0 3 4"></path></svg>
+                  {{ r.label }}
+                  <svg class="award-pill-out" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"></path></svg>
+                </a>
+              }
               @if (e.current) {
                 <span class="current-pill"><span class="pulse-dot"></span>Current</span>
               }
