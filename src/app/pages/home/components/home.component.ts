@@ -11,6 +11,9 @@ import { IconService } from 'src/app/core/services/icon.service';
 import { AnalyticsService } from 'src/app/core/services/analytics.service';
 import { SeoService } from 'src/app/core/services/seo.service';
 import { TestimonialsService } from 'src/app/core/services/testimonials.service';
+import { AtsPdfService } from 'src/app/core/services/ats-pdf.service';
+import { ResumeDataService } from 'src/app/core/services/resume-data.service';
+import { LearningDataService } from 'src/app/core/services/learning-data.service';
 import { uiScale } from 'src/app/core/utils/ui-scale';
 
 type ProjectKey = 'nxp' | 'costaff' | 'trade' | 'fms' | 'cap' | 'tiger' | 'xpath';
@@ -123,6 +126,9 @@ export class HomeComponent implements OnInit, AfterViewInit {
   private sanitizer = inject(DomSanitizer);
   private themeService = inject(ThemeService);
   private analytics = inject(AnalyticsService);
+  private atsPdf = inject(AtsPdfService);
+  private resumeData = inject(ResumeDataService);
+  private frenchSince = inject(LearningDataService).getFrenchJourney().startedLabel;
   private testimonialsService = inject(TestimonialsService);
   private destroyRef = inject(DestroyRef);
   private seoService = inject(SeoService);
@@ -194,7 +200,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
       key: 'xpath', title: 'X-Path — Merchant Collections', short: 'X-Path', hue: '#2dd4bf',
       url: 'xpath.zenithbank.com',
       imgs: ['/assets/img/xpath-payments.png', '/assets/img/xpath-deposits.png', '/assets/img/xpath-payments-memo.png', '/assets/img/xpath-merchants.png', '/assets/img/xpath-dashboard.png'],
-      badges: [{ name: 'Angular', bc: '#DD003166' }, { name: 'Angular Universal', bc: '#B7178C66' }, { name: 'Jenkins CI/CD', bc: '#D3383366' }],
+      badges: [{ name: 'Angular', bc: '#DD003166' }, { name: 'SignalR', bc: '#512BD466' }, { name: 'Jenkins CI/CD', bc: '#D3383366' }],
       desc: 'Merchant onboarding 70% faster — three-app Angular micro-frontend suite (Admin, Teller, Data-Store) with self-service ERP integration and automated reconciliation across 350 branches.'
     }
   };
@@ -336,6 +342,22 @@ export class HomeComponent implements OnInit, AfterViewInit {
   @HostListener('window:resize')
   onResize(): void {
     this.canExpand.set(window.innerWidth >= 821);
+  }
+
+  // ─── Hero: Download CV ───
+  // The same ATS resume the resume page produces, generated here so a recruiter
+  // gets it in one click (jsPDF loads lazily, only when asked).
+  readonly cvBusy = signal(false);
+
+  async downloadCv(): Promise<void> {
+    if (this.cvBusy()) return;
+    this.cvBusy.set(true);
+    try {
+      await this.atsPdf.generateATSFriendlyPDF(this.resumeData.getAtsResume(this.frenchSince), this.isDarkTheme);
+      this.analytics.trackEvent('Resume', 'Download', 'PDF_ATS_Hero');
+    } finally {
+      this.cvBusy.set(false);
+    }
   }
 
   // ─── Currently Building ───

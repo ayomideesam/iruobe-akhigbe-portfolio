@@ -173,6 +173,14 @@ h2 {
   font: 800 clamp(2.5rem, 5.6vw, 4.4rem) / 1.04 Outfit, sans-serif;
   letter-spacing: -0.03em;
 }
+.hero-name {
+  display: block;
+  margin-bottom: 14px;
+  font: 700 clamp(1rem, 1.4vw, 1.15rem) / 1.4 Outfit, sans-serif;
+  letter-spacing: 0.01em;
+  color: var(--tx);
+}
+.hero-name-role { font-weight: 500; color: var(--tx2); }
 .hero-line1 { display: block; color: var(--tx); cursor: default; }
 .hero-line2 {
   display: block;
@@ -236,6 +244,27 @@ h2 {
   background: rgba(var(--prr), 0.10);
   box-shadow: 0 14px 30px -12px rgba(var(--prr), 0.45);
 }
+
+.btn-cv:disabled { cursor: progress; opacity: 0.85; transform: none; }
+.btn-spinner {
+  width: 15px; height: 15px;
+  border-radius: 50%;
+  border: 2px solid rgba(var(--prr), 0.3);
+  border-top-color: var(--pr);
+  animation: spin 0.8s linear infinite;
+}
+.btn-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 14px 6px;
+  font: 600 15px Sora, sans-serif;
+  text-decoration: none;
+  color: var(--tx2);
+  transition: color 0.2s, gap 0.25s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.btn-link:hover { color: var(--tx); gap: 11px; }
+.btn-primary:focus-visible, .btn-ghost:focus-visible, .btn-link:focus-visible { outline: 2px solid var(--pr); outline-offset: 3px; }
 
 .hero-socials { display: flex; flex-wrap: wrap; gap: 10px; }
 .chip-link {

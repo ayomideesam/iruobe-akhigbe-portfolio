@@ -70,6 +70,8 @@
     font: 700 15px Outfit, sans-serif;
     letter-spacing: -0.01em;
     white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
     color: var(--tx);
 }
 
@@ -77,12 +79,17 @@
     display: flex;
     align-items: center;
     gap: 7px;
+    min-width: 0;
 }
 
+/* Truncates instead of sliding under the theme toggle on 320–360px phones. */
 .brand-title {
     font: 500 10.5px Sora, sans-serif;
     color: var(--tx2);
     white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    min-width: 0;
 }
 
 /* ─── AVAILABLE badge ─── */

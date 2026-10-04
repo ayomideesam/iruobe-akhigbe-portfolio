@@ -6,20 +6,36 @@
         <span class="pulse-dot"></span>
         Open to Senior Frontend &amp; Tech Lead roles
       </span>
+      <!-- The h1 says who, what and for whom: the name (SEO entity), the role, and
+           the one claim that separates this portfolio from every "beautiful
+           solutions" headline. -->
       <h1 class="hero-h1">
-        <span class="visually-hidden">Akhigbe Iruobe — </span>
-        <span appRainbowHover class="hero-line1">Turning Complex Problems</span>
-        <span class="hero-line2">Into Beautiful Solutions</span>
+        <span class="hero-name">Akhigbe Iruobe <span class="hero-name-role">· Senior Frontend Engineer</span></span>
+        <span appRainbowHover class="hero-line1">I build the frontends</span>
+        <span class="hero-line2">banks and fintechs run on.</span>
       </h1>
       <p class="hero-copy">
-        I'm <strong>Akhigbe Iruobe</strong> — an Angular specialist with 9+ years of frontend expertise, building enterprise-grade fintech platforms for CBN-regulated banks. Powerful, scalable, and elegant software that users love.
+        Angular specialist with <strong>9+ years</strong> in CBN-regulated banking — credit approval, fraud detection, trade finance and NIP/NEFT/NAPS payments. Two platforms I led on the frontend passed business CAB in October 2026; one went from an empty repository to final UAT in <strong>83 days</strong>.
       </p>
       <div class="hero-ctas">
-        <a class="btn-primary shine" (click)="navigateToProjects()">
+        <a class="btn-primary shine" href="/projects" (click)="$event.preventDefault(); navigateToProjects()">
           View Projects
-          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"></path></svg>
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"></path></svg>
         </a>
-        <a class="btn-ghost shine" (click)="navigateToContact()">Contact Me</a>
+        <!-- Recruiters' first click: the ATS resume, generated in the browser. -->
+        <button type="button" class="btn-ghost shine btn-cv" (click)="downloadCv()" [disabled]="cvBusy()" [attr.aria-busy]="cvBusy()">
+          @if (cvBusy()) {
+            <span class="btn-spinner" aria-hidden="true"></span>
+            Preparing CV…
+          } @else {
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12M7 10l5 5 5-5M5 21h14"></path></svg>
+            Download CV
+          }
+        </button>
+        <a class="btn-link" href="/contact" (click)="$event.preventDefault(); navigateToContact()">
+          Contact me
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"></path></svg>
+        </a>
       </div>
       <div class="hero-socials">
         <a [href]="githubUrl" target="_blank" rel="noopener noreferrer" class="chip-link shine">
