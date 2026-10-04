@@ -11,21 +11,99 @@ were already installed, so a clean result has a shelf life measured in weeks.
 
 | | |
 |---|---|
-| **Last run** | 2026-10-03 |
-| **Result** | ⚠️ **47 vulnerabilities** (1 low, 15 moderate, 28 high, 3 critical) — **10 in the production tree** (1 low, 8 moderate, 1 high). All published since 2026-08-07 against packages already installed; none introduced by this run's change. **Open** — see 2026-10-03 below. |
-| **Packages audited** | 1,151 |
+| **Last run** | 2026-10-04 |
+| **Result** | ⚠️ **Production tree 0.** Full tree **21 high**, all from **two root advisories that have no patched release anywhere** (`braces`, `http-cache-semantics`); the other 19 are their dependents. Both dev-only and judged unreachable here. **Open, scheduled** — they close with the Angular 22 + `@angular/build` + Vitest upgrade, see 2026-10-04 below. |
+| **Packages audited** | 1,157 |
 | **npm version** | 10.9.7 |
 | **Node version** | v22.22.2 |
-| **Angular** | 20.3.27 (CLI + build-angular 20.3.33) |
+| **Angular** | 20.3.33 (CLI + build-angular 20.3.37) |
 
 ```
 $ npm ci && npm audit
-47 vulnerabilities (1 low, 15 moderate, 28 high, 3 critical)
+21 high severity vulnerabilities      # 2 root advisories, no upstream fix
 $ npm audit --omit=dev
-10 vulnerabilities (1 low, 8 moderate, 1 high)
+found 0 vulnerabilities
 $ npm ls --all | grep -c invalid
 0
 ```
+
+---
+
+## 2026-10-04 — 47 → 21, production 10 → 0
+
+The 47 from 2026-10-03 traced to **18 root advisories**. Sixteen had an in-major patch and are closed;
+two have **no patched version published at all** and stay open.
+
+### Closed — Angular patch set
+
+`@angular/*` 20.3.27 → **20.3.33** (router GHSA-ff3f-86qr-9cv3 needs ≥ 20.3.32; core/compiler
+GHSA-hh8m-fm6v-7cvg and common GHSA-p297-fm68-3q8c need ≥ 20.3.28). CLI, build-angular → **20.3.37**,
+compiler-cli → 20.3.33. Same technique as Finding 2 of 2026-08-07: the plain `npm install` hit the
+exact-peer `ERESOLVE`, so only the 71 `@angular*` lockfile records were removed and npm re-resolved
+that scope. No `--force`, no `--legacy-peer-deps`.
+
+### Closed — transitive overrides (all in-major)
+
+| Package | Was | Override | Exposure |
+|---|---|---|---|
+| `dompurify` | 3.4.15 | `^3.4.16` | **Production** (`jspdf` chunk) |
+| `fflate` | 0.8.2 | `^0.8.3` | **Production** (`jspdf` chunk) — new override |
+| `piscina` | 5.2.0 | `^5.3.2` | dev — **critical** RCE gadget; `@angular/build` pins 5.2.0 exactly, even in 20.3.37 |
+| `webpack-dev-middleware` | 7.4.2 | `^7.4.5` | dev — path traversal; build-angular pins 7.4.2 exactly |
+| `undici` | 6.28.0 | `>=6.28.1 <7` | dev |
+| `fast-uri` | 3.1.5 | `^3.1.8` | dev |
+| `hono` | 4.13.1 | `^4.13.7` | dev |
+| `ip-address` | 10.4.0 | `^10.7.1` | dev |
+| `js-yaml` | 4.3.1 | `^4.3.2` | dev |
+| `qs` | 6.15.x | `^6.16.0` | dev — also clears `body-parser` / `express` 4 |
+| `nanoid` | 3.3.17 | `^3.3.18` | dev — only a 3.x consumer (`postcss`) exists |
+| `engine.io` | 6.6.9 | `^6.6.10` | dev (Karma) — new override |
+| `browserslist` | 4.28.1 | `^4.29.0` | dev — new override |
+| `baseline-browser-mapping` | 2.9.9 | `^2.11.0` | dev — new override |
+| `brace-expansion` | 1.1.18 / 5.0.9 | `^1.1.21` / scoped `^5.0.12` | dev — both majors still scoped separately |
+
+**Gotcha — raising an existing override does not move a locked version.** After the install,
+`npm ls --all` reported 10 `invalid` (e.g. `fast-uri@3.1.5 invalid: "^3.1.8"`) and `npm ci` refused
+to run (lockfile out of sync). npm kept the old locked record instead of re-resolving it against the
+raised range. Removing just those records (`node_modules/fast-uri`, `hono`, `ip-address`, `js-yaml`,
+`nanoid`, `undici` and the five `brace-expansion` paths) and re-running `npm install` cleared it.
+So: **after raising an override, always check `npm ls --all | grep invalid` and strict `npm ci`**,
+not just the audit count.
+
+### Open — no upstream fix exists
+
+| Advisory | Package | Path | Why it is not reachable here |
+|---|---|---|---|
+| GHSA-vfj7-8cjw-p6xm (high, published 2026-09-18) | `braces` ≤ 3.0.3 — **every** release | `karma` (direct + `chokidar@3`), `@angular-devkit/build-angular` → `fast-glob` → `micromatch` | Stack exhaustion on deeply nested brace patterns. The only patterns it sees are this repo's own config globs (Karma files, `angular.json` assets). No user input reaches it, and it never ships. |
+| GHSA-ch52-4w7c-c8xp (high, published 2026-09-18) | `http-cache-semantics` ≤ 4.2.0 — **every** release | `@angular/cli` → `pacote` → `npm-registry-fetch` → `make-fetch-happen` (also via `sigstore`/`tuf-js`) | Cross-user disclosure from **shared** caches that zero `Set-Cookie` responses. `make-fetch-happen` builds every policy with `shared: false` (`lib/cache/policy.js`), so the zeroing branch never runs; it is the CLI's private registry cache for `ng add`/`ng update`. |
+
+Both advisories list `first_patched_version: null`. There is no override target.
+
+**Options weighed and rejected:**
+
+- **Vendoring patched copies via `file:` overrides.** Tested in a scratch project: `npm audit`
+  **skips `file:` packages entirely**, and reports 0 even for an *unpatched* copy. The 0 would come
+  from npm no longer looking, not from a fix. That is exactly the false confidence this document
+  exists to prevent.
+- **A fork from the registry.** An unknown publisher in the build chain is a supply-chain risk larger
+  than either finding.
+
+**How it closes — scheduled as its own pass** (the CLAUDE.md rule: a framework major is its own piece
+of work, not a dependency-audit rider):
+
+1. `braces` leaves the tree when the build moves from `@angular-devkit/build-angular:browser`
+   (webpack) to `@angular/build:application` (esbuild, no `fast-glob`/`micromatch`), **and** tests
+   move from Karma to Vitest (`@angular/build:unit-test`). Karma depends on `braces` directly.
+2. `http-cache-semantics` leaves the tree only at **Angular 22**: `@angular/cli@22` no longer depends
+   on `pacote`. CLI 20.3.37 and 21.2.x still pin `pacote@21.5.1`. Angular 22 needs TypeScript ≥ 6.0.
+
+**Revisit trigger:** if either package publishes a patched release before that upgrade lands, add a
+plain in-major override and close it here.
+
+### Verified after the change
+
+Strict `npm ci` clean · `npm audit --omit=dev` **0** · `npm ls --all` 0 `invalid` · `tsc --noEmit`
+clean · production build clean · **85/85** tests.
 
 ---
 
@@ -207,9 +285,9 @@ clean · 63/63 tests · all five routes render with one JSON-LD block each.
 
 | Package | Version | Notes |
 |---|---|---|
-| `@angular/*` (animations, common, compiler, core, forms, platform-browser*, router) | ^20.3.27 | runtime |
-| `@angular/cli`, `@angular-devkit/build-angular` | ^20.3.33 | dev |
-| `@angular/compiler-cli` | ^20.3.27 | dev |
+| `@angular/*` (animations, common, compiler, core, forms, platform-browser*, router) | ^20.3.33 | runtime |
+| `@angular/cli`, `@angular-devkit/build-angular` | ^20.3.37 | dev |
+| `@angular/compiler-cli` | ^20.3.33 | dev |
 | `rxjs` | ~7.8.0 | |
 | `zone.js` | ~0.15.1 | |
 | `typescript` | ~5.8.3 | |
@@ -258,10 +336,12 @@ clean · 63/63 tests · all five routes render with one JSON-LD block each.
 | 2026-08-07 | `body-parser` | low | No — Karma / dev server | ✅ Resolved | Per-consumer pins; `express@5` keeps 2.x. |
 | 2026-08-07 | `@hono/node-server` ← `@modelcontextprotocol/sdk` ← `@angular/cli` | moderate | No — CLI MCP feature, never invoked | ✅ Resolved | Scoped override instead of the CLI-21 major npm suggested. |
 | 2026-08-07 | `path-to-regexp` (`invalid`, not a CVE) | — | No | ✅ Resolved | Pre-existing over-broad `express` override removed; was redundant. |
-| 2026-10-03 | `@angular/router` | high | **Yes** — framework | ⏳ Open | In-major patch (> 20.3.31). Scheduled as its own dependency pass. |
-| 2026-10-03 | `@angular/*` (7 packages) | moderate | **Yes** — framework | ⏳ Open | In-major patch (> 20.3.27). Move with the router as one set. |
-| 2026-10-03 | `fflate`, `dompurify` (via `jspdf`) | moderate / low | **Yes** — resume PDF chunk | ⏳ Open | Patch releases available. |
-| 2026-10-03 | 37 build/dev-tooling advisories (`undici`, `webpack-dev-middleware`, `express`/`qs`, …) | mixed, incl. 3 critical | No — build & dev server | ⏳ Open | Triage in the same pass; check each for an in-major fix before any `--force`. |
+| 2026-10-03 | `@angular/router` | high | **Yes** — framework | ✅ Resolved 2026-10-04 | 20.3.33 via `@angular*` lockfile surgery. |
+| 2026-10-03 | `@angular/*` (7 packages) | moderate | **Yes** — framework | ✅ Resolved 2026-10-04 | Moved with the router as one set, 20.3.33. |
+| 2026-10-03 | `fflate`, `dompurify` (via `jspdf`) | moderate / low | **Yes** — resume PDF chunk | ✅ Resolved 2026-10-04 | Overrides `^0.8.3` / `^3.4.16`. |
+| 2026-10-03 | 37 build/dev-tooling advisories (`undici`, `webpack-dev-middleware`, `express`/`qs`, …) | mixed, incl. 3 critical | No — build & dev server | ✅ Resolved 2026-10-04, except the two rows below | In-major overrides; all 3 criticals were `piscina` and its dependents. |
+| 2026-10-04 | `braces` (+ 11 dependents counted by npm) | high | No — Karma and webpack config globs only | ⏳ Open — no upstream fix | GHSA-vfj7-8cjw-p6xm, every release affected. Leaves with the `@angular/build` + Vitest move. |
+| 2026-10-04 | `http-cache-semantics` (+ 8 dependents) | high | No — CLI private cache, `shared: false` | ⏳ Open — no upstream fix | GHSA-ch52-4w7c-c8xp, every release affected. Leaves at Angular 22 (CLI drops `pacote`). |
 | 2026-10-03 | `sharp` (added) | — | No — dev-only media tool | ✅ Clean | Added for `optimize:media`; contributes 0 findings (verified against the HEAD lockfile). |
 
 ---
