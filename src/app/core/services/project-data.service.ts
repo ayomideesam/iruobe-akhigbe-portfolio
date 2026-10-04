@@ -93,7 +93,7 @@ export class ProjectDataService {
          {
             id: 6,
             title: 'Credit Approval Process (CAP)',
-            description: 'Akhigbe Iruobe is the senior frontend engineer on Globus Bank\'s Credit Approval Process Automation Solution, built by a seven-person team (two frontend engineers, two senior backend engineers, a project manager, a product owner and a QA tester) — a CBN-compliant platform designed to digitise the full credit lifecycle across 4 facility modules (Retail, Corporate, Staff Loan, Product) through a 2 stage governance structure: Stage 1 routes applications through a 10+ role sequential chain culminating in MCC online committee voting with configurable MD/CEO veto power; Stage 2 escalates facilities above ₦100M to the Board Credit Committee (BCC) for majority vote, after which the platform enables disbursement or deferral workflows. The Retail module passed business CAB and rolls out to production in October 2026; the Corporate module is paused at ~10% build after the team was redeployed to Trade Export in July 2026.',
+            description: 'Akhigbe Iruobe is the senior frontend engineer on Globus Bank\'s Credit Approval Process Automation Solution, built by a seven-person team (two frontend engineers, two senior backend engineers, a project manager, a product owner and a QA tester) — a CBN-compliant platform designed to digitise the full credit lifecycle across 4 facility modules (Retail, Corporate, Staff Loan, Product). Every request climbs a 15-desk sequential approval chain — from the Account Officer through branch and zonal management, Legal, Credit Risk, the Executive Directors and the MD to the MCC and BCC committees, with Approve, Return-to-any-lower-desk or Reject at each — after which the platform opens the disbursement and deferral workflows. The Retail module passed business CAB and rolls out to production in October 2026; the Corporate module is paused at ~10% build after the team was redeployed to Trade Export in July 2026.',
             techStack: [
                { name: 'Angular 20', color: '#DD0031' },
                { name: 'TypeScript', color: '#3178C6' },
@@ -102,10 +102,10 @@ export class ProjectDataService {
             ],
             achievements: [
                'Designed 4 facility module tracks on a shared signal-based architecture — Retail (individual customers), Corporate (SMEs & large corporates with mandatory E&S governance review), Staff Loan (streamlined RM → BM → MD path), & Product Program (government MDA/parastatal employee lending) — each with track-specific multi-step forms, document compliance gates, & governance review paths. Retail ships first with origination, disbursement & deferral complete; Corporate is ~10% built, and Staff Loan & Product Program are on the roadmap',
-               'Encoded the full 2 stage approval hierarchy as application routing & UI state: Stage 1 Business Approval Flow (RM → BM → BFGH → ZH → GH), Governance Review Flow (CRM Officer → CRM Approver → E&S → Head Risk Mgt → ED → ED Risk → MD/CEO), & MCC Committee deliberation (online/offline mode, individual vote capture per member, Yes/No vote count compilation, MD/CEO configurable veto power); Stage 2 BCC escalation for ₦100M+ facilities with board majority-vote resolution & automated re-vote trigger on tied result',
+               'Encoded the 15-desk approval chain as application routing & UI state — Account Officer → Branch Manager → BFG Head → Zonal Head → Group Head → Legal Officer → Head of Legal → Credit Analyst → Head Credit → CRO → ED Business → ED Risk → MD → MCC → BCC — with role-based landing routes, Approve / Return-to-any-lower-desk / Reject at every desk, the MD offer-letter decision & a 48-hour SLA flag on every queue; plus the 17-desk disbursement chain (through CPO, CPA, COO & COA) & the 8-desk deferral chain',
                'Led the frontend of the Disbursement workflow: multiple drawdowns per facility until fully disbursed with every amount validated against the undrawn balance, a four-view By Facility / By Request queue, COO & CPO approval with live loan-booking status, currency-aware screens with SOFR base-rate resolution for foreign-currency facilities, VAT-rate & fee calculations, vendor bank account name verification, NIN capture & moratorium handling — plus the matching Deferral create & update flows',
-               'Automated pre-submission BG checks at origination stage: real-time PEP & blacklisted BVN screening via local list & third-party API, CRC/Credit Registry API returning live credit score & report, director-related customer account flagging, & collateral management notification trigger — all system-initiated before the request enters approval chain',
-               'Designed a section-scoped real-time comment system operating across all three workflow stages (Facility, Disbursement, Deferral): CommentContextService tracks active section name, RequestEntityType, parent tab, inner section, disbursement ID, & disbursement index via RxJS BehaviorSubject; CommentManagementService exposes a single loadAndTransformCommentsBySection() Observable consumed by every child component — eliminating comment-loading boilerplate across 230+ components',
+               'Built the origination background-check screens: AML screening against the PEP, Sanction & AMC lists with per-field fuzzy-match scores (name, date of birth, BVN, email, country), credit-bureau reports from FirstCentral, CreditRegistry & CBN CRMS (Performing → Lost, reports older than 3 months dropped), director- & group-related flags, & the single-obligor-limit impact on proposed exposure — all before the request enters the approval chain',
+               'Designed a section-scoped comment system operating across all three workflow stages (Facility, Disbursement, Deferral): CommentContextService tracks active section name, RequestEntityType, parent tab, inner section, disbursement ID, & disbursement index via RxJS BehaviorSubject; CommentManagementService exposes a single loadAndTransformCommentsBySection() Observable consumed by every child component — eliminating comment-loading boilerplate across 230+ components',
                'Built, with the second frontend engineer, 230+ fully standalone Angular 20 comps & 26 shared reusable comps with signal-based contracts (input(), output(), linkedSignal(), resource()) & zero NgModules; led Angular 19 → 20 migration resolving Vite 6/7 API incompatibility that caused complete dev-server failure, & cleared all 40 npm audit findings (2 high) ahead of CAB'
             ],
             images: [
@@ -117,37 +117,37 @@ export class ProjectDataService {
             isHovered: false,
             stats: [
                { value: '4', label: 'Modules Designed' },
-               { value: '10+', label: 'Approval Roles' },
-               { value: '2', label: 'Governance Stages' },
+               { value: '15', label: 'Approval Desks' },
+               { value: '3', label: 'Workflows' },
                { value: '230+', label: 'Components' }
             ],
             pipelineLabel: 'Approval Journey',
             pipeline: [
-               { name: 'Origination', meta: 'Account Officer / RM · automated PEP, BVN & CRC checks' },
-               { name: 'Business Approval', meta: 'BM → BFGH → ZH → GH' },
-               { name: 'Governance Review', meta: 'CRM → E&S → Risk Mgt → ED' },
-               { name: 'MCC Committee', meta: 'Online vote capture · MD/CEO veto' },
-               { name: 'BCC Escalation', meta: 'Facilities > ₦100M · board majority vote' },
+               { name: 'Origination', meta: 'Account Officer · AML/PEP screening & credit-bureau checks' },
+               { name: 'Business Line', meta: 'BM → BFG Head → Zonal Head → Group Head' },
+               { name: 'Legal & Credit Risk', meta: 'Legal → Head of Legal → Credit Analyst → Head Credit → CRO' },
+               { name: 'Executive', meta: 'ED Business → ED Risk → MD · offer letter' },
+               { name: 'Committees', meta: 'MCC → BCC · approve, return or reject' },
                { name: 'Disbursement / Deferral', meta: 'Post-approval workflows unlocked' }
             ]
          },
          {
             id: 3,
             title: 'Fraud Management System',
-            description: 'Akhigbe Iruobe architected Globus Bank\'s real-time Fraud Management System — a 14-engine rule-based detection platform monitoring every bank transaction for behavioral anomalies, velocity breaches, and blacklist matches with zero-delay alerting.',
+            description: 'Akhigbe Iruobe architected Globus Bank\'s Fraud Management System — monitoring every inflow and outflow transaction against 14 weighted rules (SIM swap, PIN and device changes, account age, velocity, unusual amounts, hours and days, failed attempts, high-risk IPs and watch-listed BVNs), placing a PND or lien on flagged accounts and routing each case through a customer call-back and maker-checker review.',
             techStack: [
                { name: 'Angular 16', color: '#DD0031' },
                { name: 'TypeScript', color: '#3178C6' },
                { name: 'RxJS', color: '#B7178C' },
-               { name: 'WebSockets', color: '#4CAF50' },
+               { name: 'AG Charts', color: '#2563EB' },
                { name: 'HTML5 | CSS3', color: '#339933' }
             ],
             achievements: [
-               'Achieved 100% transaction coverage within the first week of production deployment — all inbound and outbound bank transactions monitored through 14 configurable rule engines covering velocity limits, behavioral patterns, and blacklist screening',
-               'Reduced fraudulent transaction incidents by 45% in the first 90 days post-deployment through automated real-time alerting and structured case management workflows',
-               'Designed advanced analytics dashboard with real-time fraud pattern visualisations, per-customer risk scoring, and alert triage queue — enabling fraud ops to action flagged transactions in minutes vs. hours',
+               'Achieved 100% transaction coverage within the first week of production deployment — all inbound and outbound bank transactions monitored against 14 weighted rules covering customer-behaviour signals (SIM swap, PIN & device changes, account age) and transaction attributes (velocity, amount, time, location, failed attempts, high-risk IPs, watch-listed BVNs)',
+               'Reduced fraudulent transaction incidents by 45% in the first 90 days post-deployment through automatic PND/lien restrictions on flagged accounts and a structured maker-checker case review',
+               'Designed the analytics dashboard — inflow vs outflow trends, channel analysis, monthly totals by status, per-transaction risk scores with the rules that fired, and a triage queue — enabling fraud ops to action flagged transactions in minutes vs. hours',
                'Built a hybrid security architecture separating sensitive fraud rule configuration into in-memory storage while managing auth tokens in sessionStorage — eliminating 11 vulnerability findings to zero production vulnerabilities',
-               'Integrated with multiple Globus Bank core systems via REST APIs and WebSocket streams for real-time transaction event ingestion and instant risk score updates without page refresh'
+               'Built the maker-checker review: the initiator calls the customer back and grades each answer Pass or Fail, then waives the transaction or confirms fraud; the authorizer approves or returns in bulk, lifting or sustaining the restriction; and every rule-matrix change goes through the same initiate, authorize or recall review with a before-and-after diff'
             ],
             images: [
                '/assets/img/fraud-live-dashboard.png',
@@ -158,25 +158,25 @@ export class ProjectDataService {
             ],
             isHovered: false,
             stats: [
-               { value: '14', label: 'Rule Engines' },
+               { value: '14', label: 'Weighted Rules' },
                { value: '100%', label: 'Transaction Coverage' },
                { value: '45%', label: 'Fraud Reduction' },
                { value: '₦250M+', label: 'Daily Monitored' }
             ],
             pipelineLabel: 'Detection Pipeline',
             pipeline: [
-               { name: 'Transaction Ingestion', meta: 'REST API + WebSocket · real-time event stream' },
-               { name: 'Rule Engine', meta: '14 configurable engines · velocity, pattern, behavior' },
-               { name: 'Velocity Check', meta: 'Per-account transaction rate & amount thresholds' },
-               { name: 'Blacklist Match', meta: 'BVN blacklist · known fraud patterns · PEP screen' },
-               { name: 'Alert Generation', meta: 'Zero-delay push · fraud ops triage queue' },
-               { name: 'Case Review', meta: 'Structured case management · resolution workflow' }
+               { name: 'Transaction Ingestion', meta: 'REST · inflow & outflow monitoring' },
+               { name: 'Rule Matrix', meta: '14 weighted rules · behaviour & transaction attributes' },
+               { name: 'Risk Score', meta: 'Triggered rules & weights per transaction' },
+               { name: 'Restriction', meta: 'PND or lien placed on the account' },
+               { name: 'Call-back Review', meta: 'Initiator grades the customer · waive or confirm fraud' },
+               { name: 'Authorisation', meta: 'Authorizer approves or returns · PND lifted or sustained' }
             ]
          },
          {
             id: 2,
             title: 'Globus Trade Application — Import (GTA)',
-            description: 'Akhigbe Iruobe architected and delivered Globus Bank\'s CBN-mandated import trade finance platform — digitising Form M documentation, Letters of Credit (LC), Bills for Collection (BC), and end-to-end import workflow management across all bank trade operations personas.',
+            description: 'Akhigbe Iruobe architected and delivered Globus Bank\'s CBN-mandated import trade finance platform — digitising Form M processing: the FX-validity gate (with an override against a signed letter), shipping-document review by Bill of Lading across Advanced and Negotiating sets, Exchange Control Documents and PAARs, amendments, extensions and cancellations with their fees, and the maker-checker release of documents to a verified recipient.',
             techStack: [
                { name: 'Angular 19', color: '#DD0031' },
                { name: 'TypeScript', color: '#3178C6' },
@@ -185,9 +185,9 @@ export class ProjectDataService {
             ],
             achievements: [
                'Achieved 100% adoption by the full trade operations team within 6 months — the first digital replacement of a fully paper-based CBN-regulated trade finance process at Globus Bank',
-               'Reduced trade document processing time by 60% through multi-step workflow automation, inline regulatory compliance validation gates, and automated SWIFT message generation',
-               'Designed role-based access control spanning all trade personas (Account Officer, Trade Ops, Trade Manager, Authorizer, Admin) with Angular route guards and a server-driven permission matrix',
-               'Integrated RESTful trade finance APIs handling LC issuance, Bills for Collection processing, live FX rate fetching, and regulatory reporting — with full error-state and retry handling',
+               'Reduced trade document processing time by 60% through multi-step workflow automation and inline compliance gates — an FX-validity check before any document is added, and a 13-document LC-requirements checklist (originals and copies) for every shipment',
+               'Designed role-based access control for the maker-checker model — Initiator, Approver/Authorizer and Viewer — gating every action (adding documents, amendments, release requests, charge setup, concessions) on the signed-in role',
+               'Integrated the Form M, document, amendment-fee, concession and file-storage APIs — 5 MB-capped uploads of shipping documents, ECDs and PAARs, Excel report export, and full error-state and retry handling',
                'Successfully completed UAT and deployed to production ahead of CBN-mandated regulatory deadline — zero post-launch critical defects'
             ],
             images: [
@@ -199,18 +199,18 @@ export class ProjectDataService {
             ],
             isHovered: false,
             stats: [
-               { value: '5', label: 'Trade Personas' },
-               { value: '3', label: 'Products (LC / BC / TF)' },
+               { value: '4', label: 'Document Types' },
+               { value: '13', label: 'LC Checklist Docs' },
                { value: '100%', label: 'Adoption at Launch' },
                { value: '60%', label: 'Faster Processing' }
             ],
-            pipelineLabel: 'Trade Finance Flow',
+            pipelineLabel: 'Form M Journey',
             pipeline: [
-               { name: 'Form Initiation', meta: 'Account Officer · facility type selection' },
-               { name: 'Document Upload', meta: 'Trade docs · regulatory compliance checks' },
-               { name: 'Compliance Gates', meta: 'Inline CBN validation · ECOWAS review' },
-               { name: 'SWIFT Generation', meta: 'Automated SWIFT message creation · FX rate fetch' },
-               { name: 'Authorisation', meta: 'Trade Ops → Trade Manager → Authorizer sign-off' }
+               { name: 'Form M', meta: 'Registered Form M · FX validity checked' },
+               { name: 'Document Upload', meta: 'Shipping docs by B/L · ECD · PAAR' },
+               { name: 'Requirements Check', meta: '13 documents · originals & copies vs LC terms' },
+               { name: 'Approval', meta: 'Initiator → Approver · approve, return or reject' },
+               { name: 'Document Release', meta: 'Approver releases to a verified recipient' }
             ]
          },
          {

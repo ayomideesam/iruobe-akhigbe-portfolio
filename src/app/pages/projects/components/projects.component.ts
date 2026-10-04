@@ -104,7 +104,7 @@ export class ProjectsComponent implements OnInit, AfterViewInit, OnDestroy {
   readonly githubUrl = 'https://github.com/ayomideesam';
 
   aboutText = {
-    para1: 'I build the software that banks use to run their most critical operations — credit approval workflows, real-time fraud detection, and trade finance platforms that regulators audit.',
+    para1: 'I build the software that banks use to run their most critical operations — credit approval workflows, fraud detection, and trade finance platforms that regulators audit.',
     para2: 'Every project here was delivered inside a CBN-regulated environment: strict security requirements, multi-role access control, audit trail compliance, and zero tolerance for UI bugs on live financial data.',
     para3: 'My constraint is always the same: build it fast enough for a deadline, and robust enough for 100,000+ daily users. That tension is what I\'ve been solving across 9 years and seven enterprise applications.',
     para4: 'If you\'re hiring a frontend engineer who delivers under compliance pressure and leads a team while doing it — these are the receipts.'
@@ -119,7 +119,7 @@ export class ProjectsComponent implements OnInit, AfterViewInit, OnDestroy {
     6: { accent: '#818cf8', accentRgb: '129, 140, 248', eyebrow: 'Globus Bank · Credit Governance',        video: 'assets/video/fp-cap.mp4',     poster: 'assets/video/fp-cap.jpg' },
     1: { accent: '#a78bfa', accentRgb: '167, 139, 250', eyebrow: 'Enterprise AI · Productivity Suite',     video: 'assets/video/fp-costaff.mp4', poster: 'assets/video/fp-costaff.jpg' },
     2: { accent: '#22d3ee', accentRgb: '34, 211, 238',  eyebrow: 'Globus Bank · Import Trade Finance',     video: 'assets/video/fp-gta.mp4',     poster: 'assets/video/fp-gta.jpg' },
-    3: { accent: '#fb7185', accentRgb: '251, 113, 133', eyebrow: 'Globus Bank · Real-Time Risk',           video: 'assets/video/fp-fraud.mp4',   poster: 'assets/video/fp-fraud.jpg' },
+    3: { accent: '#fb7185', accentRgb: '251, 113, 133', eyebrow: 'Globus Bank · Transaction Risk',         video: 'assets/video/fp-fraud.mp4',   poster: 'assets/video/fp-fraud.jpg' },
     4: { accent: '#fbbf24', accentRgb: '251, 191, 36',  eyebrow: 'Zenith Bank · Payments Infrastructure',  video: 'assets/video/fp-tiger.mp4',   poster: 'assets/video/fp-tiger.jpg' },
     5: { accent: '#2dd4bf', accentRgb: '45, 212, 191',  eyebrow: 'Zenith Bank · Merchant Collections',     video: 'assets/video/fp-xpath.mp4',   poster: 'assets/video/fp-xpath.jpg' },
   };

@@ -120,19 +120,19 @@ export class HomeComponent implements OnInit, AfterViewInit {
       key: 'trade', title: 'Globus Trade — Import', url: 'trade.globusbank.com',
       imgs: ['/assets/img/gta-home.png', '/assets/img/gta-documents.png', '/assets/img/gta-import.png', '/assets/img/gta-details.png', '/assets/img/gta-settings.png'],
       badges: [{ name: 'Angular 19', bc: '#DD003166' }, { name: 'TypeScript', bc: '#3178C666' }, { name: 'RxJS', bc: '#B7178C66' }],
-      desc: '100% adoption by trade ops team within 6 months — CBN-mandated import trade finance platform (Form M, LC, BC) replacing a fully paper-based process at Globus Bank.'
+      desc: '100% adoption by trade ops team within 6 months — CBN-mandated import trade finance platform (Form M, shipping documents, ECD, PAAR) replacing a fully paper-based process at Globus Bank.'
     },
     fms: {
       key: 'fms', title: 'Fraud Management System', url: 'fms.globusbank.com',
       imgs: ['/assets/img/fraud-live-dashboard.png', '/assets/img/fraud-flagged-transactions.png', '/assets/img/fraud-rule-engines.png', '/assets/img/fraud-details-dark.png', '/assets/img/fraud-dashboard-dark.png'],
-      badges: [{ name: 'Angular 16', bc: '#DD003166' }, { name: 'TypeScript', bc: '#3178C666' }, { name: 'WebSockets', bc: '#4CAF5066' }],
-      desc: '100% transaction coverage in week one — 14-engine real-time fraud detection system. Fraudulent incidents reduced 45% within 90 days of deployment.'
+      badges: [{ name: 'Angular 16', bc: '#DD003166' }, { name: 'TypeScript', bc: '#3178C666' }, { name: 'AG Charts', bc: '#2563EB66' }],
+      desc: '100% transaction coverage in week one — 14 weighted fraud rules, PND restrictions and a maker-checker case review. Fraudulent incidents reduced 45% within 90 days of deployment.'
     },
     cap: {
       key: 'cap', title: 'Credit Approval Process (CAP)', url: 'cap.globusbank.com',
       imgs: ['/assets/img/cap-dashboard.png', '/assets/img/cap-facility-requests.png', '/assets/img/cap-disbursements.png', '/assets/img/cap-login.jpeg'],
       badges: [{ name: 'Angular 20', bc: '#DD003166' }, { name: 'TypeScript', bc: '#3178C666' }, { name: 'RxJS', bc: '#B7178C66' }],
-      desc: 'CBN-compliant credit lifecycle platform — four facility modules, a 10+ role approval chain, and MCC/BCC committee voting with veto power, built by a seven-person team from 230+ standalone Angular 20 components.'
+      desc: 'CBN-compliant credit lifecycle platform — four facility modules and a 15-desk approval chain that ends at the MCC and BCC committees, built by a seven-person team from 230+ standalone Angular 20 components.'
     },
     tiger: {
       key: 'tiger', title: 'ProjectTiger — Domestic Transfers', url: 'tiger.zenithbank.com',
@@ -273,8 +273,8 @@ export class HomeComponent implements OnInit, AfterViewInit {
         name: 'CAP — Corporate Module',
         status: 'paused' as const,
         statusLabel: 'Paused at 10%',
-        description: 'SME and large corporate facilities — mandatory Environmental & Social review, director-related account flagging, live CRC credit scoring, and BCC escalation for ₦100M+ facilities. Paused in July 2026 when the team moved to Trade Export.',
-        tech: ['E&S Review', 'CRC Credit Scoring', 'Director Flagging'],
+        description: 'SME and large corporate facilities — mandatory Environmental & Social review, director-related account flagging and credit-bureau checks. Paused in July 2026 when the team moved to Trade Export.',
+        tech: ['E&S Review', 'Credit Bureau', 'Director Flagging'],
         progress: 10
       }
     ] as Module[]

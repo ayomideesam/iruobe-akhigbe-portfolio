@@ -117,7 +117,7 @@ export class ResumeDataService {
 
          "🚀 **Angular Migration Excellence**: Led Angular v16→v19 migrations implementing hybrid security enhancements (in-memory + sessionStorage), eliminating 11 vulnerabilities per application to zero production vulnerabilities with 40% performance improvements",
 
-         "🎯 **Business Impact**: Architected real-time fraud detection system processing all bank transactions, achieving 100% coverage within first week of deployment and reducing fraudulent activities by 45%"
+         "🎯 **Business Impact**: Architected a fraud detection system monitoring all bank transactions, achieving 100% coverage within first week of deployment and reducing fraudulent activities by 45%"
       ];
    }
 
@@ -139,11 +139,11 @@ export class ResumeDataService {
             ],
 
             achievements: [
-               "Shipped the Credit Approval Process platform with the team — digitising Globus Bank's credit lifecycle from account officer origination through multi-tier business approval, two-stage committee governance (MCC and BCC), and post-approval disbursement and deferral workflows — starting with the Retail module, which passed business CAB for an October 2026 production rollout (the Corporate module is paused at ~10% build since the team moved to Trade Export in July 2026)",
+               "Shipped the Credit Approval Process platform with the team — digitising Globus Bank's credit lifecycle from account officer origination through a 15-desk approval chain that ends at the MCC and BCC committees, and post-approval disbursement and deferral workflows — starting with the Retail module, which passed business CAB for an October 2026 production rollout (the Corporate module is paused at ~10% build since the team moved to Trade Export in July 2026)",
                "Took the Trade Export (NXP) platform from an empty repository on 10 July 2026 to final UAT on 1 October and business CAB approval with the team; I led the Export frontend — 13 routed pages, 3 data services and 40+ endpoints across NXP applications, the NESS levy payment (a customer-account debit gated on a resolved lookup, an unpaid levy and the SHIPMENT stage), repatriation of export proceeds with a ±10% tolerance band, and cancellation & closure",
                "Led the frontend of CAP's Disbursement workflow: multiple drawdowns per facility validated against the undrawn balance, a four-view By Facility / By Request queue, COO and CPO approval with live loan-booking status, currency-aware screens with SOFR base-rate resolution, VAT-rate and fee calculations, vendor account name verification, and the matching Deferral flows",
-               "Built the frontend of the two-stage approval committee engine with the backend team: Stage 1 MCC workflow with configurable online/offline deliberation mode, per-member vote capture, real-time Yes/No vote count compilation, and MD/CEO veto power toggled by admin; Stage 2 BCC workflow for ₦100M+ facilities with board-level majority vote, tied-vote re-trigger, and system-automated disbursement module unlock on approval",
-               "Integrated the automated background checks at origination with the backend engineers: PEP and blacklisted BVN screening via third-party API, CRC/Credit Registry API for live credit score and report retrieval, director-related account flagging, and collateral management notification — all triggered before the request enters the approval chain, replacing manual compliance steps",
+               "Built the approval journey with the backend team: role-based queues and landing routes for all 15 desks, Approve / Return-to-any-lower-desk / Reject with comments, the MD's offer-letter decision, a 48-hour SLA flag, and the 17-desk disbursement and 8-desk deferral chains that open after approval",
+               "Integrated the origination background checks with the backend engineers: AML screening against PEP, Sanction and AMC lists with per-field fuzzy-match scores, credit-bureau reports from FirstCentral, CreditRegistry and CBN CRMS, director- and group-related flags, and the single-obligor-limit impact — all before the request enters the approval chain, replacing manual compliance steps",
                // Withheld until CAP's admin module ships — no admin screens exist in CAP-Frontend yet (2026-10-04).
                // "Delivered with the team a full admin control plane enabling Admin Officers to edit process flows, define approval paths, set facility limits per approver, manage custom form tabs by facility type, configure escalation paths and user notifications, and override insufficient-fund blocks with justification — with all admin actions requiring dual-authorisation approval from the Admin Authorizer role",
                "Led the Angular 20 migration and resolved the Vite 7 compatibility breakage that had stopped the dev server; eliminated 83 Problems-tab warnings across the codebase; wrote an automated Python script patching -webkit-backdrop-filter compliance across 202 CSS and HTML files"
@@ -151,7 +151,7 @@ export class ResumeDataService {
 
             technicalAchievements: [
                "Designed, with the second frontend engineer, four parallel facility module tracks on a unified signal-based form engine — each track with its own multi-step stepper, document compliance gates, section-level validation, and track-specific governance review stages — sharing one set of base components and services with no duplication across tracks",
-               "Encoded the backend's 10+ role sequential approval chain into Angular routing and UI state: Business Approval Flow (RM → BM → BFGH → ZH → GH), Governance Review Flow (CRM Officer → CRM Approver → E&S → Head Risk Mgt → ED → ED Risk → MD/CEO), and Committee Stage (MCC Secretariat → MCC Members → MD veto → BCC Chairman → BCC Directors) — with lazy-loaded isolated layout shells and a role-normalising auth guard per persona",
+               "Encoded the backend's 15-desk sequential approval chain into Angular routing and UI state — Account Officer → Branch Manager → BFG Head → Zonal Head → Group Head → Legal Officer → Head of Legal → Credit Analyst → Head Credit → CRO → ED Business → ED Risk → MD → MCC → BCC — with lazy-loaded isolated layout shells and a role-normalising auth guard per persona",
                "Designed a two-service section-scoped comment system used across all three workflow stages: CommentContextService (BehaviorSubject tracking section name, RequestEntityType enum — Facility/Disbursement/Deferral — parent tab index, inner section, disbursement ID and index) paired with CommentManagementService (loadAndTransformCommentsBySection() — a single RxJS Observable composition method handling API response normalisation, code 00/01 branching, GbCommentFormat transformation, name extraction from email, and date formatting) consumed by every child section with zero boilerplate duplication",
                // Withheld with the matching achievement above until CAP's admin module ships.
                // "Built the admin control plane screens for five operator personas (Admin Officer, Admin Authorizer, Profile Manager/Internal Control, Application Manager, Internal Audit Officer) with the team — covering process flow editing, user lifecycle management from Active Directory, approval path configuration, facility type and custom tab management, veto power toggling, and report generation filtered by date, branch, unit, facility type, and status",
@@ -174,7 +174,7 @@ export class ResumeDataService {
             ],
 
             achievements: [
-               "Delivered real-time Fraud Management System processing all bank transactions, achieving 100% coverage within first week of deployment",
+               "Delivered the Fraud Management System monitoring all bank transactions, achieving 100% coverage within first week of deployment",
                "Led Angular v16→v19 migration implementing hybrid security architecture, eliminating 11 vulnerabilities to zero",
                "Delivered the Globus Trade Application (Import) achieving 100% adoption by trade operations team, reducing processing time by 60%",
                "Architected Credit Approval Portal managing end-to-end credit facility lifecycle with multi-step approval workflows"
@@ -182,11 +182,10 @@ export class ResumeDataService {
 
             technicalAchievements: [
                "Designed hybrid security enhancements separating sensitive data into in-memory storage while maintaining auth tokens in sessionStorage",
-               "Architected fraud detection system with 14 configurable rule engines covering customer behavioral patterns and transaction monitoring",
-               "Built advanced dashboards with real-time visualization of transaction patterns, risk scoring, and alert management",
+               "Architected the fraud detection frontend around 14 weighted rules covering customer behaviour (SIM swap, PIN and device changes) and transaction attributes (velocity, amount, time, high-risk IPs, watch-listed BVNs)",
+               "Built the fraud dashboards and review flow: inflow vs outflow trends, channel analysis, per-transaction risk scores, and the PND/lien call-back review with maker-checker approval",
                "Created reusable component library reducing development time by 40% across all three applications",
-               "Architected Credit Approval Portal from inception: designed the four-module (Retail, Corporate, Staff Loan, Product Program) multi-track form engine, the 10+ role sequential approval routing system, section-scoped comment architecture, and automated background check integration (PEP/BVN, CRC API, director flagging)",
-               "Built MCC committee voting engine: online/offline deliberation modes, per-member vote capture, Yes/No vote count compilation, MD/CEO configurable veto power, and BCC escalation routing for facilities above ₦100M with majority-vote resolution and tied-result re-vote trigger"
+               "Architected Credit Approval Portal from inception: designed the four-module (Retail, Corporate, Staff Loan, Product Program) multi-track form engine, the 15-desk sequential approval routing, section-scoped comment architecture, and the origination background checks (AML/PEP screening, credit-bureau reports, director flagging)"
             ]
          },
          {

@@ -94,7 +94,7 @@ export class ServicesDataService {
          },
          {
             title: 'Approval workflows are my specialty',
-            body: 'I encoded a 10+ role sequential approval chain with committee voting and MD veto power into a live bank platform. Your purchase orders, fee waivers, shift reconciliations and staff requisitions are the same problem — smaller, and already solved.',
+            body: 'I encoded a 15-desk sequential approval chain, from account officer to board credit committee, into a live bank platform. Your purchase orders, fee waivers, shift reconciliations and staff requisitions are the same problem — smaller, and already solved.',
             icon: `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h6v6H4z"></path><path d="M14 13h6v6h-6z"></path><path d="M10 8h4a2 2 0 0 1 2 2v3"></path><path d="M14 16H8a2 2 0 0 1-2-2v-3"></path></svg>`,
             accent: '#22d3ee', accentRgb: '34, 211, 238'
          },
@@ -340,7 +340,7 @@ export class ServicesDataService {
             key: 'fintech',
             sector: 'Banks, Fintech & Lending',
             pains: ['Regulatory exposure on every release', 'Fraud detected after the money has moved', 'Credit decisions stuck in paper chains'],
-            builds: 'Credit approval platforms, real-time fraud rules engines, trade finance and transfer systems. This is home turf.',
+            builds: 'Credit approval platforms, fraud rules engines, trade finance and transfer systems. This is home turf.',
             icon: `<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10l9-6 9 6"></path><path d="M5 10v9M19 10v9M9 10v9M15 10v9"></path><path d="M2 21h20"></path></svg>`,
             accent: '#f59e0b', accentRgb: '245, 158, 11'
          },
