@@ -296,6 +296,7 @@ export class ResumeComponent implements AfterViewInit {
         email: 'iruobeakhigbe@gmail.com',
         linkedin: 'IRUOBE AKHIGBE',
         portfolio: 'iruobeakhigbe.netlify.app',
+        github: 'github.com/ayomideesam',
         profile: [...this.profile.paragraphs, this.profile.availability],
         keyAchievements: this.keyTechnicalAchievements.map(stripEmoji),
         skills: this.skills,
@@ -307,7 +308,6 @@ export class ResumeComponent implements AfterViewInit {
           grade: 'Grade B or 2:1 [Second Class-Upper Division]'
         },
         certifications: this.courses,
-        hobbies: ['Coding', 'Software Testing', 'Board Games', 'Swimming', 'Reading', 'Console Games'],
         techWatching: this.techWatching,
         languages: ['English', 'Yoruba', `French (learning since ${this.frenchSince})`, 'Hausa'],
         references: this.references

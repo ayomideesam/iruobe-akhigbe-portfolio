@@ -10,6 +10,7 @@ interface ResumeData {
   email: string;
   linkedin: string;
   portfolio: string;
+  github: string;
   profile: string[];
   keyAchievements: string[];
   skills: SkillTier[];
@@ -34,7 +35,6 @@ interface ResumeData {
     institution: string;
     period: string;
   }>;
-  hobbies: string[];
   techWatching: string[];
   languages: string[];
   references: Reference[];
@@ -190,63 +190,37 @@ export class AtsPdfService {
 
   // ─── Left Column ─────────────────────────────────────────────────────────────
 
+  /** The sidebar mirrors the resume page's left column, in the same order:
+   *  details, links, skills, tech I'm watching, languages. */
   private drawLeftColumn(data: ResumeData): void {
     let leftY = this.currentY;
     const leftX = this.MARGIN;
     const w = this.LEFT_COLUMN_WIDTH;
 
-    // DETAILS
     leftY = this.drawSectionTitle('DETAILS', leftX, leftY, w);
     leftY = this.drawDetail('PHONE', data.phone, leftX, leftY, w);
     leftY = this.drawDetail('EMAIL', data.email, leftX, leftY, w);
-    leftY += 20;
+    leftY += 16;
 
-    // LINKS
-    if (leftY > this.PAGE_HEIGHT - 80) leftY = this.newLeftPage();
     leftY = this.drawSectionTitle('LINKS', leftX, leftY, w);
     leftY = this.drawDetail('LinkedIn', data.linkedin, leftX, leftY, w, true);
     leftY = this.drawDetail('Portfolio', data.portfolio, leftX, leftY, w, true);
-    leftY += 20;
+    leftY = this.drawDetail('GitHub', data.github, leftX, leftY, w, true);
+    leftY += 16;
 
-    // SKILLS — handles its own page breaks
     if (leftY > this.PAGE_HEIGHT - 80) leftY = this.newLeftPage();
     leftY = this.drawSectionTitle('SKILLS', leftX, leftY, w);
     leftY = this.drawSkills(data.skills, leftX, leftY, w);
-    leftY += 20;
+    leftY += 8;
 
-    // HOBBIES
-    if (leftY > this.PAGE_HEIGHT - 80) leftY = this.newLeftPage();
-    leftY = this.drawSectionTitle('HOBBIES', leftX, leftY, w);
-    leftY = this.drawHobbies(data.hobbies, leftX, leftY, w);
-    leftY += 20;
-
-    // TECH I'M WATCHING
-    if (leftY > this.PAGE_HEIGHT - 80) leftY = this.newLeftPage();
+    if (leftY > this.PAGE_HEIGHT - 110) leftY = this.newLeftPage();
     leftY = this.drawSectionTitle("TECH I'M WATCHING", leftX, leftY, w);
     leftY = this.drawTechWatching(data.techWatching, leftX, leftY, w);
-    leftY += 20;
+    leftY += 16;
 
-    // LANGUAGES
-    if (leftY > this.PAGE_HEIGHT - 60) leftY = this.newLeftPage();
+    if (leftY > this.PAGE_HEIGHT - 90) leftY = this.newLeftPage();
     leftY = this.drawSectionTitle('LANGUAGES', leftX, leftY, w);
-    leftY = this.drawLanguages(data.languages, leftX, leftY, w);
-    leftY += 20;
-
-    // Education, courses and references live in the sidebar: the right column
-    // then ends with employment and the CV holds to two pages.
-    if (leftY > this.PAGE_HEIGHT - 110) leftY = this.newLeftPage();
-    leftY = this.drawSectionTitle('EDUCATION', leftX, leftY, w);
-    leftY = this.drawEducation(data.education, leftX, leftY, w);
-    leftY += 14;
-
-    if (leftY > this.PAGE_HEIGHT - 130) leftY = this.newLeftPage();
-    leftY = this.drawSectionTitle('COURSES', leftX, leftY, w);
-    leftY = this.drawCertifications(data.certifications, leftX, leftY, w);
-    leftY += 14;
-
-    if (leftY > this.PAGE_HEIGHT - 150) leftY = this.newLeftPage();
-    leftY = this.drawSectionTitle('REFERENCES', leftX, leftY, w);
-    this.drawReferences(data.references, leftX, leftY, w);
+    this.drawLanguages(data.languages, leftX, leftY, w);
   }
 
   // ─── Right Column ─────────────────────────────────────────────────────────────
@@ -256,19 +230,38 @@ export class AtsPdfService {
     const rightX = this.RIGHT_COLUMN_X;
     const w = this.RIGHT_COLUMN_WIDTH;
 
-    // PROFILE
     rightY = this.drawSectionTitle('PROFILE', rightX, rightY, w);
     rightY = this.drawParagraphs(data.profile, rightX, rightY, w);
-    rightY += 15;
+    rightY += 10;
 
-    // KEY TECHNICAL ACHIEVEMENTS
+    rightY = this.ensureRightRoom(rightY, 70);
     rightY = this.drawSectionTitle('KEY TECHNICAL ACHIEVEMENTS', rightX, rightY, w);
     rightY = this.drawBulletList(data.keyAchievements, rightX, rightY, w, true);
-    rightY += 15;
+    rightY += 12;
 
-    // EMPLOYMENT HISTORY
+    rightY = this.ensureRightRoom(rightY, 90);
     rightY = this.drawSectionTitle('EMPLOYMENT HISTORY', rightX, rightY, w);
-    this.drawEmploymentHistory(data.employment, rightX, rightY, w);
+    rightY = this.drawEmploymentHistory(data.employment, rightX, rightY, w);
+
+    rightY = this.ensureRightRoom(rightY, 75);
+    rightY = this.drawSectionTitle('EDUCATION', rightX, rightY, w);
+    rightY = this.drawEducation(data.education, rightX, rightY, w);
+    rightY += 14;
+
+    rightY = this.ensureRightRoom(rightY, 80);
+    rightY = this.drawSectionTitle('COURSES / CERTIFICATIONS', rightX, rightY, w);
+    rightY = this.drawCertifications(data.certifications, rightX, rightY, w);
+    rightY += 12;
+
+    rightY = this.ensureRightRoom(rightY, 120);
+    rightY = this.drawSectionTitle('REFERENCES', rightX, rightY, w);
+    this.drawReferences(data.references, rightX, rightY, w);
+  }
+
+  /** Moves the right column to the next page unless `needed` points fit, so a
+   *  section title never sits alone at the foot of a page. */
+  private ensureRightRoom(y: number, needed: number): number {
+    return y + needed > this.PAGE_HEIGHT - this.MARGIN ? this.advanceRightPage() : y;
   }
 
   // ─── Shared Section Title & Detail ───────────────────────────────────────────
@@ -344,18 +337,6 @@ export class AtsPdfService {
       currentY += 12;
     });
 
-    return currentY;
-  }
-
-  private drawHobbies(hobbies: string[], x: number, y: number, width: number): number {
-    let currentY = y;
-    hobbies.forEach(hobby => {
-      this.pdf.setFontSize(9);
-      this.pdf.setFont('helvetica', 'normal');
-      this.pdf.setTextColor(this.colors.textDark);
-      this.pdf.text(`• ${hobby}`, x, currentY);
-      currentY += 15;
-    });
     return currentY;
   }
 
@@ -452,28 +433,37 @@ export class AtsPdfService {
       this.pdf.setFontSize(9);
       const firstBullet = job.achievements?.[0] ? this.pdf.splitTextToSize(this.cleanTextForATS(job.achievements[0]), width - 13).length : 0;
       const descLinesEstimate = job.description ? this.pdf.splitTextToSize(job.description, width).length : 0;
-      const keepTogether = 30 + (descLinesEstimate ? descLinesEstimate * 11 + 6 : 0) + firstBullet * 11 + 4;
+      const promotedFrom = index > 0 && jobs[index - 1].company === job.company;
+      const keepTogether = (promotedFrom ? 14 : 0) + 30 + (descLinesEstimate ? descLinesEstimate * 11 + 6 : 0) + 12 + firstBullet * 11 + 4;
       if (currentY + keepTogether > this.PAGE_HEIGHT - this.MARGIN) {
         currentY = this.advanceRightPage();
       }
       job = { ...job, role: this.cleanTextForATS(job.role), description: job.description && this.cleanTextForATS(job.description) };
 
-      // Role + period on same line
-      this.pdf.setFontSize(11);
-      this.pdf.setFont('helvetica', 'bold');
-      this.pdf.setTextColor(this.colors.accent);
+      // The earlier role of a promotion pair, as on the resume page.
+      if (promotedFrom) {
+        this.pdf.setFontSize(8);
+        this.pdf.setFont('helvetica', 'bold');
+        this.pdf.setTextColor(this.isDark ? '#34D399' : '#059669');
+        this.pdf.text('Promoted from this role', x, currentY - 2);
+        currentY += 12;
+      }
 
-      const periodWidth = 120;
-      const roleLines = this.pdf.splitTextToSize(job.role, width - periodWidth - 10);
-      this.pdf.text(roleLines, x, currentY);
-
-      // Period · tenure aligned right
+      // Role left, "period · tenure" right: the role wraps inside whatever
+      // width the measured period leaves, so the two never collide.
       const tenure = this.calculateTenure(job.period);
       const periodText = tenure ? `${job.period}  ·  ${tenure}` : job.period;
       this.pdf.setFontSize(9);
       this.pdf.setFont('helvetica', 'normal');
+      const periodWidth = this.pdf.getTextWidth(periodText);
       this.pdf.setTextColor(this.colors.textLight);
       this.pdf.text(periodText, x + width, currentY, { align: 'right' });
+
+      this.pdf.setFontSize(11);
+      this.pdf.setFont('helvetica', 'bold');
+      this.pdf.setTextColor(this.colors.accent);
+      const roleLines = this.pdf.splitTextToSize(job.role, width - periodWidth - 12);
+      this.pdf.text(roleLines, x, currentY);
 
       currentY += Math.max(roleLines.length * 13, 13);
 
@@ -510,42 +500,23 @@ export class AtsPdfService {
         currentY += descLines.length * 11 + 6;
       }
 
-      // Technical Leadership
-      if (job.technicalLeadership && job.technicalLeadership.length > 0) {
-        if (currentY > this.PAGE_HEIGHT - 80) {
-          currentY = this.advanceRightPage();
-        }
+      const groups: Array<[string, string[] | undefined]> = [
+        ['Highlights', job.achievements],
+        ['Architecture & engineering', job.technicalAchievements],
+        ['Leadership', job.technicalLeadership]
+      ];
+      groups.forEach(([label, items]) => {
+        if (!items?.length) return;
         this.pdf.setFontSize(9);
+        const firstLines = this.pdf.splitTextToSize(this.cleanTextForATS(items[0]), width - 13).length;
+        currentY = this.ensureRightRoom(currentY, 13 + firstLines * 11 + 4);
         this.pdf.setFont('helvetica', 'bold');
         this.pdf.setTextColor(this.colors.accent);
-        this.pdf.text('Technical Leadership:', x, currentY);
-        currentY += 13;
-        currentY = this.drawBulletList(job.technicalLeadership, x, currentY, width);
-        currentY += 8;
-      }
-
-      // Key Achievements & Business Impact
-      if (job.achievements && job.achievements.length > 0) {
-        if (currentY > this.PAGE_HEIGHT - 80) {
-          currentY = this.advanceRightPage();
-        }
-        currentY = this.drawBulletList(job.achievements, x, currentY, width);
+        this.pdf.text(label, x, currentY);
+        currentY += 12;
+        currentY = this.drawBulletList(items, x, currentY, width);
         currentY += 4;
-      }
-
-      // Technical Architecture & Implementation
-      if (job.technicalAchievements && job.technicalAchievements.length > 0) {
-        if (currentY > this.PAGE_HEIGHT - 80) {
-          currentY = this.advanceRightPage();
-        }
-        this.pdf.setFontSize(9);
-        this.pdf.setFont('helvetica', 'bold');
-        this.pdf.setTextColor(this.colors.accent);
-        this.pdf.text('Technical Architecture & Implementation:', x, currentY);
-        currentY += 13;
-        currentY = this.drawBulletList(job.technicalAchievements, x, currentY, width);
-        currentY += 8;
-      }
+      });
 
       currentY += 12;
     });
@@ -561,26 +532,27 @@ export class AtsPdfService {
   ): number {
     let currentY = y;
 
-    this.pdf.setFontSize(9);
+    this.pdf.setFontSize(10);
     this.pdf.setFont('helvetica', 'bold');
     this.pdf.setTextColor(this.colors.primary);
     this.pdf.text(education.degree, x, currentY);
-    currentY += 11;
-
-    this.pdf.setFontSize(8);
+    this.pdf.setFontSize(9);
     this.pdf.setFont('helvetica', 'normal');
+    this.pdf.setTextColor(this.colors.textLight);
+    this.pdf.text(education.period, x + width, currentY, { align: 'right' });
+    currentY += 13;
+
     this.pdf.setTextColor(this.colors.accent);
     const institution = this.pdf.splitTextToSize(education.institution, width);
     this.pdf.text(institution, x, currentY);
-    currentY += institution.length * 10;
+    currentY += institution.length * 11;
 
     this.pdf.setTextColor(this.colors.textLight);
-    const meta = this.pdf.splitTextToSize(`${education.period} · ${education.grade}`, width);
-    this.pdf.text(meta, x, currentY);
-    return currentY + meta.length * 10;
+    this.pdf.text(education.grade, x, currentY);
+    return currentY + 12;
   }
 
-  /** Title, then institution and date in the muted colour, sized for the sidebar. */
+  /** Title left and "institution · date" right, or stacked when both won't fit. */
   private drawCertifications(
     certifications: Array<{ title: string; institution: string; period: string }>,
     x: number,
@@ -590,46 +562,54 @@ export class AtsPdfService {
     let currentY = y;
 
     certifications.forEach(cert => {
-      this.pdf.setFontSize(8.5);
+      const meta = `${cert.institution} · ${cert.period}`;
+      this.pdf.setFontSize(9);
       this.pdf.setFont('helvetica', 'bold');
       this.pdf.setTextColor(this.colors.primary);
-      const title = this.pdf.splitTextToSize(cert.title, width);
-      this.pdf.text(title, x, currentY);
-      currentY += title.length * 10;
+      this.pdf.text(cert.title, x, currentY);
+      const titleWidth = this.pdf.getTextWidth(cert.title);
 
-      this.pdf.setFontSize(8);
       this.pdf.setFont('helvetica', 'normal');
       this.pdf.setTextColor(this.colors.textLight);
-      this.pdf.text(`${cert.institution} · ${cert.period}`, x, currentY);
+      if (titleWidth + this.pdf.getTextWidth(meta) + 12 > width) {
+        currentY += 11;
+        this.pdf.text(meta, x, currentY);
+      } else {
+        this.pdf.text(meta, x + width, currentY, { align: 'right' });
+      }
       currentY += 15;
     });
 
     return currentY;
   }
 
-  /** Names and companies only: referees' contact details are shared on
-   *  request, never printed. */
+  /** Names and companies only, two to a row: referees' contact details are
+   *  shared on request, never printed. */
   private drawReferences(references: Reference[], x: number, y: number, width: number): number {
     let currentY = y;
+    const colWidth = (width - 12) / 2;
 
-    references.forEach(ref => {
-      this.pdf.setFontSize(8.5);
+    references.forEach((ref, index) => {
+      const colX = index % 2 === 0 ? x : x + colWidth + 12;
+      if (index > 0 && index % 2 === 0) currentY += 26;
+
+      this.pdf.setFontSize(9);
       this.pdf.setFont('helvetica', 'bold');
       this.pdf.setTextColor(this.colors.primary);
-      this.pdf.text(ref.name, x, currentY);
+      this.pdf.text(ref.name, colX, currentY);
 
       this.pdf.setFontSize(8);
       this.pdf.setFont('helvetica', 'normal');
       this.pdf.setTextColor(this.colors.accent);
-      this.pdf.text(this.pdf.splitTextToSize(ref.company, width), x, currentY + 10);
-      currentY += 24;
+      this.pdf.text(ref.company, colX, currentY + 11);
     });
 
-    this.pdf.setFontSize(7.5);
+    currentY += 30;
+    this.pdf.setFontSize(8);
     this.pdf.setFont('helvetica', 'italic');
     this.pdf.setTextColor(this.colors.textLight);
     this.pdf.text('Contact details available on request.', x, currentY);
-    return currentY + 10;
+    return currentY + 12;
   }
 
   // ─── Tenure Calculation ───────────────────────────────────────────────────────

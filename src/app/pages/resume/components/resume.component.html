@@ -257,8 +257,7 @@
 
                                 @if (job.technicalAchievements?.length) {
                                 <div class="technical-section">
-                                    <h6>Technical Architecture & Implementation</h6>
-                                    <!-- <h6>Technical Achievements:</h6> -->
+                                    <h6>Architecture & engineering</h6>
                                     <ul>
                                         @for (achievement of job.technicalAchievements!; track $index) {
                                         <li>{{achievement}}</li>
@@ -269,7 +268,7 @@
 
                                 @if (job.technicalLeadership?.length) {
                                 <div class="leadership-section">
-                                    <h6>Technical Leadership:</h6>
+                                    <h6>Leadership</h6>
                                     <ul>
                                         @for (item of job.technicalLeadership!; track $index) {
                                         <li>{{item}}</li>

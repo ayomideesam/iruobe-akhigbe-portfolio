@@ -22,14 +22,26 @@ describe('ResumeDataService', () => {
       expect(jobs[0].period).toContain('Present');
     });
 
-    it('should keep the CV to two pages: at most 6 highlights for the current role and 4 for earlier ones', () => {
-      expect(jobs[0].achievements!.length).toBeLessThanOrEqual(6);
-      for (const job of jobs.slice(1)) expect(job.achievements!.length).toBeLessThanOrEqual(4);
+    it('should stay readable: at most 5 highlights and 10 bullets in all per role', () => {
+      for (const job of jobs) {
+        expect(job.achievements!.length, job.role).toBeLessThanOrEqual(5);
+        const total = (job.achievements?.length ?? 0) + (job.technicalAchievements?.length ?? 0) + (job.technicalLeadership?.length ?? 0);
+        expect(total, job.role).toBeLessThanOrEqual(10);
+      }
     });
 
-    it('should not reintroduce claims the code disproves (2026-10-04 review)', () => {
+    it('should show each promotion as its own role, newest first', () => {
+      const roles = (company: string) => jobs.filter(j => j.company.startsWith(company)).map(j => j.role);
+      expect(roles('Globus')).toEqual(['Senior Frontend Engineer (A.B.O grade)', 'Senior Frontend Engineer (S.E.A grade)']);
+      expect(roles('Zenith')).toEqual(['Frontend Team Lead', 'Senior Frontend Engineer']);
+    });
+
+    it('should not reintroduce claims the code or the proof disproves', () => {
       const text = JSON.stringify(jobs) + service.getKeyTechnicalAchievements().join(' ');
-      expect(text).not.toMatch(/committee voting|veto|quorum|WebSocket|SWIFT|velocity by|code quality by/i);
+      expect(text).not.toMatch(/committee voting|veto|quorum|WebSocket|SWIFT|velocity by|code quality by|19% to 85/i);
+      // The Zenith PMO slides: velocity 8 → 28 points, completion 19% → 69%.
+      expect(text).toMatch(/8 to 28 points/);
+      expect(text).toMatch(/19% to 69%/);
     });
   });
 

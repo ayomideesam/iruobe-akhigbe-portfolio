@@ -778,7 +778,8 @@ h3 {
 }
 
 .job-item.same-company::before {
-    content: '↳ Promoted from previous role';
+    /* Sits on the earlier role of a promotion pair, pointing up to the role it led to. */
+    content: '↑ Promoted from this role';
     display: block;
     font-size: 0.75rem;
     color: #10b981;
