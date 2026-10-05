@@ -1,5 +1,8 @@
 // app.component.ts — Home v2: ambient canvas background + theme host
 import { AfterViewInit, Component, DestroyRef, ElementRef, NgZone, ViewChild, inject, ChangeDetectionStrategy } from '@angular/core';
+import { NavigationEnd, Router } from '@angular/router';
+import { filter, skip } from 'rxjs';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ThemeService } from './core/services/theme.service';
 import { LoadingService } from './core/services/loading.service';
 
@@ -200,6 +203,17 @@ export class AppComponent implements AfterViewInit {
   private onResize?: () => void;
 
   constructor() {
+    // WCAG 2.4.3: after a route change, focus moves to <main> so keyboard and
+    // screen-reader users start at the new page's content, not on the old
+    // nav link. Skips the first navigation (page load) and never scrolls.
+    inject(Router).events.pipe(
+      filter((e): e is NavigationEnd => e instanceof NavigationEnd),
+      skip(1),
+      takeUntilDestroyed()
+    ).subscribe(() => {
+      setTimeout(() => document.getElementById('main-content')?.focus({ preventScroll: true }));
+    });
+
     this.destroyRef.onDestroy(() => {
       if (this.rafId) cancelAnimationFrame(this.rafId);
       if (this.onMove) window.removeEventListener('pointermove', this.onMove);
