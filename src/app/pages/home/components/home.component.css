@@ -180,7 +180,6 @@ h2 {
   letter-spacing: 0.01em;
   color: var(--tx);
 }
-.hero-name-role { font-weight: 500; color: var(--tx2); }
 .hero-line1 { display: block; color: var(--tx); cursor: default; }
 .hero-line2 {
   display: block;
