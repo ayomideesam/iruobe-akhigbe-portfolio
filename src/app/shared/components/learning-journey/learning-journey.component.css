@@ -1,0 +1,376 @@
+/* Learning journey — built on the Home v2 tokens in styles.css (--tx, --glass, --pr…), defined for
+   both .thm-dark and .thm-light, so it sits correctly on any page and theme. Badge artwork is the
+   transparent cut-outs in assets/img/duolingo. */
+:host {
+    display: block;
+    --lj-flame: #fb923c;
+    --lj-glow: rgba(251, 146, 60, 0.28);
+}
+
+:host-context(.thm-light) {
+    --lj-flame: #c2410c;
+    --lj-glow: rgba(194, 65, 12, 0.16);
+}
+
+.lj {
+    position: relative;
+    overflow: hidden;
+    /* the awards grid sizes itself from the card's width, not the viewport's */
+    container: lj / inline-size;
+    display: flex;
+    flex-direction: column;
+    gap: clamp(26px, 3.5vw, 40px);
+    padding: clamp(24px, 4vw, 48px);
+    border-radius: 28px;
+    background: var(--glass);
+    -webkit-backdrop-filter: blur(var(--blur, 18px)) saturate(150%);
+    backdrop-filter: blur(var(--blur, 18px)) saturate(150%);
+    border: 1px solid var(--gbrd);
+    box-shadow: var(--shdw);
+    color: var(--tx);
+    text-align: left;
+}
+
+/* warm glow behind the streak — decorative, transform/opacity only */
+.lj::before {
+    content: '';
+    position: absolute;
+    top: -120px;
+    right: -80px;
+    width: 420px;
+    height: 420px;
+    border-radius: 50%;
+    background: radial-gradient(circle, var(--lj-glow), transparent 65%);
+    pointer-events: none;
+}
+
+.lj-flag {
+    position: absolute;
+    inset: 0 0 auto 0;
+    display: flex;
+    height: 4px;
+    pointer-events: none;
+}
+
+.lj-flag span { flex: 1; }
+.lj-flag span:nth-child(1) { background: #0055a4; }
+.lj-flag span:nth-child(2) { background: #f8fafc; }
+.lj-flag span:nth-child(3) { background: #ef4135; }
+:host-context(.thm-light) .lj-flag span:nth-child(2) { background: #dfe3ea; }
+
+/* ── Intro + streak hero ── */
+.lj-top {
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr);
+    gap: clamp(22px, 4vw, 48px);
+    align-items: center;
+}
+
+.lj-head { display: flex; flex-direction: column; gap: 12px; }
+
+.lj-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    font: 600 12px Sora, sans-serif;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--pr);
+}
+
+.lj-flame { color: var(--lj-flame); flex: none; }
+
+.lj-title {
+    margin: 0;
+    font: 700 clamp(1.55rem, 2.8vw, 2.3rem) / 1.12 Outfit, sans-serif;
+    letter-spacing: -0.015em;
+    text-align: left; /* global h2 is centred */
+    color: var(--tx);
+}
+
+.lj-intro {
+    margin: 0;
+    font: 300 clamp(0.94rem, 1.2vw, 1.04rem) / 1.75 Sora, sans-serif;
+    color: var(--tx2);
+}
+
+.lj-streak {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding: 20px;
+    border-radius: 22px;
+    background: var(--glass2);
+    border: 1px solid var(--gbrd);
+}
+
+.lj-streak-row { display: flex; align-items: center; gap: 16px; }
+
+.lj-streak-badge {
+    flex: none;
+    display: block;
+    width: 92px;
+    height: 112px;
+}
+
+.lj-streak-badge img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    filter: drop-shadow(0 10px 18px var(--lj-glow));
+    animation: ljFloat 4.5s ease-in-out infinite;
+}
+
+.lj-streak-text { display: flex; flex-direction: column; gap: 2px; }
+
+.lj-streak-days {
+    font: 800 clamp(2.6rem, 5vw, 3.4rem) / 1 Outfit, sans-serif;
+    letter-spacing: -0.03em;
+    color: var(--lj-flame);
+    font-variant-numeric: tabular-nums;
+}
+
+.lj-streak-label { font: 500 13.5px Sora, sans-serif; color: var(--tx2); }
+
+.lj-chips {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 8px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.lj-chip {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    padding: 10px 12px;
+    border-radius: 14px;
+    background: var(--glass);
+    border: 1px solid var(--gbrd);
+}
+
+.lj-chip-value { font: 700 1.05rem/1.2 Outfit, sans-serif; color: var(--tx); font-variant-numeric: tabular-nums; }
+.lj-chip-label { font: 600 10.5px Sora, sans-serif; letter-spacing: 0.06em; text-transform: uppercase; color: var(--tx2); }
+
+/* ── Shared block chrome ── */
+.lj-block { display: flex; flex-direction: column; gap: 14px; }
+
+.lj-subhead-row { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 6px 14px; }
+
+.lj-subhead {
+    margin: 0;
+    font: 600 12px Sora, sans-serif;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    text-align: left;
+    color: var(--tx2);
+}
+
+.lj-subhead-count { font: 600 12px Sora, sans-serif; letter-spacing: 0.06em; text-transform: uppercase; color: var(--pr); }
+
+.lj picture { display: block; }
+.lj picture img { display: block; width: 100%; height: 100%; object-fit: contain; }
+
+/* badges lift on hover — transform only */
+.lj-record picture,
+.lj-month picture,
+.lj-award picture { transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1); }
+
+.lj-record:hover picture,
+.lj-month:hover picture,
+.lj-award:hover picture { transform: translateY(-4px) scale(1.05); }
+
+/* ── Personal records ── */
+.lj-records {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 12px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.lj-record {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    padding: 18px 10px 16px;
+    border-radius: 20px;
+    background: var(--glass2);
+    border: 1px solid var(--gbrd);
+    text-align: center;
+}
+
+.lj-record picture { width: 84px; height: 100px; }
+.lj-record-label { font: 600 13px Outfit, sans-serif; color: var(--tx); }
+.lj-record-date { font: 400 11.5px Sora, sans-serif; color: var(--tx2); }
+
+/* ── Monthly badges ── */
+.lj-months {
+    display: grid;
+    grid-template-columns: repeat(8, minmax(0, 1fr));
+    gap: 10px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.lj-month { display: flex; flex-direction: column; align-items: center; gap: 6px; }
+.lj-month picture { width: min(100%, 68px); aspect-ratio: 1 / 1.05; }
+.lj-month[data-state="missed"] picture { opacity: 0.55; }
+
+.lj-month-label { font: 600 12px Sora, sans-serif; color: var(--tx); }
+.lj-month[data-state="missed"] .lj-month-label { color: var(--tx2); font-weight: 500; }
+
+.lj-month-tag {
+    padding: 2px 8px;
+    border-radius: 999px;
+    font: 600 9.5px Sora, sans-serif;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    color: var(--lj-flame);
+    border: 1px solid currentColor;
+}
+
+/* ── Achievements (panel) ──
+   Twelve badges, so the column count is always a divisor of 12 and every row is full:
+   4 × 3 on wide cards, 3 × 4 on tablets, 2 × 6 on phones. Tiles keep the horizontal layout
+   only while a name still fits on one line beside the badge; narrower, they stack vertically. */
+.lj-awards {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+@container lj (min-width: 560px) {
+    .lj-awards { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
+}
+
+@container lj (min-width: 1110px) {
+    .lj-awards { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+}
+
+/* vertical tile: badge on top, centred text (phones and tablets) */
+.lj-award {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    padding: 14px 8px;
+    border-radius: 18px;
+    text-align: center;
+    background: var(--glass2);
+    border: 1px solid var(--gbrd);
+}
+
+/* sized so the NEW tag Duolingo puts on fresh awards stays legible */
+.lj-award picture { flex: none; width: 80px; height: 86px; }
+.lj-award-text { display: flex; flex-direction: column; align-items: center; gap: 3px; min-width: 0; flex: 1; }
+.lj-award-name { font: 600 14px Outfit, sans-serif; color: var(--tx); }
+.lj-award-note { display: none; font: 400 11.5px Sora, sans-serif; color: var(--tx2); }
+
+.lj-award-level {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+    font: 600 11px Sora, sans-serif;
+    color: var(--pr);
+    font-variant-numeric: tabular-nums;
+}
+
+.lj-bar {
+    position: relative;
+    flex: none;
+    width: 80px;
+    height: 5px;
+    border-radius: 999px;
+    overflow: hidden;
+    background: var(--gbrd2);
+}
+
+/* tablets: three across has room for the one-line note */
+@container lj (min-width: 560px) {
+    .lj-award-note { display: block; }
+}
+
+/* horizontal tile: badge beside the text, once a name fits on one line next to it */
+@container lj (min-width: 850px) {
+    .lj-award { flex-direction: row; gap: 12px; padding: 12px 14px 12px 10px; text-align: left; }
+    .lj-award picture { width: 70px; height: 76px; }
+    .lj-award-text { align-items: stretch; }
+    .lj-award-level { flex-direction: row; gap: 8px; }
+    .lj-bar { flex: 1; width: auto; max-width: 90px; }
+}
+
+.lj-bar span {
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    transform-origin: left center;
+    background: linear-gradient(90deg, var(--pr), var(--lj-flame));
+}
+
+.lj-words {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.lj-words li {
+    padding: 7px 14px;
+    border-radius: 12px;
+    font: 500 15px Sora, sans-serif;
+    color: var(--tx);
+    background: var(--glass2);
+    border: 1px solid var(--gbrd2);
+}
+
+.lj-foot {
+    padding-top: 14px;
+    border-top: 1px solid var(--gbrd);
+    font: 400 12px Sora, sans-serif;
+    color: var(--tx2);
+}
+
+@keyframes ljFloat {
+    0%, 100% { transform: translateY(0); }
+    50%      { transform: translateY(-5px); }
+}
+
+@media (max-width: 900px) {
+    .lj-top { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 640px) {
+    .lj-records { gap: 8px; }
+    .lj-record { padding: 14px 6px 12px; }
+    .lj-record picture { width: 62px; height: 74px; }
+    .lj-record-label { font-size: 12px; }
+    .lj-months { grid-template-columns: repeat(4, minmax(0, 1fr)); row-gap: 16px; }
+}
+
+@media (max-width: 400px) {
+    .lj { border-radius: 22px; }
+    .lj-chips { grid-template-columns: 1fr 1fr; }
+    .lj-chip:last-child { grid-column: 1 / -1; }
+    .lj-streak-badge { width: 76px; height: 94px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .lj-streak-badge img { animation: none; }
+    .lj-record picture,
+    .lj-month picture,
+    .lj-award picture { transition: none; }
+}

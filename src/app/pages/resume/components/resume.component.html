@@ -1,0 +1,343 @@
+<!-- resume.component.html -->
+<div class="resume-container" [ngClass]="{'dark-theme': isDarkTheme}">
+    <div class="page-sky" aria-hidden="true">
+        <span class="trail"></span>
+        <span class="trail"></span>
+        <span class="trail"></span>
+    </div>
+    <!-- Top Actions -->
+    <div class="resume-actions">
+        <button class="download-btn ats-btn" (click)="downloadATSFriendlyPDF()" title="ATS-Friendly PDF (Recommended for LinkedIn & Job Applications)">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                <polyline points="14 2 14 8 20 8" />
+                <line x1="16" y1="13" x2="8" y2="13" />
+                <line x1="16" y1="17" x2="8" y2="17" />
+                <polyline points="10 9 9 9 8 9" />
+            </svg>
+            Download ATS-Friendly PDF
+        </button>
+        <button class="download-btn visual-btn" (click)="downloadPDF()" title="Visual PDF (High Quality Design)">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                <polyline points="7 10 12 15 17 10" />
+                <line x1="12" y1="15" x2="12" y2="3" />
+            </svg>
+            Download Visual PDF
+        </button>
+    </div>
+
+    <div class="resume-main-content">
+        <div class="resume-bg-left"></div>
+        <!-- Main Resume Content -->
+        <div class="resume-content" id="resume-content">
+            <!-- Header Box that overlaps left section -->
+            <div class="resume-header-wrapper">
+                <header class="resume-header">
+                    <div class="header-box">
+                        <h1>AKHIGBE IRUOBE</h1>
+                        <h2>SENIOR FRONTEND ENGINEER</h2>
+                    </div>
+                </header>
+            </div>
+
+            <div class="resume-grid">
+                <!-- Left Column with colored background -->
+                <div class="resume-left">
+                    <!-- Details Section -->
+                    <section class="details-section">
+                        <h3>DETAILS</h3>
+                        <div class="details-content">
+                            <div class="detail-item">
+                                <span class="label">PHONE</span>
+                                <span>+2347038772342</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="label">EMAIL</span>
+                                <span>iruobeakhigbe&#64;gmail.com</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="label">LOCATION</span>
+                                <span>Lagos, Nigeria · WAT (UTC+1) · open to relocation</span>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Links Section -->
+                    <section class="links-section">
+                        <h3>LINKS</h3>
+                        <div class="links-content">
+                            <div>
+                                <span>
+                                    LinkedIn:
+                                </span>
+                                <a href="https://linkedin.com/in/akhigbe-iruobe" target="_blank" rel="noopener noreferrer"
+                                    rel="noopener noreferrer" class="link-item">
+                                    linkedin.com/in/akhigbe-iruobe
+                                </a>
+                            </div>
+                            <div>
+                                <span>
+                                    Portfolio:
+                                </span>
+                                <a href="http://iruobeakhigbe.netlify.app/" target="_blank" rel="noopener noreferrer"
+                                    class="link-item second-item">
+                                    iruobeakhigbe.netlify.app
+                                </a>
+                            </div>
+                            <div>
+                                <span>
+                                    GitHub:
+                                </span>
+                                <a href="https://github.com/ayomideesam" target="_blank" rel="noopener noreferrer"
+                                    class="link-item second-item">
+                                    github.com/ayomideesam
+                                </a>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Skills: tiers a reader can test, not percentages -->
+                    <section class="skills-section">
+                        <h3>SKILLS</h3>
+                        <div class="skills-list">
+                            @for (group of skills; track group.tier) {
+                            <div class="skill-tier" [class.skill-tier-ai]="group.tier === 'AI-augmented delivery'">
+                                <h4 class="skill-tier-name">{{ group.tier }}</h4>
+                                <ul class="skill-chips">
+                                    @for (skill of group.skills; track skill) {
+                                    <li class="skill-chip">{{ skill }}</li>
+                                    }
+                                </ul>
+                                @if (group.note) {
+                                <p class="skill-tier-note">{{ group.note }}</p>
+                                }
+                            </div>
+                            }
+                        </div>
+                    </section>
+
+                    <!-- Tech I'm Watching Section -->
+                    <section class="hobbies-section">
+                        <h3>TECH I'M WATCHING</h3>
+                        <div class="hobbies-list">
+                            @for (item of techWatching; track item; let i = $index) {
+                            <div class="hobby-item">
+                                <div class="hobby-icon" aria-hidden="true">{{ ['⚡', '🤖', '🧪', '🧠', '☁️'][i] }}</div>
+                                <span>{{ item }}</span>
+                            </div>
+                            }
+                        </div>
+                    </section>
+
+                    <!-- Languages: five dots, halves allowed -->
+                    <section class="languages-section">
+                        <h3>LANGUAGES</h3>
+                        <div class="languages-list">
+                            @for (lang of languages; track lang.name) {
+                            <div class="language-item">
+                                <span class="language-name">{{ lang.name }}@if (lang.note) {<span class="language-note">{{ lang.note }}</span>}</span>
+                                <div class="language-proficiency" role="img" [attr.aria-label]="lang.name + ': ' + lang.level + ' out of 5'">
+                                    @for (dot of [1,2,3,4,5]; track dot) {
+                                    <div class="proficiency-dot" [class.filled]="dot <= lang.level" [class.half]="dot - 0.5 === lang.level"></div>
+                                    }
+                                </div>
+                            </div>
+                            }
+                        </div>
+                    </section>
+
+                    <!-- Hobbies -->
+                    <section class="hobbies-chips-section">
+                        <h3>HOBBIES</h3>
+                        <ul class="skill-chips">
+                            @for (hobby of hobbies; track hobby) {
+                            <li class="skill-chip">{{ hobby }}</li>
+                            }
+                        </ul>
+                    </section>
+                </div>
+
+                <!-- Right Column -->
+                <div class="resume-right">
+                    <!-- Profile Section -->
+                    <section class="profile-section">
+                        <h3>PROFILE</h3>
+                        <div class="profile-content">
+                            @for (para of profile.paragraphs; track $index) {
+                            <p>{{ para }}</p>
+                            }
+                            <p class="profile-availability"><b>{{ profile.availability }}</b></p>
+                        </div>
+                    </section>
+
+                    <section class="key-achievements-section">
+                        <h3>🏆 KEY TECHNICAL ACHIEVEMENTS</h3>
+                        <div class="achievements-grid">
+                            @for (achievement of keyTechnicalAchievements; track $index) {
+                            <div class="achievement-item">
+                                <!-- Parse the achievement to separate icon, title, and description -->
+                                <div class="achievement-content" [innerHTML]="formatAchievement(achievement)"></div>
+                            </div>
+                            }
+                        </div>
+                    </section>
+
+                    <!-- Employment History Section -->
+                    <section class="employment-section">
+                        <h3>EMPLOYMENT HISTORY</h3>
+                        <div class="jobs-list">
+                            @for (job of employmentHistory; track $index; let i = $index; let first = $first) {
+                            <div class="job-item"
+                                [class.current-role]="job.period.includes('Present')"
+                                [class.same-company]="i > 0 && employmentHistory[i-1].company === job.company">
+                                <div class="job-header">
+                                    <div class="job-title">
+                                        <h4>
+                                            @if (job.period.includes('Present')) {
+                                            <span class="promotion-badge">CURRENT</span>
+                                            }
+                                            {{job.role}}
+                                            @if (getCompanyTenure(i)) {
+                                            <span class="company-tenure-badge">
+                                                {{getCompanyTenure(i)}} total
+                                            </span>
+                                            }
+                                        </h4>
+                                        <h5>
+                                            <span class="company-icon">🏢</span>
+                                            {{job.company}}
+                                        </h5>
+                                        <span class="job-location">
+                                            📍 {{job.location}}
+                                        </span>
+                                    </div>
+                                    <div class="job-meta">
+                                        <span class="job-tenure">⏳ {{getTenure(job.period)}}</span>
+                                        <span class="job-period" [class.current]="job.period.includes('Present')">
+                                            📅 {{job.period}}
+                                        </span>
+                                    </div>
+                                </div>
+                                @if (job.description) {
+                                <div class="job-description">
+                                    <p>{{job.description}}</p>
+                                </div>
+                                }
+
+                                <!-- leadership-section -->
+                                <!-- <div class="leadership-section" *ngIf="job.technicalLeadership?.length">
+                                    <h6>🚀 Technical Leadership & Team Management</h6>
+                                    <ul>
+                                        <li *ngFor="let item of job.technicalLeadership">{{item}}</li>
+                                    </ul>
+                                </div> -->
+
+                                <!-- achievements-section  -->
+                                @if (job.achievements?.length) {
+                                <div class="achievements-section">
+                                    <h6>Highlights</h6>
+                                    <ul>
+                                        @for (achievement of job.achievements!; track $index) {
+                                        <li>{{achievement}}</li>
+                                        }
+                                    </ul>
+                                </div>
+                                }
+
+                                @if (job.technicalAchievements?.length) {
+                                <div class="technical-section">
+                                    <h6>Architecture & engineering</h6>
+                                    <ul>
+                                        @for (achievement of job.technicalAchievements!; track $index) {
+                                        <li>{{achievement}}</li>
+                                        }
+                                    </ul>
+                                </div>
+                                }
+
+                                @if (job.technicalLeadership?.length) {
+                                <div class="leadership-section">
+                                    <h6>Leadership</h6>
+                                    <ul>
+                                        @for (item of job.technicalLeadership!; track $index) {
+                                        <li>{{item}}</li>
+                                        }
+                                    </ul>
+                                </div>
+                                }
+                            </div>
+                            }
+                        </div>
+                    </section>
+
+                    <!-- Education Section -->
+                    <section class="education-section">
+                        <h3>EDUCATION</h3>
+                        <div class="education-item">
+                            <div class="education-header">
+                                <h4>Bachelors of Science</h4>
+                                <span class="education-period">Sep 2011 — Jul 2016</span>
+                            </div>
+                            <div class="education-content">
+                                <h5>Babcock University, Ogun State, Nigeria</h5>
+                                <p>B.Sc Information Resource Management</p>
+                                <p class="education-grade">
+                                    Grade B or 2:1 [Second Class-Upper Division]
+                                </p>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Courses Section -->
+                    <section class="courses-section">
+                        <h3>COURSES / CERTIFICATIONS</h3>
+                        <div class="courses-list">
+                            @for (course of courses; track course.title) {
+                            <div class="course-item">
+                                <div class="course-header">
+                                    <h4>{{course.title}}</h4>
+                                    <span class="course-period">{{course.period}}</span>
+                                </div>
+                                <h5>{{course.institution}}</h5>
+                            </div>
+                            }
+                        </div>
+                    </section>
+
+                    <!-- References Section -->
+                    <section class="references-section">
+                        <h3>REFERENCES</h3>
+                        <div class="references-list">
+                            @for (reference of references; track reference.name) {
+                            <div class="reference-item">
+                                <div class="reference-content">
+                                    <h4>{{reference.name}}</h4>
+                                    <h5>{{reference.company}}</h5>
+                                    <div class="reference-contact">
+                                        <span class="reference-email reference-on-request">Available upon request</span>
+                                    </div>
+                                </div>
+                            </div>
+                            }
+                        </div>
+                        <div class="download-pdf">
+                            <button class="download-btn" (click)="downloadPDF()">
+                                Download PDF
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round">
+                                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                                    <polyline points="7 10 12 15 17 10" />
+                                    <line x1="12" y1="15" x2="12" y2="3" />
+                                </svg>
+                            </button>
+                        </div>
+                    </section>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

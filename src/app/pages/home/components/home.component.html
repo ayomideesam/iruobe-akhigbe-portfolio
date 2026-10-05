@@ -1,0 +1,586 @@
+<!-- ============ HERO ============ -->
+<section class="hero">
+  <div class="hero-grid">
+    <div class="hero-col fade-up">
+      <span class="status-pill">
+        <span class="pulse-dot"></span>
+        Open to Senior Frontend &amp; Tech Lead roles
+      </span>
+      <!-- The h1 introduces the person, then the claim. The name must stay in the
+           h1 as visible text (SEO entity rule, CLAUDE.md); the role does not repeat
+           here because the header and the status pill above already carry it. -->
+      <h1 class="hero-h1">
+        <span class="hero-name">I'm Akhigbe Iruobe.</span>
+        <span appRainbowHover class="hero-line1">I build the frontends</span>
+        <span class="hero-line2">banks and fintechs run on.</span>
+      </h1>
+      <p class="hero-copy">
+        Angular specialist with <strong>9+ years</strong> in CBN-regulated banking — credit approval, fraud detection, trade finance and NIP/NEFT/NAPS payments. Two platforms I led on the frontend passed business CAB in October 2026; one went from an empty repository to final UAT in <strong>83 days</strong>.
+      </p>
+      <div class="hero-ctas">
+        <a class="btn-primary shine" href="/projects" (click)="$event.preventDefault(); navigateToProjects()">
+          View Projects
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"></path></svg>
+        </a>
+        <!-- Recruiters' first click: the ATS resume, generated in the browser. -->
+        <button type="button" class="btn-ghost shine btn-cv" (click)="downloadCv()" [disabled]="cvBusy()" [attr.aria-busy]="cvBusy()">
+          @if (cvBusy()) {
+            <span class="btn-spinner" aria-hidden="true"></span>
+            Preparing CV…
+          } @else {
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12M7 10l5 5 5-5M5 21h14"></path></svg>
+            Download CV
+          }
+        </button>
+        <a class="btn-link" href="/contact" (click)="$event.preventDefault(); navigateToContact()">
+          Contact me
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"></path></svg>
+        </a>
+      </div>
+      <div class="hero-socials">
+        <a [href]="githubUrl" target="_blank" rel="noopener noreferrer" class="chip-link shine">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0 1 12 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"></path></svg>
+          github.com/ayomideesam
+        </a>
+        <a href="https://www.linkedin.com/in/akhigbe-iruobe/" target="_blank" rel="noopener noreferrer" class="chip-link chip-link-li shine">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"></path></svg>
+          LinkedIn
+        </a>
+      </div>
+    </div>
+
+    <div class="hero-col hero-col-orbit fade-up fade-up-2">
+      <div class="orbit-wrap">
+        <div class="orbit-ring"></div>
+        <div class="orbit-ring-dashed"></div>
+        <div class="orbit-spin">
+          @for (chip of orbitChips; track chip.name) {
+            <div class="orbit-chip" [style.left]="'calc(' + chip.left + ' - 36px)'" [style.top]="'calc(' + chip.top + ' - 36px)'">
+              <div class="orbit-chip-inner" [style.--chip-hex]="chip.hex" [style.--chip-glow]="chip.glow" [innerHTML]="sanitizeIcon(chip.icon)"></div>
+              <span class="orbit-chip-label">{{ chip.name }}</span>
+            </div>
+          }
+        </div>
+        <div class="orbit-center">
+          <div class="orbit-center-icon" [innerHTML]="sanitizeIcon(centerTech.icon)"></div>
+          <span class="orbit-center-name">{{ centerTech.name }}</span>
+          <span class="orbit-center-sub">Expert · 9+ yrs</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="scroll-indicator">
+    <div class="scroll-wheel"><span class="scroll-dot"></span></div>
+    <span class="scroll-label">Scroll to explore</span>
+    <span class="scroll-chevrons">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"></path></svg>
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"></path></svg>
+    </span>
+  </div>
+</section>
+
+<!-- ============ FEATURED PROJECTS ============ -->
+<section id="projects" class="section">
+  <div class="section-head section-head-tight">
+    <span class="eyebrow">Selected Work</span>
+    <h2 appRainbowHover class="section-h2">Featured Projects</h2>
+    <p class="section-sub">Enterprise fintech platforms I've architected and shipped to production.</p>
+  </div>
+
+  <!-- Full grid width, outside .section-head's measure. Hovering a key lights the
+       matching control on every window (:has() in the CSS). -->
+  <div class="win-hint">
+    <p class="win-hint-text">
+      <span class="win-hint-lead">These windows work.</span>
+      <span class="win-key win-key-close"><span class="win-dot win-dot-red" aria-hidden="true"><svg width="7" height="7" viewBox="0 0 8 8" fill="none" stroke="rgba(0,0,0,0.6)" stroke-width="1.5" stroke-linecap="round"><path d="M1.6 1.6l4.8 4.8M6.4 1.6L1.6 6.4"></path></svg></span>Close</span>
+      or
+      <span class="win-key win-key-min"><span class="win-dot win-dot-yellow" aria-hidden="true"><svg width="7" height="7" viewBox="0 0 8 8" fill="none" stroke="rgba(0,0,0,0.6)" stroke-width="1.5" stroke-linecap="round"><path d="M1.4 4h5.2"></path></svg></span>minimise</span>
+      one to bring in another of my {{ projectCount }}&nbsp;projects.
+      <span class="win-hint-max"><span class="win-key win-key-max"><span class="win-dot win-dot-green" aria-hidden="true"><svg width="7" height="7" viewBox="0 0 8 8" fill="rgba(0,0,0,0.6)"><path d="M1.2 4.8V1.2h3.6z"></path><path d="M6.8 3.2v3.6H3.2z"></path></svg></span>Maximise</span> for the full view.</span>
+    </p>
+    <span class="win-hint-count">
+      {{ visKeys().length }} of {{ projectCount }} open · {{ benchKeys().length }} in the dock
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M6 13l6 6 6-6"></path></svg>
+    </span>
+  </div>
+
+  <div class="projects-grid">
+    @for (p of visibleProjects; track p.key) {
+      <article class="project-card"
+               [class.card-exit-close]="swapping()?.index === p.swapIndex && swapping()?.mode === 'close'"
+               [class.card-exit-min]="swapping()?.index === p.swapIndex && swapping()?.mode === 'minimise'">
+        <div class="tl-bar">
+          <div class="tl">
+            <button type="button" class="tl-btn tl-red" (click)="swapProject(p.swapIndex, 'close')" [attr.aria-label]="'Close ' + p.title + ' and show another project'">
+              <svg class="tl-glyph" width="7" height="7" viewBox="0 0 8 8" fill="none" stroke="rgba(0,0,0,0.6)" stroke-width="1.5" stroke-linecap="round" aria-hidden="true"><path d="M1.6 1.6l4.8 4.8M6.4 1.6L1.6 6.4"></path></svg>
+              <span class="tl-tip" aria-hidden="true">Close · next project</span>
+            </button>
+            <button type="button" class="tl-btn tl-yellow" (click)="swapProject(p.swapIndex, 'minimise')" [attr.aria-label]="'Minimise ' + p.title + ' to the dock and show another project'">
+              <svg class="tl-glyph" width="7" height="7" viewBox="0 0 8 8" fill="none" stroke="rgba(0,0,0,0.6)" stroke-width="1.5" stroke-linecap="round" aria-hidden="true"><path d="M1.4 4h5.2"></path></svg>
+              <span class="tl-tip" aria-hidden="true">Minimise to dock</span>
+            </button>
+            <button type="button" class="tl-btn tl-green" (click)="expandProject(p.key)" [attr.aria-label]="'Maximise ' + p.title">
+              <svg class="tl-glyph" width="7" height="7" viewBox="0 0 8 8" fill="rgba(0,0,0,0.6)" aria-hidden="true"><path d="M1.2 4.8V1.2h3.6z"></path><path d="M6.8 3.2v3.6H3.2z"></path></svg>
+              <span class="tl-tip" aria-hidden="true">Maximise</span>
+            </button>
+          </div>
+          <span class="tl-url">{{ p.url }}</span>
+        </div>
+        <div class="project-shot" tabindex="0" role="button" [attr.aria-label]="'Expand ' + p.title + ' screenshot'" [title]="'Expand ' + p.title + ' screenshot'" (click)="expandProject(p.key)" (keydown.enter)="expandProject(p.key)">
+          <picture>
+            <source type="image/avif" [attr.srcset]="p.img | media:'avif'" sizes="(min-width: 3500px) 700px, (min-width: 2900px) 580px, (min-width: 2200px) 500px, (min-width: 1025px) 400px, (min-width: 769px) 46vw, 92vw">
+            <source type="image/webp" [attr.srcset]="p.img | media:'webp'" sizes="(min-width: 3500px) 700px, (min-width: 2900px) 580px, (min-width: 2200px) 500px, (min-width: 1025px) 400px, (min-width: 769px) 46vw, 92vw">
+            <img [src]="p.img | media:'src'" width="1280" height="720" [alt]="p.title + ' screenshot'" [title]="p.title" loading="lazy" decoding="async">
+          </picture>
+        </div>
+        <div class="carousel-bar">
+          <button type="button" class="car-btn" (click)="navImg(p.key, -1, $event)" aria-label="Previous screenshot">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+          </button>
+          <span class="car-dots">
+            @for (d of p.dots; track $index) {
+              <span class="car-dot" [class.car-dot-active]="d.active"></span>
+            }
+          </span>
+          <button type="button" class="car-btn" (click)="navImg(p.key, 1, $event)" aria-label="Next screenshot">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+          </button>
+        </div>
+        <div class="project-body">
+          <h3 class="project-title">{{ p.title }}</h3>
+          <div class="badge-row">
+            @for (b of p.badges; track b.name) {
+              <span class="badge" [style.border-color]="b.bc">{{ b.name }}</span>
+            }
+          </div>
+          <p class="project-desc">{{ p.desc }}</p>
+          <span class="view-project-link" tabindex="0" role="link" [attr.aria-label]="'View ' + p.title + ' case study'" [title]="'View ' + p.title + ' case study'" (click)="viewProject(p.key)" (keydown.enter)="viewProject(p.key)">
+            View Project
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"></path></svg>
+          </span>
+        </div>
+      </article>
+    }
+  </div>
+
+  <!-- Benched projects live here, like minimised windows; a click opens one in
+       the slot that has gone longest unchanged. -->
+  <div class="dock" role="group" aria-label="More projects">
+    <span class="dock-label">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="14" width="18" height="6" rx="2"></rect><path d="M12 3v7M8.5 6.5 12 10l3.5-3.5"></path></svg>
+      In the dock<span class="dock-touch-hint">· tap to open</span>
+    </span>
+    <!-- The tooltip names the window a click will replace, so the outcome is
+         known before the click. Hover and keyboard focus only; touch gets the
+         "tap to open" label instead. -->
+    @let target = restoreTarget;
+    <div class="dock-items">
+      @for (d of dockProjects; track d.key) {
+        <button type="button" class="dock-item" [style.--dock-hue]="d.hue" (click)="restoreProject(d.key)"
+                [attr.aria-label]="'Open ' + d.title + ' in place of ' + target.title">
+          <span class="dock-dot" aria-hidden="true"></span>{{ d.short }}
+          <span class="dock-tip" aria-hidden="true">Click to open<span class="dock-tip-sub">replaces {{ target.short }}</span></span>
+        </button>
+      }
+    </div>
+  </div>
+  <p class="visually-hidden" aria-live="polite">{{ swapAnnouncement() }}</p>
+</section>
+
+<!-- ============ CURRENTLY BUILDING ============ -->
+<section class="section">
+  <div class="cb-panel">
+    <div class="cb-head">
+      <div class="cb-eyebrow-row">
+        <span class="eyebrow">{{ currentlyBuilding.eyebrow }}</span>
+        <span class="live-pill"><span class="pulse-dot pulse-dot-fast"></span>{{ currentlyBuilding.pill }}</span>
+      </div>
+      <h2 appRainbowHover class="section-h2 cb-title">{{ currentlyBuilding.project }}</h2>
+      <p class="cb-desc"><strong>{{ currentlyBuilding.company }}</strong> — {{ currentlyBuilding.description }}</p>
+    </div>
+    <div class="cb-modules">
+      @for (m of currentlyBuilding.modules; track m.name; let n = $index) {
+        <!-- Hover replays the bar from 0, rolls the odometer and lands a ✓ (shipped)
+             or ❚❚ (paused) marker where the fill stops. Transform/opacity only. -->
+        <div class="cb-module" [class.cb-module-active]="m.status === 'shipping'" [class.cb-module-paused]="m.status === 'paused'"
+             [style.--p]="m.progress / 100" [style.--n]="n">
+          <div class="cb-module-head">
+            <h3 class="cb-module-name">{{ m.name }}</h3>
+            <span class="cb-status" [class.cb-status-active]="m.status === 'shipping'" [class.cb-status-paused]="m.status === 'paused'">
+              <span class="pulse-dot" [class.pulse-dot-fast]="m.status === 'shipping'"></span>{{ m.statusLabel }}
+            </span>
+          </div>
+          <div class="cb-progress-row">
+            <div class="cb-progress-bar">
+              <div class="cb-progress-track" role="progressbar" aria-valuemin="0" aria-valuemax="100"
+                   [attr.aria-valuenow]="m.progress" [attr.aria-label]="m.name + ' progress'">
+                <div class="cb-progress-fill">
+                  <div class="cb-progress-sheen"></div>
+                </div>
+              </div>
+              <span class="cb-progress-mark" aria-hidden="true">
+                @if (m.status === 'shipping') {
+                  <svg width="9" height="9" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 6.4l2.3 2.3 4.7-5"></path></svg>
+                } @else {
+                  <svg width="8" height="8" viewBox="0 0 12 12" fill="currentColor"><rect x="2.5" y="2" width="2.6" height="8" rx="0.8"></rect><rect x="6.9" y="2" width="2.6" height="8" rx="0.8"></rect></svg>
+                }
+              </span>
+            </div>
+            <span class="cb-progress-pct" aria-hidden="true">
+              @for (col of m.odometer; track $index) {
+                <span class="odo-col"><span class="odo-strip" [style.--to]="col.to">@for (d of col.digits; track $index) {<span>{{ d }}</span>}</span></span>
+              }<span class="odo-unit">%</span>
+            </span>
+          </div>
+          <p class="cb-module-desc">{{ m.description }}</p>
+          <div class="pill-row">
+            @for (t of m.tech; track t; let k = $index) {
+              <span class="tech-pill" [style.--k]="k">{{ t }}</span>
+            }
+          </div>
+        </div>
+      }
+    </div>
+  </div>
+</section>
+
+<!-- ============ TOOLKIT ============ -->
+<section class="section" id="toolkit">
+  <div class="section-head">
+    <span class="eyebrow">How I Build</span>
+    <h2 appRainbowHover class="section-h2">My Toolkit</h2>
+    <p class="section-sub">Nine years of Angular in production banking, and an AI-augmented workflow held to written standards, not vibes.</p>
+  </div>
+
+  <div class="tk">
+    <article class="tk-ai">
+      <div class="tk-ai-copy">
+        <span class="tk-kicker"><span class="pulse-dot"></span>AI-augmented engineering</span>
+        <h3 class="tk-ai-title">The models write fast. <span class="tk-ai-title-em">My standards decide what ships.</span></h3>
+        <p class="tk-ai-text">
+          The repos I lead open with a <code>CLAUDE.md</code> that routes the agent to the project's own rules before it
+          writes a line. On Trade Export that is {{ standardsLines | number }} lines of Angular, architecture, security,
+          merge and audit standards, plus a verify skill that drives the real app in a browser against a mocked API.
+          Claude Opus 5.5 and Fable 5.1 do the heavy lifting, MCP plugs them into real tools, and nothing ships on a
+          model's word.
+        </p>
+        <ul class="tk-models" aria-label="AI tooling">
+          @for (m of aiStack; track m) {
+            <li class="tk-model">{{ m }}</li>
+          }
+        </ul>
+        <ul class="tk-tenets">
+          @for (t of aiTenets; track t) {
+            <li>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.2 4.2L19 7"></path></svg>
+              {{ t }}
+            </li>
+          }
+        </ul>
+      </div>
+
+      <figure class="tk-ide" #agentRun>
+        <figcaption class="visually-hidden">
+          Illustration: an AI agent on the Trade Export repo reads its CLAUDE.md and standards, plans, builds, verifies
+          in a browser, runs 776 Vitest tests and npm audit, then hands off for human review.
+        </figcaption>
+        <div class="tk-ide-bar" aria-hidden="true">
+          <span class="tk-ide-repo">globus-trade</span>
+          <span class="tk-ide-sep">/</span>
+          <span class="tk-ide-tool">Claude Code</span>
+          <span class="tk-ide-model">
+            <span class="tk-ide-model-a">Opus 5.5</span>
+            <span class="tk-ide-model-b">Fable 5.1</span>
+          </span>
+        </div>
+        <div class="tk-ide-body" aria-hidden="true">
+          <ul class="tk-tree">
+            @for (f of standardsFiles; track f.path) {
+              <li class="tk-file" [class.tk-file-read]="f.step > 0" [style.--f]="f.step || 99">
+                <span class="tk-file-path">{{ f.path }}</span>
+                <span class="tk-file-lines">{{ f.lines | number }}</span>
+              </li>
+            }
+            <li class="tk-tree-total"><span>{{ standardsFiles.length }} files</span><span>{{ standardsLines | number }} lines</span></li>
+          </ul>
+          <ol class="tk-run">
+            @for (s of agentSteps; track $index; let i = $index) {
+              <li class="tk-step" [style.--i]="i + 1">
+                <span class="tk-step-verb">{{ s.verb }}</span>
+                <span class="tk-step-arg">{{ s.arg }}</span>
+                <span class="tk-step-out">{{ s.out }}</span>
+              </li>
+            }
+            <li class="tk-prompt"><span class="tk-prompt-sign">›</span><span class="tk-caret"></span></li>
+          </ol>
+        </div>
+      </figure>
+    </article>
+
+    @for (c of stackCards; track c.key; let n = $index) {
+      <article class="tk-card" [style.--n]="n">
+        <div class="tk-card-head">
+          <span class="tk-card-icon" aria-hidden="true">
+            @switch (c.key) {
+              @case ('angular') {
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 3 5.2l1.4 11.9L12 22l7.6-4.9L21 5.2z"></path><path d="M12 6.2 7.6 16.4M12 6.2l4.4 10.2M9.2 12.9h5.6"></path></svg>
+              }
+              @case ('ui') {
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="3"></rect><path d="M3 9h18M9 21V9"></path></svg>
+              }
+              @case ('quality') {
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path><path d="M9 12l2 2 4-4"></path></svg>
+              }
+              @case ('delivery') {
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="6" r="2.4"></circle><circle cx="6" cy="18" r="2.4"></circle><circle cx="18" cy="9" r="2.4"></circle><path d="M6 8.4v7.2M18 11.4c0 3.6-6 2.6-10.2 5.2"></path></svg>
+              }
+            }
+          </span>
+          <h3 class="tk-card-title">{{ c.title }}</h3>
+        </div>
+        <p class="tk-stat">
+          <span class="tk-stat-num">{{ c.stat }}</span>
+          <span class="tk-stat-note">{{ c.note }}</span>
+        </p>
+        <div class="pill-row">
+          @for (chip of c.chips; track chip) {
+            <span class="tech-pill">{{ chip }}</span>
+          }
+        </div>
+      </article>
+    }
+  </div>
+</section>
+
+<!-- ============ EXPERIENCE ============ -->
+<section id="experience" class="section section-narrow">
+  <div class="section-head">
+    <span class="eyebrow">Career</span>
+    <h2 appRainbowHover class="section-h2">Professional Journey</h2>
+    <p class="section-sub">From building payment flows in 2018 to setting the frontend standards two bank platforms shipped on in 2026.</p>
+  </div>
+
+  <!-- Growth arc: each bar is a step up in scope. Hover or focus a step to
+       light its role below; click to jump to it. -->
+  <ol class="arc" aria-label="Career growth, 2018 to 2026">
+    @for (a of growthArc; track a.key; let i = $index; let last = $last) {
+      <li class="arc-item">
+        <button type="button" class="arc-step" [class.arc-step-now]="last" [style.--h]="a.scope" [style.--i]="i"
+                (mouseenter)="focusRole.set(a.key)" (mouseleave)="focusRole.set(null)"
+                (focus)="focusRole.set(a.key)" (blur)="focusRole.set(null)" (click)="scrollToRole(a.key)"
+                [attr.aria-label]="a.year + ', ' + a.level + ': ' + a.note + '. Show this role.'">
+          <span class="arc-bar" aria-hidden="true"><span class="arc-fill"></span></span>
+          <span class="arc-text">
+            <span class="arc-year">{{ a.year }}</span>
+            <span class="arc-level">{{ a.level }}</span>
+            <span class="arc-note">{{ a.note }}</span>
+          </span>
+        </button>
+      </li>
+    }
+  </ol>
+
+  <div class="timeline">
+    @for (e of experiences; track e.key; let last = $last) {
+      <div class="timeline-row" [id]="'role-' + e.key">
+        <div class="timeline-rail">
+          <span class="timeline-badge" [style.background]="e.col" [style.box-shadow]="'0 8px 20px -6px ' + e.col">{{ e.company.charAt(0) }}</span>
+          @if (!last) { <span class="timeline-connector"></span> }
+        </div>
+        <article class="timeline-card" [class.timeline-card-current]="e.current" [class.timeline-card-focus]="focusRole() === e.key">
+          <div class="timeline-card-top">
+            <div>
+              <h3 class="timeline-role">{{ e.role }}</h3>
+              <span class="timeline-company" [style.--co]="e.col">{{ e.company }}</span>
+            </div>
+            <div class="timeline-pills">
+              @if (e.promotion) {
+                <span class="promo-pill">
+                  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5M6 11l6-6 6 6"></path></svg>
+                  {{ e.promotion }}
+                </span>
+              }
+              @if (e.recognition; as r) {
+                <a class="award-pill" [href]="r.href" target="_blank" rel="noopener noreferrer" [title]="r.proof" [attr.aria-label]="r.label + ' — ' + r.proof + ' (opens LinkedIn)'">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 21h8M12 17v4M7 4h10v5a5 5 0 0 1-10 0V4zM17 6h3a3 3 0 0 1-3 4M7 6H4a3 3 0 0 0 3 4"></path></svg>
+                  {{ r.label }}
+                  <svg class="award-pill-out" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"></path></svg>
+                </a>
+              }
+              @if (e.current) {
+                <span class="current-pill"><span class="pulse-dot"></span>Current</span>
+              }
+            </div>
+          </div>
+          <div class="timeline-meta">
+            <span>{{ e.period }}</span>
+            <span class="timeline-tenure">{{ getTenure(e.period) }}</span>
+            <span>{{ e.location }}</span>
+            @if (e.type) { <span>{{ e.type }}</span> }
+          </div>
+          <p class="timeline-scope">{{ e.scope }}</p>
+          <div class="timeline-work">
+            <span class="timeline-work-label">Signature work</span>
+            @for (w of e.work; track w.label) {
+              @if (w.projectId) {
+                <button type="button" class="work-chip" (click)="navigateToProject(w.projectId)" [attr.aria-label]="'View ' + w.label + ' on the projects page'">
+                  {{ w.label }}
+                  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"></path></svg>
+                </button>
+              } @else {
+                <span class="work-chip work-chip-plain">{{ w.label }}</span>
+              }
+            }
+          </div>
+          <div class="pill-row">
+            @for (t of e.technologies; track t) {
+              <span class="tech-pill">{{ t }}</span>
+            }
+          </div>
+        </article>
+      </div>
+    }
+  </div>
+</section>
+
+<!-- ============ BEYOND THE CODE — FRENCH ============ -->
+<section id="french" class="section section-narrow">
+  <app-learning-journey variant="card"></app-learning-journey>
+</section>
+
+<!-- ============ TESTIMONIALS ============ -->
+<!-- t-pin-wrap provides the extra scroll runway; t-pin-inner sticks in place
+     (desktop, fine pointer, no reduced-motion only — see initTestimonialPinScroll())
+     while page scroll is translated into the track's horizontal scrollLeft. -->
+<div class="t-pin-wrap" #tPinWrap [class.t-pin-active]="pinScrollActive()">
+<section class="section t-pin-inner" #tPinInner>
+  <div class="section-head section-head-row">
+    <div>
+      <span class="eyebrow">Social Proof</span>
+      <h2 appRainbowHover class="section-h2">What Colleagues Say</h2>
+      <p class="section-sub">From 8 LinkedIn recommendations — engineers and managers I've shipped with.</p>
+    </div>
+    <div class="carousel-nav">
+      <button type="button" class="carousel-nav-btn" [class.nav-pulse]="navBtnPulse() === 'prev'" (click)="scrollTestimonials(-1)" aria-label="Previous">
+        <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5"></path><path d="M11 6l-6 6 6 6"></path></svg>
+      </button>
+      <button type="button" class="carousel-nav-btn" [class.nav-pulse]="navBtnPulse() === 'next'" (click)="scrollTestimonials(1)" aria-label="Next">
+        <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"></path><path d="M13 6l6 6-6 6"></path></svg>
+      </button>
+    </div>
+  </div>
+  <div class="t-track" #testimonialsTrack (scroll)="onTrackScroll($event)">
+    @for (t of testimonials; track t.author; let i = $index) {
+      <article class="t-card">
+        <div class="t-card-top">
+          <span class="t-stars">
+            @for (s of [1,2,3,4,5]; track s) {
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path></svg>
+            }
+          </span>
+          <a href="https://www.linkedin.com/in/akhigbe-iruobe/" target="_blank" rel="noopener noreferrer" class="t-li-pill">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"></path></svg>
+            LinkedIn
+          </a>
+        </div>
+        <p class="t-quote">"{{ t.quote }}"</p>
+        <div class="t-author-row">
+          <span class="t-avatar" [style.background]="getTestimonialGradient(i)">{{ t.initials }}</span>
+          <span class="t-author-info">
+            <span class="t-author-name">{{ t.author }}</span>
+            <span class="t-author-role">{{ t.role }} · {{ t.company }}</span>
+            <span class="t-relationship">{{ t.relationship }}</span>
+          </span>
+        </div>
+      </article>
+    }
+  </div>
+</section>
+</div>
+
+<!-- ============ COMPANY MARQUEE ============ -->
+<app-company-scroller></app-company-scroller>
+
+<!-- ============ CTA ============ -->
+<section id="cta" class="section">
+  <div class="cta-panel">
+    <div class="cta-conic" aria-hidden="true"></div>
+    <div class="cta-blob cta-blob-1" aria-hidden="true"></div>
+    <div class="cta-blob cta-blob-2" aria-hidden="true"></div>
+    <h2 appRainbowHover class="section-h2 cta-title">Open to Senior Frontend Roles</h2>
+    <p class="cta-sub">Available for Senior Frontend Engineer and Tech Lead positions — UK, US, or remote. Let's talk.</p>
+    <div class="cta-buttons">
+      <a class="btn-primary shine" href="mailto:iruobeakhigbe@gmail.com?subject=Hi Akhigbe, I'd like to hire you">
+        Get in Touch
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"></path></svg>
+      </a>
+      <a class="btn-mono shine" [href]="githubUrl" target="_blank" rel="noopener noreferrer">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0 1 12 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"></path></svg>
+        github.com/ayomideesam
+      </a>
+      <a class="btn-yt shine" href="https://www.youtube.com/@AyomideIruobe" target="_blank" rel="noopener noreferrer">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M23.5 6.2c-.3-1.1-1.1-1.9-2.2-2.2C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.3.5c-1.1.3-1.9 1.1-2.2 2.2C0 8 0 12 0 12s0 4 .5 5.8c.3 1.1 1.1 1.9 2.2 2.2 1.8.5 9.3.5 9.3.5s7.5 0 9.3-.5c1.1-.3 1.9-1.1 2.2-2.2.5-1.8.5-5.8.5-5.8s0-4-.5-5.8zM9.5 15.5v-7l6.2 3.5-6.2 3.5z"></path></svg>
+        YouTube
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ============ EXPANDED PROJECT OVERLAY (desktop only) ============ -->
+@if (expandedProject; as ep) {
+  <div class="expand-overlay" (click)="closeExpand()">
+    <article class="expand-window" (click)="$event.stopPropagation()">
+      <div class="tl-bar">
+        <div class="tl">
+          <button type="button" class="tl-btn tl-red" (click)="closeExpand()" aria-label="Close expanded view" title="Close">
+            <svg class="tl-glyph" width="8" height="8" viewBox="0 0 8 8" fill="none" stroke="rgba(0,0,0,0.6)" stroke-width="1.5" stroke-linecap="round"><path d="M1.6 1.6l4.8 4.8M6.4 1.6L1.6 6.4"></path></svg>
+          </button>
+          <button type="button" class="tl-btn tl-yellow" (click)="closeExpand()" aria-label="Minimize expanded view" title="Minimize">
+            <svg class="tl-glyph" width="8" height="8" viewBox="0 0 8 8" fill="none" stroke="rgba(0,0,0,0.6)" stroke-width="1.5" stroke-linecap="round"><path d="M1.4 4h5.2"></path></svg>
+          </button>
+          <button type="button" class="tl-btn tl-green" (click)="closeExpand()" aria-label="Restore size" title="Restore">
+            <svg class="tl-glyph" width="8" height="8" viewBox="0 0 8 8" fill="rgba(0,0,0,0.6)"><path d="M4.6 1.2v3.4H1.2z"></path><path d="M3.4 6.8V3.4h3.4z"></path></svg>
+          </button>
+        </div>
+        <span class="tl-url">{{ ep.url }}</span>
+      </div>
+      <div class="expand-shot">
+        <picture>
+          <source type="image/avif" [attr.srcset]="ep.img | media:'avif'" sizes="(min-width: 1200px) 1100px, 92vw">
+          <source type="image/webp" [attr.srcset]="ep.img | media:'webp'" sizes="(min-width: 1200px) 1100px, 92vw">
+          <img [src]="ep.img | media:'src'" width="1280" height="720" [alt]="ep.title + ' screenshot'" [title]="ep.title" loading="eager" decoding="async">
+        </picture>
+      </div>
+      <div class="carousel-bar carousel-bar-lg">
+        <button type="button" class="car-btn car-btn-lg" (click)="navImg(ep.key, -1, $event)" aria-label="Previous screenshot">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+        </button>
+        <span class="car-dots">
+          @for (d of ep.dots; track $index) {
+            <span class="car-dot" [class.car-dot-active]="d.active"></span>
+          }
+        </span>
+        <button type="button" class="car-btn car-btn-lg" (click)="navImg(ep.key, 1, $event)" aria-label="Next screenshot">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+        </button>
+      </div>
+      <div class="expand-body">
+        <h3 class="expand-title">{{ ep.title }}</h3>
+        <div class="badge-row">
+          @for (b of ep.badges; track b.name) {
+            <span class="badge badge-lg" [style.border-color]="b.bc">{{ b.name }}</span>
+          }
+        </div>
+        <p class="expand-desc">{{ ep.desc }}</p>
+        <div class="expand-footer">
+          <span class="expand-hint">Press Esc or the red button to close</span>
+          <button type="button" class="expand-cta" (click)="closeExpand(); viewProject(ep.key)">
+            View Full Case Study
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"></path></svg>
+          </button>
+        </div>
+      </div>
+    </article>
+  </div>
+}

@@ -1,0 +1,380 @@
+import { Component, AfterViewInit, ElementRef, inject, ChangeDetectionStrategy } from '@angular/core';
+import { NavigationEnd, Router } from '@angular/router';
+import { filter } from 'rxjs';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { AnalyticsService } from 'src/app/core/services/analytics.service';
+import { LoadingService } from 'src/app/core/services/loading.service';
+import { PdfService } from 'src/app/core/services/pdf.service';
+import { AtsPdfService } from 'src/app/core/services/ats-pdf.service';
+import { Course, Job, Language, Profile, Reference, ResumeDataService, SkillTier } from 'src/app/core/services/resume-data.service';
+import { LearningDataService } from 'src/app/core/services/learning-data.service';
+import { SeoService } from 'src/app/core/services/seo.service';
+import { ThemeService } from 'src/app/core/services/theme.service';
+import { uiScale } from 'src/app/core/utils/ui-scale';
+
+@Component({
+    selector: 'app-resume',
+    templateUrl: './resume.component.html',
+    styleUrls: ['./resume.component.css'],
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
+})
+
+export class ResumeComponent implements AfterViewInit {
+  private elementRef = inject(ElementRef);
+  private router = inject(Router);
+  private themeService = inject(ThemeService);
+  private loadingService = inject(LoadingService);
+  private resumeData = inject(ResumeDataService);
+  private seoService = inject(SeoService);
+  private pdfService = inject(PdfService);
+  private atsPdfService = inject(AtsPdfService);
+  private analytics = inject(AnalyticsService);
+  /** French is shown as 'learning since …' from the same source as the home and projects cards. */
+  readonly frenchSince = inject(LearningDataService).getFrenchJourney().startedLabel;
+
+  get isDarkTheme(): boolean { return this.themeService.isDarkTheme(); }
+  isGeneratingPDF = false;
+
+  // Single source for the page, the visual PDF (a capture of this page) and
+  // the ATS PDF, so the three can't drift apart again.
+  profile!: Profile;
+  skills: SkillTier[] = [];
+  techWatching: string[] = [];
+  languages: Language[] = [];
+  hobbies: string[] = [];
+  employmentHistory: Job[] = [];
+  courses: Course[] = [];
+  references: Reference[] = [];
+  keyTechnicalAchievements: string[] = [];
+  private isPreparingForPdf = false;
+
+  constructor() {
+    this.initializeResumeData();
+    this.router.events.pipe(
+      takeUntilDestroyed(),
+      filter(event => event instanceof NavigationEnd)
+    ).subscribe(() => this.scrollToTop());
+    this.seoService.setResumeSeo();
+  }
+
+  private initializeResumeData(): void {
+    this.profile = this.resumeData.getProfile();
+    this.skills = this.resumeData.getSkills();
+    this.techWatching = this.resumeData.getTechWatching();
+    this.hobbies = this.resumeData.getHobbies();
+    this.languages = this.resumeData.getLanguages()
+      .map(l => l.name === 'French' ? { ...l, note: `learning since ${this.frenchSince}` } : l);
+    this.employmentHistory = this.resumeData.getEmploymentHistory();
+    this.courses = this.resumeData.getCourses();
+    this.references = this.resumeData.getReferences();
+    this.keyTechnicalAchievements = this.resumeData.getKeyTechnicalAchievements();
+  }
+
+  ngAfterViewInit() {
+    // Ensure scroll to top after view initialization
+    // setTimeout(() => this.scrollToTop(), 100);
+    this.scrollToTop();
+    this.initAchievementAnimations();
+  }
+
+  scrollToTop() {
+    if (history.state?.scrollToProject) {
+      const fragment = this.router.url.split('#')[1];
+      if (fragment) {
+        setTimeout(() => {
+          const element = document.getElementById(fragment);
+          if (element) {
+            const headerHeight = 100 * uiScale(); // Adjust based on your header height
+            const elementPosition = element.getBoundingClientRect().top;
+            const offsetPosition = elementPosition + window.pageYOffset - headerHeight;
+
+            window.scrollTo({
+              top: offsetPosition,
+              behavior: 'smooth'
+            });
+          }
+        }, 100);
+      }
+    }
+  }
+
+  initAchievementAnimations(): void {
+    // Skip animation setup if we're preparing for PDF
+    if (this.isPreparingForPdf) {
+      return;
+    }
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry, index) => {
+          if (entry.isIntersecting) {
+            // Only apply staggered animation if not preparing for PDF
+            if (!this.isPreparingForPdf) {
+              setTimeout(() => {
+                entry.target.classList.add('achievement-visible');
+              }, index * 100);
+            } else {
+              // Immediately add class if preparing for PDF
+              entry.target.classList.add('achievement-visible');
+            }
+
+            this.trackAchievementInteraction(index, 'viewed');
+          }
+        });
+      },
+      {
+        threshold: 0.2,
+        rootMargin: '50px'
+      }
+    );
+
+    // Observe all achievement items after view initialization
+    setTimeout(() => {
+      const achievementItems = this.elementRef.nativeElement.querySelectorAll('.achievement-item');
+      achievementItems.forEach((item: Element) => observer.observe(item));
+    }, 100);
+  }
+
+  formatAchievement(achievement: string): string {
+    const colonIndex = achievement.indexOf(':');
+
+    if (colonIndex !== -1) {
+      const title = achievement.substring(0, colonIndex).trim();
+      const description = achievement.substring(colonIndex + 1).trim();
+
+      // Pictographs (U+1F300+) and the older symbol blocks (⚡ is U+26A1);
+      // the data marks titles **bold**, which is markup, not text.
+      const emojiMatch = title.match(/^((?:[\u{1F300}-\u{1FAFF}]|[\u{2600}-\u{27BF}])[\u{200D}\u{FE0F}]*)\s*/u);
+      const emoji = emojiMatch ? emojiMatch[1] : '';
+      const titleText = (emoji ? title.replace(emojiMatch![0], '').trim() : title).replace(/\*\*/g, '');
+
+      // Add PDF-specific attributes for easier targeting
+      return `
+        <div class="achievement-title" 
+             role="heading" 
+             aria-level="4"
+             data-pdf-element="title">
+          ${emoji ? `<span class="achievement-emoji" 
+                            aria-hidden="true"
+                            data-pdf-element="emoji">${emoji}</span>` : ''}
+          <span class="achievement-title-text" 
+                data-pdf-element="title-text">${titleText}</span>
+        </div>
+        <div class="achievement-description" 
+             role="text"
+             data-pdf-element="description">
+          ${description}
+        </div>
+      `;
+    }
+
+    return `<div class="achievement-description"
+                 role="text"
+                 data-pdf-element="fallback">${achievement}</div>`;
+  }
+
+  // Computes a human-readable tenure (e.g. "3 yrs 9 mos") from a period like "Jun 2018 — Feb 2022"
+  getTenure(period: string): string {
+    const months: { [key: string]: number | undefined } = {
+      jan: 0, feb: 1, mar: 2, apr: 3, may: 4, jun: 5,
+      jul: 6, aug: 7, sep: 8, sept: 8, oct: 9, nov: 10, dec: 11
+    };
+
+    const parse = (value: string): Date | null => {
+      const text = value.trim();
+      if (/present/i.test(text)) return new Date();
+      const match = text.match(/([A-Za-z]+)\s+(\d{4})/);
+      if (!match) return null;
+      const month = months[match[1].toLowerCase()];
+      if (month === undefined) return null;
+      return new Date(parseInt(match[2], 10), month, 1);
+    };
+
+    const parts = period.split('—');
+    if (parts.length < 2) return '';
+
+    const start = parse(parts[0]);
+    const end = parse(parts[1]);
+    if (!start || !end) return '';
+
+    // Inclusive of both the start and end month (matches LinkedIn-style durations)
+    let totalMonths = (end.getFullYear() - start.getFullYear()) * 12 + (end.getMonth() - start.getMonth()) + 1;
+    if (totalMonths < 1) totalMonths = 1;
+
+    const years = Math.floor(totalMonths / 12);
+    const remMonths = totalMonths % 12;
+    const yearLabel = years > 0 ? `${years} yr${years > 1 ? 's' : ''}` : '';
+    const monthLabel = remMonths > 0 ? `${remMonths} mo${remMonths > 1 ? 's' : ''}` : '';
+
+    return [yearLabel, monthLabel].filter(Boolean).join(' ') || '1 mo';
+  }
+
+  // For the most-recent role of a company that has multiple (promotion) roles,
+  // returns the combined tenure across those consecutive roles. Empty otherwise.
+  getCompanyTenure(index: number): string {
+    const job = this.employmentHistory[index];
+    if (!job) return '';
+
+    // Only annotate the head (most recent) role of a company group
+    const previous = this.employmentHistory[index - 1];
+    if (previous && previous.company === job.company) return '';
+
+    // Walk forward collecting consecutive roles at the same company
+    const group: Job[] = [job];
+    for (let i = index + 1; i < this.employmentHistory.length; i++) {
+      if (this.employmentHistory[i].company === job.company) {
+        group.push(this.employmentHistory[i]);
+      } else {
+        break;
+      }
+    }
+    if (group.length < 2) return '';
+
+    const earliestStart = group[group.length - 1].period.split('—')[0];
+    const latestEnd = group[0].period.split('—')[1];
+    return this.getTenure(`${earliestStart}—${latestEnd}`);
+  }
+
+  trackAchievementInteraction(index: number, interactionType: string): void {
+    this.analytics.trackEvent('Resume', 'Achievement_Interaction', `${interactionType}_${index}`);
+  }
+
+  trackAchievementView(index: number): void {
+    this.analytics.trackEvent('Resume', 'Achievement_Viewed', `Achievement_${index}`);
+  }
+
+  async downloadPDF(): Promise<void> {
+    try {
+      this.loadingService.show('Generating PDF');
+      this.isPreparingForPdf = true;
+
+      const downloadSection = document.querySelector('.references-section .download-pdf');
+      if (downloadSection) {
+        downloadSection.classList.add('hidden');
+      }
+
+      const content = document.getElementById('resume-content');
+      if (!content) return;
+
+      // CRITICAL: Prepare animations for PDF generation
+      await this.prepareAnimationsForPdf();
+
+      const fileName = this.isDarkTheme ?
+        'AkhigbeIruobe-Resume-Dark.pdf' :
+        'AkhigbeIruobe-Resume-Light.pdf';
+
+      this.analytics.trackEvent('Resume', 'Download', 'PDF_Image_Based');
+
+      await this.pdfService.generatePDF({
+        content,
+        isDarkTheme: this.isDarkTheme,
+        fileName
+      });
+
+    } catch (error) {
+      // PDF generation error — user will see loading state timeout
+    } finally {
+      this.isPreparingForPdf = false;
+      this.loadingService.hide();
+
+      // Restore animations for normal viewing
+      this.restoreAnimationsAfterPdf();
+
+      const downloadSection = document.querySelector('.references-section .download-pdf');
+      if (downloadSection) {
+        downloadSection.classList.remove('hidden');
+      }
+    }
+  }
+
+  async downloadATSFriendlyPDF(): Promise<void> {
+    try {
+      this.loadingService.show('Generating ATS-Friendly PDF');
+
+      const resumeData = this.resumeData.getAtsResume(this.frenchSince);
+
+      this.analytics.trackEvent('Resume', 'Download', 'PDF_ATS_Friendly');
+
+      await this.atsPdfService.generateATSFriendlyPDF(resumeData, this.isDarkTheme);
+
+    } catch (error) {
+      // ATS PDF generation error — user will see loading state timeout
+    } finally {
+      this.loadingService.hide();
+    }
+  }
+
+  private async prepareAnimationsForPdf(): Promise<void> {
+    // Force all achievement items to their final visible state
+    const achievementItems = this.elementRef.nativeElement.querySelectorAll('.achievement-item');
+
+    // Add a temporary class that overrides animation states for PDF
+    achievementItems.forEach((item: Element, index: number) => {
+      // Immediately add the visible class without delay
+      item.classList.add('achievement-visible');
+
+      // Add a PDF-specific class for styling overrides
+      item.classList.add('pdf-ready');
+
+      // Ensure the item is fully visible for PDF capture
+      (item as HTMLElement).style.opacity = '1';
+      (item as HTMLElement).style.transform = 'translateY(0)';
+      (item as HTMLElement).style.visibility = 'visible';
+    });
+
+    // Also prepare the main achievements section
+    const achievementsSection = this.elementRef.nativeElement.querySelector('.key-achievements-section');
+    if (achievementsSection) {
+      achievementsSection.classList.add('pdf-ready');
+    }
+
+    // Force a layout reflow to ensure all changes are applied
+    void this.elementRef.nativeElement.offsetHeight;
+
+    // Wait for any pending animations to complete
+    await new Promise(resolve => setTimeout(resolve, 100));
+
+    // Disable any ongoing intersection observers during PDF generation
+    this.pauseIntersectionObservers();
+  }
+
+  // Method to restore normal animation behavior after PDF generation
+  private restoreAnimationsAfterPdf(): void {
+    const achievementItems = this.elementRef.nativeElement.querySelectorAll('.achievement-item');
+
+    achievementItems.forEach((item: Element) => {
+      // Remove PDF-specific overrides
+      item.classList.remove('pdf-ready');
+
+      // Clear inline styles that were set for PDF
+      (item as HTMLElement).style.opacity = '';
+      (item as HTMLElement).style.transform = '';
+      (item as HTMLElement).style.visibility = '';
+    });
+
+    const achievementsSection = this.elementRef.nativeElement.querySelector('.key-achievements-section');
+    if (achievementsSection) {
+      achievementsSection.classList.remove('pdf-ready');
+    }
+
+    // Re-enable intersection observers
+    this.resumeIntersectionObservers();
+  }
+
+  // Method to temporarily disable intersection observers during PDF generation
+  private pauseIntersectionObservers(): void {
+    // Store reference to current observers if needed
+    // For now, we'll just ensure all items are visible
+    const achievementItems = this.elementRef.nativeElement.querySelectorAll('.achievement-item');
+    achievementItems.forEach((item: Element) => {
+      item.classList.add('achievement-visible');
+    });
+  }
+
+  // Method to re-enable intersection observers after PDF generation
+  private resumeIntersectionObservers(): void {
+    // If you need to restart observers, you can do so here
+    // For now, we'll leave the items in their visible state
+  }
+}

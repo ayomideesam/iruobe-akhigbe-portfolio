@@ -1,0 +1,565 @@
+/* header.component.css — Home v2 glass pill nav + full-screen mobile menu.
+   Values are byte-identical to the design prototype's inline styles.
+   pulseDot is reimplemented as a GPU-composited pseudo-element (scale/opacity)
+   instead of the prototype's box-shadow ring, per our transform/opacity-only rule. */
+
+:host {
+    position: fixed;
+    top: 14px;
+    left: 0;
+    right: 0;
+    /* Above the app-level WhatsApp float (z-65) so the full-screen mobile menu
+       covers it. In the prototype's flat DOM menu(70) > float(65); here the host
+       boundary forms a stacking context, so it must out-rank the float itself. */
+    z-index: 70;
+    display: flex;
+    justify-content: center;
+    padding: 0 14px;
+    font-family: "Sora", sans-serif;
+}
+
+/* ─── Glass pill ─── */
+.nav-pill {
+    width: 100%;
+    max-width: 1240px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+    padding: 9px 12px;
+    border-radius: 18px;
+    background: var(--glass2);
+    -webkit-backdrop-filter: blur(var(--blur)) saturate(160%);
+    backdrop-filter: blur(var(--blur)) saturate(160%);
+    border: 1px solid var(--gbrd);
+    box-shadow: var(--shdw);
+}
+
+/* ─── Brand ─── */
+.brand {
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    text-decoration: none;
+    color: var(--tx);
+    min-width: 0;
+}
+
+.brand-chip {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 42px;
+    height: 42px;
+    flex: none;
+    border-radius: 12px;
+    background: var(--glass);
+    border: 1px solid var(--gbrd);
+    box-shadow: 0 1px 0 rgba(255, 255, 255, 0.12) inset;
+}
+.brand-chip img { display: block; border-radius: 7px; }
+
+.brand-text {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    min-width: 0;
+}
+
+.brand-name {
+    font: 700 15px Outfit, sans-serif;
+    letter-spacing: -0.01em;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    color: var(--tx);
+}
+
+.brand-sub {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    min-width: 0;
+}
+
+/* Truncates instead of sliding under the theme toggle on 320–360px phones. */
+.brand-title {
+    font: 500 10.5px Sora, sans-serif;
+    color: var(--tx2);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    min-width: 0;
+}
+
+/* ─── AVAILABLE badge ─── */
+.avail-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font: 600 9.5px Sora, sans-serif;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--ok);
+    padding: 2px 8px;
+    border-radius: 99px;
+    border: 1px solid rgba(var(--ok-rgb), 0.35);
+    background: rgba(var(--ok-rgb), 0.10);
+}
+.avail-below {
+    align-self: flex-start;
+    margin-top: 2px;
+    font-size: 9px;
+    padding: 1.5px 7px;
+}
+
+/* Green pulse dot — GPU-composited expanding ring via ::after (scale + opacity) */
+.pulse-dot {
+    position: relative;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #34d399;
+    flex: none;
+}
+.pulse-dot::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: rgba(52, 211, 153, 0.55);
+    transform: translate(-50%, -50%) scale(1);
+    animation: pulseDot 2.4s ease-out infinite;
+    pointer-events: none;
+}
+@keyframes pulseDot {
+    0%   { opacity: 0.55; transform: translate(-50%, -50%) scale(1); }
+    55%, 100% { opacity: 0; transform: translate(-50%, -50%) scale(3.4); }
+}
+.avail-below .pulse-dot,
+.avail-below .pulse-dot::after { width: 5px; height: 5px; }
+
+/* ─── Desktop nav ─── */
+.nav-links {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+/* Exclude .yt-link so the generic nav-link cascade (0,1,1) can't clobber the
+   YouTube-specific color/transition/hover (the prototype's flat inline styles
+   never collided; class-based rules do). */
+.nav-links a:not(.yt-link) {
+    font: 500 13.5px Sora, sans-serif;
+    text-decoration: none;
+    color: var(--tx2);
+    padding: 8px 14px;
+    border-radius: 11px;
+    transition: color 0.2s, background 0.2s;
+}
+.nav-links a:not(.yt-link):hover,
+.nav-links a:not(.yt-link).active {
+    color: var(--tx);
+    background: var(--glass);
+}
+
+.yt-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    font: 600 13.5px Sora, sans-serif;
+    text-decoration: none;
+    color: #f43f5e;
+    padding: 8px 14px;
+    border-radius: 11px;
+    transition: background 0.2s, transform 0.2s;
+}
+.yt-link:hover {
+    background: rgba(244, 63, 94, 0.10);
+    transform: translateY(-1px) scale(1.04);
+}
+/* Idle attention pulse — entices clicks before any hover. Paused on hover
+   per project convention (clean, non-distracting click interaction). */
+.yt-icon-ring { position: relative; display: flex; align-items: center; justify-content: center; }
+.yt-icon-ring::after {
+    content: '';
+    position: absolute;
+    inset: -5px;
+    border-radius: 50%;
+    background: rgba(244, 63, 94, 0.35);
+    transform: scale(0.6);
+    opacity: 0;
+    animation: ytRing 2.4s ease-out infinite;
+    pointer-events: none;
+}
+.yt-icon { position: relative; z-index: 1; display: block; animation: ytPulse 2.4s ease-in-out infinite; }
+@keyframes ytRing {
+    0%        { transform: scale(0.6); opacity: 0.55; }
+    70%, 100% { transform: scale(2); opacity: 0; }
+}
+.yt-link:hover .yt-icon,
+.yt-link:hover .yt-icon-ring::after { animation-play-state: paused; }
+.yt-link:hover .yt-icon { transform: scale(1.15); }
+
+/* ─── Right side / clock / switch ─── */
+.nav-end {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.nav-clock {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    font: 500 12px ui-monospace, Menlo, monospace;
+    color: var(--tx2);
+    padding: 7px 12px;
+    border-radius: 11px;
+    border: 1px solid var(--gbrd);
+    background: var(--glass);
+}
+.clock-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--ac);
+    flex: none;
+}
+.nav-clock-mobile {
+    gap: 6px;
+    font-size: 11.5px;
+    padding: 7px 10px;
+    white-space: nowrap;
+}
+.nav-clock-mobile .clock-dot { width: 5px; height: 5px; }
+
+.theme-switch {
+    position: relative;
+    flex: none;
+    width: 58px;
+    height: 30px;
+    border-radius: 99px;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    background: linear-gradient(135deg, rgba(var(--prr), 0.28), rgba(var(--acr), 0.20));
+    box-shadow: 0 1px 0 rgba(255, 255, 255, 0.12) inset, 0 4px 12px -4px rgba(0, 0, 0, 0.35);
+    transition: box-shadow 0.3s, background 0.4s ease, transform 0.25s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.theme-switch:hover {
+    box-shadow: 0 1px 0 rgba(255, 255, 255, 0.15) inset, 0 8px 22px -4px rgba(var(--prr), 0.65);
+    transform: scale(1.06);
+}
+.theme-switch:active .ts-knob { transform: scale(0.92) !important; }
+.ts-sun {
+    position: absolute;
+    left: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    color: #fbbf24;
+    transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), filter 0.3s ease;
+}
+.ts-moon {
+    position: absolute;
+    right: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    color: #a5b4fc;
+    transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), filter 0.3s ease;
+}
+.theme-switch:hover .ts-sun,
+.theme-switch:hover .ts-moon {
+    transform: translateY(-50%) scale(1.2);
+    filter: drop-shadow(0 0 4px currentColor);
+}
+.ts-knob {
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--pr), var(--ac));
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+    transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+    overflow: hidden;
+}
+/* One-shot coin-flip on the knob face each toggle. rotate(0->360deg) resolves to
+   the same matrix once committed, so a plain transition can't re-animate it on
+   the next click (nothing to diff against) — alternating between two
+   identically-defined keyframe names forces a fresh restart every time. */
+.ts-knob-face { position: absolute; inset: 0; border-radius: 50%; background: rgba(255, 255, 255, 0.22); }
+.ts-spin-a { animation: knobSpinA 0.5s cubic-bezier(0.34, 1.56, 0.64, 1); }
+.ts-spin-b { animation: knobSpinB 0.5s cubic-bezier(0.34, 1.56, 0.64, 1); }
+@keyframes knobSpinA {
+    from { transform: rotate(0deg) scale(0.6); opacity: 0.9; }
+    to   { transform: rotate(360deg) scale(1); opacity: 0; }
+}
+@keyframes knobSpinB {
+    from { transform: rotate(0deg) scale(0.6); opacity: 0.9; }
+    to   { transform: rotate(360deg) scale(1); opacity: 0; }
+}
+.theme-switch-plain {
+    background: rgba(var(--prr), 0.25);
+    box-shadow: none;
+    transition: background 0.3s;
+}
+.ts-knob-white {
+    background: #fff;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.35);
+    transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* ─── Mobile bar ─── */
+.mobile-bar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+.burger {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 4.5px;
+    width: 38px;
+    height: 38px;
+    border-radius: 11px;
+    border: 1px solid var(--gbrd);
+    background: var(--glass);
+    cursor: pointer;
+}
+.burger span {
+    width: 16px;
+    height: 2px;
+    border-radius: 2px;
+    background: var(--tx);
+}
+
+/* ─── Full-screen mobile menu ─── */
+.mobile-menu {
+    position: fixed;
+    inset: 0;
+    z-index: 70;
+    display: flex;
+    flex-direction: column;
+    background: var(--bg);
+    overflow-y: auto;
+    overflow-x: clip;
+    animation: mmBg 0.3s ease both;
+}
+@keyframes mmBg {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}
+
+.mm-blob {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(40px);
+    pointer-events: none;
+}
+.mm-blob-1 {
+    width: 70vw; height: 70vw; left: -25vw; top: -30vw;
+    background: radial-gradient(circle, rgba(var(--prr), 0.20), transparent 65%);
+}
+.mm-blob-2 {
+    width: 60vw; height: 60vw; right: -22vw; bottom: -24vw;
+    background: radial-gradient(circle, rgba(var(--acr), 0.14), transparent 65%);
+}
+
+.mm-head {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 18px 20px;
+}
+.mm-brand {
+    display: flex;
+    align-items: center;
+    gap: 11px;
+}
+.mm-brand-chip {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 42px;
+    height: 42px;
+    border-radius: 12px;
+    background: var(--glass2);
+    border: 1px solid var(--gbrd);
+}
+.mm-brand-chip img { display: block; border-radius: 7px; }
+.mm-brand-text {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+}
+.mm-close {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    border-radius: 13px;
+    border: 1px solid var(--gbrd2);
+    background: var(--glass2);
+    color: var(--tx);
+    cursor: pointer;
+    transition: transform 0.2s, border-color 0.2s;
+}
+.mm-close:hover {
+    transform: rotate(90deg);
+    border-color: rgba(var(--prr), 0.5);
+}
+
+.mm-nav {
+    position: relative;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 4px;
+    padding: 10px 26px;
+}
+.mm-link {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    text-decoration: none;
+    padding: 13px 4px;
+    border-bottom: 1px solid var(--gbrd);
+}
+.mm-link-yt { border-bottom: none; }
+.mm-num {
+    font: 600 12px ui-monospace, Menlo, monospace;
+    color: var(--tx2);
+    transition: color 0.25s;
+}
+.mm-label {
+    flex: 1;
+    font: 700 clamp(28px, 7.5vw, 38px) Outfit, sans-serif;
+    letter-spacing: -0.02em;
+    color: var(--tx);
+}
+.mm-label-active { color: var(--pr); }
+.mm-label-yt {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font: 700 clamp(28px, 7.5vw, 38px) Outfit, sans-serif;
+    letter-spacing: -0.02em;
+    color: #f43f5e;
+}
+.mm-yt-icon {
+    border-radius: 50%;
+    animation: ytPulse 2.4s ease-in-out infinite;
+}
+@keyframes ytPulse {
+    0%, 100% { transform: scale(1); opacity: 1; }
+    55%      { transform: scale(1.12); opacity: 0.7; }
+}
+.mm-arrow {
+    opacity: 0;
+    transform: translateX(-8px);
+    transition: opacity 0.25s, transform 0.25s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.mm-link:hover .mm-arrow,
+.mm-link:active .mm-arrow {
+    opacity: 1;
+    transform: translateX(0);
+}
+.mm-link:hover .mm-num,
+.mm-link:active .mm-num { color: var(--pr); }
+
+/* Numbered link entrance stagger */
+.mm-i {
+    opacity: 0;
+    animation: mmIn 0.55s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+.mm-i:nth-of-type(1) { animation-delay: 0.06s; }
+.mm-i:nth-of-type(2) { animation-delay: 0.12s; }
+.mm-i:nth-of-type(3) { animation-delay: 0.18s; }
+.mm-i:nth-of-type(4) { animation-delay: 0.24s; }
+.mm-i:nth-of-type(5) { animation-delay: 0.30s; }
+@keyframes mmIn {
+    from { opacity: 0; transform: translateY(26px) scale(0.97); }
+    to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.mm-foot {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding: 8px 26px calc(24px + env(safe-area-inset-bottom));
+}
+.mm-appearance {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 14px 16px;
+    border-radius: 16px;
+    background: var(--glass2);
+    border: 1px solid var(--gbrd);
+    -webkit-backdrop-filter: blur(14px);
+    backdrop-filter: blur(14px);
+}
+.mm-appearance-text {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+}
+.mm-appearance-title {
+    font: 600 13px Sora, sans-serif;
+    color: var(--tx);
+}
+.mm-appearance-sub {
+    font: 400 11px Sora, sans-serif;
+    color: var(--tx2);
+}
+.mm-social-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+}
+.mm-avail {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    font: 600 10px Sora, sans-serif;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #34d399;
+}
+.mm-avail .pulse-dot,
+.mm-avail .pulse-dot::after { width: 7px; height: 7px; }
+.mm-socials {
+    display: flex;
+    gap: 10px;
+}
+.mm-soc {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    border-radius: 13px;
+    border: 1px solid var(--gbrd);
+    background: var(--glass2);
+    color: var(--tx2);
+    transition: color 0.2s, border-color 0.2s;
+}
+.mm-soc:hover { color: var(--tx); border-color: var(--gbrd2); }
+.mm-soc-li:hover { color: #0a66c2; border-color: rgba(10, 102, 194, 0.5); }
+.mm-soc-wa:hover { color: #25D366; border-color: rgba(37, 211, 102, 0.5); }

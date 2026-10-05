@@ -1,0 +1,406 @@
+/* You can add global styles to this file, and also import other style files */
+/* styles.css */
+@import "src/assets/styles/font.css";
+
+html {
+    scroll-behavior: smooth;
+    /* Add this if you want to customize the scroll snap */
+    scroll-padding-top: 100px;
+    /* Should match the scroll-margin-top */
+}
+
+/* ─────────────────────────────────────────────────────────────
+   Large-display scaling. Every page is designed in px for 320–1920 CSS px.
+   On 27" QHD (2560) and 4K (3840) screens at 100% OS scaling, that design
+   would sit in a narrow column of small text, so the app shell is zoomed by
+   --z and lays out as if the screen were ~2050–2250 px wide. Raw vw/vh lengths
+   inside the shell are divided by --z (zoom multiplies them too), and scripts
+   that measure the page use uiScale() (core/utils/ui-scale.ts).
+   ───────────────────────────────────────────────────────────── */
+:root { --z: 1; }
+@media (min-width: 2200px) { :root { --z: 1.25; } }
+@media (min-width: 2900px) { :root { --z: 1.45; } }
+@media (min-width: 3500px) { :root { --z: 1.75; } }
+
+:root {
+    /* Light theme variables */
+    --primary-color: #4f46e5;
+    --primary-rgb: 79, 70, 229;
+    --accent-color: #06b6d4;
+    --accent-rgb: 6, 182, 212;
+
+    --background-color: #ffffff;
+    --background-secondary: #f8fafc;
+    --background-color-transparent: rgba(255, 255, 255, 0.8);
+
+    --text-primary: #0f172a;
+    --text-secondary: #475569;
+
+    --border-color: #e2e8f0;
+    --card-background: #ffffff;
+
+    --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.1);
+    --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
+    --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
+
+    /* HEADER */
+    --header-bg-scrolled: rgb(75 74 74 / 95%);
+    --header-line-bg: rgba(16, 16, 28, 0.95);
+
+    --cta-section-bg: linear-gradient(135deg, #ffffff 0%, var(--background-secondary) 100%);
+    --cta-section-box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
+        0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    --cta-gradient-overlay-bg: radial-gradient(circle at center,
+            rgba(var(--primary-rgb), 0.48) 1.5%,
+            rgba(var(--background-secondary), 3.43) 70%);
+    --cta-gradient-overlay-opacity: 1;
+
+    --cta-pattern-overlay-bg: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%239C92AC' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    --cta-pattern-overlay-opacity: 1;
+    --cta-title-color: #0f172a;
+
+    --skills-bg: #f8fafc;
+    --skills-card-bg: #ffffff;
+    --skills-hover-bg: rgba(79, 70, 229, 0.05);
+    --skills-border: rgba(79, 70, 229, 0.1);
+    --skills-progress-bg: rgba(79, 70, 229, 0.1);
+    --skills-progress-fill: linear-gradient(90deg, #4F46E5, #818CF8);
+
+    --exp-timeline-bg: rgba(79, 70, 229, 0.5);
+    --exp-card-bg: #ffffff;
+    --exp-badge-border: #ffffff;
+    --exp-hover-shadow: rgba(0, 0, 0, 0.1);
+}
+
+/* Dark theme variables */
+.dark-theme {
+    --primary-color: #818cf8;
+    --primary-rgb: 129, 140, 248;
+    --accent-color: #22d3ee;
+    --accent-rgb: 34, 211, 238;
+
+    --background-color: #0f172a;
+    --background-secondary: #1e293b;
+    --background-color-transparent: rgba(15, 23, 42, 0.8);
+
+    --text-primary: #f1f5f9;
+    --text-secondary: #94a3b8;
+
+    --border-color: #334155;
+    --card-background: #1e293b;
+
+    --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3);
+    --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.3);
+    --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.3);
+
+    /* HEADER */
+    --header-bg-scrolled: rgba(16, 16, 28, 0.95);
+    --header-line-bg: #f1f5f9;
+
+    /* CTA BG */
+    --cta-section-bg: linear-gradient(135deg, #1a1f35 0%, #0f1629 100%);
+    --cta-section-box-shadow: 0;
+    --cta-gradient-overlay-bg: radial-gradient(circle at center,
+            rgba(var(--primary-rgb), 0.15) 0%,
+            transparent 70%);
+    --cta-gradient-overlay-opacity: 0.5;
+
+    --cta-pattern-overlay-bg: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%239C92AC' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    ;
+    --cta-pattern-overlay-opacity: 1;
+
+    --cta-title-color: #f1f5f9;
+
+    --skills-bg: #1a1f35;
+    --skills-card-bg: #262d43;
+    --skills-hover-bg: rgba(99, 102, 241, 0.1);
+    --skills-border: rgba(99, 102, 241, 0.2);
+    --skills-progress-bg: rgba(99, 102, 241, 0.2);
+    --skills-progress-fill: linear-gradient(90deg, #818CF8, #6366F1);
+
+    --exp-timeline-bg: rgba(99, 102, 241, 0.4);
+    --exp-card-bg: #262d43;
+    --exp-badge-border: #1a1f35;
+    --exp-hover-shadow: rgba(0, 0, 0, 0.3);
+}
+
+/* ─────────────────────────────────────────────────────────────
+   Home v2 design tokens (separate names from the legacy --primary-color
+   set above, so both systems coexist). Default is DARK (:root/.thm-dark);
+   .thm-light overrides. ThemeService applies .thm-dark+.dark-theme (dark)
+   or .thm-light (light) on <html>. Keep .thm-light AFTER :root for the
+   equal-specificity tie-break.
+   ───────────────────────────────────────────────────────────── */
+:root,
+.thm-dark {
+    --bg: #090e1c;
+    --tx: #f1f5f9;
+    --tx2: #94a3b8;
+    --pr: #818cf8;
+    --prr: 129, 140, 248;
+    --ac: #22d3ee;
+    --acr: 34, 211, 238;
+    --glass: rgba(255, 255, 255, 0.05);
+    --glass2: rgba(255, 255, 255, 0.085);
+    --gbrd: rgba(255, 255, 255, 0.10);
+    --gbrd2: rgba(255, 255, 255, 0.18);
+    --shdw: 0 1px 0 rgba(255, 255, 255, 0.10) inset, 0 22px 50px -22px rgba(0, 0, 0, 0.75);
+    --blur: 18px;
+    --btntx: #0b1120;
+    --coffee: #f59e0b;
+    /* Brand colours as text: mixed toward white on dark, black on light, so
+       each company/brand name clears WCAG AA (4.5:1) in both themes. */
+    --co-mix-to: #ffffff;
+    --co-mix-pct: 75%;
+    --li-text: #70b5f9;
+    --coffee-rgb: 245, 158, 11;
+    --ok: #34d399;
+    --ok-rgb: 52, 211, 153;
+}
+
+.thm-light {
+    --bg: #f3f4fa;
+    --tx: #0f172a;
+    --tx2: #475569;
+    --pr: #4f46e5;
+    --prr: 79, 70, 229;
+    --ac: #0891b2;
+    --acr: 8, 145, 178;
+    --glass: rgba(255, 255, 255, 0.60);
+    --glass2: rgba(255, 255, 255, 0.78);
+    --gbrd: rgba(15, 23, 42, 0.09);
+    --gbrd2: rgba(15, 23, 42, 0.16);
+    --shdw: 0 1px 0 rgba(255, 255, 255, 0.9) inset, 0 18px 40px -20px rgba(15, 23, 42, 0.22);
+    --btntx: #ffffff;
+    --coffee: #92400e; /* amber-800: 6.1:1 on its own tinted pills (b45309 was 4.3) */
+    --co-mix-to: #000000;
+    --co-mix-pct: 62%;
+    --li-text: #0a66c2;
+    --coffee-rgb: 146, 64, 14;
+    /* #34d399 on light glass is ~1.9:1; emerald-700 clears 4.5:1 for status text */
+    --ok: #047857;
+    --ok-rgb: 4, 120, 87;
+}
+
+/* Global styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html,
+body {
+    height: 100%;
+}
+
+body {
+    font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI',
+        Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue',
+        sans-serif;
+    background-color: var(--background-color);
+    color: var(--text-primary);
+    line-height: 1.5;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    color: var(--text-primary);
+    line-height: 1.2;
+}
+
+h2 {
+    font-size: 2.5rem;
+    margin-bottom: 2rem;
+    text-align: center;
+}
+
+/* Smooth scrolling */
+html {
+    scroll-behavior: smooth;
+}
+
+/* Selection styles */
+::selection {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+/* Scrollbar styles */
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--background-secondary);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--primary-color);
+    border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--accent-color);
+}
+
+/* Common animations */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Common utility classes */
+.gradient-text {
+    background: linear-gradient(45deg, var(--primary-color), var(--accent-color));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+
+.container {
+    max-width: 1440px;
+    margin: 0 auto;
+    padding: 0 2rem;
+}
+
+.text-center {
+    text-align: center;
+}
+
+.hidden {
+    display: none;
+}
+
+.visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    border: 0;
+}
+
+/* Accessibility: honour users who prefer reduced motion */
+@media (prefers-reduced-motion: reduce) {
+
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+}
+
+/* Ambient shooting-star sky — full-page layer reused across routes */
+.page-sky {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    overflow: hidden;
+}
+
+.page-sky .trail {
+    position: absolute;
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: rgba(var(--primary-rgb), 1);
+    box-shadow: 0 0 8px 2px rgba(var(--primary-rgb), 0.85);
+    opacity: 0;
+    rotate: 21deg;
+    animation: pageSkyShoot var(--shoot-dur, 13s) ease-out var(--shoot-delay, 4s) infinite;
+}
+
+.page-sky .trail::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    right: 3px;
+    width: 110px;
+    height: 2px;
+    transform: translateY(-50%);
+    border-radius: 2px;
+    background: linear-gradient(90deg, rgba(var(--primary-rgb), 0) 0%, rgba(var(--primary-rgb), 0.85) 100%);
+}
+
+.page-sky .trail:nth-child(1) {
+    top: 12%;
+    left: 5%;
+    --shoot-dur: 13s;
+    --shoot-delay: 3s;
+}
+
+.page-sky .trail:nth-child(2) {
+    top: 42%;
+    left: 58%;
+    --shoot-dur: 17s;
+    --shoot-delay: 9s;
+}
+
+.page-sky .trail:nth-child(3) {
+    top: 70%;
+    left: 20%;
+    --shoot-dur: 15s;
+    --shoot-delay: 6s;
+}
+
+@keyframes pageSkyShoot {
+    0% {
+        opacity: 0;
+        translate: 0 0;
+    }
+
+    2% {
+        opacity: 1;
+    }
+
+    13% {
+        opacity: 0;
+        translate: 420px 162px;
+    }
+
+    100% {
+        opacity: 0;
+        translate: 420px 162px;
+    }
+}

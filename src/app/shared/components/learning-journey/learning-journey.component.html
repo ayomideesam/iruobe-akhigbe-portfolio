@@ -1,0 +1,125 @@
+<article class="lj" [class.lj-panel]="variant === 'panel'" [attr.aria-labelledby]="'lj-title-' + variant">
+    <span class="lj-flag" aria-hidden="true"><span></span><span></span><span></span></span>
+
+    <div class="lj-top">
+        <header class="lj-head">
+            <span class="lj-eyebrow">
+                <svg class="lj-flame" width="14" height="14" viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M12 2c1 3.2-.6 5-2.2 6.8C8.3 10.4 7 12 7 14.5A5 5 0 0 0 12 20a5 5 0 0 0 5-5.4c-.1-2.1-1.2-3.6-2.3-4.9.1 1.5-.4 2.6-1.4 3.2.3-3.6-.4-7.3-1.3-10.9Z" fill="currentColor"/>
+                </svg>
+                {{ variant === 'card' ? 'Beyond the code' : 'Learning in public' }} · {{ journey.language }}
+            </span>
+            <h2 class="lj-title" [id]="'lj-title-' + variant">{{ journey.headline }}</h2>
+            <p class="lj-intro">{{ journey.intro }}</p>
+        </header>
+
+        <div class="lj-streak">
+            <div class="lj-streak-row">
+                <picture class="lj-streak-badge">
+                    <source type="image/avif" [attr.srcset]="journey.streak.image | media:'avif'" sizes="104px">
+                    <source type="image/webp" [attr.srcset]="journey.streak.image | media:'webp'" sizes="104px">
+                    <img [src]="journey.streak.image | media:'src'" width="104" height="134" loading="lazy" decoding="async"
+                        [alt]="'Duolingo streak badge: ' + journey.streak.days + ' days'">
+                </picture>
+                <div class="lj-streak-text">
+                    <span class="lj-streak-days">{{ journey.streak.days }}</span>
+                    <span class="lj-streak-label">{{ journey.streak.label }}</span>
+                </div>
+            </div>
+            <ul class="lj-chips">
+                @for (s of journey.stats; track s.label) {
+                <li class="lj-chip">
+                    <span class="lj-chip-value">{{ s.value }}</span>
+                    <span class="lj-chip-label">{{ s.label }}</span>
+                </li>
+                }
+            </ul>
+        </div>
+    </div>
+
+    @if (variant === 'card') {
+    <section class="lj-block" aria-label="Personal records">
+        <h3 class="lj-subhead">Personal records</h3>
+        <ul class="lj-records">
+            @for (r of records; track r.label) {
+            <li class="lj-record">
+                <picture>
+                    <source type="image/avif" [attr.srcset]="r.image | media:'avif'" sizes="88px">
+                    <source type="image/webp" [attr.srcset]="r.image | media:'webp'" sizes="88px">
+                    <img [src]="r.image | media:'src'" width="88" height="104" loading="lazy" decoding="async"
+                        [alt]="r.label + ': ' + r.value">
+                </picture>
+                <span class="lj-record-label">{{ r.label }}</span>
+                <span class="lj-record-date">{{ r.date }}</span>
+            </li>
+            }
+        </ul>
+    </section>
+
+    <section class="lj-block" aria-label="Monthly badges">
+        <div class="lj-subhead-row">
+            <h3 class="lj-subhead">Monthly badges · 2026</h3>
+            <span class="lj-subhead-count">{{ earnedMonths }} earned</span>
+        </div>
+        <ol class="lj-months">
+            @for (m of journey.months; track m.label) {
+            <li class="lj-month" [attr.data-state]="m.state">
+                <picture>
+                    <source type="image/avif" [attr.srcset]="m.image | media:'avif'" sizes="64px">
+                    <source type="image/webp" [attr.srcset]="m.image | media:'webp'" sizes="64px">
+                    <img [src]="m.image | media:'src'" width="64" height="68" loading="lazy" decoding="async"
+                        [alt]="m.name + ' badge: ' + (m.state === 'earned' ? 'earned' : m.state === 'missed' ? 'not earned' : 'in progress')">
+                </picture>
+                <span class="lj-month-label">{{ m.label }}</span>
+                @if (m.state === 'current') {
+                <span class="lj-month-tag">In progress</span>
+                }
+            </li>
+            }
+        </ol>
+    </section>
+    } @else {
+    <section class="lj-block" aria-label="Achievements">
+        <div class="lj-subhead-row">
+            <h3 class="lj-subhead">Achievements</h3>
+            <span class="lj-subhead-count">{{ journey.awards.length }} badges</span>
+        </div>
+        <ul class="lj-awards">
+            @for (a of journey.awards; track a.name) {
+            <li class="lj-award">
+                <picture>
+                    <source type="image/avif" [attr.srcset]="a.image | media:'avif'" sizes="64px">
+                    <source type="image/webp" [attr.srcset]="a.image | media:'webp'" sizes="64px">
+                    <img [src]="a.image | media:'src'" width="72" height="78" loading="lazy" decoding="async"
+                        [alt]="a.name + ' achievement badge'">
+                </picture>
+                <div class="lj-award-text">
+                    <span class="lj-award-name">{{ a.name }}</span>
+                    <span class="lj-award-note">{{ a.note }}</span>
+                    @if (a.level !== undefined) {
+                    <span class="lj-award-level">
+                        <span class="lj-bar" aria-hidden="true"><span [style.transform]="'scaleX(' + (a.level / a.levels!) + ')'"></span></span>
+                        {{ a.level === a.levels ? 'Maxed' : 'Level ' + a.level + ' of ' + a.levels }}
+                    </span>
+                    }
+                </div>
+            </li>
+            }
+        </ul>
+    </section>
+
+    <section class="lj-block" aria-label="Words in rotation">
+        <h3 class="lj-subhead">Words in rotation</h3>
+        <ul class="lj-words" lang="fr">
+            @for (w of journey.words; track w) {
+            <li>{{ w }}</li>
+            }
+        </ul>
+    </section>
+    }
+
+    <footer class="lj-foot">
+        Figures and badges from my {{ journey.platform }} profile, as of
+        <time [attr.datetime]="journey.asOfIso">{{ journey.asOfLabel }}</time>. Badge artwork © {{ journey.platform }}.
+    </footer>
+</article>

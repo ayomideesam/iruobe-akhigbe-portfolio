@@ -1,0 +1,516 @@
+<div class="hero-section" [ngClass]="{'dark-theme': isDarkTheme}">
+    <div class="hero-particles" aria-hidden="true">
+        @for (p of particles; track $index) {
+        <span class="star"></span>
+        }
+        <span class="shooting-star shooting-star--a"></span>
+        <span class="shooting-star shooting-star--b"></span>
+    </div>
+    <div class="hero-content">
+        <div class="hero-text" [@fadeInUp]>
+            <h1 class="hero-title">
+                <div class="title-wrapper">
+                    <span class="text-primary">Turning Complex Problems</span>
+                    <span class="text-hover">Code. Create. Innovate.</span>
+                </div>
+                <div class="accent-wrapper">
+                    <span class="accent-text">Into Beautiful Solutions</span>
+                    <span class="accent-text-hover">One Interface at a Time</span>
+                </div>
+            </h1>
+            <p class="hero-subtitle">
+
+                {{subtitle}}
+                <!-- I'm Akhigbe Iruobe, transforming complex user needs into elegant digital experiences.
+                Whether it's building scalable enterprise applications or crafting intuitive interfaces,
+                I bring both technical expertise and creative vision to every project. -->
+                👋 <span> Hi, I'm Akhigbe, </span> an Angular specialist who believes great software should be powerful, scalable & elegant. <br>
+                Drawing from 9+ years of frontend expertise, I create robust enterprise-grade applications that users love to interact with.
+            </p>
+            <div class="cta-buttons">
+                <button class="primary-btn view-projects" (click)="navigateToProjects()">
+                    View Projects
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path opacity="0.4"
+                            d="M18.5859 13.6026L17.6194 14.3639C16.0536 15.5974 15.2707 16.2141 14.6354 15.9328C14 15.6515 14 14.6881 14 12.7613L14 11.2387C14 9.31191 14 8.34853 14.6354 8.06721C15.2707 7.7859 16.0536 8.40264 17.6194 9.63612L18.5858 10.3974C19.5286 11.1401 20 11.5115 20 12C20 12.4885 19.5286 12.8599 18.5859 13.6026Z"
+                            fill="" />
+                        <path
+                            d="M18.5859 13.6026L17.6194 14.3639C16.0536 15.5974 15.2707 16.2141 14.6354 15.9328C14 15.6515 14 14.6881 14 12.7613L14 11.2387C14 9.31191 14 8.34853 14.6354 8.06721C15.2707 7.7859 16.0536 8.40264 17.6194 9.63612L18.5858 10.3974C19.5286 11.1401 20 11.5115 20 12C20 12.4885 19.5286 12.8599 18.5859 13.6026Z"
+                            stroke="#141B34" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                        <path d="M14 12L4 12" stroke="#141B34" stroke-width="1.5" stroke-linecap="round"
+                            stroke-linejoin="round" />
+                    </svg>
+                </button>
+                <button class="secondary-btn" (click)="navigateToContact()">
+                    Contact Me
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path
+                            d="M4 10C4 6.22876 4 4.34315 5.17157 3.17157C6.34315 2 8.22876 2 12 2H13.5C17.2712 2 19.1569 2 20.3284 3.17157C21.5 4.34315 21.5 6.22876 21.5 10V14C21.5 17.7712 21.5 19.6569 20.3284 20.8284C19.1569 22 17.2712 22 13.5 22H12C8.22876 22 6.34315 22 5.17157 20.8284C4 19.6569 4 17.7712 4 14V10Z"
+                            stroke="#141B34" stroke-width="1.5" />
+                        <path
+                            d="M9.79993 11.9741C9.37332 11.2302 9.16733 10.6228 9.04313 10.007C8.85943 9.09641 9.27981 8.20686 9.97622 7.63926C10.2706 7.39937 10.608 7.48133 10.782 7.79358L11.1749 8.49851C11.4864 9.05725 11.6421 9.33663 11.6112 9.63282C11.5803 9.929 11.3703 10.1702 10.9503 10.6527L9.79993 11.9741ZM9.79993 11.9741C10.6634 13.4797 12.0185 14.8356 13.5259 15.7001M13.5259 15.7001C14.2698 16.1267 14.8772 16.3327 15.493 16.4569C16.4036 16.6406 17.2931 16.2202 17.8607 15.5238C18.1006 15.2294 18.0187 14.892 17.7064 14.718L17.0015 14.3251C16.4427 14.0136 16.1634 13.8579 15.8672 13.8888C15.571 13.9197 15.3298 14.1297 14.8473 14.5497L13.5259 15.7001Z"
+                            stroke="#141B34" stroke-width="1.5" stroke-linejoin="round" />
+                        <path d="M5 6L2.5 6M5 12L2.5 12M5 18H2.5" stroke="#141B34" stroke-width="1.5"
+                            stroke-linecap="round" stroke-linejoin="round" />
+                    </svg>
+                </button>
+            </div>
+
+            <div class="hero-social-row">
+                <a [href]="githubUrl" target="_blank" rel="noopener noreferrer" class="hero-github-link">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0 1 12 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/>
+                    </svg>
+                    <span>github.com/ayomideesam</span>
+                    <span class="hero-github-arrow">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+                            <path d="M7 17L17 7M17 7H7M17 7v10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </span>
+                </a>
+                <a href="https://www.linkedin.com/in/akhigbe-iruobe/" target="_blank" rel="noopener noreferrer" class="hero-linkedin-link">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+                    </svg>
+                    <span>LinkedIn</span>
+                </a>
+            </div>
+        </div>
+
+        <div class="hero-visual" [@fadeIn]>
+            <div class="orbit-container">
+                <div class="orbit-ring"></div>
+                <div class="tech-items">
+                    @for (tech of technologies; track $index; let i = $index) {
+                    <div class="tech-item"
+                        [style.transform]="getInitialPosition(i)"
+                        [@techItemAnimation]="hoveredTechIndex === i ? 'hovered' : 'normal'"
+                        (mouseenter)="onTechHover(i)" (mouseleave)="onTechLeave()">
+                        <div class="tech-icon" [innerHTML]="sanitizeIcon(tech.icon)"></div>
+                        <div class="tech-name">{{tech.name}}</div>
+                    </div>
+                    }
+                </div>
+                <div class="center-item">
+                    <div class="tech-item">
+                        <div class="tech-icon" [innerHTML]="sanitizeIcon(centerTech.icon)"></div>
+                        <div class="tech-step">
+                            <div class="center-tech-name">{{centerTech.name}}</div>
+                            <div class="tech-level">{{centerTech.level}}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="scroll-indicator" [@bounce]>
+        <span>Scroll to explore</span>
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path
+                d="M2.5 12C2.5 7.52166 2.5 5.28249 3.89124 3.89124C5.28249 2.5 7.52166 2.5 12 2.5C16.4783 2.5 18.7175 2.5 20.1088 3.89124C21.5 5.28249 21.5 7.52166 21.5 12C21.5 16.4783 21.5 18.7175 20.1088 20.1088C18.7175 21.5 16.4783 21.5 12 21.5C7.52166 21.5 5.28249 21.5 3.89124 20.1088C2.5 18.7175 2.5 16.4783 2.5 12Z"
+                stroke="#141B34" stroke-width="1.5" />
+            <path d="M12 16L12 8M12 16C11.2998 16 9.99153 14.0057 9.5 13.5M12 16C12.7002 16 14.0085 14.0057 14.5 13.5"
+                stroke="#141B34" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+        </svg>
+    </div>
+</div>
+
+<section class="featured-projects" [@fadeInUp]>
+    <div class="sec-shell">
+        <div class="sec-head">
+            <span class="sec-kicker">Selected Work</span>
+            <h2 class="sec-title">Featured Projects</h2>
+            <p class="sec-subtitle">
+                Enterprise fintech platforms I've architected and shipped to production
+            </p>
+        </div>
+
+        <div class="projects-grid">
+            @for (project of featuredProjects; track project.id) {
+            <div class="project-preview">
+                <div class="project-card" [@projectHover]="project.isHovered ? 'hovered' : 'rest'"
+                    (mouseenter)="project.isHovered = true" (mouseleave)="project.isHovered = false">
+                    <div class="project-image">
+                        <img [src]="project.imageUrl" [alt]="project.title">
+                        <div class="project-scrim"></div>
+                        <div class="project-info">
+                            <h3 class="project-title">{{project.title}}</h3>
+                            <div class="project-badges">
+                                @for (tech of project.techStack; track tech.name) {
+                                <span class="project-badge" [style.borderColor]="tech.color + '66'">
+                                    {{tech.name}}
+                                </span>
+                                }
+                            </div>
+                            <div class="project-reveal">
+                                <div class="project-reveal-inner">
+                                    <p class="project-desc">{{project.description}}</p>
+                                    <button class="project-view" (click)="navigateToProject(project.id)">
+                                        View Project
+                                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+                                            <path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2"
+                                                stroke-linecap="round" stroke-linejoin="round" />
+                                        </svg>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            }
+        </div>
+
+        <div class="view-all-projects">
+            <button class="primary-btn" (click)="navigateToProjects()">
+                View All Projects
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M17 8l4 4m0 0l-4 4m4-4H3" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round" />
+                </svg>
+            </button>
+        </div>
+    </div>
+</section>
+
+<!-- Currently Building -->
+<section class="currently-building-section">
+    <div class="section-particles" aria-hidden="true">
+        @for (p of particles; track $index) {
+        <span class="star"></span>
+        }
+        <span class="shooting-star shooting-star--a"></span>
+    </div>
+    <div class="cb-shell">
+        <div class="cb-header">
+            <div class="cb-live-badge">
+                <span class="cb-pulse-dot"></span>
+                <span>LIVE</span>
+            </div>
+            <div class="cb-title-block">
+                <span class="sec-kicker">Currently Building</span>
+                <h2 class="cb-title">{{currentlyBuilding.project}}</h2>
+                <p class="cb-subtitle">
+                    <span class="cb-company">{{currentlyBuilding.company}}</span>
+                    &nbsp;—&nbsp;
+                    {{currentlyBuilding.description}}
+                </p>
+            </div>
+        </div>
+
+        <div class="cb-modules-grid">
+            @for (module of currentlyBuilding.modules; track module.name) {
+            <div class="cb-module-card"
+                [class.cb-module--active]="module.status === 'finalising'"
+                [class.cb-module--upcoming]="module.status === 'upcoming'">
+
+                <div class="cb-module-header">
+                    <div class="cb-module-name-row">
+                        <h3 class="cb-module-name">{{module.name}}</h3>
+                        <span class="cb-module-status-badge" [class.badge--active]="module.status === 'finalising'" [class.badge--upcoming]="module.status === 'upcoming'">
+                            @if (module.status === 'finalising') {
+                            <span class="badge-dot"></span>
+                            }
+                            {{module.statusLabel}}
+                        </span>
+                    </div>
+                    <div class="cb-progress-row">
+                        <div class="cb-progress-bar">
+                            <div class="cb-progress-fill" [style.width.%]="module.progress"
+                                [class.fill--active]="module.status === 'finalising'"></div>
+                        </div>
+                        <span class="cb-progress-pct">{{module.progress}}%</span>
+                    </div>
+                </div>
+
+                <p class="cb-module-desc">{{module.description}}</p>
+
+                <div class="cb-module-tech">
+                    @for (t of module.tech; track $index) {
+                    <span class="cb-tech-pill">{{t}}</span>
+                    }
+                </div>
+            </div>
+            }
+        </div>
+    </div>
+</section>
+
+<!-- Skills / Toolkit -->
+<section class="skills-section">
+    <div class="section-particles" aria-hidden="true">
+        @for (m of motes; track $index) {
+        <span class="star"></span>
+        }
+    </div>
+    <div class="sec-shell">
+        <div class="sec-head">
+            <span class="sec-kicker">Capabilities</span>
+            <h2 class="sec-title">My Toolkit</h2>
+            <p class="sec-subtitle">
+                9+ years building scalable applications with modern web technologies and tools
+            </p>
+        </div>
+
+        <div class="skill-grid">
+            @for (category of skillCategories; track category.name; let i = $index) {
+            <div class="skill-category-card"
+                [@cardAnimation]="{value: '*', params: {delay: i * 100}}">
+                <div class="skill-category-header">
+                    <div class="category-icon">
+                        <svg [innerHTML]="getCategoryIcon(category.name) | safeHtml"></svg>
+                    </div>
+                    <h3 class="skill-category-title">{{category.name}}</h3>
+                </div>
+
+                <ul class="skills-list">
+                    @for (skill of category.skills; track skill.name) {
+                    <li class="skill-row">
+                        <span class="skill-row-icon" [innerHTML]="sanitizeIcon(skill.icon)"></span>
+                        <span class="skill-row-name">{{skill.name}}</span>
+                        <span class="skill-row-meta">
+                            <span class="skill-tier" [ngClass]="'tier-' + getTier(skill.level).toLowerCase()">
+                                {{getTier(skill.level)}}
+                            </span>
+                            <span class="skill-years">{{skill.experience}}</span>
+                        </span>
+                    </li>
+                    }
+                </ul>
+            </div>
+            }
+        </div>
+    </div>
+</section>
+
+<section class="experience-section py-16">
+    <div class="section-particles" aria-hidden="true">
+        @for (m of motes; track $index) {
+        <span class="star"></span>
+        }
+    </div>
+    <div class="exp-shell">
+        <div class="sec-head">
+            <span class="sec-kicker">Career</span>
+            <h2 class="sec-title">Professional Journey</h2>
+            <p class="sec-subtitle">
+                A track record of delivering innovative solutions across fintech and enterprise applications
+            </p>
+        </div>
+
+        <div class="exp-timeline">
+            @for (exp of experiences; track $index; let i = $index) {
+            <div class="exp-entry"
+                [class.is-current]="exp.current" [@timelineAnimation]="{value: '*', params: {delay: i * 120}}"
+                (mouseenter)="hoveredExp = exp" (mouseleave)="hoveredExp = null">
+
+                <div class="exp-rail">
+                    <span class="exp-node" [style.--node-color]="getCompanyColor(exp.company)">
+                        {{exp.company.charAt(0)}}
+                    </span>
+                </div>
+
+                <article class="exp-card" [class.active]="hoveredExp === exp">
+                    <div class="exp-card-top">
+                        <div class="exp-role-block">
+                            <h3 class="exp-role">{{exp.role}}</h3>
+                            <div class="exp-company-line">
+                                <span class="exp-company"
+                                    [style.color]="getCompanyColor(exp.company)">{{exp.company}}</span>
+                                @if (exp.type) {
+                                <span class="exp-type">{{exp.type}}</span>
+                                }
+                            </div>
+                        </div>
+                        @if (exp.current) {
+                        <span class="exp-current-chip">
+                            <span class="exp-current-dot"></span> Current
+                        </span>
+                        }
+                    </div>
+
+                    <div class="exp-meta">
+                        <span class="exp-meta-item">
+                            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                            </svg>
+                            {{exp.period}}
+                        </span>
+                        <span class="exp-meta-item exp-tenure">
+                            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                            {{getTenure(exp.period)}}
+                        </span>
+                        <span class="exp-meta-item">
+                            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                            </svg>
+                            {{exp.location}}
+                        </span>
+                    </div>
+
+                    @if (exp.technologies) {
+                    <div class="exp-tech">
+                        @for (tech of exp.technologies; track $index) {
+                        <span class="exp-tech-pill">{{tech}}</span>
+                        }
+                    </div>
+                    }
+                </article>
+            </div>
+            }
+        </div>
+    </div>
+</section>
+
+<!-- Testimonials / Social Proof -->
+<section class="testimonials-section">
+    <div class="section-particles" aria-hidden="true">
+        @for (p of particles; track $index) {
+        <span class="star"></span>
+        }
+        <span class="shooting-star shooting-star--b"></span>
+    </div>
+
+    <div class="sec-shell testimonials-shell">
+        <div class="sec-head">
+            <span class="sec-kicker">Social Proof</span>
+            <h2 class="sec-title">What Colleagues Say</h2>
+            <p class="sec-subtitle">
+                From 8 LinkedIn recommendations — engineers and managers I've shipped with.
+            </p>
+        </div>
+
+        <!-- Carousel -->
+        <div class="testimonials-carousel-wrapper">
+            <!-- Prev arrow -->
+            <button type="button" class="testimonial-nav-btn testimonial-nav-prev"
+                (click)="scrollTestimonials(-1)"
+                [disabled]="!canScrollPrev"
+                aria-label="Previous testimonial">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                    <path d="M15 18l-6-6 6-6" stroke="currentColor" stroke-width="2.5"
+                        stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </button>
+
+            <!-- Scrollable track -->
+            <div class="testimonials-track" #testimonialsTrack (scroll)="onTrackScroll($event)">
+                @for (t of testimonials; track $index; let i = $index) {
+                <article class="testimonial-card" [attr.data-index]="i">
+                    <div class="testimonial-top-row">
+                        <div class="testimonial-stars">
+                            @for (s of [1,2,3,4,5]; track s) {
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                            </svg>
+                            }
+                        </div>
+                        <a href="https://www.linkedin.com/in/akhigbe-iruobe/" target="_blank" rel="noopener noreferrer"
+                            class="testimonial-linkedin-badge" title="View recommendation on LinkedIn">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+                            </svg>
+                            LinkedIn
+                        </a>
+                    </div>
+                    <div class="testimonial-quote-mark">
+                        <svg width="32" height="32" viewBox="0 0 24 24">
+                            <path d="M3 21c3 0 7-1 7-8V5c0-1.25-.756-2.017-2-2H4c-1.25 0-2 .75-2 1.972V11c0 1.25.75 2 2 2 1 0 1 0 1 1v1c0 1-1 2-2 2s-1 .008-1 1.031V20c0 1 0 1 1 1z" fill="currentColor"/>
+                            <path d="M15 21c3 0 7-1 7-8V5c0-1.25-.757-2.017-2-2h-4c-1.25 0-2 .75-2 1.972V11c0 1.25.75 2 2 2h.75c0 2.25.25 4-2.75 4v3c0 1 0 1 1 1z" fill="currentColor"/>
+                        </svg>
+                    </div>
+                    <p class="testimonial-text">{{t.quote}}</p>
+                    <div class="testimonial-author">
+                        <div class="testimonial-avatar" [attr.data-index]="i">{{t.initials}}</div>
+                        <div class="testimonial-meta">
+                            <span class="testimonial-name">{{t.author}}</span>
+                            <span class="testimonial-role">{{t.role}} · {{t.company}}</span>
+                            <span class="testimonial-relationship">{{t.relationship}}</span>
+                        </div>
+                    </div>
+                </article>
+                }
+            </div>
+
+            <!-- Next arrow -->
+            <button type="button" class="testimonial-nav-btn testimonial-nav-next"
+                (click)="scrollTestimonials(1)"
+                [disabled]="!canScrollNext"
+                aria-label="Next testimonial">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                    <path d="M9 18l6-6-6-6" stroke="currentColor" stroke-width="2.5"
+                        stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </button>
+        </div>
+
+        <div class="testimonials-footer">
+            <a href="https://www.linkedin.com/in/akhigbe-iruobe/" target="_blank" rel="noopener noreferrer" class="testimonials-view-all">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+                </svg>
+                View all 8 recommendations on LinkedIn
+            </a>
+        </div>
+    </div>
+</section>
+
+<app-company-scroller></app-company-scroller>
+
+<section class="cta-section" [@fadeInUp]>
+    <div class="cta-background">
+        <div class="gradient-overlay"></div>
+        <div class="pattern-overlay"></div>
+        <div class="cta-stars" aria-hidden="true">
+            @for (p of particles; track $index) {
+            <span class="star"></span>
+            }
+            <span class="shooting-star shooting-star--a"></span>
+            <span class="shooting-star shooting-star--b"></span>
+        </div>
+    </div>
+
+    <div class="cta-content">
+        <h2 class="cta-title">Open to Senior Frontend Roles</h2>
+        <p class="cta-text">Available for Senior Frontend Engineer and Tech Lead positions — UK, US, or remote. Let's talk.</p>
+        <div class="cta-actions">
+            <button class="cta-button primary" (click)="navigateToContact()">
+                <span class="button-content">
+                    Get in Touch
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path opacity="0.4" d="M14 12L4 12" stroke="currentColor" stroke-width="1.5"
+                            stroke-linecap="round" stroke-linejoin="round" />
+                        <path
+                            d="M18.5859 13.6026L17.6194 14.3639C16.0536 15.5974 15.2707 16.2141 14.6354 15.9328C14 15.6515 14 14.6881 14 12.7613L14 11.2387C14 9.31191 14 8.34853 14.6354 8.06721C15.2707 7.7859 16.0536 8.40264 17.6194 9.63612L18.5858 10.3974C19.5286 11.1401 20 11.5115 20 12C20 12.4885 19.5286 12.8599 18.5859 13.6026Z"
+                            stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                    </svg>
+                </span>
+                <span class="button-background"></span>
+            </button>
+            <div class="cta-social-links">
+                <a [href]="githubUrl" target="_blank" rel="noopener noreferrer" class="cta-secondary-link">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0 1 12 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/>
+                    </svg>
+                    <span>github.com/ayomideesam</span>
+                </a>
+                <a href="https://www.youtube.com/@AyomideIruobe" target="_blank" rel="noopener noreferrer"
+                    class="cta-secondary-link">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                        <path
+                            d="M23.5 6.2c-.3-1.1-1.1-1.9-2.2-2.2C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.3.5c-1.1.3-1.9 1.1-2.2 2.2C0 8 0 12 0 12s0 4 .5 5.8c.3 1.1 1.1 1.9 2.2 2.2 1.8.5 9.3.5 9.3.5s7.5 0 9.3-.5c1.1-.3 1.9-1.1 2.2-2.2.5-1.8.5-5.8.5-5.8s0-4-.5-5.8zM9.5 15.5v-7l6.2 3.5-6.2 3.5z" />
+                    </svg>
+                    <span>YouTube</span>
+                </a>
+            </div>
+        </div>
+    </div>
+</section>

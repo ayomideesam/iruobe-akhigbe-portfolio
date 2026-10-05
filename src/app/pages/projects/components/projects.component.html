@@ -1,0 +1,985 @@
+<div class="projects-container" [@fadeIn]>
+    <div class="page-sky" aria-hidden="true">
+        <span class="trail"></span>
+        <span class="trail"></span>
+        <span class="trail"></span>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════════ -->
+    <!-- CINEMATIC INTRO                                             -->
+    <!-- ═══════════════════════════════════════════════════════════ -->
+    <section class="about-section">
+        <div class="intro-eyebrow">
+            <span class="intro-eyebrow-line"></span>
+            <span class="intro-eyebrow-label">Enterprise Angular &middot; CBN-Regulated Fintech &middot; 9+ Years</span>
+            <span class="intro-eyebrow-line"></span>
+        </div>
+        <h1><span appRainbowHover>About my work</span><span class="accent-dot">.</span></h1>
+        <div class="about-text-container">
+            <p class="about-text about-text-highlight">{{aboutText.para1}}</p>
+            <p class="about-text">{{aboutText.para2}}</p>
+            <p class="about-text">{{aboutText.para3}}</p>
+            <p class="about-text about-text-emphasis">{{aboutText.para4}}</p>
+        </div>
+        <div class="scroll-container">
+            <div class="scroll-text" [@scrollTextAnimation]="scrollState">
+                <span>Scroll to explore projects</span>
+            </div>
+            <div class="scroll-line-wrapper">
+                <div class="scroll-line"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════════ -->
+    <!-- FLAGSHIP SCENES                                             -->
+    <!-- ═══════════════════════════════════════════════════════════ -->
+    <section class="project-section">
+        <div class="fp-divider" aria-hidden="true">
+            <span class="fp-divider-line"></span>
+            <span class="fp-divider-label">Flagship Production Work</span>
+            <span class="fp-divider-line"></span>
+        </div>
+
+        @for (project of projects; track project.id; let i = $index) {
+        <article class="fp-scene fp-reveal" [id]="'project-' + project.id"
+            [style.--fp-acc]="getSceneMeta(project.id).accent"
+            [style.--fp-acc-rgb]="getSceneMeta(project.id).accentRgb">
+
+            <!-- Seedance 2.0 ambient film layer -->
+            <div class="fp-film" aria-hidden="true">
+                <video [attr.data-video]="getSceneMeta(project.id).video"
+                    [attr.poster]="getSceneMeta(project.id).video | media:'poster':getSceneMeta(project.id).poster"
+                    muted playsinline loop preload="none" tabindex="-1"></video>
+                <span class="fp-scrim"></span>
+                <span class="fp-grain"></span>
+            </div>
+            <span class="fp-spotlight" aria-hidden="true"></span>
+
+            <header class="fp-scene-head">
+                <span class="fp-index" aria-hidden="true">{{ i < 9 ? '0' : '' }}{{ i + 1 }}</span>
+                <div class="fp-head-id">
+                    <span class="fp-eyebrow"><span class="fp-eyebrow-dot"></span>{{getSceneMeta(project.id).eyebrow}}</span>
+                    <h2 class="fp-title" appRainbowHover>{{project.title}}</h2>
+                </div>
+                <span class="fp-private">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none">
+                        <rect x="3" y="11" width="18" height="11" rx="2" stroke="currentColor" stroke-width="2"/>
+                        <path d="M7 11V7a5 5 0 0 1 10 0v4" stroke="currentColor" stroke-width="2"/>
+                    </svg>
+                    Private Codebase
+                </span>
+            </header>
+
+            <div class="fp-body">
+                <div class="fp-narrative">
+                    <p class="fp-desc">{{project.description}}</p>
+
+                    @if (project.stats?.length) {
+                    <div class="fp-stats">
+                        @for (stat of project.stats!; track stat.label) {
+                        <div class="fp-stat">
+                            <span class="fp-stat-value">{{stat.value}}</span>
+                            <span class="fp-stat-label">{{stat.label}}</span>
+                        </div>
+                        }
+                    </div>
+                    }
+
+                    <div class="tech-stack fp-tech">
+                        @for (tech of project.techStack; track tech.name) {
+                        <span class="tech-badge"
+                            [style.backgroundColor]="tech.color + '20'" [style.color]="tech.color">
+                            {{tech.name}}
+                        </span>
+                        }
+                    </div>
+
+                    <div class="fp-achievements" [class.is-expanded]="isExpanded(project.id)">
+                        <h3>Key Achievements</h3>
+                        <ul>
+                            @for (achievement of project.achievements; track $index) {
+                            <li>{{achievement}}</li>
+                            }
+                        </ul>
+                        @if (project.achievements.length > 2) {
+                        <button type="button" class="fp-more"
+                            (click)="toggleAchievements(project.id, $event)">
+                            <span>{{isExpanded(project.id) ? 'Show less' : 'View more'}}</span>
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"
+                                [style.transform]="isExpanded(project.id) ? 'rotate(180deg)' : 'rotate(0deg)'">
+                                <polyline points="6 9 12 15 18 9"></polyline>
+                            </svg>
+                        </button>
+                        }
+                    </div>
+
+                    @if (project.engineering?.length) {
+                    <div class="fp-deep" [class.is-open]="isDeepOpen(project.id)">
+                        <button type="button" class="fp-deep-toggle" (click)="toggleDeep(project.id, $event)"
+                            [attr.aria-expanded]="isDeepOpen(project.id)" [attr.aria-controls]="'deep-' + project.id">
+                            <span class="fp-deep-icon" aria-hidden="true">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg>
+                            </span>
+                            <span class="fp-deep-label">
+                                <strong>Under the hood</strong>
+                                <span>Architecture, engineering &amp; delivery detail</span>
+                            </span>
+                            <svg class="fp-deep-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                        </button>
+                        <div class="fp-deep-panel" [id]="'deep-' + project.id" [attr.aria-hidden]="!isDeepOpen(project.id)" [attr.inert]="isDeepOpen(project.id) ? null : ''">
+                            @if (project.codebase?.length) {
+                            <div class="fp-deep-codebase">
+                                <span class="fp-deep-k">Codebase</span>
+                                @for (fact of project.codebase!; track fact) {
+                                <span class="fp-deep-chip">{{ fact }}</span>
+                                }
+                            </div>
+                            }
+                            @for (group of project.engineering!; track group.area) {
+                            <div class="fp-deep-group">
+                                <h4>{{ group.area }}</h4>
+                                <ul>
+                                    @for (point of group.points; track $index) {
+                                    <li>{{ point }}</li>
+                                    }
+                                </ul>
+                            </div>
+                            }
+                        </div>
+                    </div>
+                    }
+
+                    <div class="fp-links">
+                        <a [href]="githubUrl" target="_blank" rel="noopener noreferrer" class="fp-github">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0 1 12 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/>
+                            </svg>
+                            View GitHub Profile
+                        </a>
+                    </div>
+                </div>
+
+                <aside class="fp-visuals">
+                    <ng-container *ngTemplateOutlet="shotFrame; context: { $implicit: project, i: 0 }"></ng-container>
+
+                    <div class="fp-duo">
+                        @if (project.id === 7) {
+                        <div class="fp-telemetry">
+                            <div class="fp-telemetry-head"><span class="fp-live-dot"></span>Export Chain</div>
+                            <div class="animation-container">
+                                <div class="nxp-chain">
+                                    <div class="nxp-track">
+                                        @for (stage of ['NXP', 'NESS', 'Ship', 'Repat', 'Close']; track stage) {
+                                        <div class="nxp-stage">
+                                            <span class="nxp-node"></span>
+                                            <span class="nxp-stage-label">{{stage}}</span>
+                                        </div>
+                                        }
+                                        <span class="nxp-track-line"></span>
+                                        <div class="nxp-runner"><span class="nxp-crate"></span></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="fp-telemetry">
+                            <div class="fp-telemetry-head"><span class="fp-live-dot"></span>Repatriation Band</div>
+                            <div class="animation-container">
+                                <div class="nxp-band">
+                                    <div class="nxp-band-meta">
+                                        <span>Proceeds vs FOB</span>
+                                        <span class="nxp-band-tag">&plusmn;10%</span>
+                                    </div>
+                                    <div class="nxp-gauge">
+                                        <span class="nxp-gauge-zone"></span>
+                                        <span class="nxp-gauge-fill"></span>
+                                        <span class="nxp-gauge-target"></span>
+                                    </div>
+                                    <span class="nxp-band-ok">Within tolerance</span>
+                                    <div class="nxp-inflows">
+                                        @for (kind of ['Full', 'Partial', 'Advanced']; track kind) {
+                                        <span class="nxp-inflow">{{kind}}</span>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        }
+                        @if (project.id === 6) {
+                        <div class="fp-telemetry">
+                            <div class="fp-telemetry-head"><span class="fp-live-dot"></span>Approval Ladder</div>
+                            <div class="animation-container">
+                                <div class="tm-stage cap-ladder">
+                                    <div class="tm-row">
+                                        <span class="tm-cap">FR-0418 · Retail</span>
+                                        <span class="tm-swap cap-state">
+                                            <span class="tm-pill">Pending</span>
+                                            <span class="tm-pill ok">Approved</span>
+                                        </span>
+                                    </div>
+                                    <div class="cap-window">
+                                        <span class="cap-desk"></span>
+                                        <ol class="cap-rungs">
+                                            @for (r of tm.capRungs; track r.name) {
+                                            <li class="cap-rung" [style.--s]="r.step">
+                                                <span class="cap-rung-dot"></span>
+                                                <span class="cap-rung-name">{{r.name}}</span>
+                                                <span class="cap-rung-ok">{{r.ok}}</span>
+                                                @if (r.returned) {
+                                                <span class="cap-rung-back">Returned</span>
+                                                }
+                                            </li>
+                                            }
+                                        </ol>
+                                    </div>
+                                    <div class="tm-row">
+                                        <span class="tm-cap tm-wide">Approve · Return · Reject</span>
+                                        <span class="tm-pill ok">SLA 48h</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="fp-telemetry">
+                            <div class="fp-telemetry-head"><span class="fp-live-dot"></span>Drawdown</div>
+                            <div class="animation-container">
+                                <div class="tm-stage cap-draw">
+                                    <div class="tm-row">
+                                        <span class="tm-cap">PL-0818<span class="tm-wide"> · ₦90M limit</span></span>
+                                        <span class="tm-swap cap-draw-state">
+                                            <span class="tm-pill">Not disbursed</span>
+                                            <span class="tm-pill">Partially disbursed</span>
+                                            <span class="tm-pill ok">Fully disbursed</span>
+                                        </span>
+                                    </div>
+                                    <div class="cap-pools">
+                                        <span class="cap-pool"><span class="tm-cap">Undrawn</span></span>
+                                        <span class="cap-pool"><span class="tm-cap">Disbursed</span></span>
+                                        <span class="cap-lanes">
+                                            @for (t of tm.capTranches; track t) {
+                                            <span class="cap-tranche" [attr.data-t]="$index + 1">{{t}} · ₦30M</span>
+                                            }
+                                        </span>
+                                        <span class="cap-over">T4 · ₦45M ✕</span>
+                                    </div>
+                                    <span class="tm-swap cap-draw-note">
+                                        <span class="tm-cap">Each drawdown ≤ undrawn<span class="tm-wide"> balance</span></span>
+                                        <span class="tm-pill bad">Exceeds undrawn</span>
+                                        <span class="tm-pill ok">Booked · CPO → COO</span>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        }
+                        @if (project.id === 1) {
+                        <div class="fp-telemetry">
+                            <div class="fp-telemetry-head"><span class="fp-live-dot"></span>Inbox Agent</div>
+                            <div class="animation-container">
+                                <div class="tm-stage cos-inbox">
+                                    <div class="cos-tabs">
+                                        @for (tab of tm.cosTabs; track tab) {
+                                        <span class="cos-tab" [class.on]="tab === 'Primary'">{{tab}}</span>
+                                        }
+                                    </div>
+                                    <div class="cos-flow">
+                                        <div class="cos-mail">
+                                            <span class="cos-avatar"></span>
+                                            <span class="cos-mail-subj">Vendor quote · Q4 rates</span>
+                                            <span class="tm-swap cos-mail-meta">
+                                                <span class="tm-cap">09:41</span>
+                                                <span class="tm-pill ok">Sent ✓</span>
+                                            </span>
+                                        </div>
+                                        <div class="cos-block">
+                                            <span class="tm-cap tm-acc">✦ Email summary</span>
+                                            <span class="cos-line" style="--w: 92%"></span>
+                                            <span class="cos-line" style="--w: 64%"></span>
+                                        </div>
+                                        <div class="cos-block cos-reply">
+                                            <span class="tm-row">
+                                                <span class="tm-cap tm-acc">Suggested response</span>
+                                                <span class="tm-pill">Formal</span>
+                                            </span>
+                                            <span class="cos-line" style="--w: 96%"></span>
+                                            <span class="cos-line" style="--w: 84%"></span>
+                                            <span class="cos-line" style="--w: 52%"></span>
+                                        </div>
+                                        <span class="cos-send">Send</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="fp-telemetry">
+                            <div class="fp-telemetry-head"><span class="fp-live-dot"></span>Scheduler Agent</div>
+                            <div class="animation-container">
+                                <div class="tm-stage cos-cal">
+                                    <div class="tm-row">
+                                        <span class="tm-pill cos-req">Meet · Thu 10:00</span>
+                                        <span class="tm-swap cos-act">
+                                            <span class="tm-pill">wait</span>
+                                            <span class="tm-pill">upsert</span>
+                                            <span class="tm-pill ok">insert</span>
+                                        </span>
+                                    </div>
+                                    <div class="cos-week">
+                                        <div class="cos-days">
+                                            @for (d of tm.cosDays; track d) {
+                                            <span class="tm-cap">{{d}}</span>
+                                            }
+                                        </div>
+                                        <div class="cos-grid">
+                                            <span class="cos-ev cos-focus" style="--c: 1; --r: 0; --h: 2">Focus</span>
+                                            <span class="cos-ev cos-flex" style="--c: 3; --r: 1">Flexible</span>
+                                            <span class="cos-ev cos-ghost" style="--c: 3; --r: 1"></span>
+                                            <span class="cos-ev cos-new" style="--c: 3; --r: 1">Meet<i class="cos-rsvp"></i></span>
+                                            <span class="cos-clash" style="--c: 3; --r: 1"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        }
+                        @if (project.id === 2) {
+                        <div class="fp-telemetry">
+                            <div class="fp-telemetry-head"><span class="fp-live-dot"></span>Shipment Ledger</div>
+                            <div class="animation-container">
+                                <div class="tm-stage gta-ledger">
+                                    <div class="tm-row">
+                                        <span class="tm-cap">Form M<span class="tm-wide"> · USD CF value</span></span>
+                                        <span class="gta-var">
+                                            <span class="tm-cap">Variance</span>
+                                            <span class="tm-swap gta-var-val">
+                                                @for (v of tm.gtaVariance; track v) {
+                                                <b>{{v}}</b>
+                                                }
+                                            </span>
+                                        </span>
+                                    </div>
+                                    <div class="gta-yard">
+                                        <span class="gta-ceiling"><span class="tm-cap">Form M value</span></span>
+                                        <div class="gta-stack">
+                                            @for (box of tm.gtaBoxes; track box.part) {
+                                            <span class="gta-box" [attr.data-b]="$index + 1">
+                                                <span>{{box.part}}</span>
+                                                <span class="gta-bol">{{box.bol}}</span>
+                                            </span>
+                                            }
+                                        </div>
+                                        <span class="gta-quay"></span>
+                                        <span class="tm-pill ok gta-stamp">Approved</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="fp-telemetry">
+                            <div class="fp-telemetry-head"><span class="fp-live-dot"></span>LC Checklist</div>
+                            <div class="animation-container">
+                                <div class="tm-stage gta-check">
+                                    <div class="tm-row">
+                                        <span class="tm-swap gta-set">
+                                            <span class="tm-cap tm-acc">Advanced set</span>
+                                            <span class="tm-cap tm-acc">Negotiating set</span>
+                                        </span>
+                                        <span class="tm-cap tm-wide">2 original · 2 copy</span>
+                                    </div>
+                                    <ol class="gta-docs">
+                                        @for (d of tm.gtaDocs; track d) {
+                                        <li class="gta-doc" [style.--i]="$index">
+                                            <span class="gta-doc-name">{{d}}</span>
+                                            <span class="gta-doc-pips"><i></i></span>
+                                        </li>
+                                        }
+                                    </ol>
+                                    <span class="tm-swap gta-verdict">
+                                        <span class="tm-pill">Requirements not met</span>
+                                        <span class="tm-pill ok">Requirements met</span>
+                                        <span class="tm-pill">Released to recipient</span>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        }
+                        @if (project.id === 3) {
+                        <div class="fp-telemetry">
+                            <div class="fp-telemetry-head"><span class="fp-live-dot"></span>Rule Matrix</div>
+                            <div class="animation-container">
+                                <div class="tm-stage fms-matrix">
+                                    <div class="tm-row">
+                                        <span class="tm-pill">Mobile · ₦4.85M</span>
+                                        <span class="fms-score">
+                                            <span class="tm-cap">Score</span>
+                                            <span class="tm-swap fms-score-val">
+                                                @for (s of tm.fmsScore; track s) {
+                                                <b>{{s}}</b>
+                                                }
+                                            </span>
+                                        </span>
+                                    </div>
+                                    <div class="fms-rules">
+                                        <span class="fms-beam"></span>
+                                        @for (rule of tm.fmsRules; track rule.name) {
+                                        <span class="fms-rule" [attr.data-hit]="rule.hit || null">
+                                            <span class="fms-rule-name">{{rule.name}}</span>
+                                            @if (rule.weight) {
+                                            <span class="fms-rule-w">{{rule.weight}}</span>
+                                            }
+                                        </span>
+                                        }
+                                    </div>
+                                    <div class="tm-row">
+                                        <span class="tm-cap tm-wide">14 weighted rules</span>
+                                        <span class="tm-swap fms-verdict">
+                                            <span class="tm-pill">Monitoring</span>
+                                            <span class="tm-pill bad">Flagged</span>
+                                            <span class="tm-pill bad">PND placed</span>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="fp-telemetry">
+                            <div class="fp-telemetry-head"><span class="fp-live-dot"></span>Call-back Review</div>
+                            <div class="animation-container">
+                                <div class="tm-stage fms-review">
+                                    <div class="tm-row">
+                                        <span class="tm-swap fms-case">
+                                            <span class="tm-cap"><span class="tm-wide">Call-back · </span><b class="tm-acc">case 1 of 2</b></span>
+                                            <span class="tm-cap"><span class="tm-wide">Call-back · </span><b class="tm-acc">case 2 of 2</b></span>
+                                        </span>
+                                        <span class="tm-swap fms-out">
+                                            <span class="tm-pill ok">PND lifted</span>
+                                            <span class="tm-pill bad">PND sustained</span>
+                                        </span>
+                                    </div>
+                                    <ul class="fms-qs">
+                                        @for (q of tm.fmsQuestions; track q) {
+                                        <li class="fms-q">
+                                            <span class="fms-q-name">{{q}}</span>
+                                            <span class="tm-swap fms-q-res" [attr.data-q]="$index + 1">
+                                                <span class="tm-pill ok">Pass</span>
+                                                <span class="tm-pill bad">Fail</span>
+                                            </span>
+                                        </li>
+                                        }
+                                    </ul>
+                                    <div class="tm-row fms-decide">
+                                        <span class="tm-cap">Initiator</span>
+                                        <span class="tm-swap fms-dec">
+                                            <span class="tm-pill">Waived</span>
+                                            <span class="tm-pill bad">Fraudulent</span>
+                                        </span>
+                                        <span class="fms-arrow"></span>
+                                        <span class="tm-pill fms-auth">Authorizer ✓</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        }
+                        @if (project.id === 4) {
+                        <div class="fp-telemetry">
+                            <div class="fp-telemetry-head"><span class="fp-live-dot"></span>Teller Gate</div>
+                            <div class="animation-container">
+                                <div class="tm-stage tgr-gate">
+                                    <div class="tgr-lanes">
+                                        <div class="tgr-track">
+                                            @for (g of tm.tgrGates; track g) {
+                                            <span class="tgr-node"><i></i><span class="tm-cap">{{g}}</span></span>
+                                            }
+                                            <span class="tgr-line"></span>
+                                        </div>
+                                        <div class="tgr-queue">
+                                            <span class="tgr-box"><span class="tm-cap">HOP</span></span>
+                                            <span class="tgr-box"><span class="tm-cap">Zonal head</span></span>
+                                        </div>
+                                        <div class="tgr-runner tgr-r1"><span class="tgr-token">NIP</span></div>
+                                        <div class="tgr-runner tgr-r2"><span class="tgr-token">NEFT</span></div>
+                                    </div>
+                                    <span class="tm-swap tgr-caption">
+                                        @for (c of tm.tgrCaptions; track c) {
+                                        <span class="tm-cap" [style.--k]="$index">{{c}}</span>
+                                        }
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="fp-telemetry">
+                            <div class="fp-telemetry-head"><span class="fp-live-dot"></span>Three Rails</div>
+                            <div class="animation-container">
+                                <div class="tm-stage tgr-rails">
+                                    <div class="tgr-rail">
+                                        <span class="tgr-rail-name">NIP</span>
+                                        <div class="tgr-rail-track">
+                                            <i class="tgr-dot"></i><i class="tgr-dot"></i><i class="tgr-dot"></i>
+                                            <span class="tgr-end tgr-ok">00</span>
+                                        </div>
+                                    </div>
+                                    <div class="tgr-rail">
+                                        <span class="tgr-rail-name">NEFT</span>
+                                        <div class="tgr-rail-track">
+                                            <i class="tgr-item"></i>
+                                            <span class="tgr-bucket"><span class="tgr-bucket-fill"></span><span class="tm-cap">Session</span></span>
+                                            <span class="tgr-end">NACS</span>
+                                        </div>
+                                    </div>
+                                    <div class="tgr-rail">
+                                        <span class="tgr-rail-name">NAPS</span>
+                                        <div class="tgr-rail-track">
+                                            <span class="tgr-batch">
+                                                <span class="tgr-batch-card">
+                                                    <span class="tm-swap tgr-batch-state">
+                                                        <b>Amount block</b><b>Debit</b><b>Transmitted</b>
+                                                    </span>
+                                                </span>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        }
+                        @if (project.id === 5) {
+                        <div class="fp-telemetry">
+                            <div class="fp-telemetry-head"><span class="fp-live-dot"></span>Collection Desk</div>
+                            <div class="animation-container">
+                                <div class="tm-stage xpt-desk">
+                                    <div class="tm-row">
+                                        <span class="tm-cap tm-wide">Merchant</span>
+                                        <span class="tm-pill xpt-merchant">Crestfield Academy</span>
+                                    </div>
+                                    <div class="xpt-body">
+                                        <div class="xpt-form">
+                                            @for (f of tm.xptFields; track f) {
+                                            <span class="xpt-field" [attr.data-f]="$index + 1">
+                                                <span class="tm-cap">{{f}}</span>
+                                                <span class="xpt-input"><i></i></span>
+                                            </span>
+                                            }
+                                            <span class="xpt-methods">
+                                                @for (m of tm.xptMethods; track m) {
+                                                <span class="xpt-method" [class.pick]="m === 'Transfer'">{{m}}</span>
+                                                }
+                                            </span>
+                                        </div>
+                                        <div class="xpt-printer">
+                                            <span class="xpt-slot"></span>
+                                            <span class="xpt-printer-label">Receipt</span>
+                                            <span class="xpt-receipt"><b>Receipt</b><i></i><i></i><i></i><b class="xpt-pdf">PDF</b></span>
+                                        </div>
+                                        <span class="xpt-memo" data-m="1">Memo · fees due week 3</span>
+                                        <span class="xpt-memo" data-m="2">Notice · term 1 only</span>
+                                    </div>
+                                    <span class="tm-swap xpt-step">
+                                        <span class="tm-cap">Memo pop-ups</span>
+                                        <span class="tm-cap">Custom fields · merchant API</span>
+                                        <span class="tm-pill ok">Amount match ✓</span>
+                                        <span class="tm-pill">Preview → receipt</span>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="fp-telemetry">
+                            <div class="fp-telemetry-head"><span class="fp-live-dot"></span>Live Status</div>
+                            <div class="animation-container">
+                                <div class="tm-stage xpt-live">
+                                    <div class="tm-row">
+                                        <span class="tm-cap">SignalR · request status</span>
+                                        <span class="xpt-pulse"></span>
+                                    </div>
+                                    @for (row of tm.xptRows; track row.ref) {
+                                    <div class="xpt-req" [attr.data-r]="$index + 1">
+                                        <span class="xpt-ref">{{row.ref}}</span>
+                                        <span class="xpt-steps"><span class="xpt-fill"></span></span>
+                                        <span class="tm-swap xpt-state">
+                                            @for (st of row.states; track st.t) {
+                                            <span class="tm-pill" [class.ok]="st.tone === 'ok'" [class.bad]="st.tone === 'bad'">{{st.t}}</span>
+                                            }
+                                        </span>
+                                    </div>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                        }
+                    </div>
+
+                    <ng-container *ngTemplateOutlet="shotFrame; context: { $implicit: project, i: 1 }"></ng-container>
+                </aside>
+            </div>
+
+            @if (project.pipeline?.length) {
+            <footer class="fp-rail">
+                <div class="fp-rail-head">
+                    <h4 class="fp-rail-title">{{project.pipelineLabel || 'Project Pipeline'}}</h4>
+                    <span class="fp-rail-sub">{{getPipelineSubtitle(project.pipeline)}}</span>
+                </div>
+                <ol class="fp-rail-steps">
+                    @for (step of project.pipeline!; track $index; let last = $last) {
+                    <li class="fp-rail-step" [class.final]="last">
+                        <span class="fp-rail-marker"></span>
+                        <span class="fp-rail-name">{{step.name}}</span>
+                        <span class="fp-rail-meta">{{step.meta}}</span>
+                    </li>
+                    }
+                </ol>
+            </footer>
+            }
+        </article>
+        }
+    </section>
+
+    <!-- One preview frame. The whole frame is a button that opens the lightbox,
+         on touch as well as desktop; the expand glyph is the visible affordance
+         where there is no hover. -->
+    <ng-template #shotFrame let-project let-i="i">
+        <div class="fp-shot" [class.fp-shot-a]="i === 0" [class.fp-shot-b]="i === 1">
+            <div class="fp-shot-bar" aria-hidden="true">
+                <span class="fp-shot-dot"></span>
+                <span class="fp-shot-dot"></span>
+                <span class="fp-shot-dot"></span>
+                <span class="fp-shot-tag">Preview 0{{ i + 1 }}</span>
+                @if (i === 1 && project.images.length > 2) {
+                <span class="fp-shot-more">+{{ project.images.length - 2 }} screens</span>
+                }
+                <span class="fp-shot-expand">
+                    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>
+                </span>
+            </div>
+            <picture>
+                <source type="image/avif" [attr.srcset]="project.images[i] | media:'avif'" [attr.sizes]="shotSizes">
+                <source type="image/webp" [attr.srcset]="project.images[i] | media:'webp'" [attr.sizes]="shotSizes">
+                <img [src]="project.images[i] | media:'src'" width="1280" height="752" loading="lazy" decoding="async"
+                    [alt]="project.title + ' preview ' + (i + 1)">
+            </picture>
+            <button type="button" class="fp-shot-open" (click)="openShot(project, i, $event)"
+                [attr.aria-label]="'Enlarge ' + project.title + ', preview ' + (i + 1) + ' of ' + project.images.length + (i === 1 && project.images.length > 2 ? ' — browse all ' + project.images.length + ' screens' : '')"></button>
+        </div>
+    </ng-template>
+
+    <!-- Preview lightbox. Native <dialog>: showModal() traps focus, makes the page
+         behind inert and closes on Esc; a tap on the dimmed area closes it too. -->
+    <dialog #shotDialog class="shot-lightbox" (close)="onShotDialogClose()" (click)="onShotDialogClick($event)"
+        (keydown)="onShotKeydown($event)" (pointerdown)="onShotPointerDown($event)" (pointerup)="onShotPointerUp($event)"
+        [attr.aria-label]="lightbox ? lightbox.title + ', preview ' + (lightbox.index + 1) + ' of ' + lightbox.images.length : null">
+        @if (lightbox; as lb) {
+        <figure class="shot-lightbox-figure" [style.--fp-acc]="lb.accent" [style.--fp-acc-rgb]="lb.accentRgb">
+            <picture>
+                <source type="image/avif" [attr.srcset]="lb.images[lb.index] | media:'avif'" sizes="(min-width: 1440px) 1340px, 94vw">
+                <source type="image/webp" [attr.srcset]="lb.images[lb.index] | media:'webp'" sizes="(min-width: 1440px) 1340px, 94vw">
+                <img [src]="lb.images[lb.index] | media:'src'" width="1280" height="720" decoding="async"
+                    [alt]="lb.title + ' preview ' + (lb.index + 1)">
+            </picture>
+            <figcaption class="shot-lightbox-caption">
+                <span class="shot-lightbox-title">{{ lb.title }}</span>
+                <span class="shot-lightbox-count">Preview {{ lb.index + 1 }} of {{ lb.images.length }}</span>
+            </figcaption>
+        </figure>
+        <button type="button" class="shot-lightbox-close" (click)="closeShot()" aria-label="Close preview">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+        @if (lb.images.length > 1) {
+        <button type="button" class="shot-lightbox-nav shot-lightbox-prev" (click)="stepShot(-1)" aria-label="Previous preview">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+        </button>
+        <button type="button" class="shot-lightbox-nav shot-lightbox-next" (click)="stepShot(1)" aria-label="Next preview">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+        </button>
+        }
+        }
+    </dialog>
+
+    <!-- ═══════════════════════════════════════════════════════════ -->
+    <!-- TECHNICAL ASSESSMENTS                                       -->
+    <!-- ═══════════════════════════════════════════════════════════ -->
+    <section class="assessments-section">
+        <div class="assessments-dotgrid" aria-hidden="true"></div>
+        <div class="assessments-divider" aria-hidden="true">
+            <span class="assessments-divider-line"></span>
+            <span class="assessments-divider-label">Technical Assessments</span>
+            <span class="assessments-divider-line"></span>
+        </div>
+
+        <div class="assessments-header">
+            <div class="assessments-header-text">
+                <h2 class="assessments-heading">Engineering challenges<span class="accent-dot">.</span></h2>
+                <p class="assessments-subtitle">Senior and mid-level technical assessments from real companies — each delivered against a spec, deployed live, and open on GitHub.</p>
+            </div>
+            <div class="assessments-header-meta">
+                <span class="assessments-count-badge"><span class="badge-dot"></span>{{assessmentProjects.length}} projects</span>
+                <span class="assessments-count-badge"><span class="badge-dot badge-dot-accent"></span>All deployed</span>
+            </div>
+        </div>
+
+        <div class="assessments-grid">
+            @for (ap of assessmentProjects; track ap.id) {
+            <article class="assessment-card"
+                [style.--card-accent]="ap.accentColor"
+                [style.--card-accent-rgb]="ap.accentColorRgb">
+
+                <span class="assessment-spotlight" aria-hidden="true"></span>
+
+                <!-- Browser-framed screenshot -->
+                <div class="assessment-frame-wrap">
+                    <div class="assessment-frame">
+                        <div class="assessment-frame-bar">
+                            <div class="frame-dots" (click)="$event.stopPropagation()">
+                                <span class="frame-dot frame-dot-red" aria-hidden="true" title="Close (single assessment — nothing to swap)">
+                                    <svg class="frame-glyph" width="7" height="7" viewBox="0 0 8 8" fill="none" stroke="rgba(0,0,0,0.6)" stroke-width="1.5" stroke-linecap="round"><path d="M1.6 1.6l4.8 4.8M6.4 1.6L1.6 6.4"></path></svg>
+                                </span>
+                                <span class="frame-dot frame-dot-yellow" aria-hidden="true" title="Minimize (single assessment — nothing to swap)">
+                                    <svg class="frame-glyph" width="7" height="7" viewBox="0 0 8 8" fill="none" stroke="rgba(0,0,0,0.6)" stroke-width="1.5" stroke-linecap="round"><path d="M1.4 4h5.2"></path></svg>
+                                </span>
+                                <button type="button" class="frame-dot frame-dot-green" (click)="expandAssessment(ap.id, $event)" aria-label="Expand assessment to full view" title="Expand (desktop only)">
+                                    <svg class="frame-glyph" width="7" height="7" viewBox="0 0 8 8" fill="rgba(0,0,0,0.6)"><path d="M1.2 4.8V1.2h3.6z"></path><path d="M6.8 3.2v3.6H3.2z"></path></svg>
+                                </button>
+                            </div>
+                            <span class="frame-url">{{getFrameUrl(ap.demoUrl)}}</span>
+                        </div>
+                        <div class="assessment-shot"
+                            [class.assessment-shot-expandable]="canExpandAssessment"
+                            [attr.tabindex]="canExpandAssessment ? 0 : null"
+                            [attr.role]="canExpandAssessment ? 'button' : null"
+                            [attr.aria-label]="canExpandAssessment ? 'Expand ' + ap.title + ' screenshot' : null"
+                            [attr.title]="canExpandAssessment ? 'Expand ' + ap.title + ' screenshot' : null"
+                            (click)="expandAssessment(ap.id, $event)"
+                            (keydown.enter)="expandAssessment(ap.id, $event)">
+                            @if (ap.images?.length) {
+                            <picture>
+                                <source type="image/avif" [attr.srcset]="ap.images![getImageIndex(ap.id)] | media:'avif'" sizes="(min-width: 1025px) 420px, (min-width: 769px) 46vw, 92vw">
+                                <source type="image/webp" [attr.srcset]="ap.images![getImageIndex(ap.id)] | media:'webp'" sizes="(min-width: 1025px) 420px, (min-width: 769px) 46vw, 92vw">
+                                <img [src]="ap.images![getImageIndex(ap.id)] | media:'src'" width="1280" height="800" loading="lazy" decoding="async"
+                                    [alt]="ap.title + ' screenshot ' + (getImageIndex(ap.id) + 1)"
+                                    [title]="ap.title"
+                                    (mouseenter)="onImageHover($event.target)"
+                                    (mouseleave)="onImageLeave($event.target)">
+                            </picture>
+                            } @else {
+                            <span class="assessment-shot-empty">Screenshot</span>
+                            }
+                        </div>
+                    </div>
+                    <div class="frame-nav"
+                        [class.frame-nav--single]="(ap.images?.length ?? 0) <= 1"
+                        (click)="$event.stopPropagation()">
+                        <button type="button" class="frame-nav-btn"
+                            [disabled]="(ap.images?.length ?? 0) <= 1"
+                            (click)="prevImage(ap.id, ap.images!.length, $event)"
+                            aria-label="Previous screenshot">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+                        </button>
+                        <span class="frame-nav-dots">
+                            @for (img of ap.images!; track $index) {
+                            <span class="frame-nav-dot" [class.active]="getImageIndex(ap.id) === $index"></span>
+                            }
+                        </span>
+                        <button type="button" class="frame-nav-btn"
+                            [disabled]="(ap.images?.length ?? 0) <= 1"
+                            (click)="nextImage(ap.id, ap.images!.length, $event)"
+                            aria-label="Next screenshot">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="assessment-card-body">
+                    <div class="assessment-meta-row">
+                        <span class="assessment-company-badge">{{ap.assessmentBy}}</span>
+                        <span class="assessment-level-badge"
+                            [class.level-senior]="ap.level === 'senior'"
+                            [class.level-mid]="ap.level === 'mid'">
+                            {{ap.level === 'senior' ? 'Senior Level' : 'Mid Level'}}
+                        </span>
+                    </div>
+
+                    <h3 class="assessment-card-title">{{ap.title}}</h3>
+                    <p class="assessment-description">{{ap.description}}</p>
+
+                    <div class="assessment-brief">
+                        <span class="brief-watermark" aria-hidden="true">&rdquo;</span>
+                        <span class="brief-label"><span class="brief-dot"></span>The brief</span>
+                        <span class="brief-text">{{ap.assessmentBrief}}</span>
+                    </div>
+
+                    <div class="tech-stack assessment-tech">
+                        @for (tech of ap.techStack; track tech.name) {
+                        <span class="tech-badge"
+                            [style.backgroundColor]="tech.color + '20'"
+                            [style.color]="tech.color">
+                            {{tech.name}}
+                        </span>
+                        }
+                    </div>
+
+                    <div class="assessment-achievements" [class.is-expanded]="isExpanded(ap.id)">
+                        <h4>What I delivered</h4>
+                        <ul>
+                            @for (item of ap.achievements; track $index) {
+                            <li>{{item}}</li>
+                            }
+                        </ul>
+                        @if (ap.achievements.length > 2) {
+                        <button type="button" class="achievements-toggle"
+                            (click)="toggleAchievements(ap.id, $event)">
+                            <span>{{isExpanded(ap.id) ? 'Show less' : 'View more'}}</span>
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"
+                                class="toggle-chevron"
+                                [style.transform]="isExpanded(ap.id) ? 'rotate(180deg)' : 'rotate(0deg)'">
+                                <polyline points="6 9 12 15 18 9"></polyline>
+                            </svg>
+                        </button>
+                        }
+                    </div>
+
+                    <div class="assessment-links">
+                        @if (ap.demoUrl && ap.demoUrl !== 'ASK_AKHIGBE') {
+                        <a [href]="ap.demoUrl" target="_blank" rel="noopener noreferrer"
+                            class="assessment-link assessment-link-demo"
+                            (click)="viewProject(ap.id.toString())">
+                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
+                                <polyline points="15 3 21 3 21 9"/>
+                                <line x1="10" y1="14" x2="21" y2="3"/>
+                            </svg>
+                            Live Demo
+                        </a>
+                        } @else {
+                        <span class="assessment-link-tbc">
+                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="12" r="10"/>
+                                <line x1="12" y1="8" x2="12" y2="12"/>
+                                <line x1="12" y1="16" x2="12.01" y2="16"/>
+                            </svg>
+                            Demo TBC
+                        </span>
+                        }
+                        <a [href]="ap.repoUrl" target="_blank" rel="noopener noreferrer"
+                            class="assessment-link assessment-link-repo">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0 1 12 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/>
+                            </svg>
+                            GitHub Repo
+                        </a>
+                    </div>
+                </div>
+            </article>
+            }
+        </div>
+
+        <!-- ============ ASSESSMENT EXPAND OVERLAY (desktop only) ============ -->
+        <!-- Nested inside .assessments-section (not just a page-level sibling) so it
+             inherits that section's --ta-* theme tokens (card bg, text colors, badge
+             tints, etc.) via normal CSS custom-property inheritance. position:fixed
+             still escapes to the viewport regardless of nesting depth — verified no
+             ancestor between here and <body> sets transform/filter/perspective/
+             contain, any of which would otherwise trap a fixed-position descendant. -->
+        @if (expandedAssessment; as ea) {
+        <div class="assessment-expand-overlay" (click)="closeAssessmentExpand()"
+    [style.--card-accent]="ea.accentColor" [style.--card-accent-rgb]="ea.accentColorRgb">
+    <article class="assessment-expand-window" (click)="$event.stopPropagation()">
+        <div class="assessment-frame-bar assessment-expand-bar">
+            <div class="frame-dots">
+                <button type="button" class="frame-dot frame-dot-red" (click)="closeAssessmentExpand()" aria-label="Close expanded view" title="Close">
+                    <svg class="frame-glyph" width="8" height="8" viewBox="0 0 8 8" fill="none" stroke="rgba(0,0,0,0.6)" stroke-width="1.5" stroke-linecap="round"><path d="M1.6 1.6l4.8 4.8M6.4 1.6L1.6 6.4"></path></svg>
+                </button>
+                <button type="button" class="frame-dot frame-dot-yellow" (click)="closeAssessmentExpand()" aria-label="Minimize expanded view" title="Minimize">
+                    <svg class="frame-glyph" width="8" height="8" viewBox="0 0 8 8" fill="none" stroke="rgba(0,0,0,0.6)" stroke-width="1.5" stroke-linecap="round"><path d="M1.4 4h5.2"></path></svg>
+                </button>
+                <button type="button" class="frame-dot frame-dot-green" (click)="closeAssessmentExpand()" aria-label="Restore size" title="Restore">
+                    <svg class="frame-glyph" width="8" height="8" viewBox="0 0 8 8" fill="rgba(0,0,0,0.6)"><path d="M4.6 1.2v3.4H1.2z"></path><path d="M3.4 6.8V3.4h3.4z"></path></svg>
+                </button>
+            </div>
+            <span class="frame-url">{{getFrameUrl(ea.demoUrl)}}</span>
+        </div>
+
+        <div class="assessment-expand-shot">
+            @if (ea.images?.length) {
+            <picture>
+                <source type="image/avif" [attr.srcset]="ea.images![getImageIndex(ea.id)] | media:'avif'" sizes="(min-width: 1200px) 1100px, 92vw">
+                <source type="image/webp" [attr.srcset]="ea.images![getImageIndex(ea.id)] | media:'webp'" sizes="(min-width: 1200px) 1100px, 92vw">
+                <img [src]="ea.images![getImageIndex(ea.id)] | media:'src'" width="1280" height="720" decoding="async"
+                    [alt]="ea.title + ' screenshot ' + (getImageIndex(ea.id) + 1)"
+                    [title]="ea.title" loading="eager">
+            </picture>
+            } @else {
+            <span class="assessment-shot-empty">Screenshot</span>
+            }
+            @if ((ea.images?.length ?? 0) > 1) {
+            <div class="assessment-expand-nav" (click)="$event.stopPropagation()">
+                <button type="button" class="frame-nav-btn" (click)="prevImage(ea.id, ea.images!.length, $event)" aria-label="Previous screenshot">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+                </button>
+                <span class="frame-nav-dots">
+                    @for (img of ea.images!; track $index) {
+                    <span class="frame-nav-dot" [class.active]="getImageIndex(ea.id) === $index"></span>
+                    }
+                </span>
+                <button type="button" class="frame-nav-btn" (click)="nextImage(ea.id, ea.images!.length, $event)" aria-label="Next screenshot">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                </button>
+            </div>
+            }
+        </div>
+
+        <div class="assessment-expand-body">
+            <div class="assessment-meta-row">
+                <span class="assessment-company-badge">{{ea.assessmentBy}}</span>
+                <span class="assessment-level-badge" [class.level-senior]="ea.level === 'senior'" [class.level-mid]="ea.level === 'mid'">
+                    {{ea.level === 'senior' ? 'Senior Level' : 'Mid Level'}}
+                </span>
+            </div>
+            <h3 class="assessment-card-title">{{ea.title}}</h3>
+            <p class="assessment-description">{{ea.description}}</p>
+
+            <div class="assessment-brief">
+                <span class="brief-watermark" aria-hidden="true">&rdquo;</span>
+                <span class="brief-label"><span class="brief-dot"></span>The brief</span>
+                <span class="brief-text">{{ea.assessmentBrief}}</span>
+            </div>
+
+            <div class="tech-stack assessment-tech">
+                @for (tech of ea.techStack; track tech.name) {
+                <span class="tech-badge" [style.backgroundColor]="tech.color + '20'" [style.color]="tech.color">{{tech.name}}</span>
+                }
+            </div>
+
+            <div class="assessment-achievements is-expanded">
+                <h4>What I delivered</h4>
+                <ul>
+                    @for (item of ea.achievements; track $index) {
+                    <li>{{item}}</li>
+                    }
+                </ul>
+            </div>
+
+            <div class="assessment-links">
+                @if (ea.demoUrl && ea.demoUrl !== 'ASK_AKHIGBE') {
+                <a [href]="ea.demoUrl" target="_blank" rel="noopener noreferrer" class="assessment-link assessment-link-demo" (click)="viewProject(ea.id.toString())">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+                    Live Demo
+                </a>
+                } @else {
+                <span class="assessment-link-tbc">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"/>
+                        <line x1="12" y1="8" x2="12" y2="12"/>
+                        <line x1="12" y1="16" x2="12.01" y2="16"/>
+                    </svg>
+                    Demo TBC
+                </span>
+                }
+                <a [href]="ea.repoUrl" target="_blank" rel="noopener noreferrer" class="assessment-link assessment-link-repo">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0 1 12 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/></svg>
+                    GitHub Repo
+                </a>
+            </div>
+        </div>
+    </article>
+</div>
+}
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════════ -->
+    <!-- LEARNING IN PUBLIC — FRENCH                                 -->
+    <!-- ═══════════════════════════════════════════════════════════ -->
+    <section class="learning-section">
+        <app-learning-journey variant="panel"></app-learning-journey>
+    </section>
+</div>
