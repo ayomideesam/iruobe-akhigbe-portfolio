@@ -3,6 +3,7 @@
 **Senior Frontend Engineer · Angular specialist · Fintech & banking**
 Live at **[iruobeakhigbe.netlify.app](https://iruobeakhigbe.netlify.app/)** · [Download my CV](https://iruobeakhigbe.netlify.app/resume) · [LinkedIn](https://www.linkedin.com/in/akhigbe-iruobe/)
 
+[![CI](https://github.com/ayomideesam/iruobe-akhigbe-portfolio/actions/workflows/ci.yml/badge.svg)](https://github.com/ayomideesam/iruobe-akhigbe-portfolio/actions/workflows/ci.yml)
 ![Angular 22](https://img.shields.io/badge/Angular-22-DD0031?logo=angular&logoColor=white)
 ![TypeScript 6](https://img.shields.io/badge/TypeScript-6-3178C6?logo=typescript&logoColor=white)
 ![Vitest](https://img.shields.io/badge/tests-109_passing-6E9F18?logo=vitest&logoColor=white)

@@ -1,0 +1,42 @@
+name: CI
+
+on:
+  push:
+    branches: [main, development]
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  verify:
+    name: Audit, test and build
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v7
+
+      # Same Node as Netlify: .nvmrc is the single source, and check-deploy-config keeps them in step.
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      - run: npm ci
+
+      # docs/NPM-AUDIT.md: overrides must satisfy every consumer, and the tree stays at 0 findings.
+      - name: Check npm overrides
+        run: npm run audit:overrides
+      - name: npm audit
+        run: npm audit
+
+      - name: Unit tests (Vitest)
+        run: npx ng test --watch=false
+
+      # npm run build runs the prebuild deploy-config check first.
+      - name: Production build
+        run: npm run build
