@@ -190,7 +190,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
       desc: 'CBN-compliant credit lifecycle platform — a Retail module now in production and a 15-desk approval chain that ends at the MCC and BCC committees, built by a seven-person team from 230+ standalone Angular 20 components.'
     },
     tiger: {
-      key: 'tiger', title: 'ProjectTiger — Domestic Transfers', short: 'ProjectTiger', hue: '#fbbf24',
+      key: 'tiger', title: 'ProjectTiger — Domestic Transfers', short: 'Domestic Transfer', hue: '#DD003166',
       url: 'tiger.zenithbank.com',
       imgs: ['/assets/img/tiger-teller.png', '/assets/img/tiger-queue.png', '/assets/img/tiger-naps-direct.png', '/assets/img/tiger-search.png', '/assets/img/tiger-nip-dashboard.png'],
       badges: [{ name: 'Angular', bc: '#DD003166' }, { name: 'TypeScript', bc: '#3178C666' }, { name: 'Jenkins CI/CD', bc: '#D3383366' }],
@@ -446,7 +446,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
 
   readonly stackCards: StackCard[] = [
     {
-      key: 'angular', title: 'Angular platform', stat: 'v14 → v22',
+      key: 'angular', title: 'Angular platform', stat: 'v11 → v22',
       note: 'Angular majors I have shipped to production, from X-Path to Trade Export',
       chips: ['Signals', 'NgRx Signal Store', 'NGXS', 'RxJS', 'Standalone & NgModules', 'esbuild + Vite']
     },
